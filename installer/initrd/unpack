@@ -1,0 +1,4 @@
+#!/bin/sh
+mkdir -p initrd.new
+cd initrd.new
+zcat ../initrd.img | cpio -div

@@ -1,0 +1,2 @@
+#!/bin/sh
+setup --root /dev/sda1 --root_format ext3 --swap /dev/sda2 --pkgsource dvd --accept-license --install_type full

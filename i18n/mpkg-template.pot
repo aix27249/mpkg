@@ -1,0 +1,5379 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-25 12:25+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../installer/setup.cpp:2746
+#, c-format
+msgid "\t--accept-license       Automatically accept license terms\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2736
+#, c-format
+msgid "\t--help                 Show this help\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2741
+#, c-format
+msgid "\t--no-deps              Disable dependencies\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2739
+#, c-format
+msgid ""
+"\t--no-eject             Do not eject CD/DVD after installation (useful when "
+"installing inside virtual machine)\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2747
+#, c-format
+msgid ""
+"\t--no-warpmode          Disable fast installation mode (in case of failure, "
+"it ensures that you will have correct database)\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2745
+#, c-format
+msgid ""
+"\t--pkgsource SOURCE     Set package source (cdrom, dvd, iso, or network "
+"URL)\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2742
+#, c-format
+msgid ""
+"\t--root PARTITION_NAME  Set root partition name (for example, /dev/sda1)\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2743
+#, c-format
+msgid "\t--root_format FSTYPE   Set root filesystem type (for example, ext3\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2755
+#, c-format
+msgid ""
+"\t--skip-dev             Do not install /usr/include part of packages (to "
+"save space)\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2753
+#, c-format
+msgid ""
+"\t--skip-doc             Do not install /usr/doc part of packages (to save "
+"space)\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2754
+#, c-format
+msgid ""
+"\t--skip-man             Do not install /usr/man part of packages (to save "
+"space)\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2756
+#, c-format
+msgid ""
+"\t--skip-static          Do not install *.a static libs, to save space\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2744
+#, c-format
+msgid ""
+"\t--swap PARTITION_NAME  Set swap partition name (for example, /dev/sda2, or "
+"auto to use first available)\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2738
+#, c-format
+msgid ""
+"\t--сache                Copy all packages to hard drive before "
+"installation\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2737
+#, c-format
+msgid "\t--сheck                Check package integrity before installation\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1390
+#, c-format
+msgid "\t-A    --download-to=<DIR> download packages to specified directory\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1395
+#, c-format
+msgid "\t-C    --enable-cache      enable cached indexing\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1371
+#, c-format
+msgid "\t-D    --download-only     just download packages, do not install\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1398
+#, c-format
+msgid ""
+"\t-E    --exclusion-list=FILENAME   Exclude paths from being checked by "
+"gendeps2\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1382
+#, c-format
+msgid ""
+"\t-F    --fork              detach from terminal and run in background\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1394
+#, c-format
+msgid ""
+"\t-G    --keep-deps         do not replace deps in package, add to them "
+"instead (for gendeps2)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1384
+#, c-format
+msgid ""
+"\t-H    --html              switch to html mode (useful only for integrate "
+"into web)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1396
+#, c-format
+msgid "\t-K    --skip-deprecated   while sync, skip deprecated packages\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1392
+#, c-format
+msgid ""
+"\t-L    --linksonly         on install/upgradeall, show only download links "
+"and exit\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1387
+#, c-format
+msgid "\t-M    --md5index          add md5 sums for each file in filelist\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1378
+#, c-format
+msgid ""
+"\t-N    --nodepgen          don't generate dependencies on package building\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1393
+#, c-format
+msgid ""
+"\t-P    --noaaa             try to avoid aaa_elflibs in dependency "
+"generation (for gendeps2)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1383
+#, c-format
+msgid "\t-Q    --enqueue           only enqueue actions, do not perform\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1386
+#, c-format
+msgid "\t-R    --index-filelist    create file list while indexing\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1388
+#, c-format
+msgid "\t-S    --sysroot=<DIR>     set temporary system root\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1385
+#, c-format
+msgid "\t-V    --enableversions    enable versioning in install lists\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1391
+#, c-format
+msgid ""
+"\t-W    --enable-spkg-index enable spkg indexing (otherwise, it will be "
+"skipped)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1374
+#, c-format
+msgid ""
+"\t-a    --available         show only available packages (use with \"list\" "
+"keyword)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1381
+#, c-format
+msgid "\t-b    --cleartags         clear all other tags before tagging\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1380
+#, c-format
+msgid "\t-c    --no_resume         disable download resuming\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1366
+#, c-format
+msgid "\t-d    --force-dep         interpret dependency errors as warnings\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1368
+#, c-format
+msgid "\t-f    --force-conflicts   do not perform file conflict checking\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1365
+#, c-format
+msgid "\t-g    --dialog            use dialog mode UI\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1363
+#, c-format
+msgid "\t-h    --help              show this help\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1373
+#, c-format
+msgid ""
+"\t-i    --installed         show only installed packages (use with \"list\" "
+"keyword)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1370
+#, c-format
+msgid "\t-k    --force-essential   allow removing essential packages\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1375
+#, c-format
+msgid ""
+"\t-l    --filelist          show file list for package (with \"show\" "
+"keyword)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1369
+#, c-format
+msgid "\t-m    --no-md5            do not check package integrity on install\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1377
+#, c-format
+msgid "\t-q    --noreset           don't reset queue at start\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1372
+#, c-format
+msgid ""
+"\t-r    --repair            repair damaged packages (use with \"check\" "
+"keyword)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1397
+#, c-format
+msgid ""
+"\t-s    --keep-symlinks     keep symlinks in archive instead of moving it to "
+"doinst.sh\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1389
+#, c-format
+msgid "\t-t    --conf=CONFIG_FILE  set temporary config file\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1364
+#, c-format
+msgid "\t-v    --verbose           be verbose\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1379
+#, c-format
+msgid ""
+"\t-w    --no_buildcache     don't use source cache when building packages\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1376
+#, c-format
+msgid "\t-y    --noconfirm         don't ask confirmation\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1367
+#, c-format
+msgid "\t-z    --no-dep            totally ignore dependencies existance\n"
+msgstr ""
+
+#: ../lib/menu.cpp:829
+msgid "\tPackage contains no files\n"
+msgstr ""
+
+#: ../lib/menu.cpp:852
+msgid "\tPackage is not installed\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1424
+#, c-format
+msgid "\tadd_rep URL                        add repository\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1403
+#, c-format
+msgid ""
+"\tbuild [march=CPU] [mtune=CPU] [olevel={ O0 | O1 | O2 | O3 }] FILENAME     "
+"build source package(s)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1453
+#, c-format
+msgid "\tbuildup <filename>        increase spkg/tgz build\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1437
+#, c-format
+msgid ""
+"\tcheck [package_name]               checks installed package(s) for damaged "
+"files. Use -r flag to to repair\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1451
+#, c-format
+msgid ""
+"\tchecklist [dir]           check md5 sums of a package tree (requires a "
+"valid index in this dir)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1436
+#, c-format
+msgid ""
+"\tclean                              remove all downloaded packages from "
+"cache\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1450
+#, c-format
+msgid "\tcleardeps <filename>         clear package dependencies\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1433
+#, c-format
+msgid "\tcommit                             commit queued actions\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1445
+#, c-format
+msgid "\tconvert <filename>        convert package to MPKG format\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1444
+#, c-format
+msgid ""
+"\tconvert_dir <outp_dir>    convert whole directory (including sub-dirs) to "
+"MPKG format\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1425
+#, c-format
+msgid "\tdelete_rep REPOSITORY_NUMBER       delete Nth repository\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1427
+#, c-format
+msgid "\tdisable_rep REPOSITORY_NUMBER      disable Nth repository\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1426
+#, c-format
+msgid "\tenable_rep REPOSITORY_NUMBER       enable Nth repository\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1447
+#, c-format
+msgid ""
+"\texport [dir]              export database in slackware format to dir (by "
+"default, /var/log/packages/)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1430
+#, c-format
+msgid ""
+"\texportinstalled [FILE_NAME]        export list of installed packages to "
+"file or stdout\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1421
+#, c-format
+msgid ""
+"\tfilesearch FILE_NAME               look for owner of the file in installed "
+"packages (LIKE mode).\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1448
+#, c-format
+msgid ""
+"\tgendeps <filename(s)>         generate dependencies and import it into "
+"package\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1449
+#, c-format
+msgid ""
+"\tgendeps2 <filename(s)>         generate dependencies and import it into "
+"package (new algorithm\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1428
+#, c-format
+msgid ""
+"\tgetrepositorylist [LIST_URL]       get the list of repositories from "
+"server (by default, from rpunet.ru)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1443
+#, c-format
+msgid ""
+"\tindex                     create a repository index file \"packages.xml.gz"
+"\"\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1404
+#, c-format
+msgid "\tinstall PACKAGE_NAME | FILENAME    install package(s)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1429
+#, c-format
+msgid ""
+"\tinstallfromlist FILE_NAME          install using file with list of items\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1410
+#, c-format
+msgid ""
+"\tinstallgroup GROUP_NAME            install all the packages from group\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1416
+#, c-format
+msgid ""
+"\tlist                               show the list of all packages in "
+"database\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1423
+#, c-format
+msgid "\tlist_rep                           list enabled repositories\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1417
+#, c-format
+msgid ""
+"\tlistgroup GROUP_NAME               show the list of packages belonged to "
+"group\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1418
+#, c-format
+msgid ""
+"\tlistgroups                         show the list of all existing groups\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1413
+#, c-format
+msgid "\tlistupdates                        list available updates\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1459
+#, c-format
+msgid "\tmarch=                    CPU architecture\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1440
+#, c-format
+msgid "\tmenu                      shows the package selection menu\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1460
+#, c-format
+msgid "\tmtune=                    CPU tuning\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1446
+#, c-format
+msgid ""
+"\tnativize [dir]            search directory for non-native packages and "
+"convert it to MPKG format\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1461
+#, c-format
+msgid "\tolevel=                   Optimization level\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1409
+#, c-format
+msgid "\tpurge PACKAGE_NAME                 purge selected package(s)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1407
+#, c-format
+msgid "\treinstall PACKAGE_NAME             reinstall package(s)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1408
+#, c-format
+msgid "\tremove PACKAGE_NAME                remove selected package(s)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1411
+#, c-format
+msgid ""
+"\tremovegroup GROUP_NAME             remove all the packages from group\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1431
+#, c-format
+msgid "\treset                              reset queue\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1434
+#, c-format
+msgid ""
+"\tsearch PATTERN                     search package by name containing "
+"PATTERN\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1435
+#, c-format
+msgid ""
+"\tsearchdescription PATTERN          search package by description "
+"containing PATTERN\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2734
+#, c-format
+msgid ""
+"\tsetup [ OPTIONS ]\n"
+"Available options:\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1414
+#, c-format
+msgid "\tshow PACKAGE_NAME                  show info about package\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1432
+#, c-format
+msgid "\tshow_queue                         show queue\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1452
+#, c-format
+msgid "\tsync <syncmap file>       syncronize repositories by sync map\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1456
+#, c-format
+msgid "\ttest                      Executes unit test\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1415
+#, c-format
+msgid "\tupdate                             update packages info\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1405
+#, c-format
+msgid "\tupgrade PACKAGE_NAME | FILENAME    upgrade selected package\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1406
+#, c-format
+msgid "\tupgradeall                         upgrade all installed packages\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1402
+#, c-format
+msgid "\tversion                            show mpkg version\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1422
+#, c-format
+msgid ""
+"\twhich FILE_NAME                    look for owner of the file in installed "
+"packages (EQUAL mode).\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1419
+#, c-format
+msgid ""
+"\twhodepend PACKAGE_NAME             show what packages depends on this one\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:53
+#, c-format
+msgid ""
+"\n"
+"\tNo deltas found for %s\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:874
+msgid ""
+"\n"
+"\n"
+"----------Repairing damaged packages----------\n"
+msgstr ""
+
+#: ../lib/menu.cpp:669
+msgid ""
+"\n"
+"\n"
+"Tags: \n"
+msgstr ""
+
+#: ../lib/repository.cpp:642
+#, c-format
+msgid ""
+"\n"
+"-------------SUMMARY------------------\n"
+"Total: %d packages\n"
+"\n"
+"Repository index created successfully\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1401
+#, c-format
+msgid ""
+"\n"
+"Actions:\n"
+msgstr ""
+
+#: ../lib/menu.cpp:671
+msgid ""
+"\n"
+"Added to repository: "
+msgstr ""
+
+#: ../lib/menu.cpp:656
+msgid ""
+"\n"
+"Arch: "
+msgstr ""
+
+#: ../lib/menu.cpp:655
+msgid ""
+"\n"
+"Beta release: "
+msgstr ""
+
+#: ../installer/setup.cpp:1824
+msgid ""
+"\n"
+"Boot loader will be installed in: "
+msgstr ""
+
+#: ../lib/menu.cpp:660
+msgid ""
+"\n"
+"Branch: "
+msgstr ""
+
+#: ../lib/menu.cpp:657
+msgid ""
+"\n"
+"Build: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:620
+msgid ""
+"\n"
+"Checking and fixing permissions...\n"
+msgstr ""
+
+#: ../lib/core.cpp:93
+#, c-format
+msgid ""
+"\n"
+"Checking file conflicts for package %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2410
+msgid ""
+"\n"
+"Choose driver for it:"
+msgstr ""
+
+#: ../installer/setup.cpp:1822
+msgid ""
+"\n"
+"Compressed packages size: "
+msgstr ""
+
+#: ../lib/menu.cpp:663
+msgid ""
+"\n"
+"Compressed size: "
+msgstr ""
+
+#: ../lib/menu.cpp:659
+msgid ""
+"\n"
+"Conflicts: "
+msgstr ""
+
+#: ../installer/setup.cpp:2014
+msgid ""
+"\n"
+"Data path: "
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1455
+#, c-format
+msgid ""
+"\n"
+"Debug options:\n"
+msgstr ""
+
+#: ../lib/menu.cpp:673
+msgid ""
+"\n"
+"Deltas: \n"
+msgstr ""
+
+#: ../lib/menu.cpp:674
+msgid ""
+"\n"
+"Dependencies: \n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:466
+msgid ""
+"\n"
+"Details:\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1823
+msgid ""
+"\n"
+"Disk space required by packages: "
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:586
+msgid ""
+"\n"
+"Download error: "
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1458
+#, c-format
+msgid ""
+"\n"
+"Extra options for command \"build\" (should be specified _before_ package "
+"name):\n"
+msgstr ""
+
+#: ../lib/menu.cpp:665
+msgid ""
+"\n"
+"File name: "
+msgstr ""
+
+#: ../installer/setup.cpp:609 ../installer/setup.cpp:621
+msgid ""
+"\n"
+"Filesystem type: "
+msgstr ""
+
+#: ../lib/menu.cpp:662
+msgid ""
+"\n"
+"Full description: "
+msgstr ""
+
+#: ../lib/menu.cpp:664
+msgid ""
+"\n"
+"Installed size: "
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1439
+#, c-format
+msgid ""
+"\n"
+"Interactive options:\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1904
+msgid ""
+"\n"
+"Last indexed: "
+msgstr ""
+
+#: ../lib/menu.cpp:672
+msgid ""
+"\n"
+"Locations: \n"
+msgstr ""
+
+#: ../lib/menu.cpp:666
+msgid ""
+"\n"
+"MD5 checksum: "
+msgstr ""
+
+#: ../lib/menu.cpp:667
+msgid ""
+"\n"
+"Maintainer: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:888
+msgid ""
+"\n"
+"Note that if you splitted your filesystem tree (e.g. separate /usr, and so "
+"on), this information may be incorrect and you can safely ignore this "
+"warning.\n"
+"Continue anyway?"
+msgstr ""
+
+#: ../installer/setup.cpp:2043
+msgid ""
+"\n"
+"Package path: "
+msgstr ""
+
+#: ../installer/setup.cpp:1825
+msgid ""
+"\n"
+"Proceed with installation?"
+msgstr ""
+
+#: ../lib/menu.cpp:658
+msgid ""
+"\n"
+"Provides: "
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1442
+#, c-format
+msgid ""
+"\n"
+"Repository maintaining functions:\n"
+msgstr ""
+
+#: ../lib/menu.cpp:661
+msgid ""
+"\n"
+"Short description: "
+msgstr ""
+
+#: ../lib/menu.cpp:615
+msgid ""
+"\n"
+"Update available: "
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1361
+#, c-format
+msgid ""
+"\n"
+"Usage: %s [options] ACTION [package] [package] ...\n"
+msgstr ""
+
+#: ../lib/menu.cpp:654
+msgid ""
+"\n"
+"Version: "
+msgstr ""
+
+#: ../lib/menu.cpp:838
+msgid " (config file)\n"
+msgstr ""
+
+#: ../lib/sql_pool.cpp:49
+msgid ""
+" (current version: 1.0).\n"
+"Please run mpkg (e.g. 'mpkg list') as root to do this\n"
+"Note: it will be backward-compatible with all previous versions of mpkg"
+msgstr ""
+
+#: ../installer/setup.cpp:1821
+msgid " (explicitly choosed: "
+msgstr ""
+
+#: ../lib/menu.cpp:846
+msgid " (plain file)\n"
+msgstr ""
+
+#: ../lib/menu.cpp:844
+msgid " (symlink)\n"
+msgstr ""
+
+#: ../lib/repository.cpp:882
+msgid " (total "
+msgstr ""
+
+#: ../console/validator.cpp:75
+msgid " ; to fix this - rename package"
+msgstr ""
+
+#: ../lib/mpkg.cpp:984 ../lib/mpkg.cpp:1988
+msgid " ==> "
+msgstr ""
+
+#: ../installer/setup.cpp:938
+msgid " again:"
+msgstr ""
+
+#: ../installer/setup.cpp:400
+msgid ""
+" as a root filesystem.\n"
+"Which filesystem type do you want to format it?"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:442
+msgid " build "
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:341
+msgid " cannot be found"
+msgstr ""
+
+#: ../installer/setup.cpp:1499
+msgid " contains 0 (zero) packages, I cannot install by this list"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1256
+msgid " dependencies"
+msgstr ""
+
+#: ../lib/config.cpp:99
+msgid " depends on "
+msgstr ""
+
+#: ../lib/menu.cpp:892
+msgid " doesn't belong to any of installed packages"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:820 ../lib/menu.cpp:221 ../lib/metaframe.cpp:84
+#: ../lib/metaframe.cpp:246
+msgid " doesn't exist"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1774 ../lib/mpkg.cpp:1775
+msgid " files"
+msgstr ""
+
+#: ../lib/menu.cpp:912
+msgid " found in "
+msgstr ""
+
+#: ../lib/libmpkg.cpp:562
+msgid " has broken files or symlinks:"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1557
+msgid " in drive "
+msgstr ""
+
+#: ../lib/menu.cpp:309
+msgid " installed)\n"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:234 ../lib/HttpDownload.cpp:281
+msgid " into drive "
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:186 ../lib/mpkgsys.cpp:342 ../lib/mpkgsys.cpp:368
+msgid " is already installed"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:523 ../lib/mpkgsys.cpp:524
+msgid " is already purged"
+msgstr ""
+
+#: ../lib/dependencies.cpp:488
+msgid " is broken"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:596
+msgid " is failed: error while downloading"
+msgstr ""
+
+#: ../console/setmeta.cpp:45 ../console/setmeta.cpp:52
+msgid " is incorrect, cannot resolve as dependency"
+msgstr ""
+
+#: ../installer/setup.cpp:504
+msgid ""
+" is incorrect. It should be an absolute path (it means, beginning with "
+"slash /), for example: /mnt/win_c"
+msgstr ""
+
+#: ../lib/dependencies.cpp:607
+msgid " is required, but no suitable version was found"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:190 ../lib/mpkgsys.cpp:372
+msgid " is unavailable"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:92 ../lib/HttpDownload.cpp:102
+msgid " kb)"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:66
+msgid " kbytes)"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1412
+msgid " min"
+msgstr ""
+
+#: ../lib/dependencies.cpp:553 ../installer/setup.cpp:1491
+msgid " not found"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:65 ../lib/HttpDownload.cpp:90
+#: ../lib/HttpDownload.cpp:100
+msgid " of "
+msgstr ""
+
+#: ../installer/setup.cpp:2975
+msgid " on it's MBR. Select first HDD if unsure:"
+msgstr ""
+
+#: ../lib/menu.cpp:912
+msgid " package(s):\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1305 ../lib/repository.cpp:643
+msgid " packages"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1470
+msgid " packages enqueued to sync. Proceed? [Y/n]"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1467
+msgid " packages enqueued to sync. Processing"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:466
+msgid ""
+" packages has unresolvable dependencies. See full log in /tmp/depErrTable."
+"log\n"
+msgstr ""
+
+#: ../lib/repository.cpp:882 ../installer/setup.cpp:2860
+msgid " packages)"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:536
+msgid " packages, ambiguity!"
+msgstr ""
+
+#: ../lib/menu.cpp:309
+msgid " packages, total size: "
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:208
+msgid " to mount point "
+msgstr ""
+
+#: ../lib/menu.cpp:258 ../lib/menu.cpp:274
+msgid " updates\n"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:441
+msgid " version "
+msgstr ""
+
+#: ../lib/converter.cpp:301
+msgid " with tag "
+msgstr ""
+
+#: ../lib/libmpkg.cpp:531
+msgid "\": it isn't installed"
+msgstr ""
+
+#: ../lib/menu.cpp:995
+#, c-format
+msgid "%s %s requires: %s\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:120
+#, c-format
+msgid "%s patch failed to merge, going to download full package\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:119
+#, c-format
+msgid "%s patch failed to merge, trying next one\n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:570
+#, c-format
+msgid "%s%s%s: /%s (broken symlink)\n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:568
+#, c-format
+msgid "%s%s%s: /%s (file doesn't exist)\n"
+msgstr ""
+
+#: ../lib/menu.cpp:938
+#, c-format
+msgid "%s-%s\n"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:505
+#, c-format
+msgid "%s-%s doesn't present in the system\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:857
+#, c-format
+msgid "%s: %sDAMAGED%s\n"
+msgstr ""
+
+#: ../lib/local_package.cpp:462
+#, c-format
+msgid "%s: No XML, converting from legacy\n"
+msgstr ""
+
+#: ../lib/menu.cpp:762
+#, c-format
+msgid "%sArch:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:766
+#, c-format
+msgid "%sBranch:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:763
+#, c-format
+msgid "%sBuild:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:818
+#, c-format
+msgid ""
+"%sChangelog:%s          \n"
+"%s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:765
+#, c-format
+msgid "%sConflicts:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:786
+#, c-format
+msgid "%sDelta patches:%s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:791
+#, c-format
+msgid "%sDelta patches:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:809
+#, c-format
+msgid "%sDepends on:%s "
+msgstr ""
+
+#: ../lib/menu.cpp:819
+#, c-format
+msgid ""
+"%sDescription:%s        \n"
+"%s\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2107
+#, c-format
+msgid "%sFAILED%s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:823
+#, c-format
+msgid "%sFilelist:%s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:774
+#, c-format
+msgid "%sFilename:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:759
+#, c-format
+msgid "%sID:%s %d\n"
+msgstr ""
+
+#: ../lib/menu.cpp:768
+#, c-format
+msgid "%sInstalled size:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:778
+#, c-format
+msgid "%sLocations:%s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:784
+#, c-format
+msgid "%sLocations:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:773
+#, c-format
+msgid "%sMD5:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:770
+#, c-format
+msgid "%sMaintainer e-mail:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:769
+#, c-format
+msgid "%sMaintainer:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:760
+#, c-format
+msgid "%sName:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:767
+#, c-format
+msgid "%sPackage size:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:764
+#, c-format
+msgid "%sProvides:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:775
+#, c-format
+msgid "%sShort description:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:771
+#, c-format
+msgid "%sStatus:%s %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:793
+#, c-format
+msgid "%sTags:%s "
+msgstr ""
+
+#: ../lib/menu.cpp:761
+#, c-format
+msgid "%sVersion:%s %s\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:920
+msgid "(binary)"
+msgstr ""
+
+#: ../lib/mpkg.cpp:919
+msgid "(source)"
+msgstr ""
+
+#: ../installer/setup.cpp:1650
+msgid ""
+")\n"
+"To select, use SPACE key"
+msgstr ""
+
+#: ../installer/setup.cpp:2140
+msgid ""
+"), but no repository found there.\n"
+"Check path and try again."
+msgstr ""
+
+#: ../installer/setup.cpp:1821
+msgid ", added by dependencies: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:888 ../lib/mpkg.cpp:893
+msgid ", available: "
+msgstr ""
+
+#: ../lib/dependencies.cpp:889
+msgid ", because it is an important system component."
+msgstr ""
+
+#: ../lib/bus.cpp:248
+msgid ", current: "
+msgstr ""
+
+#: ../installer/setup.cpp:493
+msgid ", for example, /mnt/win_c"
+msgstr ""
+
+#: ../installer/setup.cpp:1766 ../installer/setup.cpp:2852
+msgid ", format: "
+msgstr ""
+
+#: ../installer/setup.cpp:550
+msgid ", formatting: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1730
+msgid ", it will be skipped!"
+msgstr ""
+
+#: ../console/deleteprofile.cpp:15
+msgid ", may be you are not root?"
+msgstr ""
+
+#: ../installer/setup.cpp:621
+msgid ", mount point: "
+msgstr ""
+
+#: ../installer/setup.cpp:459 ../installer/setup.cpp:497
+msgid ", not mounted"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1641
+msgid ", should be: "
+msgstr ""
+
+#: ../lib/menu.cpp:425
+msgid ", tags: "
+msgstr ""
+
+#: ../installer/setup.cpp:2859
+msgid ", total: "
+msgstr ""
+
+#: ../installer/setup.cpp:2863
+msgid ", will be installed in "
+msgstr ""
+
+#: ../console/setmeta.cpp:12
+#, c-format
+msgid "-B   --buildup                   increase package build\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:19
+#, c-format
+msgid "-D   --remove-dep=DEP            remove dependency (format: foo)\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:28
+#, c-format
+msgid "-K   --clearconflicts            clear conflicts value\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:13
+#, c-format
+msgid ""
+"-N   --basename                  set name, version, arch and build by "
+"specified filename\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:26
+#, c-format
+msgid "-P   --clearprovides             clear provides value\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:20
+#, c-format
+msgid "-S   --shortdesc=FILE|TEXT       set short description\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:17
+#, c-format
+msgid "-T   --remove-tag=TAG            remove tag from package\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:23
+#, c-format
+msgid "-X   --cleartags                 clear all previous tags\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:24
+#, c-format
+msgid "-Z   --cleardeps                 clear all previous dependencies\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:10
+#, c-format
+msgid "-a   --arch=ARCH                 set package architecture\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:11
+#, c-format
+msgid "-b   --build=BUILD               set package build\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:22
+#, c-format
+msgid "-c   --changelog=FILENAME|TEXT   set changelog\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:18
+#, c-format
+msgid "-d   --add-dep=DEP               add dependency (format: foo>=1.0)\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:15
+#, c-format
+msgid "-e   --maintainer-email=MAIL     set maintainer email\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:7
+#, c-format
+msgid "-h   --help                      show this help\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:27
+#, c-format
+msgid "-k   --conflicts                 set conflicts value\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:21
+#, c-format
+msgid "-l   --longdesc=FILE|TEXT        set long description\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:14
+#, c-format
+msgid "-m   --maintainer-name=NAME      set maintainer name\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:8
+#, c-format
+msgid "-n   --name=NAME                 set package name\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:25
+#, c-format
+msgid "-p   --provides                  set provides value\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:30
+#, c-format
+msgid ""
+"-s   --keep-symlinks             keep symlinks in archive instead of moving "
+"it to doinst.sh\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:16
+#, c-format
+msgid "-t   --add-tag=TAG               add tag to package\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:9
+#, c-format
+msgid "-v   --version=VERSION           set package version\n"
+msgstr ""
+
+#: ../lib/sql_pool.cpp:61 ../lib/sql_pool.cpp:73 ../lib/sql_pool.cpp:85
+#: ../lib/sql_pool.cpp:97 ../lib/sql_pool.cpp:109 ../lib/sql_pool.cpp:121
+#: ../lib/sql_pool.cpp:133 ../lib/sql_pool.cpp:144 ../lib/sql_pool.cpp:156
+#: ../lib/sql_pool.cpp:168 ../lib/sql_pool.cpp:181 ../lib/sql_pool.cpp:191
+#: ../lib/sql_pool.cpp:201
+msgid ""
+".\n"
+"Please run mpkg (e.g. 'mpkg list') as root to do this\n"
+"Note: it will be backward-compatible with all previous versions of mpkg"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1428
+msgid ""
+". Due to possible dependency issues, the installation procedure will stop "
+"now."
+msgstr ""
+
+#: ../installer/setup.cpp:3494
+msgid ". Try another?"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1412
+msgid "/s, ETA: "
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:67 ../lib/HttpDownload.cpp:92
+#: ../lib/HttpDownload.cpp:102
+msgid "/sec]"
+msgstr ""
+
+#: ../installer/setup.cpp:3019
+msgid "1024x768, 16-bit color"
+msgstr ""
+
+#: ../installer/setup.cpp:3024
+msgid "1024x768, 24-bit color (default)"
+msgstr ""
+
+#: ../installer/setup.cpp:3014
+msgid "1024x768, 256 colors"
+msgstr ""
+
+#: ../installer/setup.cpp:3020
+msgid "1280x1024, 16-bit color"
+msgstr ""
+
+#: ../installer/setup.cpp:3025
+msgid "1280x1024, 24-bit color"
+msgstr ""
+
+#: ../installer/setup.cpp:3015
+msgid "1280x1024, 256 colors"
+msgstr ""
+
+#: ../installer/setup.cpp:387 ../installer/setup.cpp:475
+msgid "4th version of standard linux filesystem"
+msgstr ""
+
+#: ../installer/setup.cpp:3017
+msgid "640x480, 16-bit color"
+msgstr ""
+
+#: ../installer/setup.cpp:3022
+msgid "640x480, 24-bit color"
+msgstr ""
+
+#: ../installer/setup.cpp:3012
+msgid "640x480, 256 colors"
+msgstr ""
+
+#: ../installer/setup.cpp:3018
+msgid "800x600, 16-bit color"
+msgstr ""
+
+#: ../installer/setup.cpp:3023
+msgid "800x600, 24-bit color"
+msgstr ""
+
+#: ../installer/setup.cpp:3013
+msgid "800x600, 256 colors"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1641
+msgid ": MD5 checksum incorrect: got "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1602
+msgid ": building from source"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1715
+msgid ": checking file conflicts"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2045
+msgid ": checking for backups"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1637
+msgid ": checking package integrity"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1513
+msgid ": checking package source"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1598
+msgid ": checking package type"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2164
+msgid ": clearing script directory"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1899
+msgid ": complete"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1696
+msgid ": detecting configuration files"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2214
+msgid ": done"
+msgstr ""
+
+#: ../lib/repository.cpp:743
+msgid ": download error or unsupported type"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1861
+msgid ": executing post-install script"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2157
+msgid ": executing post-remove script"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1762
+msgid ": executing pre-install script"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2029
+msgid ": executing pre-remove script"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1895
+msgid ": exporting legacy data"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1775
+msgid ": extracting "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1678 ../lib/mpkg.cpp:2016
+msgid ": extracting file list"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1647
+msgid ": extracting metadata"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1671
+msgid ": extracting scripts"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2198
+msgid ": finishing"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1884
+msgid ": finishing installation"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1506
+msgid ": initialization"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1689
+msgid ": looking for X fonts"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1744
+msgid ": merging file lists into database"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1529
+msgid ": mounting CD-ROM"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1550
+msgid ": mounting CD/DVD..."
+msgstr ""
+
+#: ../lib/config.cpp:101
+msgid ": no suitable version"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:555
+msgid ": not installed"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:597
+msgid ": package is unavailable"
+msgstr ""
+
+#: ../lib/config.cpp:100
+msgid ": package not found"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2113
+msgid ": removing empty directories"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2064
+msgid ": removing files ["
+msgstr ""
+
+#: ../lib/mpkg.cpp:2169
+msgid ": restoring backups"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1893 ../lib/mpkg.cpp:2207
+msgid ": updating database"
+msgstr ""
+
+#: ../installer/setup.cpp:1989
+msgid "<none>"
+msgstr ""
+
+#: ../installer/setup.cpp:1440
+msgid ""
+"A minimal package set. It is enough to boot and install packages, but will "
+"be a very difficult process. Not recommended unless you know what you are "
+"doing"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:36 ../lib/errorcodes.cpp:146
+#: ../lib/errorcodes.cpp:177 ../lib/errorcodes.cpp:197
+#: ../lib/errorcodes.cpp:270
+msgid "Abort"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:215 ../lib/errorcodes.cpp:223
+#: ../lib/errorcodes.cpp:241 ../lib/errorcodes.cpp:250
+#: ../lib/errorcodes.cpp:258
+msgid "Abort and exit"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:500
+msgid "Aborted\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1277
+msgid "Aborting installation\n"
+msgstr ""
+
+#: ../lib/ncurses_if.h:63
+msgid "Accept"
+msgstr ""
+
+#: ../installer/setup.cpp:967
+msgid "Add "
+msgstr ""
+
+#: ../lib/menu.cpp:461
+msgid "Add/remove packages"
+msgstr ""
+
+#: ../installer/setup.cpp:2854
+msgid "Additional partitions configuration"
+msgstr ""
+
+#: ../installer/setup.cpp:2831
+msgid "Advanced"
+msgstr ""
+
+#: ../lib/mpkg.cpp:264
+msgid "Advanced URL list:\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2289
+msgid "Advanced command line based partitioning (expert mode)"
+msgstr ""
+
+#: ../lib/dependencies.cpp:361
+msgid "Advanced search for updates"
+msgstr ""
+
+#: ../installer/setup.cpp:1436
+msgid "Advanced setup"
+msgstr ""
+
+#: ../installer/setup.cpp:2831
+msgid "Advanced setup mode"
+msgstr ""
+
+#: ../installer/setup.cpp:985
+msgid ""
+"After installing this driver, you will see an error message due to "
+"incompatibility with newer kernels. Ignore this, and setup will apply patch "
+"automatically after driver installation"
+msgstr ""
+
+#: ../installer/setup.cpp:559 ../installer/setup.cpp:562
+msgid "All OK"
+msgstr ""
+
+#: ../installer/setup.cpp:1618
+msgid "All OK, continue"
+msgstr ""
+
+#: ../lib/menu.cpp:480
+msgid "All packages"
+msgstr ""
+
+#: ../installer/setup.cpp:1628
+msgid "All packages in one list"
+msgstr ""
+
+#: ../installer/setup.cpp:555
+msgid "All partitions already used as swap or as root filesystem"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:550
+msgid "Ambiguity in uninstall: multiple packages with some name are installed"
+msgstr ""
+
+#: ../installer/setup.cpp:727
+msgid "An error occured while creating database structure"
+msgstr ""
+
+#: ../installer/setup.cpp:327
+msgid "An error occured while creating swap: "
+msgstr ""
+
+#: ../installer/setup.cpp:335
+msgid "An error occured while enabling swap space: "
+msgstr ""
+
+#: ../installer/setup.cpp:624
+msgid "An error occured while formatting partition "
+msgstr ""
+
+#: ../installer/setup.cpp:2126
+msgid ""
+"An error occured while loading package list. Check if package source "
+"specified correctly."
+msgstr ""
+
+#: ../installer/setup.cpp:707
+msgid "An error occured while mounting partition "
+msgstr ""
+
+#: ../installer/setup.cpp:651
+msgid "An error occured while mounting root filesystem:\n"
+msgstr ""
+
+#: ../installer/setup.cpp:739
+msgid "An error occured while moving database to hard drive"
+msgstr ""
+
+#: ../installer/setup.cpp:1280
+msgid ""
+"An error occured while performing initial system configuration. Find out why "
+"it happened, and restart installation."
+msgstr ""
+
+#: ../installer/setup.cpp:391 ../installer/setup.cpp:479
+msgid "Another good filesystem for general use."
+msgstr ""
+
+#: ../lib/menu.cpp:558
+msgid "Apply"
+msgstr ""
+
+#: ../lib/menu.cpp:481
+msgid "Apply changes and exit"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1020
+msgid "Approximate size of deltas which can be used"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1021
+msgid "Approximate size of deltas which can be used:"
+msgstr ""
+
+#: ../installer/setup.cpp:2347
+msgid "Are you really want to restore standard boot loader on drive "
+msgstr ""
+
+#: ../lib/menu.cpp:751
+msgid "Available"
+msgstr ""
+
+#: ../lib/menu.cpp:287 ../lib/menu.cpp:309
+msgid "Available updates:\n"
+msgstr ""
+
+#: ../installer/setup.cpp:393 ../installer/setup.cpp:481
+msgid ""
+"B-Tree FS, new EXPERIMENTAL filesystem similar to ZFS. Separate /boot "
+"partition required to use it as root filesystem."
+msgstr ""
+
+#: ../installer/setup.cpp:2782
+msgid "BACK"
+msgstr ""
+
+#: ../installer/setup.cpp:2368
+msgid "BFS kernel"
+msgstr ""
+
+#: ../installer/setup.cpp:2239
+msgid "Back"
+msgstr ""
+
+#: ../installer/setup.cpp:2239 ../installer/setup.cpp:2290
+msgid "Back to main menu"
+msgstr ""
+
+#: ../installer/setup.cpp:2862 ../installer/setup.cpp:2932
+msgid "Boot loader configuration"
+msgstr ""
+
+#: ../installer/setup.cpp:2862 ../installer/setup.cpp:2863
+msgid ""
+"Boot loader is required to start your operating system. Without it, it will "
+"be unable to boot."
+msgstr ""
+
+#: ../installer/setup.cpp:2863
+msgid "Boot loader: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:170
+msgid "Build options are strictly defined by package and cannot be overrided"
+msgstr ""
+
+#: ../lib/menu.cpp:48
+msgid "Build repository index"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:473
+msgid "Building actions queue"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:446 ../lib/libmpkg.cpp:448
+msgid "Building dependency tree"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1594
+msgid "Building index for deprecated directory\n"
+msgstr ""
+
+#: ../lib/bus.cpp:399 ../lib/libmpkg.cpp:471
+msgid "Building queue"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:115 ../lib/libmpkg.cpp:154 ../lib/libmpkg.cpp:171
+msgid "Building queue: "
+msgstr ""
+
+#: ../lib/ncurses_if.cpp:48 ../lib/ncurses_if.cpp:95
+msgid "CANCEL"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:632
+#, c-format
+msgid "CD-ROM device: %s\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:633
+#, c-format
+msgid "CD-ROM mountpoint: %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:789
+msgid "CD/DVD drive autodetection failed. Specify device name manually?"
+msgstr ""
+
+#: ../installer/setup.cpp:775
+msgid "CD/DVD drive found at "
+msgstr ""
+
+#: ../installer/setup.cpp:1445 ../installer/setup.cpp:1466
+#: ../installer/setup.cpp:1561 ../installer/setup.cpp:1590
+#: ../installer/setup.cpp:1596
+msgid "CUSTOM"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:207
+msgid "Cache cleanup complete"
+msgstr ""
+
+#: ../console/validator.cpp:168
+msgid "Can't understand what with versioning"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1042 ../installer/setup.cpp:1750
+msgid "Cancel"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:531
+msgid "Cannot check package \""
+msgstr ""
+
+#: ../lib/package.cpp:470
+msgid ""
+"Cannot determine which directory to use. Seems that you have a package "
+"without a subfolder\n"
+"Candidates are: \n"
+msgstr ""
+
+#: ../lib/menu.cpp:1079
+msgid "Cannot download repository list from "
+msgstr ""
+
+#: ../installer/setup.cpp:1482
+msgid "Cannot find predefined set"
+msgstr ""
+
+#: ../lib/menu.cpp:1071
+msgid "Cannot get valid repository list from url "
+msgstr ""
+
+#: ../lib/sql_pool.cpp:294
+msgid "Cannot open database even in read-only mode:\n"
+msgstr ""
+
+#: ../lib/sql_pool.cpp:308 ../lib/sql_pool.cpp:315
+msgid "Cannot open database:\n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1201
+msgid ""
+"Cannot parse data.xml in package. Only MPKG packages are supported, convert "
+"it first."
+msgstr ""
+
+#: ../lib/dependencies.cpp:887 ../lib/mpkgsys.cpp:555
+msgid "Cannot remove package "
+msgstr ""
+
+#: ../lib/libmpkg.cpp:597
+msgid "Cannot repair "
+msgstr ""
+
+#: ../lib/libmpkg.cpp:589
+#, c-format
+msgid "Cannot repair or reinstall package %s: it is not installed\n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:861
+msgid ""
+"Cannot work with legacy packages, convert it first using mpkg-convert or "
+"mpkg-setmeta"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:837
+msgid "Cannot work without data.xml, create it using mpkg-setmeta"
+msgstr ""
+
+#: ../installer/setup.cpp:1144
+msgid "Change settings"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1277
+msgid "Changes:"
+msgstr ""
+
+#: ../installer/setup.cpp:1752
+msgid ""
+"Check carefully all settings before continuing!\n"
+"\n"
+msgstr ""
+
+#: ../installer/setup.cpp:3039
+msgid ""
+"Check kernel boot options (separated by space, for example: acpi=force "
+"noapic quiet).\n"
+"If unsure, leave default values"
+msgstr ""
+
+#: ../installer/setup.cpp:2526 ../installer/setup.cpp:2883
+msgid "Check package integrity before installation?"
+msgstr ""
+
+#: ../console/checkdeps.cpp:18 ../console/installpkg-ng2.cpp:1165
+#, c-format
+msgid "Checking %d packages in %s\n"
+msgstr ""
+
+#: ../lib/bus.cpp:401
+msgid "Checking MD5"
+msgstr ""
+
+#: ../lib/bus.cpp:402 ../lib/mpkg.cpp:1099
+msgid "Checking cache"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1132
+msgid "Checking cache and building download queue: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:77
+msgid "Checking delta and trying to download it: "
+msgstr ""
+
+#: ../lib/dependencies.cpp:312
+msgid "Checking dependencies: filtering (stage 1: installation queue dupes"
+msgstr ""
+
+#: ../lib/dependencies.cpp:315
+msgid "Checking dependencies: filtering (stage 2: remove queue dupes"
+msgstr ""
+
+#: ../lib/dependencies.cpp:319
+msgid "Checking dependencies: filtering (stage 3: rollback)"
+msgstr ""
+
+#: ../lib/dependencies.cpp:354
+msgid "Checking dependencies: muxing queues"
+msgstr ""
+
+#: ../lib/dependencies.cpp:628 ../lib/dependencies.cpp:636
+msgid "Checking dependencies: rendering remove queue"
+msgstr ""
+
+#: ../lib/dependencies.cpp:432 ../lib/dependencies.cpp:442
+msgid "Checking dependencies: rendering requirements"
+msgstr ""
+
+#: ../lib/dependencies.cpp:414
+msgid "Checking dependencies: searching for broken packages"
+msgstr ""
+
+#: ../lib/mpkg.cpp:872
+msgid "Checking disk free space"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:139
+msgid "Checking existance of requested packages: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1226
+msgid "Checking files (comparing MD5):"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1227 ../lib/mpkg.cpp:1255
+msgid "Checking md5"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1252
+msgid "Checking md5 of downloaded files: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1125
+msgid "Checking package cache"
+msgstr ""
+
+#: ../lib/mpkg.cpp:75
+msgid "Checking package delta"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1229
+msgid "Checking packages integrity"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1247
+msgid "Checking packages integrity: "
+msgstr ""
+
+#: ../installer/setup.cpp:2858
+msgid "Choose a set of packages to be installed."
+msgstr ""
+
+#: ../lib/menu.cpp:237
+msgid "Choose action"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:330
+msgid "Choose an action:"
+msgstr ""
+
+#: ../installer/setup.cpp:2944
+msgid ""
+"Choose boot loader type.\n"
+"If unsure - choose default:"
+msgstr ""
+
+#: ../lib/menu.cpp:121
+msgid "Choose file with package list:"
+msgstr ""
+
+#: ../installer/setup.cpp:509
+msgid "Choose filesystem type for "
+msgstr ""
+
+#: ../installer/setup.cpp:3028
+msgid ""
+"Choose framebuffer graphics mode\n"
+"To enable splash screen, you should choose 16-bit or 24-bit color mode\n"
+msgstr ""
+
+#: ../lib/menu.cpp:485
+msgid "Choose group or action"
+msgstr ""
+
+#: ../installer/setup.cpp:2346
+msgid ""
+"Choose hard drive on which you want to restore a standard MBR boot loader:"
+msgstr ""
+
+#: ../installer/setup.cpp:2975
+msgid "Choose hard drive to install boot loader "
+msgstr ""
+
+#: ../installer/setup.cpp:2832
+msgid ""
+"Choose installation mode. In case of standard mode, setup will continue in "
+"step-by-step manner with minimum of questions. If you want full control over "
+"installation process - choose advanced mode"
+msgstr ""
+
+#: ../lib/menu.cpp:99
+msgid "Choose package for tagging:"
+msgstr ""
+
+#: ../installer/setup.cpp:2858
+msgid "Choose package installation set"
+msgstr ""
+
+#: ../installer/setup.cpp:2859
+msgid "Choose package set (selected: "
+msgstr ""
+
+#: ../installer/setup.cpp:1447
+msgid "Choose package set to install"
+msgstr ""
+
+#: ../installer/setup.cpp:2855
+msgid "Choose package source"
+msgstr ""
+
+#: ../lib/menu.cpp:127
+msgid "Choose package to generate dependencies:"
+msgstr ""
+
+#: ../installer/setup.cpp:2994
+msgid ""
+"Choose partition on hard drive, in which you want to install boot loader "
+msgstr ""
+
+#: ../installer/setup.cpp:3482
+msgid "Choose partition to mount:"
+msgstr ""
+
+#: ../installer/setup.cpp:2847
+msgid ""
+"Choose partition to use as a swap space.\n"
+"You need it if you want to use suspend-to-disk feature, and it is strongly "
+"recommended if you have less than 1Gb RAM. Swap partition size should be "
+"equal or greater than RAM size"
+msgstr ""
+
+#: ../installer/setup.cpp:2291
+msgid "Choose partitioning method:"
+msgstr ""
+
+#: ../installer/setup.cpp:2871
+msgid ""
+"Choose required actions\n"
+"Navigation: UP/DOWN, TAB\n"
+"Choose: Enter key"
+msgstr ""
+
+#: ../installer/setup.cpp:2850
+msgid "Choose root partition"
+msgstr ""
+
+#: ../installer/setup.cpp:358
+msgid "Choose root partition for MOPSLinux:"
+msgstr ""
+
+#: ../installer/setup.cpp:2847
+msgid "Choose swap partition"
+msgstr ""
+
+#: ../installer/setup.cpp:2956
+msgid "Choose where do you want to install boot loader"
+msgstr ""
+
+#: ../installer/setup.cpp:2855
+msgid ""
+"Choose where to get packages. It can be one of: DVD, a CD set, network "
+"repository, ISO image on HDD or available via Samba network, directory on "
+"hard drive or any other mounted filesystem)."
+msgstr ""
+
+#: ../lib/menu.cpp:46
+msgid "Clean package cache"
+msgstr ""
+
+#: ../lib/menu.cpp:116
+msgid "Cleaning actions queue"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:205
+msgid "Cleaning cache..."
+msgstr ""
+
+#: ../lib/menu.cpp:224
+msgid "Cleaning package cache"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:16
+msgid "Cleaning package cache\n"
+msgstr ""
+
+#: ../lib/menu.cpp:105
+msgid "Clear old tags?"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1455
+msgid "Clearing unreachable packages"
+msgstr ""
+
+#: ../installer/setup.cpp:2369
+msgid "Cleartype-patched fonts"
+msgstr ""
+
+#: ../installer/setup.cpp:2288
+msgid "Command line based partitioning (expert mode)"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:504
+msgid "Commit failed, error code: "
+msgstr ""
+
+#: ../lib/menu.cpp:44
+msgid "Commit queued actions"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:486
+msgid "Committing changes..."
+msgstr ""
+
+#: ../lib/libmpkg.cpp:482 ../lib/libmpkg.cpp:484
+msgid "Committing..."
+msgstr ""
+
+#: ../lib/libmpkg.cpp:508 ../lib/libmpkg.cpp:509
+msgid "Complete."
+msgstr ""
+
+#: ../lib/libmpkg.cpp:493
+msgid "Completed successfully\n"
+msgstr ""
+
+#: ../lib/repository.cpp:640
+msgid "Compressing files\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2174
+msgid "Configure network?"
+msgstr ""
+
+#: ../installer/setup.cpp:1259
+msgid "Configuring your system..."
+msgstr ""
+
+#: ../installer/setup.cpp:1751
+msgid "Confirm installation parameters"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1042 ../installer/setup.cpp:559 ../installer/setup.cpp:1904
+#: ../installer/setup.cpp:2275
+msgid "Continue"
+msgstr ""
+
+#: ../installer/setup.cpp:1147
+msgid "Continue without installing bootloader"
+msgstr ""
+
+#: ../installer/setup.cpp:267
+msgid "Continue without swap partition"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1029
+msgid "Continue? [Y/n]\n"
+msgstr ""
+
+#: ../lib/menu.cpp:49
+msgid "Convert packages to MOPSLinux format"
+msgstr ""
+
+#: ../installer/setup.cpp:2274
+msgid "Create RAID array"
+msgstr ""
+
+#: ../lib/menu.cpp:84
+msgid "Create filelist index?"
+msgstr ""
+
+#: ../installer/setup.cpp:3552
+msgid "Creating initrd..."
+msgstr ""
+
+#: ../installer/setup.cpp:1771
+msgid "Creating installation list"
+msgstr ""
+
+#: ../installer/setup.cpp:1837
+msgid "Creating installation queue"
+msgstr ""
+
+#: ../installer/setup.cpp:966
+msgid "Creating users"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:627
+msgid "Current configuration:\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1959
+msgid ""
+"Current version of KDE. Good choice if you have a modern computer with good "
+"videocard and want to go forward with new technologies"
+msgstr ""
+
+#: ../installer/setup.cpp:1445 ../installer/setup.cpp:1467
+msgid "Custom installation"
+msgstr ""
+
+#: ../installer/setup.cpp:1445
+msgid "Custom installation. You can manually select what packages to install."
+msgstr ""
+
+#: ../lib/mpkg.cpp:176
+#, c-format
+msgid "Customizable config, checking....\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1480
+msgid "DISABLED"
+msgstr ""
+
+#: ../installer/setup.cpp:2043
+msgid ""
+"Data loaded successfully.\n"
+"Disc label: "
+msgstr ""
+
+#: ../lib/sql_pool.cpp:54
+#, c-format
+msgid "Database format has been upgraded to version %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2791
+msgid "Database is locked by another process"
+msgstr ""
+
+#: ../lib/sql_pool.cpp:303
+msgid ""
+"Database is locked by another process, waiting for release...\n"
+"You can press CTRL-C to break waiting and exit\n"
+msgstr ""
+
+#: ../lib/sql_pool.cpp:304
+msgid ""
+"Database is locked, waiting for release...\n"
+"You can press CTRL-C to break waiting and exit\n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:41
+msgid "Database loaded"
+msgstr ""
+
+#: ../lib/sql_pool.cpp:320
+msgid "Database opened\n"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:122
+msgid "Database update error: error downloading index: forbidden"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:117
+msgid "Database update error: error downloading index: login incorrect"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:107
+msgid ""
+"Database update error: error downloading repository index: host not found"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:93
+msgid "Database update error: error downloading repository index: timeout"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:98
+msgid "Database update error: invalid index received: parse error"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:112
+msgid "Database update error: repository type not recognized"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:127
+msgid "Database update error: unknown error while importing index"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:85
+msgid "Database updated successfully"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:631
+#, c-format
+msgid "Database: %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:3027
+msgid "Define custom framebuffer mode"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1522
+#, c-format
+msgid "Deleting deprecated package %s-%s\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:112
+#, c-format
+msgid "Delta patch successfully merged in %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1398
+msgid "Depencency errors"
+msgstr ""
+
+#: ../console/validator.cpp:124
+msgid "Dependencies are resolvable using installed or available packages"
+msgstr ""
+
+#: ../lib/dependencies.cpp:418
+msgid "Dependency check completed, error count: "
+msgstr ""
+
+#: ../lib/libmpkg.cpp:455 ../console/checkdeps.cpp:28
+msgid "Dependency error"
+msgstr ""
+
+#: ../console/validator.cpp:166
+msgid "Deprecated version: there is already "
+msgstr ""
+
+#: ../console/validator.cpp:134
+msgid "Description is good"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:323
+msgid "Details: "
+msgstr ""
+
+#: ../lib/errorcodes.cpp:318
+#, c-format
+msgid "Details: %s\n"
+msgstr ""
+
+#: ../lib/repository.cpp:713
+msgid "Detected legacy Slackware repository"
+msgstr ""
+
+#: ../lib/repository.cpp:692
+msgid "Detected native MPKG repository"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:256
+msgid "Disk mounted successfully"
+msgstr ""
+
+#: ../installer/setup.cpp:2264
+msgid "Disk partitioning"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1017 ../lib/mpkg.cpp:1018
+msgid "Disk space will be freed"
+msgstr ""
+
+#: ../lib/ncurses_if.h:63
+msgid "Do not accept"
+msgstr ""
+
+#: ../installer/setup.cpp:395 ../installer/setup.cpp:484
+msgid "Do not format (use as is and keep data)"
+msgstr ""
+
+#: ../installer/setup.cpp:2942
+msgid "Do not install boot loader"
+msgstr ""
+
+#: ../installer/setup.cpp:2408
+msgid "Do not install driver"
+msgstr ""
+
+#: ../installer/setup.cpp:3528
+msgid ""
+"Do you need a delay to initialize your boot disk?\n"
+"If you're installing system on USB drive, say [YES], otherwise you have a "
+"chance to get unbootable system.\n"
+"\n"
+"If unsure - say YES, in worst case it just will boot 10 seconds longer."
+msgstr ""
+
+#: ../installer/setup.cpp:2912
+msgid "Do you really want to exit setup program?"
+msgstr ""
+
+#: ../installer/setup.cpp:1977
+msgid "Do you want to mount partition which contains an ISO image?"
+msgstr ""
+
+#: ../installer/setup.cpp:2107
+msgid "Do you want to mount partition with packages?"
+msgstr ""
+
+#: ../installer/setup.cpp:1909
+msgid "Do you wish to configure network?"
+msgstr ""
+
+#: ../lib/menu.cpp:756
+msgid "Doesn't exist"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:22
+msgid "Download completed successfully"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:80
+msgid "Download error: cannot download file"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:75
+msgid "Download error: error writing output file"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:45
+msgid "Download error: file downloaded, but MD5 doesn't match"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:55
+msgid "Download error: file not found"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:65
+msgid "Download error: forbidden"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:50
+msgid "Download error: host not found"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:60
+msgid "Download error: login incorrect"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:70
+msgid "Download error: out of space"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:31
+msgid "Download error: timeout"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1190
+msgid "Download errors ignored, continue installing\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1184
+msgid "Download failed"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:536
+msgid "Download: ["
+msgstr ""
+
+#: ../lib/mpkg.cpp:1214
+#, c-format
+msgid "Downloaded packages are stored in %s\n"
+msgstr ""
+
+#: ../lib/bus.cpp:406
+msgid "Downloading"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:596
+msgid "Downloading "
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:364
+msgid "Downloading files"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:528
+msgid "Downloading files from "
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:580
+msgid "Downloading finished"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:64
+msgid "Downloading: "
+msgstr ""
+
+#: ../installer/setup.cpp:1619
+msgid "Edit by groups"
+msgstr ""
+
+#: ../installer/setup.cpp:1145
+msgid "Edit configuration file manually"
+msgstr ""
+
+#: ../installer/setup.cpp:1436
+msgid "Edit current package set"
+msgstr ""
+
+#: ../installer/setup.cpp:1601
+msgid ""
+"Edit list of groups which will be installed. Note that all changes done in "
+"previous menu will be lost."
+msgstr ""
+
+#: ../lib/menu.cpp:576
+msgid "Edit repository URL:"
+msgstr ""
+
+#: ../lib/menu.cpp:560
+msgid ""
+"Edit repository list. Keys: SPACE - enable/disable, ENTER - edit, INSERT - "
+"add, DELETE - remove. When ready, select Apply"
+msgstr ""
+
+#: ../lib/menu.cpp:50
+msgid "Edit tags of package"
+msgstr ""
+
+#: ../installer/setup.cpp:1298
+msgid "Enable X11 login by default?"
+msgstr ""
+
+#: ../installer/setup.cpp:1967
+msgid "Enable addons?"
+msgstr ""
+
+#: ../installer/setup.cpp:82
+msgid "English"
+msgstr ""
+
+#: ../lib/menu.cpp:168
+msgid "Enter URL for repository list:"
+msgstr ""
+
+#: ../installer/setup.cpp:3030
+msgid "Enter VESA graphics mode (decimal):"
+msgstr ""
+
+#: ../lib/menu.cpp:135
+msgid "Enter a part of filename:"
+msgstr ""
+
+#: ../installer/setup.cpp:1086
+msgid "Enter hostname (for example, mops):"
+msgstr ""
+
+#: ../installer/setup.cpp:493
+msgid "Enter mount point for "
+msgstr ""
+
+#: ../installer/setup.cpp:2150
+msgid "Enter network card name:"
+msgstr ""
+
+#: ../installer/setup.cpp:1088
+msgid "Enter network name (for example, example.net):"
+msgstr ""
+
+#: ../lib/menu.cpp:103
+msgid "Enter new tag for package:"
+msgstr ""
+
+#: ../lib/menu.cpp:174
+msgid "Enter output filename:"
+msgstr ""
+
+#: ../lib/menu.cpp:145
+msgid "Enter package name (without version, for example: zlib):"
+msgstr ""
+
+#: ../lib/menu.cpp:333
+msgid "Enter package name or part of it:"
+msgstr ""
+
+#: ../installer/setup.cpp:937
+msgid "Enter password for user "
+msgstr ""
+
+#: ../lib/menu.cpp:566 ../installer/setup.cpp:2188
+msgid "Enter repository URL:"
+msgstr ""
+
+#: ../lib/menu.cpp:154
+msgid "Enter search pattern:"
+msgstr ""
+
+#: ../installer/setup.cpp:1910
+msgid "Enter server's hostname or IP address:"
+msgstr ""
+
+#: ../installer/setup.cpp:968
+msgid "Enter user name:"
+msgstr ""
+
+#: ../lib/debug.cpp:39
+msgid "Error"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:208
+msgid "Error cleaning cache!"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1390
+#, c-format
+msgid "Error connecting to %s, skipping\n"
+msgstr ""
+
+#: ../lib/repository.cpp:645
+msgid "Error creating repository index!"
+msgstr ""
+
+#: ../lib/repository.cpp:720
+msgid "Error downloading checksums"
+msgstr ""
+
+#: ../lib/repository.cpp:744
+msgid ""
+"Error downloading package index: download error, or unsupported repository "
+"type"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1347
+msgid "Error in "
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:292
+msgid "Error initializing CORE"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1631 ../lib/libmpkg.cpp:1632
+msgid "Error querying database"
+msgstr ""
+
+#: ../lib/repository.cpp:743
+msgid "Error updating data from "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1849
+msgid "Error while extracting package "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1641
+msgid "Error while installing package "
+msgstr ""
+
+#: ../lib/htmlcore.cpp:26
+msgid "Error: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1729
+msgid "Error: Unresolved file conflict on package "
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:368
+msgid ""
+"Error: database is locked. Please close all other programs that use this"
+msgstr ""
+
+#: ../installer/setup.cpp:941
+msgid "Error: failed to set password, internal error"
+msgstr ""
+
+#: ../installer/setup.cpp:2966
+msgid "Error: no hard drive detected"
+msgstr ""
+
+#: ../installer/setup.cpp:2726
+#, c-format
+msgid "Error: unknown option %s\n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:457
+msgid "Error: unresolved dependencies"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:395
+msgid "Errors detected, cannot continue"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1462
+#, c-format
+msgid "Example: mpkg build march=i686 mtune=prescott olevel=O3\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1460
+msgid "Executing ldconfig"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:283 ../lib/menu.cpp:53 ../installer/setup.cpp:2869
+msgid "Exit"
+msgstr ""
+
+#: ../installer/setup.cpp:2869
+msgid "Exit from setup."
+msgstr ""
+
+#: ../lib/menu.cpp:173
+msgid "Export list of installed packages"
+msgstr ""
+
+#: ../lib/menu.cpp:40
+msgid "Export list of installed packages to file"
+msgstr ""
+
+#: ../console/validator.cpp:48
+msgid "Extraction failed"
+msgstr ""
+
+#: ../installer/setup.cpp:1446 ../installer/setup.cpp:1452
+#: ../installer/setup.cpp:1469 ../installer/setup.cpp:1490
+msgid "FILE"
+msgstr ""
+
+#: ../installer/setup.cpp:1439 ../installer/setup.cpp:1447
+#: ../installer/setup.cpp:1463 ../installer/setup.cpp:1558
+msgid "FULL"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:516
+msgid "Failed - depencency errors"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:517
+msgid "Failed - dependency errors"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:218
+msgid "Failed retrieving package list!"
+msgstr ""
+
+#: ../installer/setup.cpp:1943
+msgid "Failed to connect to Samba server:\n"
+msgstr ""
+
+#: ../console/deleteprofile.cpp:15
+msgid "Failed to delete profile "
+msgstr ""
+
+#: ../lib/mpkg.cpp:479
+#, c-format
+msgid "Failed to detect source directory, cannot continue\n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:505
+msgid "Failed to execute requested operations: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1848
+msgid "Failed to extract!"
+msgstr ""
+
+#: ../lib/repository.cpp:795
+msgid "Failed to get index"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1428
+msgid "Failed to install package "
+msgstr ""
+
+#: ../installer/setup.cpp:2209
+msgid ""
+"Failed to load package list from network. Maybe, you didn't configured "
+"network properly. Try to (re)configure it?"
+msgstr ""
+
+#: ../installer/setup.cpp:3494
+msgid "Failed to mount partition "
+msgstr ""
+
+#: ../console/setmeta.cpp:71
+msgid "Failed to open package, exiting"
+msgstr ""
+
+#: ../console/validator.cpp:54
+msgid "Failed to parse package: invalid data.xml"
+msgstr ""
+
+#: ../installer/setup.cpp:2049
+msgid "Failed to read repository index from this disc"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1484
+msgid "Failed to receive answer from user"
+msgstr ""
+
+#: ../installer/setup.cpp:2353
+msgid "Failed to restore standard MBR boot loader on drive "
+msgstr ""
+
+#: ../installer/setup.cpp:390 ../installer/setup.cpp:478
+msgid "Fast filesystem developed by SGI"
+msgstr ""
+
+#: ../lib/menu.cpp:221 ../lib/menu.cpp:892 ../lib/menu.cpp:912
+msgid "File "
+msgstr ""
+
+#: ../lib/menu.cpp:891
+#, c-format
+msgid "File %s doesn't belong to any installed package\n"
+msgstr ""
+
+#: ../lib/menu.cpp:911
+#, c-format
+msgid "File %s found in %d package(s):\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:487
+msgid "File not found"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:820 ../lib/metaframe.cpp:84 ../lib/metaframe.cpp:246
+msgid "File or directory "
+msgstr ""
+
+#: ../console/validator.cpp:77
+msgid "Filename conforms slackware guidelines"
+msgstr ""
+
+#: ../console/validator.cpp:75
+msgid "Filename doesn't conform slackware guidelines: should be "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1592
+msgid "Filename was: "
+msgstr ""
+
+#: ../installer/setup.cpp:471
+msgid "Filesystem type and mountpoint options for "
+msgstr ""
+
+#: ../installer/setup.cpp:604
+msgid "Formatting filesystems..."
+msgstr ""
+
+#: ../installer/setup.cpp:620
+msgid "Formatting partition "
+msgstr ""
+
+#: ../installer/setup.cpp:603
+msgid "Formatting partitions"
+msgstr ""
+
+#: ../installer/setup.cpp:608
+msgid "Formatting root partition "
+msgstr ""
+
+#: ../lib/menu.cpp:258 ../lib/menu.cpp:274
+msgid "Found "
+msgstr ""
+
+#: ../lib/dependencies.cpp:899
+msgid "Found essential packages, cannot continue"
+msgstr ""
+
+#: ../installer/setup.cpp:2180
+msgid "From network"
+msgstr ""
+
+#: ../installer/setup.cpp:2199
+msgid "From network (multiple sources)"
+msgstr ""
+
+#: ../installer/setup.cpp:2198
+msgid "From network: "
+msgstr ""
+
+#: ../installer/setup.cpp:1464
+msgid "Full installation"
+msgstr ""
+
+#: ../installer/setup.cpp:1439
+msgid "Full installation (recommended)"
+msgstr ""
+
+#: ../installer/setup.cpp:1439
+msgid ""
+"Full package set for any purposes: workstation, office, home, education, "
+"development, and so on. You can remove unneeded components at any time after "
+"installation."
+msgstr ""
+
+#: ../installer/setup.cpp:2831
+msgid ""
+"Full-featured menu-based installation mode. Use it if you need advanced "
+"options"
+msgstr ""
+
+#: ../installer/setup.cpp:3313
+msgid "GRUB boot loader installed successfully"
+msgstr ""
+
+#: ../installer/setup.cpp:1179
+msgid "GRUB installation failed. Your system will NOT boot without bootloader"
+msgstr ""
+
+#: ../installer/setup.cpp:3414
+msgid "GRUB2 boot loader installed successfully"
+msgstr ""
+
+#: ../installer/setup.cpp:1153
+msgid "GRUB2 installation failed. Your system will NOT boot without bootloader"
+msgstr ""
+
+#: ../installer/setup.cpp:2938
+msgid "GRand Unified Bootloader 2 (default)"
+msgstr ""
+
+#: ../installer/setup.cpp:2162
+msgid "Gateway (leave blank if none):"
+msgstr ""
+
+#: ../installer/setup.cpp:2402
+msgid "GeForce 4 series"
+msgstr ""
+
+#: ../installer/setup.cpp:2398
+msgid "GeForce FX series"
+msgstr ""
+
+#: ../lib/menu.cpp:51
+msgid "Generate dependencies"
+msgstr ""
+
+#: ../lib/menu.cpp:130
+msgid "Generating dependencies for "
+msgstr ""
+
+#: ../installer/setup.cpp:3010
+msgid "Generic 80x25 text console"
+msgstr ""
+
+#: ../installer/setup.cpp:1138
+msgid "Generic netconfig, Slackware default network settings manager"
+msgstr ""
+
+#: ../lib/menu.cpp:31
+msgid "Get repository list from server"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1256
+msgid "Got "
+msgstr ""
+
+#: ../installer/setup.cpp:1619 ../installer/setup.cpp:1632
+msgid "Groups"
+msgstr ""
+
+#: ../installer/setup.cpp:2954
+msgid "Hard drive partition"
+msgstr ""
+
+#: ../installer/setup.cpp:87
+msgid "Hebrew"
+msgstr ""
+
+#: ../installer/setup.cpp:88
+msgid "Hebrew (phonetic)"
+msgstr ""
+
+#: ../lib/menu.cpp:907
+msgid "Hm... no package was returned. Seems to be malformed SQL query"
+msgstr ""
+
+#: ../installer/setup.cpp:1750
+msgid "I CONFIRM"
+msgstr ""
+
+#: ../installer/setup.cpp:2158
+msgid "IP address:"
+msgstr ""
+
+#: ../installer/setup.cpp:2079
+msgid "ISO image"
+msgstr ""
+
+#: ../lib/bus.cpp:238
+msgid "Idle"
+msgstr ""
+
+#: ../installer/setup.cpp:267
+msgid ""
+"If you have lots of RAM (2Gb or more), and you sure that you will never use "
+"all of this - you can continue without swap. Please note, that you will also "
+"loose ability of suspending to disk, because it uses swapspace for data "
+"storage."
+msgstr ""
+
+#: ../installer/setup.cpp:529
+msgid ""
+"If you have lots of RAM (at least 2 Gb), you can enable tmpfs for temporary "
+"files (/tmp partition). Enabling this may significantly increase performance "
+"in most cases.\n"
+"Do you want to mount /tmp as tmpfs?"
+msgstr ""
+
+#: ../installer/setup.cpp:3543
+msgid ""
+"If you need additional modules to boot, specify it here separating by "
+"semicolon (':'), otherwise leave this field blank."
+msgstr ""
+
+#: ../installer/setup.cpp:2854
+msgid ""
+"If you wish to attach additional partitions to your root tree at boot time "
+"(e.g. /boot, /home, or windows partitions), you can configure it here."
+msgstr ""
+
+#: ../lib/errorcodes.cpp:155 ../lib/errorcodes.cpp:174
+msgid "Ignore"
+msgstr ""
+
+#: ../installer/setup.cpp:1458
+msgid "Importing package list for installation..."
+msgstr ""
+
+#: ../lib/mpkg.cpp:1617
+msgid "Importing to database\n"
+msgstr ""
+
+#: ../lib/menu.cpp:176
+msgid "Include version info?"
+msgstr ""
+
+#: ../lib/mpkg.cpp:784
+#, c-format
+msgid "Incorrect MD5 for package %s: received %s, but should be %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:3546
+msgid "Incorrect characters in input, retry?"
+msgstr ""
+
+#: ../installer/setup.cpp:2249
+msgid "Incorrect source selected: "
+msgstr ""
+
+#: ../installer/setup.cpp:1904
+msgid "Index"
+msgstr ""
+
+#: ../console/checkdeps.cpp:10
+msgid "Index file "
+msgstr ""
+
+#: ../lib/repository.cpp:844 ../lib/repository.cpp:882
+msgid "Index update:"
+msgstr ""
+
+#: ../lib/repository.cpp:847
+msgid "Index update: Importing received data: "
+msgstr ""
+
+#: ../lib/repository.cpp:424
+msgid "Indexing repository"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:361
+msgid "Information"
+msgstr ""
+
+#: ../lib/menu.cpp:618
+msgid "Information about package "
+msgstr ""
+
+#: ../installer/setup.cpp:1113 ../installer/setup.cpp:1258
+#: ../installer/setup.cpp:1279
+msgid "Initial system configuration"
+msgstr ""
+
+#: ../lib/local_package.cpp:818
+msgid "Injecting file"
+msgstr ""
+
+#: ../installer/setup.cpp:1903
+msgid ""
+"Insert another installation disc to index.\n"
+"If all discs are already indexed, press [Next]\n"
+"\n"
+"Discs indexed: "
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:457
+msgid "Inspecting local package "
+msgstr ""
+
+#: ../installer/setup.cpp:2233
+msgid "Install from DVD"
+msgstr ""
+
+#: ../installer/setup.cpp:2237
+msgid "Install from ISO image on HDD"
+msgstr ""
+
+#: ../installer/setup.cpp:2238
+msgid "Install from Samba (Windows network)"
+msgstr ""
+
+#: ../installer/setup.cpp:2234
+msgid "Install from a set of CD/DVD"
+msgstr ""
+
+#: ../installer/setup.cpp:2235
+msgid "Install from hard drive"
+msgstr ""
+
+#: ../installer/setup.cpp:2236
+msgid "Install from network repository (FTP, HTTP)"
+msgstr ""
+
+#: ../installer/setup.cpp:1446
+msgid "Install package set by list predefined in your file"
+msgstr ""
+
+#: ../lib/menu.cpp:39
+msgid "Install packages from list"
+msgstr ""
+
+#: ../installer/setup.cpp:2864
+msgid "Install system"
+msgstr ""
+
+#: ../lib/menu.cpp:234
+msgid "Install updates"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1447
+msgid "Installation complete."
+msgstr ""
+
+#: ../lib/errorcodes.cpp:132
+msgid "Installation completed successfully"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:199
+msgid "Installation error: error mounting CD-ROM media"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1591
+msgid "Installation error: file not found"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:166
+msgid "Installation error: incorrect package metadata"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:140
+msgid "Installation error: out of space"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:161
+msgid "Installation error: package extraction failed"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:183
+msgid "Installation error: package not found in database"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:152
+msgid "Installation error: script execution error"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:171
+msgid "Installation error: unresolvable file conflicts"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:204
+msgid "Installation error: wrong CD-ROM media"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1424
+msgid "Installation failed"
+msgstr ""
+
+#: ../installer/setup.cpp:1338
+msgid "Installation finished"
+msgstr ""
+
+#: ../installer/setup.cpp:1954
+msgid "Installation from DVD"
+msgstr ""
+
+#: ../installer/setup.cpp:1955 ../installer/setup.cpp:1981
+msgid "Installation from ISO image"
+msgstr ""
+
+#: ../installer/setup.cpp:2828
+msgid "Installation mode"
+msgstr ""
+
+#: ../installer/setup.cpp:1204
+msgid ""
+"Installation of LILO failed. Your system will NOT boot without bootloader"
+msgstr ""
+
+#: ../lib/menu.cpp:754 ../lib/mpkg.cpp:1437
+msgid "Installed"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1506 ../lib/mpkg.cpp:1513 ../lib/mpkg.cpp:1529
+#: ../lib/mpkg.cpp:1598 ../lib/mpkg.cpp:1602 ../lib/mpkg.cpp:1636
+#: ../lib/mpkg.cpp:1637 ../lib/mpkg.cpp:1646 ../lib/mpkg.cpp:1647
+#: ../lib/mpkg.cpp:1670 ../lib/mpkg.cpp:1671 ../lib/mpkg.cpp:1677
+#: ../lib/mpkg.cpp:1678 ../lib/mpkg.cpp:1689 ../lib/mpkg.cpp:1696
+#: ../lib/mpkg.cpp:1715 ../lib/mpkg.cpp:1716 ../lib/mpkg.cpp:1743
+#: ../lib/mpkg.cpp:1744 ../lib/mpkg.cpp:1761 ../lib/mpkg.cpp:1762
+#: ../lib/mpkg.cpp:1774 ../lib/mpkg.cpp:1775 ../lib/mpkg.cpp:1861
+#: ../lib/mpkg.cpp:1862 ../lib/mpkg.cpp:1883 ../lib/mpkg.cpp:1884
+#: ../lib/mpkg.cpp:1893 ../lib/mpkg.cpp:1895 ../lib/mpkg.cpp:1899
+msgid "Installing "
+msgstr ""
+
+#: ../installer/setup.cpp:3226
+msgid "Installing GRUB to "
+msgstr ""
+
+#: ../installer/setup.cpp:3331
+msgid "Installing GRUB2 to "
+msgstr ""
+
+#: ../installer/setup.cpp:1005
+msgid "Installing additional drivers"
+msgstr ""
+
+#: ../installer/setup.cpp:1141
+msgid "Installing bootloader: "
+msgstr ""
+
+#: ../lib/bus.cpp:405
+msgid "Installing package"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1408 ../lib/mpkg.cpp:1507 ../lib/mpkg.cpp:1550
+msgid "Installing package "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1372 ../lib/mpkg.cpp:1386 ../lib/mpkg.cpp:1412
+msgid "Installing packages"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:247
+msgid "Internal error: SQL query failed"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:255
+msgid "Internal error: cannot create temporary file"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:221
+msgid "Internal error: cannot open database file"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:230
+msgid "Internal error: cannot read configuration file"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:235
+msgid "Internal error: cannot write configuration file"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:209
+msgid "Internal error: database structure is invalid"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:276
+msgid "Internal error: error reading file"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:264
+msgid "Internal error: error writing file"
+msgstr ""
+
+#: ../lib/repository.cpp:801
+msgid "Invalid index file"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:344
+msgid "Invalid input\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:888 ../lib/mpkg.cpp:893
+msgid ""
+"It seems to be that disk free space is not enough to install. Required: "
+msgstr ""
+
+#: ../installer/setup.cpp:391 ../installer/setup.cpp:479
+msgid "Journaling filesystem by IBM"
+msgstr ""
+
+#: ../installer/setup.cpp:392 ../installer/setup.cpp:480
+msgid "Journaling filesystem developed by Hans Reiser"
+msgstr ""
+
+#: ../installer/setup.cpp:2391
+msgid "Latest"
+msgstr ""
+
+#: ../installer/setup.cpp:2391
+msgid "Latest GeForce (series 6xxx and later)"
+msgstr ""
+
+#: ../installer/setup.cpp:2394
+msgid "Latest GeForce (series 6xxx and later), beta driver"
+msgstr ""
+
+#: ../installer/setup.cpp:814
+msgid "License agreement"
+msgstr ""
+
+#: ../lib/menu.cpp:179
+msgid "List exported successfully"
+msgstr ""
+
+#: ../lib/menu.cpp:37
+msgid "List packages who depends on selected"
+msgstr ""
+
+#: ../installer/setup.cpp:2014
+msgid "Loading data from disc "
+msgstr ""
+
+#: ../lib/bus.cpp:397
+msgid "Loading database"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:16
+msgid "Loading database..."
+msgstr ""
+
+#: ../installer/setup.cpp:1912
+msgid "Login (leave blank if none):"
+msgstr ""
+
+#: ../installer/parted_tools.cpp:52
+msgid "Looking for hard drives and partitions..."
+msgstr ""
+
+#: ../lib/mpkg.cpp:1087
+msgid "Looking for install queue"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1093
+msgid "Looking for package locations"
+msgstr ""
+
+#: ../installer/setup.cpp:2175
+msgid "Looking for packages in network"
+msgstr ""
+
+#: ../installer/setup.cpp:2087
+msgid "Looking for partitions on hard drives"
+msgstr ""
+
+#: ../installer/parted_tools.cpp:149
+msgid "Looking for partitions on hard drives..."
+msgstr ""
+
+#: ../lib/mpkg.cpp:1304
+msgid "Looking for remove queue"
+msgstr ""
+
+#: ../lib/mpkg.cpp:854
+msgid "Looking if an installation queue contains updates"
+msgstr ""
+
+#: ../installer/setup.cpp:2349
+msgid "MBR boot loader successfully restored on "
+msgstr ""
+
+#: ../lib/mpkg.cpp:71
+#, c-format
+msgid "MD5 of original file doesn't match for delta %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1440 ../installer/setup.cpp:1459
+#: ../installer/setup.cpp:1553
+msgid "MINIMAL"
+msgstr ""
+
+#: ../installer/setup.cpp:41
+msgid "MOPSLinux "
+msgstr ""
+
+#: ../installer/setup.cpp:2732
+#, c-format
+msgid "MOPSLinux %s setup (build %s)\n"
+msgstr ""
+
+#: ../installer/setup.cpp:3393
+msgid "MOPSLinux 7.0 (recovery mode) on "
+msgstr ""
+
+#: ../installer/setup.cpp:3389
+msgid "MOPSLinux 7.0 on "
+msgstr ""
+
+#: ../installer/setup.cpp:1105
+msgid ""
+"MOPSLinux has EXPERIMENTAL support for graphical boot splash implemented "
+"using Plymouth.\n"
+"If your hardware supports KMS (kernel modesetting), you can try to enable it "
+"now.\n"
+"It seems to work fine, but it wasn't tested well and may cause problems.\n"
+"In any case, you can change your choice later by changing permissions on /"
+"etc/rc.d/rc.plymouth file.\n"
+"\n"
+"Do you want to enable experimental splash screen?"
+msgstr ""
+
+#: ../installer/setup.cpp:1342
+msgid "MOPSLinux installation finished successfully. Reboot now?"
+msgstr ""
+
+#: ../lib/pkgeditor.cpp:10
+#, c-format
+msgid ""
+"MPKG Package Editor (ncurses-based)\n"
+"Usage: %s FILENAME\n"
+msgstr ""
+
+#: ../console/deleteprofile.cpp:3
+#, c-format
+msgid "MPKG Package System: delete repository profile\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:4
+#, c-format
+msgid "MPKG Package System: package metadata editor (CLI-based)\n"
+msgstr ""
+
+#: ../console/saveprofile.cpp:3
+#, c-format
+msgid "MPKG Package System: save repository profile\n"
+msgstr ""
+
+#: ../console/setprofile.cpp:3
+#, c-format
+msgid "MPKG Package System: set repository profile\n"
+msgstr ""
+
+#: ../lib/menu.cpp:78
+msgid "MPKG package system"
+msgstr ""
+
+#: ../lib/menu.cpp:76
+msgid "MPKG package system "
+msgstr ""
+
+#: ../lib/menu.cpp:77
+msgid "Main menu"
+msgstr ""
+
+#: ../lib/mpkg.cpp:262
+#, c-format
+msgid "Main source url: [%s]\n"
+msgstr ""
+
+#: ../console/validator.cpp:143
+msgid "Maintainer email is good"
+msgstr ""
+
+#: ../console/validator.cpp:139
+msgid "Maintainer name is good"
+msgstr ""
+
+#: ../lib/repository.cpp:151
+#, c-format
+msgid "Malformed metadata: compressed size unreadable\n"
+msgstr ""
+
+#: ../lib/repository.cpp:163
+#, c-format
+msgid "Malformed metadata: uncompressed size unreadable\n"
+msgstr ""
+
+#: ../lib/repository.cpp:83
+#, c-format
+msgid "Malformed package name or unknown package extension: %s\n"
+msgstr ""
+
+#: ../lib/repository.cpp:98 ../lib/repository.cpp:109
+#: ../lib/repository.cpp:120
+#, c-format
+msgid "Malformed package name: %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1650
+msgid "Mark packages to install (group "
+msgstr ""
+
+#: ../lib/menu.cpp:497
+msgid "Mark packages you want to be installed"
+msgstr ""
+
+#: ../installer/setup.cpp:2953
+msgid "Master boot record"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1023 ../lib/mpkg.cpp:1024
+msgid "Maximum download size"
+msgstr ""
+
+#: ../installer/setup.cpp:2992
+msgid "Mb, root, default)"
+msgstr ""
+
+#: ../lib/mpkg.cpp:109
+msgid "Merge OK, but got wrong MD5!\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:106
+msgid "Merged file MD5 OK\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1440 ../installer/setup.cpp:1460
+msgid "Minimal installation"
+msgstr ""
+
+#: ../installer/setup.cpp:1453
+msgid "Mount partition?"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:208
+msgid "Mounting "
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:212
+#, c-format
+msgid "Mounting %s to %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2004
+msgid "Mounting CD/DVD..."
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:196
+msgid "Mounting DVD"
+msgstr ""
+
+#: ../installer/setup.cpp:695
+msgid "Mounting other partitions: "
+msgstr ""
+
+#: ../installer/setup.cpp:1977
+msgid "Mounting partition with ISO image"
+msgstr ""
+
+#: ../installer/setup.cpp:639
+msgid "Mounting partitions"
+msgstr ""
+
+#: ../installer/setup.cpp:642
+msgid "Mounting root partition ("
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1526
+#, c-format
+msgid "Moving deprecated package %s-%s to %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:713
+msgid "Moving package database to hard drive"
+msgstr ""
+
+#: ../installer/setup.cpp:394 ../installer/setup.cpp:482
+msgid ""
+"NILFS2, new EXPERIMENTAL snapshot-based filesystem. Separate /boot partition "
+"required to use it as root filesystem."
+msgstr ""
+
+#: ../lib/menu.cpp:653
+msgid "Name: "
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1001
+#, c-format
+msgid "Nativizing in %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2160
+msgid "Network mask:"
+msgstr ""
+
+#: ../installer/setup.cpp:1237 ../installer/setup.cpp:2148
+msgid "Network setup"
+msgstr ""
+
+#: ../installer/setup.cpp:1127
+msgid "NetworkManager is default network connection manager for any desktop."
+msgstr ""
+
+#: ../installer/setup.cpp:1135
+msgid ""
+"New MOPSLinux network manager. Very experimental, but already suitable for "
+"Ethernet and Wireless networks"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2487
+#, c-format
+msgid "New packages in repositories: %d\n"
+msgstr ""
+
+#: ../installer/setup.cpp:387 ../installer/setup.cpp:475
+msgid ""
+"New version of EXT, developed to superseed EXT3. The fastest journaling "
+"filesystem in most cases."
+msgstr ""
+
+#: ../lib/menu.cpp:988
+msgid "Next packages depends on "
+msgstr ""
+
+#: ../lib/menu.cpp:987
+#, c-format
+msgid "Next packages depends on %s: \n"
+msgstr ""
+
+#: ../installer/setup.cpp:529 ../lib/ncurses_if.h:47
+msgid "No"
+msgstr ""
+
+#: ../installer/setup.cpp:1732
+msgid "No available packages found\n"
+msgstr ""
+
+#: ../console/validator.cpp:115
+msgid "No conflicts detected"
+msgstr ""
+
+#: ../console/validator.cpp:60
+msgid ""
+"No data.xml found, legacy packages are not acceptable. Convert it using mpkg "
+"convert"
+msgstr ""
+
+#: ../console/validator.cpp:132
+msgid "No description"
+msgstr ""
+
+#: ../lib/menu.cpp:866
+msgid "No filename specified\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2280 ../installer/setup.cpp:2339
+msgid "No hard drive detected in your computer"
+msgstr ""
+
+#: ../lib/metaframe.cpp:89 ../lib/metaframe.cpp:251
+msgid "No install directory exists here! Create it manually."
+msgstr ""
+
+#: ../lib/menu.cpp:976
+msgid "No installed packages depends on "
+msgstr ""
+
+#: ../lib/menu.cpp:975
+#, c-format
+msgid "No installed packages depends on %s\n"
+msgstr ""
+
+#: ../lib/metaframe.cpp:118 ../lib/metaframe.cpp:280
+msgid ""
+"No maintainer e-mail specified in configuration file! Please specify it if "
+"you going to public your packages."
+msgstr ""
+
+#: ../console/validator.cpp:141
+msgid "No maintainer email specified"
+msgstr ""
+
+#: ../console/validator.cpp:137
+msgid "No maintainer name specified"
+msgstr ""
+
+#: ../lib/metaframe.cpp:114 ../lib/metaframe.cpp:276
+msgid ""
+"No maintainer name specified in configuration file! Please specify it if you "
+"going to public your packages."
+msgstr ""
+
+#: ../lib/mpkg.cpp:67
+#, c-format
+msgid "No original file for delta %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:980
+msgid "No package depends on "
+msgstr ""
+
+#: ../lib/menu.cpp:979
+#, c-format
+msgid "No package depends on %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1740
+msgid "No package set selected\n"
+msgstr ""
+
+#: ../installer/setup.cpp:257
+msgid "No partitions found on your hard drive. Create it first."
+msgstr ""
+
+#: ../console/validator.cpp:127
+msgid "No short description"
+msgstr ""
+
+#: ../lib/menu.cpp:621
+msgid "No such package\n"
+msgstr ""
+
+#: ../lib/menu.cpp:620
+#, c-format
+msgid "No such package %s %s %s\n"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:443
+msgid "No such package: "
+msgstr ""
+
+#: ../lib/libmpkg.cpp:314
+msgid "No such repository\n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:349 ../lib/libmpkg.cpp:386
+msgid "No such repository: "
+msgstr ""
+
+#: ../console/validator.cpp:145
+msgid "No tags specified"
+msgstr ""
+
+#: ../lib/menu.cpp:314 ../lib/menu.cpp:315
+msgid "No updates available\n"
+msgstr ""
+
+#: ../lib/bus.cpp:396
+msgid "None"
+msgstr ""
+
+#: ../lib/repository.cpp:527
+#, c-format
+msgid "Note: duplicate package %s %s found for %s %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1531
+msgid ""
+"Note: some of requested packages are unavailable and will not be installed:\n"
+"\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1047 ../lib/mpkg.cpp:1048
+msgid "Nothing to do\n"
+msgstr ""
+
+#: ../lib/ncurses_if.cpp:47 ../lib/ncurses_if.cpp:94
+msgid "OK"
+msgstr ""
+
+#: ../installer/setup.cpp:389 ../installer/setup.cpp:477
+msgid "Old, stable, very fast (it doesn't use jounal), but less reliable"
+msgstr ""
+
+#: ../installer/setup.cpp:1146
+msgid "Open chroot console"
+msgstr ""
+
+#: ../lib/sql_pool.cpp:291
+#, c-format
+msgid "Opening database %s in read-only mode\n"
+msgstr ""
+
+#: ../lib/sql_pool.cpp:299
+#, c-format
+msgid "Opening database %s in read-write mode\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1362 ../console/setmeta.cpp:6
+#, c-format
+msgid "Options:\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2370
+msgid "Original OpenOffice build from Sun"
+msgstr ""
+
+#: ../installer/setup.cpp:3027 ../installer/setup.cpp:3029
+msgid "Other"
+msgstr ""
+
+#: ../installer/setup.cpp:535
+msgid "Other partitions mount options"
+msgstr ""
+
+#: ../installer/setup.cpp:1757
+msgid "Other partitions: "
+msgstr ""
+
+#: ../console/checklibdeps.cpp:7
+#, c-format
+msgid ""
+"Output will be written to /var/log/mpkg-checklibdeps.log and /var/log/mpkg-"
+"checklibdeps-extended.log"
+msgstr ""
+
+#: ../lib/config.cpp:99 ../lib/libmpkg.cpp:562 ../lib/mpkgsys.cpp:186
+#: ../lib/mpkgsys.cpp:190 ../lib/mpkgsys.cpp:368 ../lib/mpkgsys.cpp:372
+#: ../lib/mpkgsys.cpp:523 ../lib/mpkgsys.cpp:524
+msgid "Package "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1604
+#, c-format
+msgid "Package %s is source-based. Building...\n"
+msgstr ""
+
+#: ../console/validator.cpp:162
+msgid "Package already in repository"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:629
+#, c-format
+msgid "Package cache: %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1499
+msgid "Package list "
+msgstr ""
+
+#: ../installer/setup.cpp:1491
+msgid "Package list file "
+msgstr ""
+
+#: ../installer/setup.cpp:1446
+msgid "Package list from file..."
+msgstr ""
+
+#: ../installer/setup.cpp:1470
+msgid "Package list from file: "
+msgstr ""
+
+#: ../lib/menu.cpp:26
+msgid "Package menu"
+msgstr ""
+
+#: ../installer/setup.cpp:1434
+msgid "Package selection"
+msgstr ""
+
+#: ../installer/setup.cpp:2228
+msgid "Package source selection"
+msgstr ""
+
+#: ../console/validator.cpp:147
+msgid "Package tagged"
+msgstr ""
+
+#: ../lib/menu.cpp:102
+msgid "Package tagging"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:91
+#, c-format
+msgid "Package was built to %s/%s\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1610
+#, c-format
+msgid "Package was built. Filename: %s\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2551
+#, c-format
+msgid "Packages removed from repositories: %d\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1818
+msgid "Packages source: "
+msgstr ""
+
+#: ../lib/menu.cpp:527
+msgid "Packages to be installed:\n"
+msgstr ""
+
+#: ../lib/menu.cpp:531
+msgid "Packages to be removed:\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1820
+msgid "Packages to install: "
+msgstr ""
+
+#: ../installer/setup.cpp:1627
+msgid "Packages which doesn't belong to any group"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:81
+#, c-format
+msgid "Packing binary package to %s%s.%s\n"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:73
+#, c-format
+msgid "Packing source package to %s%s.spkg\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2846
+msgid ""
+"Paritition table management: create, delete or modify partitions on your "
+"hard drive to prepare space for system installation.\n"
+")"
+msgstr ""
+
+#: ../installer/setup.cpp:931
+msgid "Password input"
+msgstr ""
+
+#: ../installer/setup.cpp:1913
+msgid "Password:"
+msgstr ""
+
+#: ../installer/setup.cpp:946
+msgid "Passwords doesn't match"
+msgstr ""
+
+#: ../installer/setup.cpp:2864
+msgid ""
+"Perform actual installation.\n"
+"WARNING: check all parameters (especially - partition names and formatting "
+"options): after confirmation, there will be no way to get back data from "
+"formatted partitions!"
+msgstr ""
+
+#: ../installer/setup.cpp:2846
+msgid "Perform hard drive partitioning"
+msgstr ""
+
+#: ../installer/setup.cpp:759
+msgid "Performing CD/DVD drive autodetection..."
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1478 ../lib/mpkg.cpp:1036
+msgid "Please answer Y (yes) or N (no)\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1049
+msgid "Please define output directory"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1557
+msgid "Please insert DVD with label "
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:234 ../lib/HttpDownload.cpp:281
+msgid "Please insert disk with label "
+msgstr ""
+
+#: ../installer/setup.cpp:1239
+msgid "Please select preferred network manager:"
+msgstr ""
+
+#: ../installer/setup.cpp:1961
+msgid ""
+"Please, choose KDE branch which you prefer. Both of them are stable enough "
+"today in most cases. If you wish to use another desktop environment (XFCE, "
+"Fluxbox, etc) - your choice should be based on programs which you will use "
+"from these environments\n"
+msgstr ""
+
+#: ../installer/setup.cpp:271
+msgid "Please, choose swap partition"
+msgstr ""
+
+#: ../installer/setup.cpp:795
+msgid "Please, enter device name (for example, /dev/scd0):"
+msgstr ""
+
+#: ../installer/setup.cpp:1992
+msgid ""
+"Please, prepare all installation discs.\n"
+"It is required to index them all."
+msgstr ""
+
+#: ../installer/setup.cpp:416
+msgid "Predefined format options are incorrect: "
+msgstr ""
+
+#: ../installer/setup.cpp:372
+msgid "Predefined root partition doesn't exist: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1464
+msgid "Prelinking with randomization..."
+msgstr ""
+
+#: ../lib/mpkg.cpp:1468
+msgid "Prelinking..."
+msgstr ""
+
+#: ../installer/setup.cpp:1307
+msgid ""
+"Prelinking...\n"
+"It will take about 3-5 minutes, depending on your hardware"
+msgstr ""
+
+#: ../lib/mpkg.cpp:813
+msgid "Preparing to package installation"
+msgstr ""
+
+#: ../installer/setup.cpp:1830
+msgid "Preparing with system installation"
+msgstr ""
+
+#: ../installer/setup.cpp:2163
+msgid "Primary DNS (leave blank if none):"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1629
+msgid "Processing to install binary\n"
+msgstr ""
+
+#: ../console/deleteprofile.cpp:11
+#, c-format
+msgid "Profile %s doesn't exist\n"
+msgstr ""
+
+#: ../console/saveprofile.cpp:12
+#, c-format
+msgid "Profile name is invalid\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1999
+msgid "Purging"
+msgstr ""
+
+#: ../lib/bus.cpp:403
+msgid "Purging package"
+msgstr ""
+
+#: ../lib/menu.cpp:380 ../lib/menu.cpp:381
+msgid "Querying database...\n"
+msgstr ""
+
+#: ../lib/menu.cpp:118
+msgid "Queue is clean"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1272
+msgid "Re-downloading...\n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:536
+msgid "Received "
+msgstr ""
+
+#: ../lib/errorcodes.cpp:212
+msgid "Recreate structure (ALL DATA WILL BE LOST!)"
+msgstr ""
+
+#: ../installer/setup.cpp:392 ../installer/setup.cpp:480
+msgid ""
+"ReiserFS is a general-purpose, journaled computer file system designed and "
+"implemented by a team at Namesys led by Hans Reiser. ReiserFS is currently "
+"supported on Linux. Introduced in version 2.4.1 of the Linux kernel, it was "
+"the first journaling file system to be included in the standard kernel"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1351
+msgid "Remove failed"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1355
+msgid "Removed"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1998
+msgid "Removing"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1305
+msgid "Removing "
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:575
+#, c-format
+msgid "Removing %s\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2142
+msgid "Removing empty directory"
+msgstr ""
+
+#: ../lib/dependencies.cpp:892
+msgid "Removing essential package "
+msgstr ""
+
+#: ../lib/mpkg.cpp:2103
+msgid "Removing file"
+msgstr ""
+
+#: ../lib/bus.cpp:404 ../lib/mpkg.cpp:1327
+msgid "Removing package"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2008
+msgid "Removing package "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1306 ../lib/mpkg.cpp:1328
+msgid "Removing packages"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:592
+#, c-format
+msgid "Removing symlink %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1399
+msgid "Rendering error list: "
+msgstr ""
+
+#: ../installer/setup.cpp:938
+msgid "Repeat password for user "
+msgstr ""
+
+#: ../lib/libmpkg.cpp:282
+#, c-format
+msgid "Repository %s is already in list\n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1458
+#, c-format
+msgid "Repository are up to date\n"
+msgstr ""
+
+#: ../lib/menu.cpp:326
+msgid "Repository data update complete"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:197
+msgid "Repository data update failed"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:192
+msgid "Repository data updated"
+msgstr ""
+
+#: ../lib/repository.cpp:643
+msgid ""
+"Repository index created\n"
+"Total: "
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1471
+msgid "Repository list:\n"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:338
+msgid "Requested package "
+msgstr ""
+
+#: ../lib/mpkg.cpp:833
+msgid "Requesting list of packages marked to install"
+msgstr ""
+
+#: ../lib/mpkg.cpp:815
+msgid "Requesting list of packages marked to remove"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1013 ../lib/mpkg.cpp:1014
+msgid "Required disk space"
+msgstr ""
+
+#: ../lib/dependencies.cpp:553
+msgid "Required package "
+msgstr ""
+
+#: ../lib/menu.cpp:43
+msgid "Reset action queue"
+msgstr ""
+
+#: ../installer/setup.cpp:2941
+msgid "Restore standard Windows/DOS MBR boot loader"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:513
+#, c-format
+msgid "Resuming download from %Li\n"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:544
+msgid "Retrieving index: ["
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:806
+msgid "Retrieving package data, it may take a while...\n"
+msgstr ""
+
+#: ../lib/bus.cpp:398
+msgid "Retrieving package list"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:215
+msgid "Retrieving package list..."
+msgstr ""
+
+#: ../lib/libmpkg.cpp:217
+msgid "Retriveal complete"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:33 ../lib/errorcodes.cpp:143
+#: ../lib/errorcodes.cpp:194 ../lib/errorcodes.cpp:238
+#: ../lib/errorcodes.cpp:267
+msgid "Retry"
+msgstr ""
+
+#: ../installer/setup.cpp:1728
+msgid "Root and swap partition cannot be the same. Please fix this.\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2850
+msgid ""
+"Root partition is a place on which Linux will be installed. Also, it is a "
+"root for filesystem tree."
+msgstr ""
+
+#: ../installer/setup.cpp:349
+msgid "Root partition setup"
+msgstr ""
+
+#: ../installer/setup.cpp:1753 ../installer/setup.cpp:2851
+msgid "Root partition: "
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:630
+#, c-format
+msgid "Run scripts: %d\n"
+msgstr ""
+
+#: ../console/checklibdeps.cpp:6
+#, c-format
+msgid "Running mpkg-checklibdeps without parameters will check whole system.\n"
+msgstr ""
+
+#: ../installer/setup.cpp:83
+msgid "Russian"
+msgstr ""
+
+#: ../installer/setup.cpp:84
+msgid "Russian (UNIX)"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:634
+#, c-format
+msgid "Scripts directory: %s\n"
+msgstr ""
+
+#: ../lib/menu.cpp:388 ../lib/menu.cpp:389
+msgid "Search attempt has no results\n"
+msgstr ""
+
+#: ../lib/menu.cpp:36
+msgid "Search exact file in packages"
+msgstr ""
+
+#: ../lib/menu.cpp:35
+msgid "Search file in packages by pattern"
+msgstr ""
+
+#: ../lib/menu.cpp:340
+msgid "Search options:"
+msgstr ""
+
+#: ../lib/menu.cpp:34
+msgid "Search package by description"
+msgstr ""
+
+#: ../lib/menu.cpp:33
+msgid "Search packages by name"
+msgstr ""
+
+#: ../lib/menu.cpp:452
+msgid "Search results:"
+msgstr ""
+
+#: ../lib/menu.cpp:873
+msgid "Searching by filename with pattern \""
+msgstr ""
+
+#: ../lib/menu.cpp:872
+#, c-format
+msgid "Searching by filename with pattern \"%s\"...\n"
+msgstr ""
+
+#: ../installer/setup.cpp:758
+msgid "Searching for CD/DVD drive"
+msgstr ""
+
+#: ../lib/menu.cpp:863
+msgid "Searching for file "
+msgstr ""
+
+#: ../lib/menu.cpp:954
+msgid "Searching for packages depending on "
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:680
+#, c-format
+msgid "Searching for packages which depends on %s\n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1618 ../lib/libmpkg.cpp:1619 ../lib/menu.cpp:248
+#: ../lib/menu.cpp:249
+msgid "Searching for updates..."
+msgstr ""
+
+#: ../lib/menu.cpp:877
+msgid "Searching package who contains \""
+msgstr ""
+
+#: ../lib/menu.cpp:876
+#, c-format
+msgid "Searching package who contains \"/%s\"\n"
+msgstr ""
+
+#: ../lib/menu.cpp:153
+msgid "Searching packages by description"
+msgstr ""
+
+#: ../installer/setup.cpp:1143
+msgid "See installation log"
+msgstr ""
+
+#: ../installer/setup.cpp:388 ../installer/setup.cpp:476
+msgid "Seems to be a best balance between reliability and performance"
+msgstr ""
+
+#: ../installer/setup.cpp:1975
+msgid "Select ISO image"
+msgstr ""
+
+#: ../installer/setup.cpp:98
+msgid "Select X11 keyboard layouts. If not sure, leave this as is"
+msgstr ""
+
+#: ../installer/setup.cpp:2240
+msgid "Select a package source to install system from it:"
+msgstr ""
+
+#: ../installer/setup.cpp:1531
+msgid "Select another list"
+msgstr ""
+
+#: ../lib/menu.cpp:81
+msgid "Select directory to index:"
+msgstr ""
+
+#: ../installer/setup.cpp:1454
+msgid "Select file with package list:"
+msgstr ""
+
+#: ../installer/setup.cpp:1630
+msgid "Select group and edit package list if needed. When ready, select [OK]"
+msgstr ""
+
+#: ../installer/setup.cpp:560
+msgid "Select other partitions you want to mount:"
+msgstr ""
+
+#: ../lib/menu.cpp:274
+msgid "Select packages you wish to be updated:\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1453
+msgid "Select partition which contains package list file:"
+msgstr ""
+
+#: ../installer/setup.cpp:2107
+msgid "Select partition with packages:"
+msgstr ""
+
+#: ../installer/setup.cpp:1933
+msgid "Select share to mount:"
+msgstr ""
+
+#: ../console/setprofile.cpp:10
+#, c-format
+msgid "Selected profile %s doesn't exist\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2077
+msgid "Set of "
+msgstr ""
+
+#: ../installer/setup.cpp:926
+msgid "Setting new password for user "
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1033
+#, c-format
+msgid "Setting version of %s to %s...\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1340
+msgid "Setup finished. Time:\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1819
+msgid "Setup mode: "
+msgstr ""
+
+#: ../console/validator.cpp:129
+msgid "Short description is good"
+msgstr ""
+
+#: ../lib/menu.cpp:233
+msgid "Show available updates"
+msgstr ""
+
+#: ../lib/menu.cpp:27
+msgid "Show latest updates"
+msgstr ""
+
+#: ../lib/menu.cpp:338
+msgid "Show only available"
+msgstr ""
+
+#: ../lib/menu.cpp:339
+msgid "Show only installed"
+msgstr ""
+
+#: ../lib/menu.cpp:42
+msgid "Show queued actions"
+msgstr ""
+
+#: ../installer/setup.cpp:2830
+msgid ""
+"Simple installation step-by-step mode, recommended for most users. Some "
+"rarely-used questions are omitted (using defaults)"
+msgstr ""
+
+#: ../installer/setup.cpp:2286
+msgid "Simple menu"
+msgstr ""
+
+#: ../installer/setup.cpp:2076
+msgid "Single CD/DVD"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:101 ../lib/errorcodes.cpp:186
+#: ../installer/setup.cpp:267 ../installer/setup.cpp:2408
+#: ../installer/setup.cpp:2411
+msgid "Skip"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:39
+msgid "Skip/Ignore"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1425 ../lib/libmpkg.cpp:1441
+#, c-format
+msgid "Skipping %s %s as deprecated: %s already in mirror\n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1402
+#, c-format
+msgid "Skipping %s-%s: package dropped in config\n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1645
+#, c-format
+msgid "Skipping %s: BLACKLISTED\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1745
+msgid "Some errors has been detected in configuration"
+msgstr ""
+
+#: ../lib/mpkg.cpp:822 ../lib/mpkg.cpp:839
+msgid "Sorting list of packages marked to remove"
+msgstr ""
+
+#: ../lib/mpkg.cpp:153
+msgid "Source build: error extracting package"
+msgstr ""
+
+#: ../lib/mpkg.cpp:148
+msgid "Source build: file not found"
+msgstr ""
+
+#: ../lib/mpkg.cpp:159
+msgid "Source build: invalid XML data"
+msgstr ""
+
+#: ../lib/mpkg.cpp:306
+msgid "Source file doesn't exist"
+msgstr ""
+
+#: ../lib/mpkg.cpp:299
+msgid "Source file doesn't exist, aborting"
+msgstr ""
+
+#: ../installer/setup.cpp:2830 ../installer/setup.cpp:2834
+msgid "Standard"
+msgstr ""
+
+#: ../installer/setup.cpp:389 ../installer/setup.cpp:477
+msgid "Standard Linux filesystem (without journaling)."
+msgstr ""
+
+#: ../installer/setup.cpp:2830
+msgid "Standard installation mode"
+msgstr ""
+
+#: ../installer/setup.cpp:388 ../installer/setup.cpp:476
+msgid "Standard journaling Linux filesystem"
+msgstr ""
+
+#: ../installer/setup.cpp:1862
+msgid "Starting package installation"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:281
+msgid "Startup error: some of required components not found"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:289
+msgid "Startup error: you must run this program as root"
+msgstr ""
+
+#: ../installer/setup.cpp:252
+msgid "Swap partition selection"
+msgstr ""
+
+#: ../installer/setup.cpp:1754 ../installer/setup.cpp:2848
+msgid "Swap partition: "
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1255
+msgid "Sync map not found\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1479
+msgid "Syncing disks..."
+msgstr ""
+
+#: ../installer/setup.cpp:2733
+#, c-format
+msgid "Syntax:\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:628
+#, c-format
+msgid "System root: %s\n"
+msgstr ""
+
+#: ../lib/converter.cpp:301
+msgid "Tagging package "
+msgstr ""
+
+#: ../lib/mpkg.cpp:453
+msgid "Tar was failed to extract the received source package"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:171
+#, c-format
+msgid "Temporarily reassigned system cache: %s\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:166
+#, c-format
+msgid "Temporarily reassigned system root: %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:390 ../installer/setup.cpp:478
+msgid ""
+"The best choise to store data (especially large files). Supports online "
+"defragmentation and other advanced features. Not recommended to use as root "
+"FS or /home"
+msgstr ""
+
+#: ../installer/setup.cpp:804
+msgid "The drive you have specified has failed to mount:\n"
+msgstr ""
+
+#: ../installer/setup.cpp:504
+msgid "The mount point you specified "
+msgstr ""
+
+#: ../installer/setup.cpp:2446
+msgid ""
+"There are some package alternatives. Please, mark ones which you want to use."
+msgstr ""
+
+#: ../installer/setup.cpp:2051
+msgid "This disc already indexed"
+msgstr ""
+
+#: ../installer/setup.cpp:2053
+msgid "This disc doesn't recognized as MOPSLinux installation disc"
+msgstr ""
+
+#: ../installer/setup.cpp:2295
+msgid ""
+"To install MOPSLinux, you should have at least one Linux partition. Also, it "
+"is strongly recommended to have a swap partition.\n"
+"If you didn't do this before, you can create it now.\n"
+"Which drive do you want to edit?"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:300 ../console/installpkg-ng2.cpp:311
+#, c-format
+msgid "Too many arguments\n"
+msgstr ""
+
+#: ../lib/menu.cpp:448 ../lib/menu.cpp:1046
+#, c-format
+msgid "Total: %d packages\n"
+msgstr ""
+
+#: ../installer/setup.cpp:85
+msgid "Ukrainian"
+msgstr ""
+
+#: ../installer/setup.cpp:86
+msgid "Ukrainian (UNIX)"
+msgstr ""
+
+#: ../lib/bus.cpp:407
+msgid "Unknown action type"
+msgstr ""
+
+#: ../lib/converter.cpp:28 ../lib/local_package.cpp:212
+msgid "Unknown package type "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1281
+msgid "Unknown reply, aborting"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1203
+msgid "Unknown value, don't know what to do, aborting"
+msgstr ""
+
+#: ../console/validator.cpp:121
+msgid "Unresolvable dependencies"
+msgstr ""
+
+#: ../installer/setup.cpp:1400
+msgid "Unresolved dependencies: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1730
+msgid "Unresolved file conflict on package "
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:145
+msgid "Update complete.\n"
+msgstr ""
+
+#: ../lib/menu.cpp:29
+msgid "Update repository data"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1987
+msgid "Updating"
+msgstr ""
+
+#: ../lib/repository.cpp:666
+msgid "Updating data from "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1475
+msgid "Updating font indexes"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1323
+msgid "Updating package"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:112
+#, c-format
+msgid "Updating package data from %d repository(s)...\n"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:110
+#, c-format
+msgid "Updating package data from %ld repository(s)...\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2200
+msgid "Updating package list"
+msgstr ""
+
+#: ../installer/setup.cpp:2119
+msgid "Updating package list..."
+msgstr ""
+
+#: ../lib/mpkg.cpp:1324
+msgid "Updating packages"
+msgstr ""
+
+#: ../lib/bus.cpp:400 ../lib/repository.cpp:836
+msgid "Updating repository data"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:301
+#, c-format
+msgid "Usage: buildpkg [output_directory]\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:312
+#, c-format
+msgid "Usage: buildsrcpkg [output_directory]\n"
+msgstr ""
+
+#: ../console/checklibdeps.cpp:5
+#, c-format
+msgid "Usage: mpkg-checklibdeps [PKGNAME] - checks package for errors\n"
+msgstr ""
+
+#: ../console/deleteprofile.cpp:4
+#, c-format
+msgid "Usage: mpkg-deleteprofile PROFILE_NAME\n"
+msgstr ""
+
+#: ../console/saveprofile.cpp:4
+#, c-format
+msgid "Usage: mpkg-saveprofile PROFILE_NAME\n"
+msgstr ""
+
+#: ../console/setmeta.cpp:5
+#, c-format
+msgid "Usage: mpkg-setmeta FILENAME [OPTIONS]\n"
+msgstr ""
+
+#: ../console/setprofile.cpp:4
+#, c-format
+msgid "Usage: mpkg-setprofile PROFILE_NAME\n"
+msgstr ""
+
+#: ../console/validator.cpp:4
+#, c-format
+msgid "Usage: mpkg-validate FILENAME\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2152
+msgid "Use automatic configuration (DHCP)?"
+msgstr ""
+
+#: ../installer/setup.cpp:971
+msgid "User name cannot start from number, enter correct name."
+msgstr ""
+
+#: ../installer/setup.cpp:2287
+msgid "User-friendly frontend to parted. Experimental"
+msgstr ""
+
+#: ../console/validator.cpp:158
+msgid "Version ok"
+msgstr ""
+
+#: ../installer/setup.cpp:1958
+msgid "Very old and very stable. If you need \"Just works\" - it's your choice"
+msgstr ""
+
+#: ../installer/setup.cpp:2410
+msgid "Videocard detected: "
+msgstr ""
+
+#: ../lib/menu.cpp:30
+msgid "View/edit repositories"
+msgstr ""
+
+#: ../installer/setup.cpp:1750
+msgid ""
+"WARNING! You didn't configured a boot loader.\n"
+"You can install system without this, but remember that in this case you "
+"should provide system booting manually (for example, using another, already "
+"installed boot loader).\n"
+"CONTINUE ONLY IF YOU *REALLY KNOW* WHAT YOU ARE DOING!"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1313 ../lib/mpkg.cpp:1379
+msgid "Waiting"
+msgstr ""
+
+#: ../lib/debug.cpp:40
+msgid "Warning"
+msgstr ""
+
+#: ../lib/htmlcore.cpp:32
+msgid "Warning: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:2226
+msgid "Weird status of package, i'm afraid to remove this..."
+msgstr ""
+
+#: ../installer/setup.cpp:247
+msgid ""
+"Welcome to MOPSLinux!\n"
+"\n"
+"Setup program will install the system on your computer and perform initial "
+"configuration.\n"
+msgstr ""
+
+#: ../installer/setup.cpp:246
+msgid "Welcome!"
+msgstr ""
+
+#: ../installer/setup.cpp:1131
+msgid "Wicd is an open source wired and wireless network manager"
+msgstr ""
+
+#: ../lib/mpkg.cpp:915 ../lib/mpkg.cpp:916
+msgid "Will be installed:\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:958 ../lib/mpkg.cpp:959
+msgid "Will be purged:\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:938 ../lib/mpkg.cpp:939
+msgid "Will be removed:\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:996 ../lib/mpkg.cpp:997
+msgid "Will be repaired:\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:978 ../lib/mpkg.cpp:979
+msgid "Will be updated:\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1269
+msgid "Wrong checksum ignored, continuing...\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2363
+msgid "YES"
+msgstr ""
+
+#: ../installer/setup.cpp:529 ../lib/ncurses_if.h:47
+msgid "Yes"
+msgstr ""
+
+#: ../installer/setup.cpp:304
+msgid "You are going to create swapspace on partition "
+msgstr ""
+
+#: ../installer/setup.cpp:2804
+msgid ""
+"You cannot use this software without accepting the license.\n"
+"Installation terminated"
+msgstr ""
+
+#: ../lib/errorcodes.cpp:339
+#, c-format
+msgid "You decided to %s\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1729
+msgid "You didn't specified a package source\n"
+msgstr ""
+
+#: ../installer/setup.cpp:1727
+msgid "You didn't specified a root partition\n"
+msgstr ""
+
+#: ../lib/libmpkg.cpp:1357
+msgid "You didn't specified directory for deprecated packages"
+msgstr ""
+
+#: ../installer/setup.cpp:400
+msgid "You have choosed "
+msgstr ""
+
+#: ../installer/setup.cpp:428
+msgid ""
+"You have choosed XFS as root filesystem format.\n"
+"It is not recommended, AND It is NOT SUPPORTED by GRUB bootloader. Also, if "
+"you install any bootloader on this partition, it will cause of TOTAL DATA "
+"LOSS on it.\n"
+"You have to choose another option, or create a separate /boot partition, or "
+"use LILO as boot loader in MBR.\n"
+"\n"
+"Are you REALLY SURE you want to continue with this option?"
+msgstr ""
+
+#: ../installer/setup.cpp:292
+msgid "You have defined swap partition that doesn't exists: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1572
+msgid ""
+"You have inserted a wrong disk.\n"
+"Required: ["
+msgstr ""
+
+#: ../installer/setup.cpp:2140
+msgid "You have specified directory ("
+msgstr ""
+
+#: ../lib/sql_pool.cpp:49 ../lib/sql_pool.cpp:61 ../lib/sql_pool.cpp:73
+#: ../lib/sql_pool.cpp:85 ../lib/sql_pool.cpp:97 ../lib/sql_pool.cpp:109
+#: ../lib/sql_pool.cpp:121 ../lib/sql_pool.cpp:133 ../lib/sql_pool.cpp:144
+#: ../lib/sql_pool.cpp:156 ../lib/sql_pool.cpp:168 ../lib/sql_pool.cpp:181
+#: ../lib/sql_pool.cpp:191 ../lib/sql_pool.cpp:201
+msgid "Your database need to be upgraded to new version "
+msgstr ""
+
+#: ../lib/repository.cpp:422
+#, c-format
+msgid "[%d/%d] indexing file %s%s%s\n"
+msgstr ""
+
+#: ../console/validator.cpp:16
+#, c-format
+msgid "[BLOCKING] Error: %s\n"
+msgstr ""
+
+#: ../console/validator.cpp:9
+#, c-format
+msgid "[FATAL] Error: %s\n"
+msgstr ""
+
+#: ../console/validator.cpp:23
+#, c-format
+msgid "[NOT GOOD] Warning: %s\n"
+msgstr ""
+
+#: ../console/validator.cpp:30
+#, c-format
+msgid "[PASSED] OK: %s\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1572
+msgid ""
+"]\n"
+"Inserted: ["
+msgstr ""
+
+#: ../lib/mpkg.cpp:1107
+msgid "] Checking package cache and building installation queue: "
+msgstr ""
+
+#: ../lib/repository.cpp:757
+msgid "] Importing data..."
+msgstr ""
+
+#: ../lib/repository.cpp:844
+msgid "] Importing received data: "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1414
+msgid "] Installing: "
+msgstr ""
+
+#: ../lib/repository.cpp:425
+msgid "] indexing file "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1199
+msgid "aborting...\n"
+msgstr ""
+
+#: ../lib/bus.cpp:248
+msgid "actions total: "
+msgstr ""
+
+#: ../installer/setup.cpp:978
+msgid "another "
+msgstr ""
+
+#: ../lib/mpkg.cpp:2054
+msgid "building file list"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1162
+msgid "cached"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1140
+msgid "check skipped"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1716 ../lib/mpkg.cpp:1720
+msgid "checking file conflicts"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1636
+msgid "checking package integrity"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:813
+msgid "checking...\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2203
+msgid "cleaning file list"
+msgstr ""
+
+#: ../console/validator.cpp:56
+msgid "data.xml parsed"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1694
+msgid "detecting configuration files"
+msgstr ""
+
+#: ../lib/HttpDownload.cpp:556 ../lib/repository.cpp:882
+msgid "done"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1862
+msgid "executing post-install script"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1843
+msgid "executing post-install scripts..."
+msgstr ""
+
+#: ../lib/mpkg.cpp:2158
+msgid "executing post-remove scripts"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1761
+msgid "executing pre-install script"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1760
+msgid "executing pre-install scripts"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2031
+msgid "executing pre-remove scripts"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1774
+msgid "extracting "
+msgstr ""
+
+#: ../lib/mpkg.cpp:1675 ../lib/mpkg.cpp:1677
+msgid "extracting file list"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1646
+msgid "extracting metadata"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1670
+msgid "extracting scripts"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1773
+msgid "extracting..."
+msgstr ""
+
+#: ../lib/mpkg.cpp:1883
+msgid "finishing installation"
+msgstr ""
+
+#: ../lib/mpkgsys.cpp:206
+msgid "get_package error: returned "
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1023
+#, c-format
+msgid "increasing build of %s...\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1508 ../lib/mpkg.cpp:2009
+msgid "initialization"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1505
+msgid "installing"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1735
+msgid "installing..."
+msgstr ""
+
+#: ../installer/setup.cpp:2844
+msgid "main menu"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1261
+msgid "md5 incorrect"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1743
+msgid "merging file lists into database"
+msgstr ""
+
+#: ../console/checklibdeps.cpp:4
+#, c-format
+msgid ""
+"mpkg-checklibdeps: checks binary dependencies using ldd for missing "
+"libraries\n"
+msgstr ""
+
+#: ../installer/setup.cpp:2364
+msgid "no"
+msgstr ""
+
+#: ../installer/setup.cpp:1755 ../installer/setup.cpp:1758
+msgid "no\n"
+msgstr ""
+
+#: ../lib/menu.cpp:784 ../lib/menu.cpp:791
+msgid "none"
+msgstr ""
+
+#: ../lib/menu.cpp:796
+msgid "none\n"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1139
+msgid "not cached"
+msgstr ""
+
+#: ../lib/dependencies.cpp:488
+msgid "package "
+msgstr ""
+
+#: ../console/checkdeps.cpp:10
+msgid "packages.xml.gz not found"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2210
+msgid "remove complete"
+msgstr ""
+
+#: ../lib/mpkg.cpp:2116
+msgid "removing empty directories..."
+msgstr ""
+
+#: ../lib/mpkg.cpp:2059
+msgid "removing files..."
+msgstr ""
+
+#: ../lib/mpkg.cpp:1195
+msgid "retrying...\n"
+msgstr ""
+
+#: ../console/installpkg-ng2.cpp:1012
+#, c-format
+msgid "tagging %s as %s...\n"
+msgstr ""
+
+#: ../lib/repository.cpp:475
+msgid "unable to open log file"
+msgstr ""
+
+#: ../installer/setup.cpp:967
+msgid "user?"
+msgstr ""
+
+#: ../lib/mpkg.cpp:1098 ../lib/mpkg.cpp:1173 ../lib/mpkg.cpp:1221
+#: ../lib/mpkg.cpp:1370
+msgid "waiting"
+msgstr ""

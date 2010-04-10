@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Categories=Development;
+Exec=packagebuilder
+GenericName=Package and spkg editor
+GenericName[ru]=Редактор пакетов и spkg
+Icon=mpkg-packagebuilder
+Name=PackageBuilder
+StartupNotify=true
+Terminal=false
+Type=Application

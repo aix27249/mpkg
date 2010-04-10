@@ -1,0 +1,2528 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>851</width>
+    <height>630</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MOPSLinux package builder</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../../../usr/share/mpkg/packagebuilder/icons/package.png</normaloff>../../../../usr/share/mpkg/packagebuilder/icons/package.png</iconset>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <item>
+    <widget class="QTabWidget" name="globalTabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="packageMetadataTab">
+      <attribute name="icon">
+       <iconset>
+        <normaloff>../../../../usr/share/mpkg/packagebuilder/icons/smart.png</normaloff>../../../../usr/share/mpkg/packagebuilder/icons/smart.png</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Description</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_10">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMinimumSize</enum>
+         </property>
+         <item>
+          <widget class="QGroupBox" name="groupBox_7">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="title">
+            <string>Basic data</string>
+           </property>
+           <layout class="QGridLayout">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Package name:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1" colspan="3">
+             <widget class="QLineEdit" name="NameEdit"/>
+            </item>
+            <item row="0" column="4">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Architecture:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="5">
+             <widget class="QComboBox" name="ArchComboBox">
+              <property name="editable">
+               <bool>true</bool>
+              </property>
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <item>
+               <property name="text">
+                <string>i686</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>x86_64</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>noarch</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>fw</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Version:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="VersionEdit"/>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Build:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="5">
+             <widget class="QLineEdit" name="BuildEdit"/>
+            </item>
+            <item row="3" column="0" colspan="6">
+             <layout class="QHBoxLayout">
+              <property name="spacing">
+               <number>6</number>
+              </property>
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_5">
+                <property name="text">
+                 <string>Short description:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="ShortDescriptionEdit"/>
+              </item>
+             </layout>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_15">
+              <property name="text">
+               <string>Provides:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="providesEdit"/>
+            </item>
+            <item row="2" column="4">
+             <widget class="QLabel" name="label_16">
+              <property name="text">
+               <string>Conflicts:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="5">
+             <widget class="QLineEdit" name="conflictsEdit"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_4">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="title">
+            <string>Maintainer</string>
+           </property>
+           <layout class="QGridLayout">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>Name:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="MaintainerNameEdit"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>E-mail:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="MaintainerMailEdit"/>
+            </item>
+            <item row="2" column="1">
+             <widget class="QCheckBox" name="needSpecialUpdateCheckBox">
+              <property name="text">
+               <string>Package needs a special update method</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="packageTypeGroupBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="title">
+            <string>Package type</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_14">
+            <item>
+             <widget class="QRadioButton" name="sourcePackageRadioButton">
+              <property name="text">
+               <string>Source package</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="binaryPackageRadioButton">
+              <property name="text">
+               <string>Binary package</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,0">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMaximumSize</enum>
+         </property>
+         <item>
+          <widget class="QToolBox" name="toolBox_4">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>1</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <widget class="QWidget" name="page_10">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>401</width>
+              <height>304</height>
+             </rect>
+            </property>
+            <attribute name="label">
+             <string>Description</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <item>
+              <widget class="QTextEdit" name="DescriptionEdit"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="page_11">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>83</width>
+              <height>75</height>
+             </rect>
+            </property>
+            <attribute name="label">
+             <string>Changelog</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <item>
+              <widget class="QTextEdit" name="ChangelogEdit"/>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolBox" name="toolBox_3">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>1</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <widget class="QWidget" name="page_5">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>400</width>
+              <height>304</height>
+             </rect>
+            </property>
+            <attribute name="label">
+             <string>Dependencies</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <item>
+              <layout class="QHBoxLayout">
+               <item>
+                <widget class="QComboBox" name="DepSuggestComboBox">
+                 <item>
+                  <property name="text">
+                   <string>Dependency</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Suggestion</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="DepNameEdit"/>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout">
+               <item>
+                <widget class="QComboBox" name="DepConditionComboBox">
+                 <property name="minimumSize">
+                  <size>
+                   <width>50</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="currentIndex">
+                  <number>1</number>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>any</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>&gt;=</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>==</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>&lt;=</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>&gt;</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>&lt;</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="DepVersionEdit"/>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="buildDependencyCheckBox">
+                 <property name="text">
+                  <string>For build only</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QTableWidget" name="DepTableWidget">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>1</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="sizeIncrement">
+                <size>
+                 <width>0</width>
+                 <height>1</height>
+                </size>
+               </property>
+               <property name="alternatingRowColors">
+                <bool>true</bool>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::SingleSelection</enum>
+               </property>
+               <property name="selectionBehavior">
+                <enum>QAbstractItemView::SelectRows</enum>
+               </property>
+               <property name="gridStyle">
+                <enum>Qt::SolidLine</enum>
+               </property>
+               <property name="sortingEnabled">
+                <bool>false</bool>
+               </property>
+               <property name="columnCount">
+                <number>5</number>
+               </property>
+               <column>
+                <property name="text">
+                 <string>name</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>condition</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>version</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>type</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>flags</string>
+                </property>
+               </column>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout">
+               <property name="spacing">
+                <number>6</number>
+               </property>
+               <property name="margin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QPushButton" name="generateDepsButton">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string>Generate</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QToolButton" name="addDepFromFilesBtn">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="DepAddButton">
+                 <property name="text">
+                  <string>Add</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="DepDeleteButton">
+                 <property name="text">
+                  <string>Delete</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="page_6">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>145</width>
+              <height>132</height>
+             </rect>
+            </property>
+            <attribute name="label">
+             <string>Tags</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <item>
+              <widget class="QListWidget" name="TagListWidget">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>1</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QGridLayout" name="gridLayout_3">
+               <item row="0" column="0">
+                <widget class="QComboBox" name="tagBox">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>1</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="editable">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QPushButton" name="TagAddButton">
+                 <property name="text">
+                  <string>Add</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QPushButton" name="TagDeleteButton">
+                 <property name="text">
+                  <string>Delete</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="specialFilesTab">
+      <attribute name="icon">
+       <iconset>
+        <normaloff>../../../../usr/share/icons/crystalsvg/32x32/actions/save_all.png</normaloff>../../../../usr/share/icons/crystalsvg/32x32/actions/save_all.png</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Special files</string>
+      </attribute>
+      <layout class="QVBoxLayout">
+       <item>
+        <widget class="QSplitter" name="splitter_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Configuration files</string>
+          </property>
+          <layout class="QGridLayout">
+           <property name="margin">
+            <number>9</number>
+           </property>
+           <property name="spacing">
+            <number>6</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="text">
+              <string>File to add:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="confFileAddEdit"/>
+           </item>
+           <item row="0" column="2">
+            <widget class="QToolButton" name="conffileSearchButton">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="3">
+            <layout class="QHBoxLayout">
+             <property name="spacing">
+              <number>6</number>
+             </property>
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <spacer>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="addConfFileButton">
+               <property name="text">
+                <string>Add file</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="delConfFileButton">
+               <property name="text">
+                <string>Delete</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="2" column="0" colspan="3">
+            <widget class="QListWidget" name="configFilesListWidget">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>1</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QGroupBox" name="tempFilesGroupBox">
+          <property name="title">
+           <string>Temporary files</string>
+          </property>
+          <layout class="QVBoxLayout">
+           <item>
+            <layout class="QHBoxLayout">
+             <item>
+              <widget class="QLabel" name="label_7">
+               <property name="text">
+                <string>File to add:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="tempFileAddEdit"/>
+             </item>
+             <item>
+              <widget class="QToolButton" name="tempfileSearchButton">
+               <property name="text">
+                <string>...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout">
+             <property name="spacing">
+              <number>6</number>
+             </property>
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <spacer>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="addTempFileButton">
+               <property name="text">
+                <string>Add file</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="delTempFileButton">
+               <property name="text">
+                <string>Delete</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QListWidget" name="tempFilesListWidget">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>1</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="icon">
+       <iconset>
+        <normaloff>../../../../usr/share/icons/crystalsvg/32x32/actions/filenew.png</normaloff>../../../../usr/share/icons/crystalsvg/32x32/actions/filenew.png</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>File manager</string>
+      </attribute>
+      <layout class="QVBoxLayout">
+       <item>
+        <widget class="QSplitter" name="splitter_6">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <widget class="QWidget" name="layoutWidget">
+          <layout class="QVBoxLayout">
+           <item>
+            <widget class="QLabel" name="label_13">
+             <property name="text">
+              <string>Package contents</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout">
+             <item>
+              <widget class="QToolButton" name="goHomeButton">
+               <property name="toolTip">
+                <string>Go to package root</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../../../../usr/share/mpkg/packagebuilder/icons/gohome.png</normaloff>../../../../usr/share/mpkg/packagebuilder/icons/gohome.png</iconset>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="goUpButton">
+               <property name="toolTip">
+                <string>Directory up</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../../../../usr/share/mpkg/packagebuilder/icons/up.png</normaloff>../../../../usr/share/mpkg/packagebuilder/icons/up.png</iconset>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="refreshButton">
+               <property name="toolTip">
+                <string>Refresh</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../../../../usr/share/mpkg/packagebuilder/icons/reload.png</normaloff>../../../../usr/share/mpkg/packagebuilder/icons/reload.png</iconset>
+               </property>
+               <property name="shortcut">
+                <string>Ctrl+R</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="filelistCurrentPath">
+               <property name="text">
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QListWidget" name="filelistWidget">
+             <property name="selectionMode">
+              <enum>QAbstractItemView::ExtendedSelection</enum>
+             </property>
+             <property name="selectionRectVisible">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="layoutWidget_2">
+          <layout class="QVBoxLayout">
+           <item>
+            <widget class="QLabel" name="label_14">
+             <property name="text">
+              <string>Filesystem</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout">
+             <item>
+              <widget class="QToolButton" name="goHomeButton_2">
+               <property name="toolTip">
+                <string>Go to home directory</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../../../../usr/share/mpkg/packagebuilder/icons/gohome.png</normaloff>../../../../usr/share/mpkg/packagebuilder/icons/gohome.png</iconset>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="goUpButton_2">
+               <property name="toolTip">
+                <string>Directory up</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../../../../usr/share/mpkg/packagebuilder/icons/up.png</normaloff>../../../../usr/share/mpkg/packagebuilder/icons/up.png</iconset>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="refreshButton_2">
+               <property name="toolTip">
+                <string>Refresh</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../../../../usr/share/mpkg/packagebuilder/icons/reload.png</normaloff>../../../../usr/share/mpkg/packagebuilder/icons/reload.png</iconset>
+               </property>
+               <property name="shortcut">
+                <string>Ctrl+R</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="filelistCurrentPath_2">
+               <property name="text">
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QListWidget" name="filelistWidget_2">
+             <property name="editTriggers">
+              <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::ExtendedSelection</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout">
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="renameButton">
+           <property name="text">
+            <string>F2 Rename</string>
+           </property>
+           <property name="shortcut">
+            <string>F2</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="viewButton">
+           <property name="text">
+            <string>F3 View</string>
+           </property>
+           <property name="shortcut">
+            <string>F3</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="editButton">
+           <property name="text">
+            <string>F4 Edit</string>
+           </property>
+           <property name="shortcut">
+            <string>F4</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="copyButton">
+           <property name="text">
+            <string>F5 Copy</string>
+           </property>
+           <property name="shortcut">
+            <string>F5</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="moveButton">
+           <property name="text">
+            <string>F6 Move</string>
+           </property>
+           <property name="shortcut">
+            <string>F6</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="mkdirButton">
+           <property name="text">
+            <string>F7 Mkdir</string>
+           </property>
+           <property name="shortcut">
+            <string>F7</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="deleteButton">
+           <property name="text">
+            <string>F8 Delete</string>
+           </property>
+           <property name="shortcut">
+            <string>F8</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout">
+         <item>
+          <widget class="QLabel" name="currentPath">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Execute command:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cmdLine">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="icon">
+       <iconset>
+        <normaloff>../../../../usr/share/mpkg/packagebuilder/icons/system-config-services.png</normaloff>../../../../usr/share/mpkg/packagebuilder/icons/system-config-services.png</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Building options</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QSplitter" name="splitter_7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <widget class="QToolBox" name="toolBox_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="page_7">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>365</width>
+             <height>101</height>
+            </rect>
+           </property>
+           <attribute name="label">
+            <string>Sources</string>
+           </attribute>
+           <layout class="QVBoxLayout">
+            <item>
+             <layout class="QHBoxLayout">
+              <item>
+               <widget class="QLabel" name="label_9">
+                <property name="text">
+                 <string>URL:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="urlEdit">
+                <property name="toolTip">
+                 <string>Please enter an URL to the source file. It can be http://, ftp://, and even svn checkout or cvs (for last ones, just enter download command)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="nameDetectButton">
+                <property name="text">
+                 <string>Detect name/version</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout">
+              <item>
+               <widget class="QCheckBox" name="embedSourcesCheckBox">
+                <property name="toolTip">
+                 <string>Import sources directly in package. Useful for offline distributing</string>
+                </property>
+                <property name="statusTip">
+                 <string/>
+                </property>
+                <property name="text">
+                 <string>Embed sources into ebuild</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>314</width>
+                  <height>27</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="downloadAnalyzeButton">
+                <property name="text">
+                 <string>Download and analyze</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>../../../../usr/share/icons/crystalsvg/32x32/actions/svn_status.png</normaloff>../../../../usr/share/icons/crystalsvg/32x32/actions/svn_status.png</iconset>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout">
+              <item>
+               <widget class="QLabel" name="sourcesRootDirectoryLabel">
+                <property name="text">
+                 <string>Sources root directory:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="sourcesRootDirectoryEdit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="sourcesRootDirectoryAutodetectCheckBox">
+                <property name="text">
+                 <string>Autodetect</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="noSubfolderCheckBox">
+                <property name="text">
+                 <string>No subfolder</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="page_8">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>200</width>
+             <height>189</height>
+            </rect>
+           </property>
+           <attribute name="label">
+            <string>Build system options</string>
+           </attribute>
+           <layout class="QVBoxLayout">
+            <item>
+             <layout class="QHBoxLayout">
+              <item>
+               <widget class="QCheckBox" name="envOptionsCheckBox">
+                <property name="text">
+                 <string>Environment options</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="envOptionsEdit"/>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="noStripCheckBox">
+              <property name="text">
+               <string>Don't strip</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="customCommandsGroupBox">
+              <property name="title">
+               <string>Custom commands</string>
+              </property>
+              <layout class="QGridLayout">
+               <item row="0" column="0">
+                <widget class="QCheckBox" name="configureCheckBox">
+                 <property name="toolTip">
+                  <string>Check this if compilation requires configure script</string>
+                 </property>
+                 <property name="text">
+                  <string>Configure:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="configureEdit"/>
+               </item>
+               <item row="1" column="0">
+                <widget class="QCheckBox" name="compilationCheckBox">
+                 <property name="toolTip">
+                  <string>Check this if compilation requires make</string>
+                 </property>
+                 <property name="text">
+                  <string>Compilation:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="compilationEdit"/>
+               </item>
+               <item row="2" column="0">
+                <widget class="QCheckBox" name="installationCheckBox">
+                 <property name="toolTip">
+                  <string>Check this if compilation requires make install script</string>
+                 </property>
+                 <property name="text">
+                  <string>Install in subdirectory:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="installEdit"/>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <spacer>
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>141</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="page_9">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>649</width>
+             <height>119</height>
+            </rect>
+           </property>
+           <attribute name="label">
+            <string>GCC options and optimization</string>
+           </attribute>
+           <layout class="QGridLayout">
+            <item row="0" column="0">
+             <widget class="QCheckBox" name="cpuArchCheckBox">
+              <property name="text">
+               <string>CPU architecture:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="cpuArchComboBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="currentIndex">
+               <number>1</number>
+              </property>
+              <item>
+               <property name="text">
+                <string>i386</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>i486</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>i586</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>pentium-mmx</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>i686</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>pentium2</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>pentium3</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>pentium-m</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>pentium4</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>prescott</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>nocona</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>k6</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>k6-2</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>k6-3</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>athlon</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>athlon64</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QCheckBox" name="cpuTuneCheckBox">
+              <property name="text">
+               <string>CPU optimization:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QComboBox" name="cpuTuneComboBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="currentIndex">
+               <number>4</number>
+              </property>
+              <item>
+               <property name="text">
+                <string>i386</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>i486</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>i586</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>pentium-mmx</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>i686</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>pentium2</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>pentium3</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>pentium-m</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>pentium4</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>prescott</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>nocona</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>k6</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>k6-2</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>k6-3</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>athlon</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>athlon64</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QCheckBox" name="optimizationCheckBox">
+              <property name="text">
+               <string>Optimization level:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="optimizationComboBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="currentIndex">
+               <number>4</number>
+              </property>
+              <item>
+               <property name="text">
+                <string>O</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Os</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>O0</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>O1</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>O2</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>O3</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>O4</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>O5</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>O6</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>O7</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>O8</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>O9</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLabel" name="maxNumjobsLabel">
+              <property name="text">
+               <string>Limit numjobs at:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QSpinBox" name="maxNumjobsSpinBox"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QCheckBox" name="customGccOptionsCheckBox">
+              <property name="text">
+               <string>Custom gcc flags</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1" colspan="3">
+             <widget class="QLineEdit" name="customGccOptionsEdit"/>
+            </item>
+            <item row="3" column="0" colspan="2">
+             <widget class="QCheckBox" name="AllowUserToChangeCheckBox">
+              <property name="text">
+               <string>Allow user to change these settings</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QCheckBox" name="dontUseCflags">
+              <property name="text">
+               <string>Don't use CFLAGS</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" colspan="4">
+             <spacer>
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>641</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="layoutWidget">
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <layout class="QHBoxLayout">
+             <item>
+              <widget class="QLabel" name="buildingSystemLabel">
+               <property name="text">
+                <string>Building system:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="buildingSystemComboBox">
+               <item>
+                <property name="text">
+                 <string>autotools (configure/make/make install)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>scons (scons foo.out)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>cmake (mkdir build; cd build; cmake ..; make)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>custom set of commands</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>custom script</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>qmake (Qt4)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>qmake (Qt3)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>python (setup.py)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>make &amp;&amp; make install</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>perl</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>waf</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QToolBox" name="toolBox">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="currentIndex">
+              <number>3</number>
+             </property>
+             <widget class="QWidget" name="page">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>325</width>
+                <height>146</height>
+               </rect>
+              </property>
+              <attribute name="label">
+               <string>Patches</string>
+              </attribute>
+              <layout class="QVBoxLayout">
+               <item>
+                <widget class="QGroupBox" name="patchGroupBox">
+                 <property name="title">
+                  <string>Patches</string>
+                 </property>
+                 <layout class="QVBoxLayout">
+                  <item>
+                   <layout class="QHBoxLayout">
+                    <item>
+                     <widget class="QLabel" name="patchLabel">
+                      <property name="text">
+                       <string>Patch (file/URL):</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="patchEdit"/>
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="browsePatchButton">
+                      <property name="text">
+                       <string>...</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="patchAddButton">
+                      <property name="text">
+                       <string>Add</string>
+                      </property>
+                      <property name="icon">
+                       <iconset>
+                        <normaloff/>
+                       </iconset>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="patchDeleteButton">
+                      <property name="text">
+                       <string>Delete</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <widget class="QListWidget" name="patchListWidget"/>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="page_2">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>306</width>
+                <height>137</height>
+               </rect>
+              </property>
+              <attribute name="label">
+               <string>PreBuild script</string>
+              </attribute>
+              <layout class="QVBoxLayout">
+               <item>
+                <layout class="QHBoxLayout">
+                 <item>
+                  <widget class="QCheckBox" name="runPreBuildScriptCheckBox">
+                   <property name="text">
+                    <string>Run script before build</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="loadPreBuildScriptFromFileButton">
+                   <property name="text">
+                    <string>Load from file...</string>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <normaloff>../../../../usr/share/icons/crystalsvg/32x32/actions/fileopen.png</normaloff>../../../../usr/share/icons/crystalsvg/32x32/actions/fileopen.png</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout">
+                 <item>
+                  <spacer>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>321</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="editPreBuildWithGvimButton">
+                   <property name="text">
+                    <string>Edit with gvim</string>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <normaloff>../../../../usr/share/icons/crystalsvg/32x32/apps/gvim.png</normaloff>../../../../usr/share/icons/crystalsvg/32x32/apps/gvim.png</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QTextEdit" name="preBuildScriptTextEdit"/>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="page_3">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>296</width>
+                <height>137</height>
+               </rect>
+              </property>
+              <attribute name="label">
+               <string>PostBuild script</string>
+              </attribute>
+              <layout class="QVBoxLayout">
+               <item>
+                <layout class="QHBoxLayout">
+                 <item>
+                  <widget class="QCheckBox" name="runScriptCheckBox">
+                   <property name="text">
+                    <string>Run script after build</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="loadScriptFromFileButton">
+                   <property name="text">
+                    <string>Load from file...</string>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <normaloff>../../../../usr/share/icons/crystalsvg/32x32/actions/fileopen.png</normaloff>../../../../usr/share/icons/crystalsvg/32x32/actions/fileopen.png</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout">
+                 <item>
+                  <spacer>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>211</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="editWithGvimButton">
+                   <property name="text">
+                    <string>Edit with gvim</string>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <normaloff>../../../../usr/share/icons/crystalsvg/32x32/apps/gvim.png</normaloff>../../../../usr/share/icons/crystalsvg/32x32/apps/gvim.png</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QTextEdit" name="customScriptTextEdit"/>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="page_4">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>232</width>
+                <height>164</height>
+               </rect>
+              </property>
+              <attribute name="label">
+               <string>Configure options</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_2">
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_2">
+                 <item>
+                  <widget class="QLineEdit" name="keyNameEdit">
+                   <property name="font">
+                    <font>
+                     <pointsize>7</pointsize>
+                     <italic>true</italic>
+                    </font>
+                   </property>
+                   <property name="toolTip">
+                    <string>Key name</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_8">
+                   <property name="text">
+                    <string>=</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="keyValueEdit">
+                   <property name="font">
+                    <font>
+                     <italic>true</italic>
+                    </font>
+                   </property>
+                   <property name="toolTip">
+                    <string>Key value</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="keyAddButton">
+                   <property name="text">
+                    <string>Add</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="keyDeleteButton">
+                   <property name="text">
+                    <string>Delete</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QTableWidget" name="compilationOptionsTableWidget">
+                 <property name="editTriggers">
+                  <set>QAbstractItemView::NoEditTriggers</set>
+                 </property>
+                 <property name="selectionMode">
+                  <enum>QAbstractItemView::SingleSelection</enum>
+                 </property>
+                 <property name="selectionBehavior">
+                  <enum>QAbstractItemView::SelectRows</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_3">
+                 <item>
+                  <widget class="QLabel" name="setFromTemplateLabel">
+                   <property name="text">
+                    <string>Set from template:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="configTemplateComboBox">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="setConfigTemplateButton">
+                   <property name="text">
+                    <string>Set</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                 <item>
+                  <spacer name="horizontalSpacer">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="saveConfigTemplateButton">
+                   <property name="text">
+                    <string>Save as new template...</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="scriptsTab">
+      <attribute name="icon">
+       <iconset>
+        <normaloff>../../../../usr/share/mpkg/packagebuilder/icons/advancedsettings.png</normaloff>../../../../usr/share/mpkg/packagebuilder/icons/advancedsettings.png</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Installation scripts</string>
+      </attribute>
+      <layout class="QVBoxLayout">
+       <item>
+        <widget class="QTabWidget" name="installScriptsTabWidget">
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+         <widget class="QWidget" name="preinstallTab">
+          <attribute name="title">
+           <string>Preinstall</string>
+          </attribute>
+          <layout class="QVBoxLayout">
+           <item>
+            <layout class="QHBoxLayout">
+             <item>
+              <widget class="QCheckBox" name="preinstallEnabledCheckBox">
+               <property name="text">
+                <string>Enabled</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="preinstallScriptLoadFromFileButton">
+               <property name="text">
+                <string>Load from file...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QTextEdit" name="preinstallScriptEdit"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="postinstallTab">
+          <attribute name="title">
+           <string>Postinstall</string>
+          </attribute>
+          <layout class="QVBoxLayout">
+           <item>
+            <layout class="QHBoxLayout">
+             <item>
+              <widget class="QCheckBox" name="postinstallEnabledCheckBox">
+               <property name="text">
+                <string>Enabled</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="postinstallScriptLoadFromFileButton">
+               <property name="text">
+                <string>Load from file...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QTextEdit" name="postinstallScriptEdit"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="preremoveTab">
+          <attribute name="title">
+           <string>Preremove</string>
+          </attribute>
+          <layout class="QVBoxLayout">
+           <item>
+            <layout class="QHBoxLayout">
+             <item>
+              <widget class="QCheckBox" name="preremoveEnabledCheckBox">
+               <property name="text">
+                <string>Enabled</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="preremoveScriptLoadFromFileButton">
+               <property name="text">
+                <string>Load from file...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QTextEdit" name="preremoveScriptEdit"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="postremoveTab">
+          <attribute name="title">
+           <string>Postremove</string>
+          </attribute>
+          <layout class="QVBoxLayout">
+           <item>
+            <layout class="QHBoxLayout">
+             <item>
+              <widget class="QCheckBox" name="postremoveEnabledCheckBox">
+               <property name="text">
+                <string>Enabled</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="postremoveScriptLoadFromFileButton">
+               <property name="text">
+                <string>Load from file...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QTextEdit" name="postremoveScriptEdit"/>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <item>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QPushButton" name="LoadButton">
+         <property name="text">
+          <string>Open...</string>
+         </property>
+         <property name="shortcut">
+          <string>Ctrl+O</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QPushButton" name="importFromDatabaseButton">
+         <property name="text">
+          <string>Import from database</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="aboutButton">
+         <property name="text">
+          <string>About...</string>
+         </property>
+         <property name="shortcut">
+          <string>F1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QPushButton" name="importDescriptionButton">
+         <property name="text">
+          <string>Import meta...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QComboBox" name="resentComboBox"/>
+       </item>
+       <item row="1" column="3">
+        <widget class="QPushButton" name="openDirectoryButton">
+         <property name="text">
+          <string>Open directory...</string>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QPushButton" name="saveAndBuildButton">
+         <property name="text">
+          <string>Save and build</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QPushButton" name="BuildButton">
+         <property name="text">
+          <string>Save package</string>
+         </property>
+         <property name="shortcut">
+          <string>Ctrl+S</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QPushButton" name="quitButton">
+         <property name="text">
+          <string>Quit</string>
+         </property>
+         <property name="shortcut">
+          <string>Ctrl+Q</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="saveAndQuitButton">
+         <property name="text">
+          <string>Save and quit</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="saveAsButton">
+         <property name="text">
+          <string>Save as...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QPushButton" name="buildInstallButton">
+         <property name="text">
+          <string>Build and install</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>NameEdit</tabstop>
+  <tabstop>VersionEdit</tabstop>
+  <tabstop>ArchComboBox</tabstop>
+  <tabstop>BuildEdit</tabstop>
+  <tabstop>ShortDescriptionEdit</tabstop>
+  <tabstop>DepSuggestComboBox</tabstop>
+  <tabstop>DepNameEdit</tabstop>
+  <tabstop>DepConditionComboBox</tabstop>
+  <tabstop>DepVersionEdit</tabstop>
+  <tabstop>buildDependencyCheckBox</tabstop>
+  <tabstop>addDepFromFilesBtn</tabstop>
+  <tabstop>DepAddButton</tabstop>
+  <tabstop>DepDeleteButton</tabstop>
+  <tabstop>tagBox</tabstop>
+  <tabstop>TagAddButton</tabstop>
+  <tabstop>MaintainerNameEdit</tabstop>
+  <tabstop>MaintainerMailEdit</tabstop>
+  <tabstop>sourcePackageRadioButton</tabstop>
+  <tabstop>binaryPackageRadioButton</tabstop>
+  <tabstop>aboutButton</tabstop>
+  <tabstop>LoadButton</tabstop>
+  <tabstop>BuildButton</tabstop>
+  <tabstop>saveAndQuitButton</tabstop>
+  <tabstop>quitButton</tabstop>
+  <tabstop>globalTabWidget</tabstop>
+  <tabstop>urlEdit</tabstop>
+  <tabstop>embedSourcesCheckBox</tabstop>
+  <tabstop>downloadAnalyzeButton</tabstop>
+  <tabstop>buildingSystemComboBox</tabstop>
+  <tabstop>envOptionsCheckBox</tabstop>
+  <tabstop>envOptionsEdit</tabstop>
+  <tabstop>configureCheckBox</tabstop>
+  <tabstop>configureEdit</tabstop>
+  <tabstop>compilationCheckBox</tabstop>
+  <tabstop>compilationEdit</tabstop>
+  <tabstop>installationCheckBox</tabstop>
+  <tabstop>installEdit</tabstop>
+  <tabstop>cpuArchCheckBox</tabstop>
+  <tabstop>cpuArchComboBox</tabstop>
+  <tabstop>cpuTuneCheckBox</tabstop>
+  <tabstop>cpuTuneComboBox</tabstop>
+  <tabstop>optimizationCheckBox</tabstop>
+  <tabstop>optimizationComboBox</tabstop>
+  <tabstop>maxNumjobsSpinBox</tabstop>
+  <tabstop>customGccOptionsCheckBox</tabstop>
+  <tabstop>customGccOptionsEdit</tabstop>
+  <tabstop>AllowUserToChangeCheckBox</tabstop>
+  <tabstop>patchEdit</tabstop>
+  <tabstop>patchAddButton</tabstop>
+  <tabstop>patchDeleteButton</tabstop>
+  <tabstop>patchListWidget</tabstop>
+  <tabstop>loadScriptFromFileButton</tabstop>
+  <tabstop>editWithGvimButton</tabstop>
+  <tabstop>customScriptTextEdit</tabstop>
+  <tabstop>keyNameEdit</tabstop>
+  <tabstop>keyValueEdit</tabstop>
+  <tabstop>keyAddButton</tabstop>
+  <tabstop>keyDeleteButton</tabstop>
+  <tabstop>compilationOptionsTableWidget</tabstop>
+  <tabstop>installScriptsTabWidget</tabstop>
+  <tabstop>preinstallEnabledCheckBox</tabstop>
+  <tabstop>preinstallScriptLoadFromFileButton</tabstop>
+  <tabstop>preinstallScriptEdit</tabstop>
+  <tabstop>postinstallEnabledCheckBox</tabstop>
+  <tabstop>postinstallScriptLoadFromFileButton</tabstop>
+  <tabstop>postinstallScriptEdit</tabstop>
+  <tabstop>preremoveEnabledCheckBox</tabstop>
+  <tabstop>preremoveScriptLoadFromFileButton</tabstop>
+  <tabstop>preremoveScriptEdit</tabstop>
+  <tabstop>postremoveEnabledCheckBox</tabstop>
+  <tabstop>postremoveScriptLoadFromFileButton</tabstop>
+  <tabstop>postremoveScriptEdit</tabstop>
+  <tabstop>DepTableWidget</tabstop>
+  <tabstop>generateDepsButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

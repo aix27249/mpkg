@@ -1,0 +1,1109 @@
+<ui version="4.0" >
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1008</width>
+    <height>685</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>MOPSLinux package manager</string>
+  </property>
+  <property name="windowIcon" >
+   <iconset>/usr/share/mpkg/icons/removed_available.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <layout class="QVBoxLayout" >
+    <property name="spacing" >
+     <number>6</number>
+    </property>
+    <property name="leftMargin" >
+     <number>9</number>
+    </property>
+    <property name="topMargin" >
+     <number>9</number>
+    </property>
+    <property name="rightMargin" >
+     <number>9</number>
+    </property>
+    <property name="bottomMargin" >
+     <number>9</number>
+    </property>
+    <item>
+     <widget class="QSplitter" name="splitter_3" >
+      <property name="sizePolicy" >
+       <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+        <horstretch>0</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="orientation" >
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QSplitter" name="splitter_2" >
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+       <widget class="QGroupBox" name="packageListBox" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Maximum" hsizetype="Preferred" >
+          <horstretch>0</horstretch>
+          <verstretch>144</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize" >
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="sizeIncrement" >
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="title" >
+         <string>Package categories</string>
+        </property>
+        <layout class="QVBoxLayout" >
+         <property name="spacing" >
+          <number>6</number>
+         </property>
+         <property name="leftMargin" >
+          <number>9</number>
+         </property>
+         <property name="topMargin" >
+          <number>9</number>
+         </property>
+         <property name="rightMargin" >
+          <number>9</number>
+         </property>
+         <property name="bottomMargin" >
+          <number>9</number>
+         </property>
+         <item>
+          <widget class="QSplitter" name="splitter" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="QListWidget" name="listWidget" >
+            <property name="maximumSize" >
+             <size>
+              <width>515</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="iconSize" >
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QGroupBox" name="packageInfoBox" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Maximum" hsizetype="Minimum" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize" >
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="sizeIncrement" >
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="title" >
+         <string>Info about package</string>
+        </property>
+        <layout class="QVBoxLayout" >
+         <property name="spacing" >
+          <number>6</number>
+         </property>
+         <property name="leftMargin" >
+          <number>9</number>
+         </property>
+         <property name="topMargin" >
+          <number>9</number>
+         </property>
+         <property name="rightMargin" >
+          <number>9</number>
+         </property>
+         <property name="bottomMargin" >
+          <number>9</number>
+         </property>
+         <item>
+          <widget class="QTabWidget" name="tabWidget" >
+           <property name="tabPosition" >
+            <enum>QTabWidget::South</enum>
+           </property>
+           <property name="tabShape" >
+            <enum>QTabWidget::Rounded</enum>
+           </property>
+           <property name="currentIndex" >
+            <number>0</number>
+           </property>
+           <property name="usesScrollButtons" >
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="tab" >
+            <attribute name="title" >
+             <string>Overview</string>
+            </attribute>
+            <layout class="QVBoxLayout" >
+             <property name="spacing" >
+              <number>6</number>
+             </property>
+             <property name="leftMargin" >
+              <number>9</number>
+             </property>
+             <property name="topMargin" >
+              <number>9</number>
+             </property>
+             <property name="rightMargin" >
+              <number>9</number>
+             </property>
+             <property name="bottomMargin" >
+              <number>9</number>
+             </property>
+             <item>
+              <widget class="QTextEdit" name="overviewEdit" >
+               <property name="readOnly" >
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="tab_2" >
+            <attribute name="title" >
+             <string>Details</string>
+            </attribute>
+            <layout class="QHBoxLayout" >
+             <property name="spacing" >
+              <number>6</number>
+             </property>
+             <property name="leftMargin" >
+              <number>9</number>
+             </property>
+             <property name="topMargin" >
+              <number>9</number>
+             </property>
+             <property name="rightMargin" >
+              <number>9</number>
+             </property>
+             <property name="bottomMargin" >
+              <number>9</number>
+             </property>
+             <item>
+              <widget class="QTextEdit" name="detailedEdit" >
+               <property name="readOnly" >
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="tab_3" >
+            <attribute name="title" >
+             <string>Dependencies</string>
+            </attribute>
+            <layout class="QHBoxLayout" >
+             <property name="spacing" >
+              <number>6</number>
+             </property>
+             <property name="leftMargin" >
+              <number>9</number>
+             </property>
+             <property name="topMargin" >
+              <number>9</number>
+             </property>
+             <property name="rightMargin" >
+              <number>9</number>
+             </property>
+             <property name="bottomMargin" >
+              <number>9</number>
+             </property>
+             <item>
+              <widget class="QTextBrowser" name="depTextBrowser" />
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QGroupBox" name="packagesBox" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Maximum" >
+         <horstretch>10</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>300</width>
+         <height>200</height>
+        </size>
+       </property>
+       <property name="title" >
+        <string>Packages - loading...</string>
+       </property>
+       <property name="flat" >
+        <bool>false</bool>
+       </property>
+       <layout class="QVBoxLayout" >
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <property name="leftMargin" >
+         <number>9</number>
+        </property>
+        <property name="topMargin" >
+         <number>9</number>
+        </property>
+        <property name="rightMargin" >
+         <number>9</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>9</number>
+        </property>
+        <item>
+         <widget class="QFrame" name="splashFrame" >
+          <property name="autoFillBackground" >
+           <bool>true</bool>
+          </property>
+          <property name="frameShape" >
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow" >
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QVBoxLayout" >
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <property name="leftMargin" >
+            <number>9</number>
+           </property>
+           <property name="topMargin" >
+            <number>9</number>
+           </property>
+           <property name="rightMargin" >
+            <number>9</number>
+           </property>
+           <property name="bottomMargin" >
+            <number>9</number>
+           </property>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" >
+             <property name="spacing" >
+              <number>6</number>
+             </property>
+             <property name="leftMargin" >
+              <number>0</number>
+             </property>
+             <property name="topMargin" >
+              <number>0</number>
+             </property>
+             <property name="rightMargin" >
+              <number>0</number>
+             </property>
+             <property name="bottomMargin" >
+              <number>0</number>
+             </property>
+             <item>
+              <spacer>
+               <property name="orientation" >
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" >
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QLabel" name="loadingLabel" >
+               <property name="text" >
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer>
+               <property name="orientation" >
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" >
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" >
+             <property name="spacing" >
+              <number>6</number>
+             </property>
+             <property name="leftMargin" >
+              <number>0</number>
+             </property>
+             <property name="topMargin" >
+              <number>0</number>
+             </property>
+             <property name="rightMargin" >
+              <number>0</number>
+             </property>
+             <property name="bottomMargin" >
+              <number>0</number>
+             </property>
+             <item>
+              <spacer>
+               <property name="orientation" >
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" >
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QLabel" name="indicatorLabel" >
+               <property name="text" >
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer>
+               <property name="orientation" >
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" >
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="progressTable" >
+          <property name="editTriggers" >
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="selectionMode" >
+           <enum>QAbstractItemView::NoSelection</enum>
+          </property>
+          <property name="selectionBehavior" >
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <property name="showGrid" >
+           <bool>false</bool>
+          </property>
+          <column>
+           <property name="text" >
+            <string>Item</string>
+           </property>
+          </column>
+          <column>
+           <property name="text" >
+            <string>State</string>
+           </property>
+          </column>
+          <column>
+           <property name="text" >
+            <string>Progress</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="packageTable" >
+          <property name="baseSize" >
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="mouseTracking" >
+           <bool>false</bool>
+          </property>
+          <property name="contextMenuPolicy" >
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
+          <property name="frameShape" >
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy" >
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="autoScroll" >
+           <bool>true</bool>
+          </property>
+          <property name="editTriggers" >
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="tabKeyNavigation" >
+           <bool>false</bool>
+          </property>
+          <property name="alternatingRowColors" >
+           <bool>true</bool>
+          </property>
+          <property name="selectionMode" >
+           <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
+          <property name="selectionBehavior" >
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <property name="verticalScrollMode" >
+           <enum>QAbstractItemView::ScrollPerItem</enum>
+          </property>
+          <property name="horizontalScrollMode" >
+           <enum>QAbstractItemView::ScrollPerItem</enum>
+          </property>
+          <property name="showGrid" >
+           <bool>true</bool>
+          </property>
+          <property name="gridStyle" >
+           <enum>Qt::DotLine</enum>
+          </property>
+          <property name="sortingEnabled" >
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" >
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <property name="leftMargin" >
+           <number>0</number>
+          </property>
+          <property name="topMargin" >
+           <number>0</number>
+          </property>
+          <property name="rightMargin" >
+           <number>0</number>
+          </property>
+          <property name="bottomMargin" >
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="selectAllButton" >
+            <property name="text" >
+             <string/>
+            </property>
+            <property name="icon" >
+             <iconset>/usr/share/mpkg/icons/install.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="deselectAllButton" >
+            <property name="text" >
+             <string/>
+            </property>
+            <property name="icon" >
+             <iconset>/usr/share/mpkg/icons/purge.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="quickSearchLabel" >
+            <property name="text" >
+             <string>Quick search:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="quickPackageSearchEdit" />
+          </item>
+          <item>
+           <widget class="QToolButton" name="clearSearchButton" >
+            <property name="text" >
+             <string>...</string>
+            </property>
+            <property name="icon" >
+             <iconset>/usr/share/mpkg/icons/clear_left.png</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QGridLayout" >
+          <property name="leftMargin" >
+           <number>0</number>
+          </property>
+          <property name="topMargin" >
+           <number>0</number>
+          </property>
+          <property name="rightMargin" >
+           <number>0</number>
+          </property>
+          <property name="bottomMargin" >
+           <number>0</number>
+          </property>
+          <property name="horizontalSpacing" >
+           <number>6</number>
+          </property>
+          <property name="verticalSpacing" >
+           <number>6</number>
+          </property>
+          <item row="0" column="0" >
+           <widget class="QLabel" name="totalLabel" >
+            <property name="text" >
+             <string>This process:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QProgressBar" name="progressBar" >
+            <property name="enabled" >
+             <bool>true</bool>
+            </property>
+            <property name="statusTip" >
+             <string/>
+            </property>
+            <property name="whatsThis" >
+             <string/>
+            </property>
+            <property name="value" >
+             <number>0</number>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+            <property name="orientation" >
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" >
+           <widget class="QLabel" name="currentLabel" >
+            <property name="text" >
+             <string>Overall:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" >
+           <widget class="QProgressBar" name="progressBar2" >
+            <property name="value" >
+             <number>0</number>
+            </property>
+            <property name="orientation" >
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" >
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <property name="leftMargin" >
+       <number>0</number>
+      </property>
+      <property name="topMargin" >
+       <number>0</number>
+      </property>
+      <property name="rightMargin" >
+       <number>0</number>
+      </property>
+      <property name="bottomMargin" >
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="statLabel" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="applyButton" >
+        <property name="text" >
+         <string>Apply changes</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" >
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <property name="leftMargin" >
+         <number>0</number>
+        </property>
+        <property name="topMargin" >
+         <number>0</number>
+        </property>
+        <property name="rightMargin" >
+         <number>0</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="skipButton" >
+          <property name="text" >
+           <string>Skip</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="abortButton" >
+          <property name="text" >
+           <string>Abort</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="quitButton" >
+          <property name="text" >
+           <string>Quit</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1008</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuRepositories" >
+    <property name="title" >
+     <string>Repositories</string>
+    </property>
+    <addaction name="actionAdd_remove_repositories" />
+    <addaction name="actionUpdate_data" />
+   </widget>
+   <widget class="QMenu" name="menuHelp" >
+    <property name="title" >
+     <string>Help</string>
+    </property>
+    <addaction name="actionHelp_topics" />
+    <addaction name="actionMini_FAQ" />
+    <addaction name="actionAbout" />
+   </widget>
+   <widget class="QMenu" name="menuFile" >
+    <property name="title" >
+     <string>File</string>
+    </property>
+    <addaction name="actionPreferences" />
+    <addaction name="actionCore_settings" />
+    <addaction name="separator" />
+    <addaction name="actionCommit_changes" />
+    <addaction name="actionReset_changes" />
+    <addaction name="actionReset_all_queue" />
+    <addaction name="separator" />
+    <addaction name="actionSave_queue" />
+    <addaction name="actionClean_cache" />
+    <addaction name="separator" />
+    <addaction name="actionQuit" />
+   </widget>
+   <widget class="QMenu" name="menuFilters" >
+    <property name="title" >
+     <string>Filters</string>
+    </property>
+    <addaction name="actionShow_available" />
+    <addaction name="actionShow_installed" />
+    <addaction name="actionShow_broken" />
+    <addaction name="actionShow_configexist" />
+    <addaction name="actionShow_queue" />
+    <addaction name="actionCustom_filter" />
+    <addaction name="actionShow_install" />
+    <addaction name="actionShow_purge" />
+    <addaction name="actionShow_unavailable" />
+    <addaction name="actionShow_deprecated" />
+   </widget>
+   <addaction name="menuFile" />
+   <addaction name="menuRepositories" />
+   <addaction name="menuFilters" />
+   <addaction name="menuHelp" />
+  </widget>
+  <widget class="QStatusBar" name="statusbar" />
+  <action name="actionAdd_remove_repositories" >
+   <property name="icon" >
+    <iconset>/usr/share/mpkg/icons/icons/taskbar.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Add/remove repositories</string>
+   </property>
+  </action>
+  <action name="actionInstalled" >
+   <property name="text" >
+    <string>Installed</string>
+   </property>
+  </action>
+  <action name="actionAvailable" >
+   <property name="text" >
+    <string>Installed</string>
+   </property>
+  </action>
+  <action name="actionAvailable_2" >
+   <property name="text" >
+    <string>Available</string>
+   </property>
+  </action>
+  <action name="actionShow_installed" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="icon" >
+    <iconset>/usr/share/mpkg/icons/installed.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Show installed</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+2</string>
+   </property>
+  </action>
+  <action name="actionShow_available" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="icon" >
+    <iconset>/usr/share/mpkg/icons/available.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Show available</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+1</string>
+   </property>
+  </action>
+  <action name="actionShow_broken" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="icon" >
+    <iconset>/usr/share/mpkg/icons/warning.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Show broken</string>
+   </property>
+   <property name="visible" >
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionShow_configexist" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="icon" >
+    <iconset>/usr/share/mpkg/icons/remove.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Show not purged</string>
+   </property>
+   <property name="iconText" >
+    <string>Show not purged</string>
+   </property>
+   <property name="toolTip" >
+    <string>Show packages that have config files (i.e. not purged)</string>
+   </property>
+   <property name="whatsThis" >
+    <string/>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+3</string>
+   </property>
+  </action>
+  <action name="actionShow_queue" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="icon" >
+    <iconset>/usr/share/mpkg/icons/install.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Show queued</string>
+   </property>
+   <property name="iconText" >
+    <string>Show queued</string>
+   </property>
+   <property name="toolTip" >
+    <string>Show queued</string>
+   </property>
+   <property name="visible" >
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionCustom_filter" >
+   <property name="text" >
+    <string>Custom filter...</string>
+   </property>
+   <property name="visible" >
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionHelp_topics" >
+   <property name="text" >
+    <string>Help topics</string>
+   </property>
+   <property name="visible" >
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionMini_FAQ" >
+   <property name="text" >
+    <string>Mini-FAQ</string>
+   </property>
+   <property name="visible" >
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionAbout" >
+   <property name="icon" >
+    <iconset>/usr/share/mpkg/icons/warning.png</iconset>
+   </property>
+   <property name="text" >
+    <string>About...</string>
+   </property>
+  </action>
+  <action name="actionPreferences" >
+   <property name="icon" >
+    <iconset>/usr/share/mpkg/icons/icons/default.kde/32x32/apps/package_utilities.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Preferences</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionCore_settings" >
+   <property name="icon" >
+    <iconset>/usr/share/mpkg/icons/icons/default.kde/32x32/apps/kcmprocessor.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Core settings</string>
+   </property>
+  </action>
+  <action name="actionCommit_changes" >
+   <property name="icon" >
+    <iconset>/usr/share/mpkg/icons/installed.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Commit changes</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionReset_changes" >
+   <property name="icon" >
+	   <iconset>/usr/share/mpkg/icons/rotate.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Reset changes</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="actionReset_all_queue" >
+   <property name="icon" >
+	   <iconset>/usr/share/mpkg/icons/eraser.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Reset all queue</string>
+   </property>
+  </action>
+  <action name="actionSave_queue" >
+   <property name="icon" >
+	   <iconset>/usr/share/mpkg/icons/document_save.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Save queue</string>
+   </property>
+  </action>
+  <action name="actionQuit" >
+   <property name="icon" >
+	   <iconset>/usr/share/mpkg/icons/application-exit.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Quit</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionClean_cache" >
+   <property name="icon" >
+	   <iconset>/usr/share/mpkg/icons/user_trash_full.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Clean cache</string>
+   </property>
+  </action>
+  <action name="actionShow_install" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Show queued</string>
+   </property>
+   <property name="visible" >
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionShow_purge" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Show purge</string>
+   </property>
+   <property name="visible" >
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionShow_unavailable" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="icon" >
+    <iconset>/usr/share/mpkg/icons/unknown.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Show unavailable</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+4</string>
+   </property>
+  </action>
+  <action name="actionUpdate_data" >
+   <property name="icon" >
+	   <iconset>/usr/share/mpkg/icons/reload.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Update data</string>
+   </property>
+  </action>
+  <action name="actionShow_deprecated" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="icon" >
+    <iconset>/usr/share/mpkg/icons/deprecated_available.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Show deprecated</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+5</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

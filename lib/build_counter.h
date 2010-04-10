@@ -1,0 +1,4 @@
+#ifndef BUILDCOUNTER_H_
+#define BUILDCOUNTER_H_
+#define MOPSLINUX_BUILD "RELEASE"
+#endif

@@ -1,0 +1,23 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Comment=MPKG Package Manager
+Comment[ru]=Менеджер пакетов MPKG
+Exec=manager2
+TryExec=manager2
+GenericName=MPKG Package manager
+GenericName[ru]=Менеджер пакетов MPKG
+Icon=mpkg-manager2
+MimeType=
+Name=MOPSLinux Package Manager 2 (mpkg)
+Name[ru]=Установка/удаление пакетов
+Name[en]=Install/remove packages
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DCOP-ServiceType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=root
+Categories=System;

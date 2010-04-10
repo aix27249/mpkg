@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 2.4)
+if(COMMAND cmake_policy)
+   cmake_policy(SET CMP0003 NEW)
+endif(COMMAND cmake_policy)
+
+PROJECT(installer)
+if (CMAKE_SIZEOF_VOID_P EQUAL 4)
+	SET(X86_64 OFF)
+else (CMAKE_SIZEOF_VOID_P EQUAL 4)
+	SET(X86_64 ON)
+	ADD_DEFINITIONS( -DX86_64)
+endif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+
+ADD_DEFINITIONS( -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DLARGEFILE64_SOURCE -DDL_CLEANUP -I. -I/usr/include/libxml2 -Wall -W -DNEW_INSTALL_SYSTEM -DUSE_SYSTEM_SED -DDEP_NORMALIZE -DLINUX_DEFINED )
+
+ADD_DEFINITIONS(${CXXFLAGS})
+LINK_LIBRARIES(mpkg parted)
+ADD_EXECUTABLE(setup parted_tools raidtool setup composite_setup)
+ADD_EXECUTABLE(raidtool parted_tools raidtool raidmanager)
+ADD_EXECUTABLE(composite_setup composite_setup composite)

@@ -1,0 +1,3 @@
+pwd > /var/log/hdddir
+exit 0
+

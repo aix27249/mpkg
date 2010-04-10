@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/x-tar;application/x-compressed-tar;application/x-xz;
+
+Actions=mpkgInstall;
+X-KDE-Priority=TopLevel
+X-KDE-StartupNotify=false
+
+[Desktop Action mpkgInstall]
+Exec=mpkg-gui-installer %U
+Name=Install packages with mpkg
+Name[ru]=Установить пакеты с помощью mpkg

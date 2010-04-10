@@ -1,0 +1,12 @@
+#!/bin/sh
+echo "Extracting language data from sources"
+
+LANGUAGES="ru uk"
+SOURCES="../lib/*.cpp ../console/*.cpp ../installer/*.cpp ../lib/*.h ../console/*.h ../installer/*.h"
+
+# Extract from sources for each language
+for lang in $LANGUAGES ; do
+	xgettext --from-code="utf-8" --keyword="_" -d mpkg -j -s -o $lang.po $SOURCES
+done
+# Extract from sources for template
+xgettext --from-code="utf-8" --keyword="_" -d mpkg -s -o mpkg-template.pot $SOURCES

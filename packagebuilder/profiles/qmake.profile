@@ -1,0 +1,2 @@
+PREFIX=/usr
+INSTALL_PREFIX=/usr

@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="main">
+    <file>edit-clear-locationbar-rtl.png</file>
+    <file>applications-system.png</file>
+  </qresource>
+</RCC>

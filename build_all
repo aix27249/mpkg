@@ -1,0 +1,31 @@
+#!/bin/sh
+# This script builds all components and installs it into system (because of building requirements).
+# Do not use this for package build
+TARGETS="mpkgsupport nwidgets lib console i18n manager2 mpkg-gui-installer packagebuilder mparted mbuilder installer mpkg-parted installer2"
+set -e
+CWD=`pwd`
+if [ `uname -m` = "i686" ] ; then
+	echo DESU
+	MARCH="-march=i686"
+fi
+
+CXXFLAGS="-O3 $MARCH -fomit-frame-pointer -fPIC -funroll-all-loops -fopenmp -funroll-loops -ffast-math -O3 -fgraphite-identity -floop-interchange -floop-strip-mine -ftree-parallelize-loops=4 -pthread -floop-block"
+export CXXFLAGS
+CFLAGS=$CXXFLAGS
+export CFLAGS
+
+for i in $TARGETS ; do
+	mkdir -p $CWD/$i/build
+	cd $CWD/$i/build
+	CXXFLAGS=$CXXFLAGS CFLAGS=$CFLAGS cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS:STRING="$CFLAGS" -DCMAKE_CXX_FLAGS:STRING="$CXXFLAGS" ..
+	make $NUMJOBS
+	if [ x$i = x"installer" ] ; then
+		echo "Installer build ok"
+	elif [ x$i = x"installer2" ] ; then
+		echo "Installer2 build ok"
+	else
+		sudo make install
+	fi
+
+done
+cd $CWD

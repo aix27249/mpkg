@@ -1,0 +1,13 @@
+#!/bin/sh
+VERSION=0.14.0
+ARCH=`uname -m`
+svn up
+REVISION=`svn info | grep Revi | cut -d ":" -f2 | cut -c2-`
+
+MODULES="mpkgsupport nwidgets mpkg-core mpkg-console mbuilder mpkg-packagebuilder mpkg-manager2 mpkg-i18n mpkg-gui-installer"
+set -e
+for i in $MODULES ; do
+	mpkg build $i-${VERSION}_svnREVISION-1.spkg
+	mpkg-install -y /var/mpkg/packages/$i-${VERSION}_svn${REVISION}-$ARCH-1.txz
+done
+

@@ -1,0 +1,29 @@
+#!/bin/bash
+PKG=$1
+PRGNAM=$2
+SOURCELIST=$3
+CWD=$4
+if [ -z "$PKG" ] ; then
+	echo "No PKG specified"
+	exit 1
+fi
+if [ -z "$SOURCELIST" ] ; then
+	echo "No SOURCELIST specified"
+	exit 1
+fi
+
+SRCDIR=$PKG/usr/src/SlackBuilds
+SRCTMP=$SRCDIR/tmp
+mkdir -p $SRCTMP
+
+for i in $SOURCELIST ; do
+	cat $CWD/$i > $SRCTMP/$i
+done
+cd $SRCTMP
+tar cvf $PRGNAM.build_tree.txz *
+mv $PRGNAM.build_tree.txz $SRCDIR/
+
+cd $PKG
+rm -rf $SRCTMP
+echo Sources compressed to $SRCDIR
+

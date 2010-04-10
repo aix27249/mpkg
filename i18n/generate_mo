@@ -1,0 +1,8 @@
+#!/bin/sh
+echo "Generating .mo files"
+LANGUAGES="ru uk"
+for lang in $LANGUAGES ; do
+    msgfmt -c -v -o mpkg-$lang.mo ./mpkg-$lang.po
+done
+echo Translation generated.
+

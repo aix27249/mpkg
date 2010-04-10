@@ -1,0 +1,46 @@
+--- build_mod/firegl_public.c.orig	2009-07-10 17:32:06.000000000 +0400
++++ build_mod/firegl_public.c	2009-07-10 17:35:26.000000000 +0400
+@@ -225,7 +225,7 @@
+ #endif
+ 
+ #ifdef MODULE_LICENSE
+-MODULE_LICENSE("Proprietary. (C) 2002 - ATI Technologies, Starnberg, GERMANY");
++MODULE_LICENSE("GPL");
+ #endif
+ #ifdef MODULE_DEVICE_TABLE
+ MODULE_DEVICE_TABLE(pci, fglrx_pci_table);
+@@ -1402,7 +1402,7 @@
+  */
+ KCL_TYPE_Uid ATI_API_CALL KCL_GetEffectiveUid(void)
+ {
+-    return current->euid;
++    return current->cred->euid;
+ }
+ 
+ /** /brief Delay execution for the specified number of microseconds
+@@ -1776,11 +1776,11 @@
+ {
+     if (lock == 0 )
+     {
+-        cap_lower(current->cap_effective, CAP_IPC_LOCK);
++        cap_lower(*(kernel_cap_t *)&current->cred->cap_effective, CAP_IPC_LOCK);
+     }
+     else
+     {
+-        cap_raise(current->cap_effective, CAP_IPC_LOCK);
++        cap_raise(*(kernel_cap_t *)&current->cred->cap_effective, CAP_IPC_LOCK);
+     }    
+     return; 
+ }
+--- build_mod/kcl_acpi.c.orig	2009-07-10 17:36:00.000000000 +0400
++++ build_mod/kcl_acpi.c	2009-07-10 17:36:44.000000000 +0400
+@@ -21,6 +21,9 @@
+ #include "kcl_config.h"
+ #include "kcl_type.h"
+ #include "kcl_acpi.h"
++#include "../acconfig.h"
++#include "../aclocal.h"
++#include "../acobject.h"
+ 
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,14)
+ 

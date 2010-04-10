@@ -1,0 +1,61 @@
+#ifndef ACTIONS_H_
+#define ACTIONS_H_
+
+#define ACT_INSTALL			0x01
+#define ACT_REMOVE			0x02
+#define ACT_CLEAN			0x04
+#define ACT_SEARCH			0x05
+#define ACT_UPGRADE			0x06
+#define ACT_UPDATE			0x07
+#define ACT_LIST			0x08
+#define ACT_NONE			0x09
+#define ACT_INDEX			0x0a
+#define ACT_PURGE			0x0b
+#define ACT_CONVERT			0x0c
+#define ACT_CONVERT_DIR			0x0d
+#define ACT_LIST_REP			0x0e
+#define ACT_TAG				0x0f
+#define ACT_TEST			0x10
+#define ACT_COMMIT			0x11
+#define ACT_SHOWQUEUE			0x12
+#define ACT_RESETQUEUE			0x13
+#define ACT_SHOW			0x14
+#define ACT_INSTALLFROMLIST 		0x15
+#define ACT_PACKAGEMENU 		0x16
+#define ACT_CHECKDAMAGE 		0x17
+#define ACT_CONFIG			0x18
+#define ACT_EXPORT			0x19
+#define ACT_GENDEPS			0x1a
+#define ACT_FILESEARCH 			0x1b
+#define ACT_WHICH			0x1c
+#define ACT_INSTALLGROUP 		0x1d
+#define ACT_LISTGROUP			0x1e
+#define ACT_REMOVEGROUP 		0x1f
+#define ACT_LISTDEPENDANTS 		0x20
+#define ACT_REINSTALL			0x21
+#define ACT_UPDATEALL			0x22
+#define ACT_LISTGROUPS			0x23
+#define ACT_BUILD			0x24
+#define ACT_ADD_REPOSITORY 		0x25
+#define ACT_REMOVE_REPOSITORY 		0x26
+#define ACT_ENABLE_REPOSITORY 		0x27
+#define ACT_DISABLE_REPOSITORY 		0x28
+#define ACT_EDIT_REPOSITORY 		0x29
+#define ACT_BUILDUP 			0x2a
+#define ACT_LISTUPGRADE 		0x2b
+#define ACT_SHOWVERSION 		0x2c
+#define ACT_SEARCHBYDESCRIPTION 	0x2d
+#define ACT_SEARCHBYLOCATION 		0x2e
+#define ACT_GETONLINEREPOSITORYLIST 	0x2f
+#define ACT_MENU			0x30
+#define ACT_QUERY			0x31
+#define ACT_SYNC			0x32
+#define ACT_LATESTUPDATES		0x33
+#define ACT_CHECKLIST			0x34
+#define ACT_CLEARDEPS			0x35
+#define ACT_SETVER			0x36
+#define ACT_NAVIVIZE			0x37
+#define ACT_EXPORTINSTALLED		0x38
+#define ACT_GENDEPSNEW			0x39
+#endif
+

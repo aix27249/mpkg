@@ -1,0 +1,9 @@
+#!/bin/sh
+mpkg getrepositorylist http://mopspackages.ru/repository_list_6.2_kde4
+mpkg disable_rep 1 2
+mount /dev/dvd /mnt/dvd
+mpkg add_rep file:///mnt/dvd/branches/kde4/
+mpkg update
+mpkg -zy install mpkg-core mpkg-console mpkg-gui mpkg-tools
+mpkg -zy install aaa_elflibs
+mpkg -y installfromlist http://mopspackages.ru/branches/mopslinux-6.2/branches/kde4/package_list

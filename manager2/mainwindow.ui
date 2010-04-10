@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindowClass</class>
+ <widget class="QMainWindow" name="MainWindowClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MPKG Package manager</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="mainwindow.qrc">
+    <normaloff>:/main/applications-system.png</normaloff>:/main/applications-system.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QListWidget" name="packagesListWidget">
+        <property name="autoScroll">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QToolButton" name="markAllVisibleButton">
+          <property name="text">
+           <string>+</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="unmarkAllVisibleButton">
+          <property name="text">
+           <string>-</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="searchLineEdit"/>
+        </item>
+        <item>
+         <widget class="QToolButton" name="clearSearchButton">
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="mainwindow.qrc">
+            <normaloff>:/main/edit-clear-locationbar-rtl.png</normaloff>:/main/edit-clear-locationbar-rtl.png</iconset>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionSettings"/>
+    <addaction name="separator"/>
+    <addaction name="actionReload_package_list"/>
+    <addaction name="actionReset_queue"/>
+    <addaction name="actionClean_cache"/>
+    <addaction name="separator"/>
+    <addaction name="actionCommit_actions"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuFilters">
+    <property name="title">
+     <string>Filters</string>
+    </property>
+    <addaction name="actionHide_deprecated"/>
+    <addaction name="actionHide_installed"/>
+    <addaction name="actionHide_not_installed"/>
+   </widget>
+   <widget class="QMenu" name="menuRepositories_2">
+    <property name="title">
+     <string>Repositories</string>
+    </property>
+    <addaction name="actionUpdate_data"/>
+    <addaction name="actionGet_repository_list"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuRepositories_2"/>
+   <addaction name="menuFilters"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="groupsDockWidget">
+   <property name="windowTitle">
+    <string>Groups</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QListWidget" name="tagsListWidget"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="windowTitle">
+    <string>Dependencies info</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <widget class="QListWidget" name="dependencyListWidget"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="infoDockWidget_2">
+   <property name="windowTitle">
+    <string>Package info</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <layout class="QVBoxLayout" name="verticalLayout_5">
+     <item>
+      <widget class="QLabel" name="packageInfoLabel">
+       <property name="text">
+        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Tahoma'; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;No package selected&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+       <property name="openExternalLinks">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="commitButton">
+       <property name="text">
+        <string>Commit</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionAdd_remove_repositories">
+   <property name="text">
+    <string>Add/remove repositories</string>
+   </property>
+  </action>
+  <action name="actionUpdate_data">
+   <property name="text">
+    <string>Update data</string>
+   </property>
+  </action>
+  <action name="actionAdvanced_search">
+   <property name="text">
+    <string>Advanced search...</string>
+   </property>
+  </action>
+  <action name="actionMPKG_Manual">
+   <property name="text">
+    <string>MPKG Manual</string>
+   </property>
+  </action>
+  <action name="actionGlobal_settings">
+   <property name="text">
+    <string>Global settings</string>
+   </property>
+  </action>
+  <action name="actionManager_settings">
+   <property name="text">
+    <string>Manager settings</string>
+   </property>
+  </action>
+  <action name="actionAbout_MPKG">
+   <property name="text">
+    <string>About MPKG...</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About Qt...</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionShow_queue">
+   <property name="text">
+    <string>Show queue</string>
+   </property>
+  </action>
+  <action name="actionReload_package_list">
+   <property name="text">
+    <string>Reload package list</string>
+   </property>
+  </action>
+  <action name="actionReset_queue">
+   <property name="text">
+    <string>Reset queue</string>
+   </property>
+  </action>
+  <action name="actionClean_cache">
+   <property name="text">
+    <string>Clean cache</string>
+   </property>
+  </action>
+  <action name="actionShow_installed">
+   <property name="text">
+    <string>Show installed</string>
+   </property>
+  </action>
+  <action name="actionHide_deprecated">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hide deprecated</string>
+   </property>
+  </action>
+  <action name="actionHide_installed">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hide installed</string>
+   </property>
+  </action>
+  <action name="actionHide_not_installed">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hide not installed</string>
+   </property>
+  </action>
+  <action name="actionCommit_actions">
+   <property name="text">
+    <string>Commit actions</string>
+   </property>
+  </action>
+  <action name="actionGet_repository_list">
+   <property name="text">
+    <string>Get repository list</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="mainwindow.qrc"/>
+ </resources>
+ <connections/>
+</ui>

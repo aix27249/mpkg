@@ -1,0 +1,10 @@
+--prefix=/usr
+--bindir=/usr/bin
+--sbindir=/usr/sbin
+--libexecdir=/usr/libexec
+--includedir=/usr/include
+--mandir=/usr/man
+--infodir=/usr/info
+--libdir=/usr/lib$LIBSUFFIX
+--sysconfdir=/etc
+--localstatedir=/var

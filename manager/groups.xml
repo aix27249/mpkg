@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<groups>
+	<group tag="_all_" name = "Все пакеты" icon="/usr/share/mpkg/icons/penguin.png"/>
+	<group tag="_updates_" name = "Последние обновления" icon = "/usr/share/mpkg/icons/icons/default.kde/32x32/apps/superkaramba.png"/>
+	<group tag="base" name = "Базовая система" icon = "/usr/share/mpkg/icons/icons/default.kde/32x32/apps/kcmprocessor.png"/>
+	<group tag="base-utils" name = "Базовые утилиты" icon = "/usr/share/icons/crystalsvg/32x32/apps/linuxconf.png"/>
+	<group tag="print" name = "Печать" icon = "/usr/share/icons/crystalsvg/32x32/apps/package_wordprocessing.png"/>
+	<group tag="audio" name = "Аудио" icon = "/usr/share/icons/crystalsvg/32x32/apps/kcmsound.png"/>
+	<group tag="docs" name = "Документация" icon = "/usr/share/icons/crystalsvg/32x32/apps/assistant.png"/>
+	<group tag="desktop" name = "Рабочая станция" icon = "/usr/share/icons/crystalsvg/32x32/apps/systemtray.png"/>
+	<group tag="x11-fonts" name = "Шрифты X11" icon = "/usr/share/icons/crystalsvg/32x32/apps/fonts.png"/>
+	<group tag="virtual" name = "Виртуальные пакеты" icon = "/usr/share/icons/crystalsvg/32x32/apps/package.png"/>
+	<group tag="multimedia" name = "Мультимедиа" icon = "/usr/share/icons/crystalsvg/32x32/apps/multimedia.png"/>
+
+	<group tag="utils" name = "Утилиты" icon = "/usr/share/icons/crystalsvg/32x32/apps/package_utilities.png"/>
+	<group tag="devel" name="Разработка" icon="/usr/share/icons/crystalsvg/32x32/apps/package_development.png"/>
+	<group tag="emacs" name="Emacs" icon="/usr/share/icons/crystalsvg/32x32/apps/plan.png"/>
+	<group tag="kernel-source" name="Исходники ядра" icon="/usr/share/mpkg/icons/icons/default.kde/32x32/apps/kcmpci.png"/>
+	<group tag="kde" name="KDE" icon="/usr/share/icons/crystalsvg/32x32/apps/kmenu.png"/>
+	<group tag="kde-i18n" name="KDE i18n" icon="/usr/share/icons/crystalsvg/128x128/apps/kmenu.png"/>
+	<group tag="koffice" name="KOffice" icon="/usr/share/icons/crystalsvg/128x128/apps/wp.png"/>
+	<group tag="libs" name="Библиотеки" icon="/usr/share/mpkg/icons/icons/default.kde/32x32/apps/kcmsystem.png"/>
+	<group tag="network" name="Сетевые утилиты" icon="/usr/share/icons/crystalsvg/32x32/apps/package_network.png"/>
+	<group tag="openoffice" name="OpenOffice.org" icon="/usr/share/icons/MOPSIcons/128x128/apps/ooo-base.png"/>
+	<group tag="server" name="Серверные приложения" icon="/usr/share/mpkg/icons/icons/default.kde/32x32/apps/gnomemeeting.png"/>
+	<group tag="tex" name="TeX" icon="/usr/share/icons/crystalsvg/128x128/apps/fonts.png"/>
+	<group tag="tcl" name="Tk/TCL" icon="/usr/share/icons/crystalsvg/128x128/apps/kcmdevices.png"/>
+	<group tag="wine" name="WINE" icon="/usr/share/mpkg/icons/icons/default.kde/32x32/apps/wine.png"/>
+	<group tag="x11" name="Сервер X11" icon="/usr/share/icons/crystalsvg/32x32/apps/kcmx.png"/>
+	<group tag="xapps" name="Приложения X11" icon="/usr/share/icons/crystalsvg/64x64/apps/style.png"/>
+	<group tag="_misc_" name="Разное" icon="/usr/share/mpkg/icons/icons/default.kde/32x32/apps/fifteenpieces.png"/>
+	<group tag="games" name="Игры" icon="/usr/share/mpkg/icons/icons/package_games.png"/>
+	<group tag="science" name="Научные приложения" icon="/usr/share/mpkg/icons/icons/default.kde/32x32/apps/designer.png"/>
+	<group tag="deprecated" name="Устаревшие" icon="/usr/share/mpkg/icons/deprecated_unknown.png"/>
+	<group tag="drivers" name="Драйвера" icon="/usr/share/mpkg/icons/icons/kcmpci.png"/>
+	<group tag="proprietary" name="Проприетарные приложения" icon="/usr/share/mpkg/icons/icons/encrypted.png"/>
+</groups>
+
