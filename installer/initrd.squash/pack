@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ -d initrd.new ]; then
+	(cd initrd.new
+	find . | cpio -o -H newc | gzip --best
+	) > initrd.img 
+fi

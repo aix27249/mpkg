@@ -1,0 +1,29 @@
+#!/bin/sh
+# WARNING: it is an update script for OLD-STYLE build system!
+# TODO: remake it for new one
+ARCH=`uname -m`
+
+if [ "$ARCH" = "x86_64" ] ; then
+	LIBDIRSUFFIX="64"
+else
+	LIBDIRSUFFIX=""
+fi
+
+cp -fv ../../nwidgets/build/libnwidgets.so initrd.new/usr/lib$LIBDIRSUFFIX/
+cp -fv ../../mpkgsupport/build/libmpkgsupport.so initrd.new/usr/lib$LIBDIRSUFFIX/
+cp -fv ../../lib/build/libmpkg.so initrd.new/usr/lib$LIBDIRSUFFIX/
+cp -fv ../../console/build/mpkg initrd.new/usr/bin/
+cp -fv ../build/setup initrd.new/usr/lib/setup/
+cp -fv ../../mparted/build/mparted initrd.new/usr/bin/
+cp -fv ../../mparted/build/libmparted.so initrd.new/usr/lib$LIBDIRSUFFIX/
+cp -fv ../../i18n/build/ru.gmo initrd.new/usr/share/locale/ru/LC_MESSAGES/mpkg.mo
+cp -fv ../../i18n/build/uk.gmo initrd.new/usr/share/locale/uk/LC_MESSAGES/mpkg.mo
+cp -fv ../../console/aliases/mpkg-* initrd.new/usr/bin/
+cp -fv ../../console/build/mpkg-* initrd.new/usr/bin/
+
+cp -fv ../../mpkg-parted/build/libmpkg-parted.so initrd.new/usr/lib$LIBDIRSUFFIX/
+cp -fv ../../installer2/build/select_* initrd.new/root/new_installer/
+cp -fv ../../installer2/build/run_setup initrd.new/root/new_installer/
+cp -fv ../../installer2/build/update_cache initrd.new/root/new_installer/
+cp -fv ../../installer2/*.sh initrd.new/root/new_installer/
+
