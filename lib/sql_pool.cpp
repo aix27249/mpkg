@@ -10,13 +10,7 @@
 #include "sql_pool.h"
 #include "dbstruct.h"
 #include <mpkgsupport/mpkgsupport.h>
-#ifdef SERVERAPP
-#define getuid(m) server_getuid(m)
-int server_getuid() {
-	return 0;
-}
-#endif
-
+#include "errorhandler.h"
 const string MPKGTableVersion="1.8";
 bool SQLiteDB::CheckDatabaseIntegrity()
 {
@@ -238,7 +232,6 @@ int SQLiteDB::get_sql_table (const string &sql_query, char ***table, int *rows, 
 	sqldump_counter++;
 	get_sql_table_counter++;
 	char *errmsg=0;
-	mpkgErrorReturn errRet;
 	int query_return=0;
 	//const char *qqq = sql_query->c_str();
 	query_return=sqlite3_get_table(db, sql_query.c_str(), table, rows, cols, &errmsg);
@@ -253,7 +246,7 @@ int SQLiteDB::get_sql_table (const string &sql_query, char ***table, int *rows, 
 		if (errmsg) sqlError=query_return;
 		if (errmsg) sqlErrMsg=errmsg;
 		//free(errmsg);
-		errRet = waitResponce(MPKG_SUBSYS_SQLQUERY_ERROR);
+		mpkgErrorHandler.callError(MPKG_SUBSYS_SQLQUERY_ERROR);
 		return query_return;
 	}
 	
@@ -337,7 +330,6 @@ int SQLiteDB::sql_exec_c (const char *sql_query)
 			sleep(1);
 		}
 	} while (query_return==SQLITE_BUSY || query_return==SQLITE_LOCKED);
-	mpkgErrorReturn errRet;
 	if (query_return!=SQLITE_OK) // Means error
 	{
 		
@@ -354,7 +346,7 @@ int SQLiteDB::sql_exec_c (const char *sql_query)
 			if (sql_errmsg) sqlErrMsg=sql_errmsg;
 			//free(sql_errmsg);
 
-			errRet = waitResponce(MPKG_SUBSYS_SQLQUERY_ERROR);
+			mpkgErrorHandler.callError(MPKG_SUBSYS_SQLQUERY_ERROR);
 		}
 		return query_return;
 	}
@@ -755,7 +747,6 @@ SQLiteDB::SQLiteDB(string filename, bool skip_integrity_check)
 	db_filename=filename;
 	sqlError=0;
 	int sql_return;
-	mpkgErrorReturn errRet;
 
 	// backup db:
 	backupDatabase();
@@ -768,11 +759,7 @@ opendb:
 		sqlErrMsg="Error opening database file "+db_filename+", aborting.";
 		mError(sqlErrMsg);
 	       	sqlite3_close(db);
-	       	errRet = waitResponce(MPKG_SUBSYS_SQLDB_OPEN_ERROR);
-		if (errRet == MPKG_RETURN_RETRY)
-		{
-			goto opendb;
-		}
+	       	if (mpkgErrorHandler.callError(MPKG_SUBSYS_SQLDB_OPEN_ERROR)==MPKG_RETURN_RETRY) goto opendb;
 		abort();
        	}
 
@@ -786,12 +773,8 @@ check_integrity:
 			sql_return = init();
 			goto check_integrity;
 		}
-		errRet = waitResponce(MPKG_SUBSYS_SQLDB_INCORRECT);
-		//printf("errRet = %d\n", errRet);
-		if (errRet == MPKG_RETURN_REINIT)
-		{
+		if (mpkgErrorHandler.callError(MPKG_SUBSYS_SQLDB_INCORRECT)==MPKG_RETURN_REINIT) {
 			say("reinitializing\n");
-			//sqlite3_close(db);
 			initDatabaseStructure();
 			goto check_integrity;
 		}

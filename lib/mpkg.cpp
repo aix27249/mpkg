@@ -12,6 +12,7 @@
 #include "htmlcore.h"
 #include <fstream>
 #include <stdint.h>
+#include "errorhandler.h"
 long double guessDeltaSize(const PACKAGE& p, const string workingDir) {
 	if (p.deltaSources.empty()) return 0;
 	if (_cmdOptions["enable_delta"]!="true") return 0;
@@ -1167,7 +1168,6 @@ int mpkgDatabase::commit_actions()
 		ncInterface.setProgress(0);
 		actionBus.setActionState(ACTIONID_CACHECHECK);
 		actionBus.setCurrentAction(ACTIONID_DOWNLOAD);
-		mpkgErrorReturn errRet;
 		bool do_download = true;
 	
 		pData.resetItems(_("waiting"), 0, 1, ITEMSTATE_WAIT);
@@ -1183,9 +1183,8 @@ download_process:
 				//printf("Error in commonGetFileEx\n");
 				mError(_("Download failed"));
 				if (!actionBus._abortActions) {
-					errRet = waitResponce (MPKG_DOWNLOAD_ERROR);
-					switch(errRet)
-					{
+					MpkgErrorReturn errRet = mpkgErrorHandler.callError(MPKG_DOWNLOAD_ERROR);
+					switch(errRet) {
 						case MPKG_RETURN_IGNORE:
 							say(_("Download errors ignored, continue installing\n"));
 							goto installProcess;
@@ -1262,7 +1261,7 @@ installProcess:
 				pData.increaseItemProgress(install_list[i].itemID);
 				pData.setItemState(install_list[i].itemID, ITEMSTATE_FAILED);
 	
-				errRet = waitResponce(MPKG_DOWNLOAD_ERROR);
+				MpkgErrorReturn errRet = mpkgErrorHandler.callError(MPKG_DOWNLOAD_ERROR, _("Invalid checksum in downloaded file"));
 				switch(errRet)
 				{
 					case MPKG_RETURN_IGNORE:
@@ -1509,7 +1508,6 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	
 	// Checking if it is a symlink. If it is broken, and package installs from CD, ask to insert and mount
 	bool broken_sym=false;
-	mpkgErrorReturn errRet;
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": checking package source"));
 
 	// Если ставим с CD/DVD, попытаемся молча смонтировать диск.
@@ -1575,13 +1573,8 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 					else abortMount = true;
 					ncInterface.setSubtitle(oldtitle);
 				}
-				else
-				{
-					errRet = waitResponce(MPKG_CDROM_MOUNT_ERROR);
-					if (errRet == MPKG_RETURN_ABORT)
-					{
-						abortMount=true;
-					}
+				else {
+					if (mpkgErrorHandler.callError(MPKG_CDROM_MOUNT_ERROR)==MPKG_RETURN_ABORT) abortMount=true;
 				}
 				if (abortMount) mountedOk=true;
 			}

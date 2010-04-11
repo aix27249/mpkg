@@ -12,6 +12,7 @@
 #include <mntent.h>
 #include "terminal.h"
 #include "htmlcore.h"
+#include "errorhandler.h"
 #define DOWNLOAD_TIMEOUT 10 // 10 seconds, and failing
 int downloadTimeout=0;
 double prevDlValue;
@@ -135,7 +136,6 @@ int cdromFetch(std::string source, std::string output, bool do_cache) // Caching
 	if (_cmdOptions["cdrom_permanent_fail"]=="yes") return -1;
 	if (FORCE_CDROM_CACHE) do_cache = true;
 	mDebug("DEV: " + CDROM_DEVICE+", MP: " + CDROM_MOUNTPOINT);
-	mpkgErrorReturn errRet;
 	if (dialogMode) ncInterface.showInfoBox(_("Checking existance of requested packages: ") + getFilename(output));
 	bool mounted = false;
 	mDebug("source=["+source+"]");
@@ -214,7 +214,9 @@ try_mount:
 			}
 			mDebug("Mounting");
 			mDebug("Mount using system");
-			string mnt_cmd = "mount "+CDROM_DEVICE + " " + CDROM_MOUNTPOINT;
+			string loop_option;
+			if (CDROM_DEVICE.find("/dev/")!=0) loop_option = " -o loop ";
+			string mnt_cmd = "mount " + loop_option + CDROM_DEVICE + " " + CDROM_MOUNTPOINT;
 		       	if (!setupMode) mnt_cmd += " 2>/dev/null >/dev/null";
 		       	if (setupMode) mnt_cmd+= " 2>/dev/tty4 > /dev/tty4";
 			usedCdromMount = true;
@@ -239,13 +241,10 @@ try_mount:
 				}
 				else
 				{
-					errRet = waitResponce(MPKG_CDROM_MOUNT_ERROR);
-					if (errRet == MPKG_RETURN_RETRY)
-					{
+					if (mpkgErrorHandler.callError(MPKG_CDROM_MOUNT_ERROR, _("Please insert disk with label ") + cdromVolName + _(" into drive ") + CDROM_DEVICE)==MPKG_RETURN_RETRY) {
 						goto try_mount;
 					}
-					if (errRet == MPKG_RETURN_ABORT)
-					{
+					else {
 						_cmdOptions["cdrom_permanent_fail"]="yes";
 						return -1;
 					}
@@ -283,13 +282,11 @@ try_mount:
 			}
 			else
 			{
-				errRet = waitResponce(MPKG_CDROM_MOUNT_ERROR);
-				if (errRet == MPKG_RETURN_RETRY)
-				{
-					goto try_mount;
+				if (mpkgErrorHandler.callError(MPKG_CDROM_MOUNT_ERROR, _("Please insert disk with label ") + cdromVolName + _(" into drive ") + CDROM_DEVICE)==MPKG_RETURN_RETRY) {
+						goto try_mount;
 				}
-				if (errRet == MPKG_RETURN_ABORT)
-				{
+				else {
+					_cmdOptions["cdrom_permanent_fail"]="yes";
 					return -1;
 				}
 			}
@@ -316,11 +313,8 @@ copy_file:
 		mDebug("Link returned: " + IntToStr(link_ret));
 	}
 
-	if (link_ret!=0 && sourceFileName.find("packages")!=std::string::npos && sourceFileName.find("PACKAGES")!=std::string::npos)
-	{
-		errRet = waitResponce(MPKG_SUBSYS_FILE_READ_ERROR);
-		if (errRet == MPKG_RETURN_RETRY)
-			goto copy_file;
+	if (link_ret!=0 && sourceFileName.find("packages")!=std::string::npos && sourceFileName.find("PACKAGES")!=std::string::npos) {
+		if (mpkgErrorHandler.callError(MPKG_SUBSYS_FILE_READ_ERROR, _("Failed to create link from ") + sourceFileName + _(" to ") + output)==MPKG_RETURN_RETRY) goto copy_file;
 		else return -1;
 	}
 //	printf("copy ok\n");

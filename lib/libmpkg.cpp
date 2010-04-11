@@ -6,12 +6,44 @@
 #include "libmpkg.h"
 #include "terminal.h"
 #include <iostream>
+
+string getErrorDescription(int errCode) { // FIXME: LOCALIZATION!!!
+#warning getErrorDescription needs localization!
+	switch(errCode) {
+		case MPKGERROR_OK:
+			return "OK";
+		case MPKGERROR_NOPACKAGE:
+			return "Нет такого пакета";
+		case MPKGERROR_IMPOSSIBLE:
+			return "Запрошенное действие невозможно";
+		case MPKGERROR_NOSUCHVERSION:
+			return "Нет такой версии";
+		case MPKGERROR_COMMITERROR:
+			return "Ошибка при установке или удалении пакетов";
+		case MPKGERROR_UNRESOLVEDDEPS:
+			return "Неразрешенные зависимости";
+		case MPKGERROR_SQLQUERYERROR:
+			return "Ошибка в SQL-запросе";
+		case MPKGERROR_DOWNLOADERROR:
+			return "Ошибка при закачке";
+		case MPKGERROR_ABORTED:
+			return "Отменено";
+		case MPKGERROR_CRITICAL:
+			return "Критическая ошибка";
+		case MPKGERROR_AMBIGUITY:
+			return "Неоднозначность";
+		case MPKGERROR_INCORRECTDATA:
+			return "Некорректные данные";
+		case MPKGERROR_FILEOPERATIONS:
+			return "Ошибка при работе с файлами";
+		default:
+			return "Неизвестный код ошибки: " + IntToStr(errCode);
+	}
+}
+
+
 mpkg::mpkg(bool _loadDatabase)
 {
-	if (!consoleMode && !dialogMode) initErrorManager(EMODE_QT);
-	if (consoleMode && dialogMode) initErrorManager(EMODE_DIALOG);
-	if (consoleMode && !dialogMode) initErrorManager(EMODE_CONSOLE);
-
 	mDebug("creating core");
 	currentStatus=_("Loading database...");
 	char *home_dir = getenv("HOME");

@@ -7,8 +7,8 @@
 
 #include "config.h"
 #include "xmlParser.h"
-//#include "file_routines.h"
 #include "dependencies.h"
+#include "errorhandler.h"
 map<string, string> _cmdOptions;
 bool enableSpkgIndexing=false;
 bool afraidAaaInDeps=false;
@@ -38,8 +38,6 @@ bool verbose=false;
 bool useBuildCache=true;
 bool enableDownloadResume=false;
 int autogenDepsMode=ADMODE_MOZGMERTV;
-mpkgErrorCode errorCode;
-mpkgErrorReturn errorReturn;
 bool setupMode=false;
 bool interactive_mode=false;
 bool require_root = true;
@@ -159,9 +157,7 @@ int loadGlobalConfig(string config_file)
 		if (xmlErrCode.error != eXMLErrorNone)
 		{
 			mError("config parse error!\n");
-			mpkgErrorReturn errRet = waitResponce(MPKG_SUBSYS_XMLCONFIG_READ_ERROR);
-			if (errRet == MPKG_RETURN_REINIT)
-			{
+			if (mpkgErrorHandler.callError(MPKG_SUBSYS_XMLCONFIG_READ_ERROR)==MPKG_RETURN_REINIT) {
 				conf_init = true;
 			}
 		}
@@ -311,11 +307,7 @@ XMLNode mpkgconfig::getXMLConfig(string conf_file)
 		if (xmlErrCode.error != eXMLErrorNone)
 		{
 			mError("config parse error!\n");
-			mpkgErrorReturn errRet = waitResponce(MPKG_SUBSYS_XMLCONFIG_READ_ERROR);
-			if (errRet == MPKG_RETURN_REINIT)
-			{
-				conf_init = true;
-			}
+			if (mpkgErrorHandler.callError(MPKG_SUBSYS_XMLCONFIG_READ_ERROR)==MPKG_RETURN_REINIT) conf_init = true;
 		}
 
 	}
@@ -391,17 +383,10 @@ int mpkgconfig::initConfig()
 
 int mpkgconfig::setXMLConfig(XMLNode xmlConfig, string conf_file)
 {
-	mpkgErrorReturn errRet;
-
 write_config:
-	if (xmlConfig.writeToFile(conf_file.c_str())!=eXMLErrorNone) 
-	{
+	if (xmlConfig.writeToFile(conf_file.c_str())!=eXMLErrorNone) {
 		mError("error writing config file");
-		errRet = waitResponce(MPKG_SUBSYS_XMLCONFIG_WRITE_ERROR);
-		if (errRet == MPKG_RETURN_RETRY)
-		{
-			goto write_config;
-		}
+		if (mpkgErrorHandler.callError(MPKG_SUBSYS_XMLCONFIG_WRITE_ERROR)==MPKG_RETURN_RETRY) goto write_config;
 	}
 	loadGlobalConfig();
 	return 0;
@@ -587,33 +572,6 @@ int mpkgconfig::set_checkFiles(unsigned int value)
 	return setXMLConfig(tmp);
 }
 
-
-
-void setErrorCode(mpkgErrorCode value)
-{
-	if (value != MPKG_OK) setErrorReturn(MPKG_RETURN_WAIT);
-	errorCode = value;
-}
-void setErrorReturn(mpkgErrorReturn value)
-{
-	setErrorCode(MPKG_OK);
-	errorReturn = value;
-}
-
-mpkgErrorCode getErrorCode()
-{
-	return errorCode;
-}
-mpkgErrorReturn getErrorReturn()
-{
-	return errorReturn;
-}
-
-
-mpkgErrorReturn waitResponce(mpkgErrorCode errCode)
-{
-	return callError(errCode);
-}
 
 
 Config::Config(string _configName)
