@@ -3,6 +3,7 @@
 #include <QtGui>
 #include <mpkg/libmpkg.h>
 #include <mpkg-parted/mpkg-parted.h>
+#include <mpkg/errorhandler.h>
 #include "thread.h"
 class QListWidgetItem;
 namespace Ui {
@@ -23,6 +24,8 @@ class MainWindow: public QMainWindow {
 	public slots:
 		void showError(const QString &);
 		void finish();
+
+		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);
 	
 };
 #endif // MAINWINDOW_H_

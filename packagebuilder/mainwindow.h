@@ -11,6 +11,7 @@
 #include "ui_package_builder.h"
 #include <QDir>
 #include <mpkg/libmpkg.h>
+#include <mpkg/errorhandler.h>
 typedef enum {
        	TYPE_NONE=0,
 	TYPE_TGZ,
@@ -38,6 +39,8 @@ class Form: public QWidget
 		~Form();
 		QString _wTitle;
 	public slots:
+
+		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);
 		void importFromDatabase();
 		void showAbout();
 		void loadData();

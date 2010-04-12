@@ -21,7 +21,38 @@ void MainWindow::loadPixmapList() {
 	pixmapList.push_back(QPixmap(ICON_PREFIX+"update.png"));
 
 }
+
+MainWindow *guiObject;
+
+
+MpkgErrorReturn qtErrorHandler(ErrorDescription err, const string& details) {
+	return guiObject->errorHandler(err, details);
+}
+
+MpkgErrorReturn MainWindow::errorHandler(ErrorDescription err, const string& details) {
+	QMessageBox box(this);
+	QVector<QPushButton *> buttons;
+	if (err.action.size()>1) {
+		for (size_t i=0; i<err.action.size(); ++i) {
+			buttons.push_back(box.addButton(err.action[i].text.c_str(), QMessageBox::AcceptRole));
+		}
+	}
+	box.setWindowTitle(tr("Error"));
+	box.setText(err.text.c_str());
+	box.setInformativeText(details.c_str());
+	box.exec();
+	if (err.action.size()==1) return err.action[0].ret;
+	for (int i=0; i<buttons.size(); ++i) {
+		if (box.clickedButton()==buttons[i]) return err.action[i].ret;
+	}
+	return MPKG_RETURN_ABORT;
+}
+
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindowClass) {
+	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
+	guiObject = this;
+
 	slotsConnected=false;
 	ui->setupUi(this);
 	loadSettings();

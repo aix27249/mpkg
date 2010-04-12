@@ -3,6 +3,7 @@
 #include <QtGui/QMainWindow>
 #include <QtGui/QListWidgetItem>
 #include <mpkg/libmpkg.h>
+#include <mpkg/errorhandler.h>
 enum {
 	ICONSTATE_UNKNOWN = 0,
 	ICONSTATE_INSTALLED,
@@ -78,6 +79,8 @@ class MainWindow: public QMainWindow {
 		void loadSettings();
 		void saveSettings();
 		void quit();
+
+		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);
 };
 
 #endif // MAINWINDOW_H_

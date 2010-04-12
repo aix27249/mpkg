@@ -5,6 +5,32 @@
 #include <QSettings>
 #include <QListWidgetItem>
 
+MainWindow *guiObject;
+
+
+MpkgErrorReturn qtErrorHandler(ErrorDescription err, const string& details) {
+	return guiObject->errorHandler(err, details);
+}
+
+MpkgErrorReturn MainWindow::errorHandler(ErrorDescription err, const string& details) {
+	QMessageBox box(this);
+	QVector<QPushButton *> buttons;
+	if (err.action.size()>1) {
+		for (size_t i=0; i<err.action.size(); ++i) {
+			buttons.push_back(box.addButton(err.action[i].text.c_str(), QMessageBox::AcceptRole));
+		}
+	}
+	box.setWindowTitle(tr("Error"));
+	box.setText(err.text.c_str());
+	box.setInformativeText(details.c_str());
+	box.exec();
+	if (err.action.size()==1) return err.action[0].ret;
+	for (int i=0; i<buttons.size(); ++i) {
+		if (box.clickedButton()==buttons[i]) return err.action[i].ret;
+	}
+	return MPKG_RETURN_ABORT;
+}
+
 MountOptions::MountOptions(QTreeWidgetItem *_item, QString _partition, QString _size, QString _currentfs, QString _mountpoint, bool _format, QString _newfs) {
 	itemPtr = _item;
 	partition = _partition;
@@ -21,6 +47,8 @@ MountOptions::~MountOptions() {
 }
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindowClass) {
+	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
+	guiObject = this;
 	ui->setupUi(this);
 	setWindowState(Qt::WindowFullScreen);
 	connect(ui->nextButton, SIGNAL(clicked()), this, SLOT(nextButtonClick()));
@@ -264,6 +292,12 @@ void MainWindow::updateMountItemUI() {
 	if (!mountPtr->mountpoint.isEmpty()) newdata = ": " + mountPtr->mountpoint;
 	if (mountPtr->format) formatdata = tr(", format to: %1").arg(mountPtr->newfs);
 	item->setText(0, QString("%1 (%2, %3)%4%5").arg(mountPtr->partition).arg(mountPtr->size).arg(mountPtr->currentfs).arg(newdata).arg(formatdata));
+	if (mountPtr->mountpoint=="/") item->setBackground(0, QBrush(QColor(186,15,88,127)));
+	else if (mountPtr->mountpoint=="swap") item->setBackground(0, QBrush(QColor(215,91,24,127)));
+	else if (mountPtr->mountpoint.isEmpty()) item->setBackground(0, QBrush(QColor(255,255,255,0)));
+	else if (mountPtr->format) item->setBackground(0, QBrush(QColor(59,74,215,127)));
+	else item->setBackground(0, QBrush(QColor(255,0,0,127)));
+
 }
 
 void MainWindow::updateMountsGUI(QTreeWidgetItem *nextItem, QTreeWidgetItem *prevItem) {
@@ -507,6 +541,9 @@ void MainWindow::getCustomSetupVariants(const vector<string>& rep_list) {
 
 
 void MainWindow::loadSetupVariants() {
+	QLabel *waitLabel = new QLabel;
+	waitLabel->setText(tr("Please wait while installer loads data from repository.\nIt may take some tome, be patient."));
+	waitLabel->show();
 	// Let's write down repo list
 	mpkg *core = new mpkg;
 
@@ -544,6 +581,7 @@ void MainWindow::loadSetupVariants() {
 	for (size_t i=0; i<customPkgSetList.size(); ++i) {
 		item = new QListWidgetItem(customPkgSetList[i].desc.c_str(), ui->setupVariantsListWidget);
 	}
+	waitLabel->hide();
 }
 
 void MainWindow::loadTimezones() {
@@ -568,7 +606,30 @@ void MainWindow::saveTimezone() {
 }
 
 void MainWindow::loadConfirmationData() {
-	ui->confirmationTextBrowser->setText(tr("<p><b>Package source:</b> %1</p><p><b>Installation type:</b> %2</p><p><b>Partitions that will be FORMATTED:</b>%3</p><p><b>Partitions that will NOT be formatted but used:</b> %4</p><p><b>Boot loader will be installed to:</b> %5</p>").arg(settings->value("pkgsource").toString()).arg(settings->value("setup_variant").toString()).arg("some").arg("also some").arg(settings->value("bootloader").toString()));
+	QString newdata, formatdata;
+	
+	QString formatted, notFormatted;
+	MountOptions *mountPtr = NULL;
+	for (size_t i=0; i<mountOptions.size(); ++i) {
+		mountPtr = &mountOptions[i];
+		newdata.clear();
+		formatdata.clear();
+		if (!mountPtr->mountpoint.isEmpty()) newdata = ": " + mountPtr->mountpoint;
+		if (mountPtr->format) {
+			formatdata = tr(", format to: %1").arg(mountPtr->newfs);
+			formatted += QString("<li><u>%1</u> (%2, %3)%4%5</li>\n").arg(mountPtr->partition).arg(mountPtr->size).arg(mountPtr->currentfs).arg(newdata).arg(formatdata);
+		}
+		else notFormatted += QString("<li><u>%1</u> (%2, %3)%4%5</li>\n").arg(mountPtr->partition).arg(mountPtr->size).arg(mountPtr->currentfs).arg(newdata).arg(formatdata);
+	}
+	ui->confirmationTextBrowser->setText(tr("<p><b>Package source:</b> %1</p>\
+				<p><b>Installation type:</b> %2</p>\
+				<p><b>Partitions that will be FORMATTED:</b><br><ul>%3</ul></p>\
+				<p><b>Partitions that will NOT be formatted but used:</b><br><ul>%4</ul></p>\
+				<p><b>Boot loader will be installed to:</b> %5</p>").\
+			arg(settings->value("pkgsource").toString()).\
+			arg(settings->value("setup_variant").toString()).\
+			arg(formatted).arg(notFormatted).\
+			arg(settings->value("bootloader").toString()));
 }
 
 void MainWindow::saveRootPassword() {

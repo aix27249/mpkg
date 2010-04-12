@@ -43,7 +43,7 @@ SET(guisetup_UI
 	mainwindow.ui
 )
 SET(guisetup_QRC
-	mainwindow.qrc
+	#	mainwindow.qrc
 )
 FIND_PACKAGE(Qt4 REQUIRED)
 INCLUDE( ${QT_USE_FILE} )

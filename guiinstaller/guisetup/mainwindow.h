@@ -2,6 +2,7 @@
 #define MAINWINDOW_H_
 #include <QtGui>
 #include <mpkg/libmpkg.h>
+#include <mpkg/errorhandler.h>
 #include <mpkg-parted/mpkg-parted.h>
 class QListWidgetItem;
 namespace Ui {
@@ -97,6 +98,7 @@ class MainWindow: public QMainWindow {
 		void updateMountItemUI();
 
 		void runInstaller();
+		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);
 
 	
 };

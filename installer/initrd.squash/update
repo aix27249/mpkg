@@ -26,4 +26,6 @@ cp -fv ../../installer2/build/select_* initrd.new/root/new_installer/
 cp -fv ../../installer2/build/run_setup initrd.new/root/new_installer/
 cp -fv ../../installer2/build/update_cache initrd.new/root/new_installer/
 cp -fv ../../installer2/*.sh initrd.new/root/new_installer/
+cp -fv ../../guiinstaller/guisetup/build/guisetup initrd.new/usr/bin/
+cp -fv ../../guiinstaller/guisetup_exec/build/guisetup_exec initrd.new/usr/bin/
 

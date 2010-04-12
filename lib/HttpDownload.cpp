@@ -273,7 +273,6 @@ try_mount:
 		{ 
 			// Ups, wrong CD!
 			system(ej);
-			if (setupMode) system("echo EJECTING (http:241) > /dev/tty4");
 			mError("Wrong volname: need " + cdromVolName + ", but detected: " + Svolname);
 			if (dialogMode) 
 			{
