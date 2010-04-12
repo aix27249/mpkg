@@ -32,10 +32,12 @@ ADD_DEFINITIONS(${CXXFLAGS})
 SET(guisetup_SRC
 	main.cpp
 	mainwindow.cpp
+	thread.cpp
 )
 # headers for MOC
 SET(guisetup_MOC_HDR
 	mainwindow.h
+	thread.h
 )
 
 # UI

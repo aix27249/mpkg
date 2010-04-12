@@ -69,13 +69,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	ui->stackedWidget->setCurrentIndex(0);
 	ui->backButton->hide();
 	settings = new QSettings("guiinstaller");
+	loadSetupVariantsThread = new LoadSetupVariantsThread;
+	connect(loadSetupVariantsThread, SIGNAL(finished(bool)), this, SLOT(receiveLoadSetupVariants(bool)));
+	connect(ui->quitButton, SIGNAL(clicked()), this, SLOT(askQuit()));
 
 }
 
 MainWindow::~MainWindow() {
 	delete settings;
+	delete loadSetupVariantsThread;
 }
-
+void MainWindow::askQuit() {
+	if (QMessageBox::question(this, tr("Really cancel installation?"), tr("Installation is not yet complete. Do you really want to cancel?"))==QMessageBox::Yes) qApp->quit();
+}
 void MainWindow::runInstaller() {
 	if (!ui->confirmInstallCheckBox->isChecked()) {
 		QMessageBox::critical(this, tr("Please confirm settings"), tr("You chould confirm that settings are OK. Check the appropriate check box."));
@@ -98,7 +104,9 @@ void MainWindow::nextButtonClick() {
 void MainWindow::backButtonClick() {
 	if (ui->stackedWidget->currentIndex()==1) ui->backButton->hide();
 	else if (ui->stackedWidget->currentIndex()==ui->stackedWidget->count()-1) ui->nextButton->show();
-	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->currentIndex()-1);
+	int shift = 1;
+	if (ui->stackedWidget->currentIndex()==PAGE_INSTALLTYPE) shift=2;
+	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->currentIndex()-shift);
 	ui->statusbar->showMessage(QString("Step %1 of %2").arg(ui->stackedWidget->currentIndex()).arg(ui->stackedWidget->count()-1));
 	//updatePageData(ui->stackedWidget->currentIndex());
 
@@ -212,7 +220,7 @@ void MainWindow::updatePageData(int index) {
 			break;
 		case PAGE_PKGSOURCE:
 			break;
-		case PAGE_INSTALLTYPE:
+		case PAGE_WAITPKGSOURCE:
 			loadSetupVariants();
 			break;
 		case PAGE_TIMEZONE:
@@ -441,64 +449,8 @@ void MainWindow::savePkgsourceSettings() {
 	// TODO: Don't forget about pkgSourceCustomRadioButton!
 }
 
-QString MainWindow::detectDVDDevice(QString isofile) {
-	if (!dvdDevice.isEmpty()) return dvdDevice;
-	string cdlist = get_tmp_file();
-	vector<string> ret;
-	if (isofile.isEmpty()) {
-		system("getcdromlist.sh " + cdlist + " 2>/dev/null >/dev/null");
-		ret = ReadFileStrings(cdlist);
-		unlink(cdlist.c_str());
-	}
-	else ret.push_back(isofile.toStdString());
-	mpkg *core;
-	QString testdev;
-	while (dvdDevice.isEmpty()) {
-		for (size_t i=0; i<ret.size(); ++i) {
-			if (isofile.isEmpty()) testdev = QString("/dev/") + ret[i].c_str();
-			else testdev = isofile;
-			// Try to mount, check if device exists
-			if (mountDVD(testdev, !isofile.isEmpty())) {
-				if (FileExists("/var/log/mount/.volume_id")) {
-					volname = getCdromVolname(&rep_location);
-					system("rm -f /dev/cdrom 2>/dev/tty4 >/dev/tty4; ln -s " + testdev.toStdString() + " /dev/cdrom 2>/dev/tty4 >/dev/tty4");
-					core = new mpkg;
-					core->set_cdromdevice(testdev.toStdString());
-					core->set_cdrommountpoint("/var/log/mount/");
-					delete core;
 
-					umountDVD();
-					dvdDevice = testdev;
-					return dvdDevice;
-				}
-				umountDVD();
-			}
-		}
-		if (dvdDevice.isEmpty()) {
-			if (QMessageBox::question(this, tr("DVD detection failed"), tr("Failed to detect DVD drive. Be sure you inserted installation DVD into this. Retry?"))!=QMessageBox::Yes) return "";
-		}
-	}
-	return dvdDevice;
-	
-}
 
-bool MainWindow::mountDVD(QString dev, bool iso) {
-	if (!iso) {
-		printf("Mounting real DVD drive %s\n", dev.toStdString().c_str());
-		if (system("mount " + dev.toStdString() + " /var/log/mount")==0) return true;
-	}
-	else {
-		printf("Mounting ISO image %s\n", dev.toStdString().c_str());
-		if (system("mount -o loop " + dev.toStdString() + " /var/log/mount")==0) return true;
-	}
-	printf("Failed to mount %s\n", dev.toStdString().c_str());
-	return false;
-}
-
-bool MainWindow::umountDVD() {
-	if (system("umount /var/log/mount")==0) return true;
-	return false;
-}
 
 CustomPkgSet MainWindow::getCustomPkgSet(const string& name) {
 	vector<string> data = ReadFileStrings("/tmp/setup_variants/" + name + ".desc");
@@ -541,47 +493,45 @@ void MainWindow::getCustomSetupVariants(const vector<string>& rep_list) {
 
 
 void MainWindow::loadSetupVariants() {
-	QLabel *waitLabel = new QLabel;
-	waitLabel->setText(tr("Please wait while installer loads data from repository.\nIt may take some tome, be patient."));
-	waitLabel->show();
 	// Let's write down repo list
-	mpkg *core = new mpkg;
+	if (loadSetupVariantsThread->isRunning()) {
+		if (!loadSetupVariantsThread->wait(5000)) loadSetupVariantsThread->terminate();
+	}
+	loadSetupVariantsThread->pkgsource = settings->value("pkgsource").toString();
+	//loadSetupVariantsThread->volname = volname;
+	//loadSetupVariantsThread->rep_location = rep_location;
+	loadSetupVariantsThread->start();
+}
 
-	vector<string> rList, dlist;
-	if (settings->value("pkgsource")=="dvd" || settings->value("pkgsource").toString().toStdString().find("iso:///")==0) {
-		if (settings->value("pkgsource").toString().toStdString().find("iso:///")==0) {
-			if (detectDVDDevice(settings->value("pkgsource").toString().toStdString().substr(6).c_str())=="") {
-				QMessageBox::critical(this, tr("FAIL"), tr("Failed to detect dvd, cannot continue"));
-				qApp->quit();
+void MainWindow::receiveLoadSetupVariants(bool success) {
+	if (!success) {
+		if (settings->value("pkgsource")=="dvd") {
+			if (QMessageBox::question(this, tr("DVD detection failed"), tr("Failed to detect DVD drive. Be sure you inserted installation DVD into this. Retry?"))==QMessageBox::Yes) {
+				loadSetupVariants();
+				return;
 			}
-
+			else qApp->quit();
 		}
 		else {
-			if (detectDVDDevice()=="") {
-				QMessageBox::critical(this, tr("FAIL"), tr("Failed to detect dvd, cannot continue"));
-				qApp->quit();
+			if (QMessageBox::question(this, tr("Repository connection failed"), tr("Failed to connect to repository. If you trying to access network repository, check your network settings. Retry?"))==QMessageBox::Yes) {
+				loadSetupVariants();
+				return;
 			}
-		}
-		rList.push_back("cdrom://"+volname+"/"+rep_location);
-		settings->setValue("volname", volname.c_str());
-		settings->setValue("rep_location", rep_location.c_str());
+			else qApp->quit();
 
+
+		}
 	}
-	else rList.push_back(settings->value("pkgsource").toString().toStdString());
-	// TODO: respect options other than DVD, please
-	if (settings->value("pkgsource")=="dvd") {
-		mountDVD();
-		cacheCdromIndex(volname, rep_location);
-	}
-	core->set_repositorylist(rList, dlist);
-	core->update_repository_data();
+	mpkg *core = new mpkg(false);
+	vector<string> rList = core->get_repositorylist();
 	getCustomSetupVariants(rList);
 	ui->setupVariantsListWidget->clear();
 	QListWidgetItem *item;
 	for (size_t i=0; i<customPkgSetList.size(); ++i) {
 		item = new QListWidgetItem(customPkgSetList[i].desc.c_str(), ui->setupVariantsListWidget);
 	}
-	waitLabel->hide();
+	delete core;
+	nextButtonClick();
 }
 
 void MainWindow::loadTimezones() {

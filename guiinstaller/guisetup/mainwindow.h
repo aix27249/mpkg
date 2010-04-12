@@ -4,6 +4,7 @@
 #include <mpkg/libmpkg.h>
 #include <mpkg/errorhandler.h>
 #include <mpkg-parted/mpkg-parted.h>
+#include "thread.h"
 class QListWidgetItem;
 namespace Ui {
 	class MainWindowClass;
@@ -37,7 +38,8 @@ class MainWindow: public QMainWindow {
 	private:
 		Ui::MainWindowClass *ui;
 		// Core
-		mpkg *core;
+		//mpkg *core;
+		LoadSetupVariantsThread *loadSetupVariantsThread;
 		QSettings *settings;
 		bool validatePageSettings(int index);
 		bool validateBootloaderSettings();
@@ -58,14 +60,9 @@ class MainWindow: public QMainWindow {
 		void saveMountSettings();
 		void saveBootloaderSettings();
 		void savePkgsourceSettings();
-		QString detectDVDDevice(QString isofile="");
 		QString isopath;
-		bool mountDVD(QString device="", bool iso=false);
-		bool umountDVD();
 
 		vector<CustomPkgSet> customPkgSetList;
-		QString dvdDevice;
-		string volname, rep_location;
 		void getCustomSetupVariants(const vector<string>& rep_list);
 
 		CustomPkgSet getCustomPkgSet(const string& name);
@@ -78,6 +75,7 @@ class MainWindow: public QMainWindow {
 
 		
 	public slots:
+		void askQuit();
 		void nextButtonClick();
 		void backButtonClick();
 		void updatePageData(int index);
@@ -93,6 +91,8 @@ class MainWindow: public QMainWindow {
 		void loadSetupVariants();
 		void loadTimezones();
 		void loadConfirmationData();
+
+		void receiveLoadSetupVariants(bool success);
 
 		void timezoneSearch(const QString &);
 		void updateMountItemUI();
@@ -110,6 +110,7 @@ enum {
 	PAGE_MOUNTPOINTS,
 	PAGE_BOOTLOADER,
 	PAGE_PKGSOURCE,
+	PAGE_WAITPKGSOURCE,
 	PAGE_INSTALLTYPE,
 	PAGE_TIMEZONE,
 	PAGE_ROOTPASSWORD,
