@@ -1,5 +1,16 @@
 <RCC>
-  <qresource prefix="logo">
-    <file>LML.png</file>
+  <qresource prefix="setupRoots">
+    <file>icons/wicd-gtk.png</file>
+    <file>icons/application-x-cd-image.png</file>
+    <file>icons/help-about.png</file>
+    <file>icons/arrow-left.png</file>
+    <file>icons/arrow-right.png</file>
+    <file>icons/application-x-compressed-tar.png</file>
+    <file>icons/preferences-system.png</file>
+    <file>icons/drive-harddisk.png</file>
+    <file>icons/input-keyboard.png</file>
+    <file>icons/network-wired.png</file>
+    <file>icons/network-wireless.png</file>
+    <file>icons/media-optical-data.png</file>
   </qresource>
 </RCC>

@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QListWidgetItem>
+#include <QTimer>
 MainWindow *guiObject;
 
 
@@ -37,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	guiObject = this;
 
 	ui->setupUi(this);
+	changePhoto();
 	setWindowState(Qt::WindowFullScreen);
 	connect(&thread, SIGNAL(setSummaryText(const QString &)), ui->currentSummaryLabel, SLOT(setText(const QString &)));
 	connect(&thread, SIGNAL(setDetailsText(const QString &)), ui->currentDetailsLabel, SLOT(setText(const QString &)));
@@ -44,6 +46,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(&thread, SIGNAL(setProgressMax(int)), ui->progressBar, SLOT(setMaximum(int)));
 	connect(&thread, SIGNAL(reportError(const QString &)), this, SLOT(showError(const QString &)));
 	connect(&thread, SIGNAL(reportFinish()), this, SLOT(finish()));
+	connect(ui->rebootNowButton(), SIGNAL(clicked()), this, SLOT(reboot()));
+	connect(ui->rebootLaterButton(), SIGNAL(clicked()), qApp, SLOT(quit()));
+	currentPhoto = 0;
+	timer = new QTimer;
+	timer->setInterval(6000);
+	connect(timer, SIGNAL(timeout()), this, SLOT(changePhoto()));
+	timer->start();
+
+
+
 
 	thread.start();
 
@@ -57,8 +69,22 @@ void MainWindow::showError(const QString &err) {
 }
 
 void MainWindow::finish() {
-	QMessageBox::information(this, tr("Installation finished"), tr("Install complete"));
-	qApp->quit();
+	ui->stackedWidget->setCurrentIndex(1);
 }
 
+void MainWindow::changePhoto() {
+	if (FileExists("/usr/share/setup/images/" + IntToStr(currentPhoto+1) + ".jpg")) {
+		currentPhoto++;
+	}
+	else {
+		if (currentPhoto>0) currentPhoto=0;
+		else return;
+	}
+	ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".jpg")).scaledToHeight(ui->imageLabel->height(), Qt::SmoothTransformation));
+}
+
+void MainWindow::reboot() {
+	system("sync && reboot &");
+	qApp->quit();
+}
 

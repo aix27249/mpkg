@@ -112,6 +112,9 @@ class SetupThread: public QThread {
 		void setRootPassword();
 		void createUsers();
 		void setTimezone();
+		void setupNetwork();
+
+		void copyMPKGConfig();
 
 		void umountFilesystems();
 

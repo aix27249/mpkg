@@ -10,6 +10,7 @@ namespace Ui {
 	class MainWindowClass;
 }
 class QSettings;
+class QTimer;
 
 
 class MainWindow: public QMainWindow {
@@ -21,9 +22,14 @@ class MainWindow: public QMainWindow {
 		Ui::MainWindowClass *ui;
 		SetupThread thread;
 
+		int currentPhoto;
+		QTimer *timer;
 	public slots:
 		void showError(const QString &);
 		void finish();
+		void changePhoto();
+		void reboot();
+
 
 		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);
 	

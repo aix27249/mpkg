@@ -46,6 +46,7 @@ class MainWindow: public QMainWindow {
 		bool validateRootPassword();
 		bool validateUserPasswords();
 		bool validatePkgSources();
+		bool validateMountPoints();
 		vector<TagPair> drives;
 		vector<pEntry> partitions;
 		QString lastPart;

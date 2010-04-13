@@ -80,7 +80,7 @@ MainWindow::~MainWindow() {
 	delete loadSetupVariantsThread;
 }
 void MainWindow::askQuit() {
-	if (QMessageBox::question(this, tr("Really cancel installation?"), tr("Installation is not yet complete. Do you really want to cancel?"))==QMessageBox::Yes) qApp->quit();
+	if (QMessageBox::question(this, tr("Really cancel installation?"), tr("Installation is not yet complete. Do you really want to cancel?"), QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) qApp->quit();
 }
 void MainWindow::runInstaller() {
 	if (!ui->confirmInstallCheckBox->isChecked()) {
@@ -137,6 +137,9 @@ bool MainWindow::validatePageSettings(int index) {
 				QMessageBox::critical(this, tr("No partitions detected"), tr("You have no partitions on your hard drive. Please create it first."));
 				return false;
 			}
+			break;
+		case PAGE_MOUNTPOINTS:
+			if (!validateMountPoints()) return false;
 			break;
 		case PAGE_BOOTLOADER:
 			if (!validateBootloaderSettings()) return false;
@@ -501,19 +504,20 @@ void MainWindow::loadSetupVariants() {
 	//loadSetupVariantsThread->volname = volname;
 	//loadSetupVariantsThread->rep_location = rep_location;
 	loadSetupVariantsThread->start();
+	ui->nextButton->setEnabled(false);
 }
 
 void MainWindow::receiveLoadSetupVariants(bool success) {
 	if (!success) {
 		if (settings->value("pkgsource")=="dvd") {
-			if (QMessageBox::question(this, tr("DVD detection failed"), tr("Failed to detect DVD drive. Be sure you inserted installation DVD into this. Retry?"))==QMessageBox::Yes) {
+			if (QMessageBox::question(this, tr("DVD detection failed"), tr("Failed to detect DVD drive. Be sure you inserted installation DVD into this. Retry?"), QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
 				loadSetupVariants();
 				return;
 			}
 			else qApp->quit();
 		}
 		else {
-			if (QMessageBox::question(this, tr("Repository connection failed"), tr("Failed to connect to repository. If you trying to access network repository, check your network settings. Retry?"))==QMessageBox::Yes) {
+			if (QMessageBox::question(this, tr("Repository connection failed"), tr("Failed to connect to repository. If you trying to access network repository, check your network settings. Retry?"), QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
 				loadSetupVariants();
 				return;
 			}
@@ -531,6 +535,7 @@ void MainWindow::receiveLoadSetupVariants(bool success) {
 		item = new QListWidgetItem(customPkgSetList[i].desc.c_str(), ui->setupVariantsListWidget);
 	}
 	delete core;
+	ui->nextButton->setEnabled(true);
 	nextButtonClick();
 }
 
@@ -573,8 +578,8 @@ void MainWindow::loadConfirmationData() {
 	}
 	ui->confirmationTextBrowser->setText(tr("<p><b>Package source:</b> %1</p>\
 				<p><b>Installation type:</b> %2</p>\
-				<p><b>Partitions that will be FORMATTED:</b><br><ul>%3</ul></p>\
-				<p><b>Partitions that will NOT be formatted but used:</b><br><ul>%4</ul></p>\
+				<p><b>Partitions that will be FORMATTED:</b><ul>%3</ul></p>\
+				<p><b>Partitions that will NOT be formatted but used:</b><ul>%4</ul></p>\
 				<p><b>Boot loader will be installed to:</b> %5</p>").\
 			arg(settings->value("pkgsource").toString()).\
 			arg(settings->value("setup_variant").toString()).\
@@ -648,4 +653,33 @@ void MainWindow::timezoneSearch(const QString &search) {
 		if (ui->timezoneListWidget->item(i)->text().contains(search, Qt::CaseInsensitive)) ui->timezoneListWidget->item(i)->setHidden(false);
 		else ui->timezoneListWidget->item(i)->setHidden(true);
 	}
+}
+
+bool MainWindow::validateMountPoints() {
+	bool hasRoot = false, hasSwap = false;
+	// Check for nessecary partitions
+	for (size_t i=0; i<mountOptions.size(); ++i) {
+		if (mountOptions[i].mountpoint == "swap") hasSwap = true;
+		if (mountOptions[i].mountpoint == "/") hasRoot = true;
+	}
+	if (!hasSwap && QMessageBox::question(this, tr("No swap partition"), tr("You didn't specified swap partition. It is OK for systems with lots of RAM (2Gb or more), but you will be unable to use suspend-to-disk. Are you sure?"), QMessageBox::Yes|QMessageBox::No)!=QMessageBox::Yes) return false;
+	if (!hasRoot) {
+		QMessageBox::warning(this, tr("No root partition"), tr("You didn't specified root partition. Without this, system cannot be installed."));
+		return false;
+	}
+
+	// Check for dupes
+	bool dupesFound = false;
+	for (size_t i=0; i<mountOptions.size(); ++i) {
+		for (size_t t=0; t<mountOptions.size(); ++t) {
+			if (i==t) continue;
+			if (mountOptions[i].mountpoint == mountOptions[t].mountpoint) {
+				QMessageBox::warning(this, tr("Duplicate mount points found"), tr("Duplicate mount points found: %1").arg(mountOptions[i].mountpoint));
+				dupesFound = true;
+			}
+		}
+	}
+	if (dupesFound) return false;
+
+	return true;
 }

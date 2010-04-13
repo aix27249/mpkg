@@ -682,8 +682,7 @@ bool SetupThread::postInstallActions() {
 	system("chroot /mnt depmod -a " + kernelversion);
 	buildInitrd();
 	grub2config();
-	system("chmod +x /mnt/etc/rc.d/rc.networkmanager");
-	setHostname(); 
+	setupNetwork();
 	setTimezone();
 	if (FileExists("/mnt/usr/bin/X")) {
 		if (FileExists("/mnt/usr/bin/kdm") ||
@@ -697,6 +696,8 @@ bool SetupThread::postInstallActions() {
 
 	generateFontIndex();
 	setXwmConfig();
+
+	copyMPKGConfig();
 
 	umountFilesystems();
 
@@ -796,5 +797,15 @@ void SetupThread::setTimezone() {
 		system("( cd /mnt/etc ; ln -sf /usr/share/zoneinfo/" + settings->value("timezone").toString().toStdString() + " localtime-copied-from )");
 		unlink("/mnt/etc/localtime");
 		system("chroot /mnt cp etc/localtime-copied-from etc/localtime");
+	}
+}
+
+void SetupThread::setupNetwork() {
+	setHostname();
+	if (settings->value("netman").toString()=="wicd") {
+		system("chmod +x /etc/rc.d/rc.wicd");	
+	}
+	if (settings->value("netman").toString()=="networkmanager") {
+		system("chmod +x /etc/rc.d/rc.networkmanager");	
 	}
 }
