@@ -29,6 +29,8 @@ class MainWindow: public QMainWindow {
 		void finish();
 		void changePhoto();
 		void reboot();
+		void minimizeWindow();
+		void maximizeWindow();
 
 
 		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);

@@ -47,6 +47,7 @@ class MainWindow: public QMainWindow {
 		bool validateUserPasswords();
 		bool validatePkgSources();
 		bool validateMountPoints();
+		bool validateNetworking();
 		vector<TagPair> drives;
 		vector<pEntry> partitions;
 		QString lastPart;
@@ -71,6 +72,7 @@ class MainWindow: public QMainWindow {
 		void saveSetupVariant();
 		void saveRootPassword();
 		void saveUsers();
+		void saveNetworking();
 
 
 
@@ -105,17 +107,19 @@ class MainWindow: public QMainWindow {
 };
 
 enum {
-	PAGE_LANGUAGE = 0,
+	PAGE_WELCOME = 0,
+	PAGE_LANGUAGE,
 	PAGE_LICENSE,
-	PAGE_PARTITIONING,
-	PAGE_MOUNTPOINTS,
-	PAGE_BOOTLOADER,
+	PAGE_NETWORKING,
 	PAGE_PKGSOURCE,
 	PAGE_WAITPKGSOURCE,
 	PAGE_INSTALLTYPE,
-	PAGE_TIMEZONE,
+	PAGE_PARTITIONING,
+	PAGE_MOUNTPOINTS,
+	PAGE_BOOTLOADER,
 	PAGE_ROOTPASSWORD,
 	PAGE_USERS,
+	PAGE_TIMEZONE,
 	PAGE_CONFIRMATION
 };
 

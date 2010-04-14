@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="setupRoots">
+    <file>icons/welcome.jpg</file>
     <file>icons/wicd-gtk.png</file>
     <file>icons/application-x-cd-image.png</file>
     <file>icons/help-about.png</file>

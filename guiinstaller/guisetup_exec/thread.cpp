@@ -534,7 +534,7 @@ bool SetupThread::grub2config() {
 	StringMap devMap = getDeviceMap("/mnt/boot/grub/device.map");
 	remapHdd(devMap, bootDevice);
 
-	string gfxPayload = getGfxPayload(settings->value("videomode").toString().toStdString());
+	string gfxPayload = settings->value("fbmode").toString().toStdString();
 	if (!gfxPayload.empty()) gfxPayload = "\tset gfxpayload=\"" + gfxPayload + "\"\n";
 	// Check if /boot is located on partition other than root
 	string grubBootPartition = rootPartition;
@@ -609,7 +609,7 @@ menuentry \"" + string(_("MOPSLinux 7.0 on ")) + rootPartition + "\" {\n\
 bool SetupThread::setHostname() {
 	string hostname = settings->value("hostname").toString().toStdString();
 	if (hostname.empty()) return false;
-	string netname = settings->value("hostname").toString().toStdString();
+	string netname = settings->value("netname").toString().toStdString();
 	if (netname.empty()) netname = "example.net";
 	WriteFile("/mnt/etc/HOSTNAME", hostname + "." + netname + "\n");
 	string hosts = ReadFile("/mnt/etc/hosts");
@@ -805,7 +805,17 @@ void SetupThread::setupNetwork() {
 	if (settings->value("netman").toString()=="wicd") {
 		system("chmod +x /etc/rc.d/rc.wicd");	
 	}
-	if (settings->value("netman").toString()=="networkmanager") {
+	else if (settings->value("netman").toString()=="networkmanager") {
 		system("chmod +x /etc/rc.d/rc.networkmanager");	
 	}
+	else if (settings->value("netman").toString()=="netconfig") {
+		emit minimizeWindow();
+		system("xterm -fg white -bg black -C `chroot /mnt /sbin/netconfig`");
+		emit maximizeWindow();
+	}
+
+}
+
+void SetupThread::copyMPKGConfig() {
+	system("cp /etc/mpkg.xml /mnt/etc/");
 }

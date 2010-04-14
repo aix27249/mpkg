@@ -50,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	guiObject = this;
 	ui->setupUi(this);
-	setWindowState(Qt::WindowFullScreen);
+	setWindowState(Qt::WindowMaximized);
 	connect(ui->nextButton, SIGNAL(clicked()), this, SLOT(nextButtonClick()));
 	connect(ui->backButton, SIGNAL(clicked()), this, SLOT(backButtonClick()));
 	connect(ui->mountPointsTreeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), this, SLOT(updateMountsGUI(QTreeWidgetItem *, QTreeWidgetItem *)));
@@ -87,6 +87,10 @@ void MainWindow::runInstaller() {
 		QMessageBox::critical(this, tr("Please confirm settings"), tr("You chould confirm that settings are OK. Check the appropriate check box."));
 		return;
 	}
+	if (ui->sendStatCheckBox->isChecked()) {
+		settings->setValue("anonstat", true);
+	}
+	else settings->setValue("anonstat", false);
 	system("nohup guisetup_exec &");
 	qApp->quit();
 }
@@ -195,6 +199,9 @@ void MainWindow::storePageSettings(int index) {
 		case PAGE_ROOTPASSWORD:
 			saveRootPassword();
 			break;
+		case PAGE_NETWORKING:
+			saveNetworking();
+			break;
 		case PAGE_USERS:
 			saveUsers();
 			break;
@@ -261,7 +268,7 @@ void MainWindow::runPartitioningTool() {
 	Qt::WindowStates winstate = windowState();
 	setWindowState(Qt::WindowMinimized);
 	system("gparted");
-	setWindowState(Qt::WindowFullScreen);
+	setWindowState(Qt::WindowMaximized);
 	deviceCacheActual = false;
 	partitionCacheActual = false;
 	updatePartitionLists();
@@ -425,8 +432,11 @@ bool MainWindow::validateBootloaderSettings() {
 }
 
 void MainWindow::saveBootloaderSettings() {
-	
+	QString fbmode = ui->fbResolutionComboBox->currentText();
+	if (fbmode=="KMS" || fbmode == "Kernel modesetting") fbmode = "text";
+	if (fbmode!="text") fbmode += "x" + ui->fbColorComboBox->currentText();
 	settings->setValue("bootloader", drives[ui->bootLoaderComboBox->currentIndex()].tag.c_str());
+	settings->setValue("fbmode", fbmode);
 	settings->setValue("initrd_delay", ui->initrdDelayCheckBox->isChecked());
 	settings->setValue("kernel_options", ui->kernelOptionsLineEdit->text());
 	settings->setValue("initrd_modules", ui->initrdModulesLineEdit->text());
@@ -531,7 +541,9 @@ void MainWindow::receiveLoadSetupVariants(bool success) {
 	getCustomSetupVariants(rList);
 	ui->setupVariantsListWidget->clear();
 	QListWidgetItem *item;
+	printf("Beginning fill of pkgSetList, size=%d\n", customPkgSetList.size());
 	for (size_t i=0; i<customPkgSetList.size(); ++i) {
+		printf("%s\n", customPkgSetList[i].desc.c_str());
 		item = new QListWidgetItem(customPkgSetList[i].desc.c_str(), ui->setupVariantsListWidget);
 	}
 	delete core;
@@ -682,4 +694,25 @@ bool MainWindow::validateMountPoints() {
 	if (dupesFound) return false;
 
 	return true;
+}
+
+bool MainWindow::validateNetworking() {
+	if (ui->hostnameEdit->text().isEmpty()) {
+		QMessageBox::information(this, tr("Network settings error"), tr("Please specify hostname"));
+		return false;
+	}
+
+	if (ui->netnameEdit->text().isEmpty()) {
+		QMessageBox::information(this, tr("Network settings error"), tr("Please specify network name"));
+		return false;
+	}
+	return true;
+}
+
+void MainWindow::saveNetworking() {
+	settings->setValue("hostname", ui->hostnameEdit->text());
+	settings->setValue("netname", ui->netnameEdit->text());
+	if (ui->netNMRadioButton->isChecked()) settings->setValue("netman", "networkmanager");
+	else if (ui->netWicdRadioButton->isChecked()) settings->setValue("netman", "wicd");
+	else if (ui->netNetconfigRadioButton->isChecked()) settings->setValue("netman", "netconfig");
 }

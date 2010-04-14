@@ -83,6 +83,8 @@ class SetupThread: public QThread {
 		void setProgress(int);
 		void reportError(const QString &);
 		void reportFinish();
+		void minimizeWindow();
+		void maximizeWindow();
 	public slots:
 		void getCustomSetupVariants(const vector<string>& rep_list);
 		CustomPkgSet getCustomPkgSet(const string& name);

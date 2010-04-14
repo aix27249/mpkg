@@ -39,15 +39,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 	ui->setupUi(this);
 	changePhoto();
-	setWindowState(Qt::WindowFullScreen);
+	setWindowState(Qt::WindowMaximized);
 	connect(&thread, SIGNAL(setSummaryText(const QString &)), ui->currentSummaryLabel, SLOT(setText(const QString &)));
 	connect(&thread, SIGNAL(setDetailsText(const QString &)), ui->currentDetailsLabel, SLOT(setText(const QString &)));
 	connect(&thread, SIGNAL(setProgress(int)), ui->progressBar, SLOT(setValue(int)));
 	connect(&thread, SIGNAL(setProgressMax(int)), ui->progressBar, SLOT(setMaximum(int)));
 	connect(&thread, SIGNAL(reportError(const QString &)), this, SLOT(showError(const QString &)));
 	connect(&thread, SIGNAL(reportFinish()), this, SLOT(finish()));
-	connect(ui->rebootNowButton(), SIGNAL(clicked()), this, SLOT(reboot()));
-	connect(ui->rebootLaterButton(), SIGNAL(clicked()), qApp, SLOT(quit()));
+	connect(&thread, SIGNAL(minimizeWindow()), this, SLOT(minimizeWindow()));
+	connect(&thread, SIGNAL(maximizeWindow()), this, SLOT(maximizeWindow()));
+
+	connect(ui->rebootNowButton, SIGNAL(clicked()), this, SLOT(reboot()));
+	connect(ui->rebootLaterButton, SIGNAL(clicked()), qApp, SLOT(quit()));
 	currentPhoto = 0;
 	timer = new QTimer;
 	timer->setInterval(6000);
@@ -80,7 +83,7 @@ void MainWindow::changePhoto() {
 		if (currentPhoto>0) currentPhoto=0;
 		else return;
 	}
-	ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".jpg")).scaledToHeight(ui->imageLabel->height(), Qt::SmoothTransformation));
+	ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".jpg")).scaledToHeight(ui->imageLabel->height()));
 }
 
 void MainWindow::reboot() {
@@ -88,3 +91,10 @@ void MainWindow::reboot() {
 	qApp->quit();
 }
 
+void MainWindow::minimizeWindow() {
+	setWindowState(Qt::WindowMinimized);
+}
+
+void MainWindow::maximizeWindow() {
+	setWindowState(Qt::WindowMaximized);
+}
