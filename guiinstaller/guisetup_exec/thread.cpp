@@ -311,6 +311,7 @@ bool SetupThread::processInstall() {
 	emit setSummaryText(tr("Installing packages"));
 	emit setDetailsText(tr("Preparing to installation"));
 	core = new mpkg;
+	if (FileExists("/var/log/mount/cache")) system("ln -s /var/log/mount/cache /var/mpkg/cache/.fcache");
 	if (core->commit()!=0) {
 		delete core;
 		return false;
@@ -810,7 +811,7 @@ void SetupThread::setupNetwork() {
 	}
 	else if (settings->value("netman").toString()=="netconfig") {
 		emit minimizeWindow();
-		system("xterm -fg white -bg black -C `chroot /mnt /sbin/netconfig`");
+		system("xterm -fg white -bg black -e 'echo Configuring netconfig && netconfig_ch`");
 		emit maximizeWindow();
 	}
 
