@@ -1,7 +1,9 @@
 <RCC>
   <qresource prefix="setupRoots">
+    <file>icons/agilia_installer_head.png</file>
     <file>icons/welcome.jpg</file>
     <file>icons/wicd-gtk.png</file>
+    <file>icons/agilia_installer.png</file>
     <file>icons/application-x-cd-image.png</file>
     <file>icons/help-about.png</file>
     <file>icons/arrow-left.png</file>

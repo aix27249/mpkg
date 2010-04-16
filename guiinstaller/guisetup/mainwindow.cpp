@@ -47,6 +47,7 @@ MountOptions::~MountOptions() {
 }
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindowClass) {
+	hasNvidia = -1;
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	guiObject = this;
 	ui->setupUi(this);
@@ -193,6 +194,12 @@ void MainWindow::storePageSettings(int index) {
 		case PAGE_INSTALLTYPE:
 			saveSetupVariant();
 			break;
+		case PAGE_ALTERNATIVES:
+			saveAlternatives();
+			break;
+		case PAGE_NVIDIA:
+			saveNvidia();
+			break;
 		case PAGE_TIMEZONE:
 			saveTimezone();
 			break;
@@ -232,6 +239,9 @@ void MainWindow::updatePageData(int index) {
 			break;
 		case PAGE_WAITPKGSOURCE:
 			loadSetupVariants();
+			break;
+		case PAGE_NVIDIA:
+			loadNvidia();
 			break;
 		case PAGE_TIMEZONE:
 			loadTimezones();
@@ -541,9 +551,7 @@ void MainWindow::receiveLoadSetupVariants(bool success) {
 	getCustomSetupVariants(rList);
 	ui->setupVariantsListWidget->clear();
 	QListWidgetItem *item;
-	printf("Beginning fill of pkgSetList, size=%d\n", customPkgSetList.size());
 	for (size_t i=0; i<customPkgSetList.size(); ++i) {
-		printf("%s\n", customPkgSetList[i].desc.c_str());
 		item = new QListWidgetItem(customPkgSetList[i].desc.c_str(), ui->setupVariantsListWidget);
 	}
 	delete core;
@@ -715,4 +723,33 @@ void MainWindow::saveNetworking() {
 	if (ui->netNMRadioButton->isChecked()) settings->setValue("netman", "networkmanager");
 	else if (ui->netWicdRadioButton->isChecked()) settings->setValue("netman", "wicd");
 	else if (ui->netNetconfigRadioButton->isChecked()) settings->setValue("netman", "netconfig");
+}
+
+void MainWindow::loadNvidia() {
+	if (hasNvidia==-1) {
+		string tmp_hw = get_tmp_file();
+		system("lspci > " + tmp_hw);
+		vector<string> hw = ReadFileStrings(tmp_hw);
+		for(size_t i=0; i<hw.size(); ++i) {
+			if (hw[i].find("VGA compatible controller")!=std::string::npos && hw[i].find("nVidia")!=std::string::npos) hasNvidia = i;
+		}
+		if (hasNvidia == -1) hasNvidia = 0;
+	}
+
+
+	if (!hasNvidia) nextButtonClick();
+}
+
+void MainWindow::saveNvidia() {
+	if (ui->nvidia190RadioButton->isChecked()) settings->setValue("nvidia-driver", "190");
+	else if (ui->nvidia173RadioButton->isChecked()) settings->setValue("nvidia-driver", "173");
+	else if (ui->nvidia96RadioButton->isChecked()) settings->setValue("nvidia-driver", "96");
+	else if (ui->nvidiaNVRadioButton->isChecked()) settings->setValue("nvidia-driver", "nv");
+}
+
+void MainWindow::saveAlternatives() {
+	QString alternatives;
+	settings->remove("alternatives");
+	if (ui->altBFSCheckBox->isChecked()) settings->setValue("alternatives/bfs", true);
+	if (ui->altCleartypeCheckBox->isChecked()) settings->setValue("alternatives/cleartype", true);
 }

@@ -73,6 +73,9 @@ class MainWindow: public QMainWindow {
 		void saveRootPassword();
 		void saveUsers();
 		void saveNetworking();
+		void saveNvidia();
+		void saveAlternatives();
+		int hasNvidia;
 
 
 
@@ -94,6 +97,7 @@ class MainWindow: public QMainWindow {
 		void loadSetupVariants();
 		void loadTimezones();
 		void loadConfirmationData();
+		void loadNvidia();
 
 		void receiveLoadSetupVariants(bool success);
 
@@ -114,6 +118,8 @@ enum {
 	PAGE_PKGSOURCE,
 	PAGE_WAITPKGSOURCE,
 	PAGE_INSTALLTYPE,
+	PAGE_ALTERNATIVES,
+	PAGE_NVIDIA,
 	PAGE_PARTITIONING,
 	PAGE_MOUNTPOINTS,
 	PAGE_BOOTLOADER,
