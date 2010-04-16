@@ -39,13 +39,16 @@ SET(guisetup_MOC_HDR
 	mainwindow.h
 	thread.h
 )
-
+SET(guisetup_QRC
+	mainwindow.qrc
+)
 # UI
 SET(guisetup_UI
 	mainwindow.ui
 )
 FIND_PACKAGE(Qt4 REQUIRED)
 INCLUDE( ${QT_USE_FILE} )
+QT4_ADD_RESOURCES(guisetup_RCC_SRCS ${guisetup_QRC})
 QT4_WRAP_UI(guisetup_UI_HDR ${guisetup_UI})
 QT4_WRAP_CPP(guisetup_MOC_SRC ${guisetup_MOC_HDR})
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
