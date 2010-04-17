@@ -86,6 +86,8 @@ class SetupThread: public QThread {
 		void minimizeWindow();
 		void maximizeWindow();
 	public slots:
+		void setDefaultRunlevels();
+		void setDefaultXDM();
 		void getCustomSetupVariants(const vector<string>& rep_list);
 		CustomPkgSet getCustomPkgSet(const string& name);
 		bool validateConfig();

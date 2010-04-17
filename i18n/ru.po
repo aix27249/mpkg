@@ -2608,8 +2608,8 @@ msgstr " Кб"
 
 #: ../console/installpkg-ng2.cpp:1249 ../console/installpkg-ng2.cpp:1256
 #: ../console/installpkg-ng2.cpp:1262
-msgid " MOPSLinux repository updates"
-msgstr " Обновление репозиториев MOPSLinux"
+msgid " AgiliaLinux repository updates"
+msgstr " Обновление репозиториев AgiliaLinux"
 
 #: string_operations.cpp:439 ../lib/string_operations.cpp:439
 msgid " Mb"
@@ -5524,8 +5524,8 @@ msgstr "Выбор корневого раздела"
 #: ../installer/setup.cpp:230 ../installer/setup.cpp:240
 #: ../installer/setup.cpp:277 ../installer/setup.cpp:334
 #: ../installer/setup.cpp:358
-msgid "Choose root partition for MOPSLinux:"
-msgstr "Укажите корневой раздел для MOPSLinux:"
+msgid "Choose root partition for AgiliaLinux:"
+msgstr "Укажите корневой раздел для AgiliaLinux:"
 
 #: ../installer/setup.cpp:2266 ../installer/setup.cpp:2263
 #: ../installer/setup.cpp:2324 ../installer/setup.cpp:2321
@@ -5760,12 +5760,12 @@ msgid "Continue? [Y/n]\n"
 msgstr "Продолжить? [Y/n]\n"
 
 #: menu.cpp:18
-msgid "Convert directory to MOPSLinux format"
-msgstr "Конвертировать директорию с пакетами в формат MOPSLinux"
+msgid "Convert directory to AgiliaLinux format"
+msgstr "Конвертировать директорию с пакетами в формат AgiliaLinux"
 
 #: menu.cpp:17 menu.cpp:49 ../lib/menu.cpp:49
-msgid "Convert packages to MOPSLinux format"
-msgstr "Конвертировать пакеты в формат MOPSLinux"
+msgid "Convert packages to AgiliaLinux format"
+msgstr "Конвертировать пакеты в формат AgiliaLinux"
 
 #: ../installer/setup.cpp:1891 ../installer/setup.cpp:1947
 #: ../installer/setup.cpp:1944 ../installer/setup.cpp:1948
@@ -8108,8 +8108,8 @@ msgstr "Новые GeForce (серия 6xxx и новее), beta-драйвер"
 
 #: ../console/installpkg-ng2.cpp:1245 ../console/installpkg-ng2.cpp:1252
 #: ../console/installpkg-ng2.cpp:1258
-msgid "Latest MOPSLinux repository updates"
-msgstr "Последние обновления репозитория MOPSLinux"
+msgid "Latest AgiliaLinux repository updates"
+msgstr "Последние обновления репозитория AgiliaLinux"
 
 #: ../installer/setup.cpp:735 ../installer/setup.cpp:736
 #: ../installer/setup.cpp:746 ../installer/setup.cpp:783
@@ -8257,8 +8257,8 @@ msgstr "МИНИМАЛЬНАЯ"
 #: ../installer/setup.cpp:26 ../installer/setup.cpp:27
 #: ../installer/setup.cpp:28 ../installer/setup.cpp:39
 #: ../installer/setup.cpp:41
-msgid "MOPSLinux "
-msgstr "MOPSLinux "
+msgid "AgiliaLinux "
+msgstr "AgiliaLinux "
 
 #: ../installer/setup.cpp:2161 ../installer/setup.cpp:2221
 #: ../installer/setup.cpp:2218 ../installer/setup.cpp:2222
@@ -8267,24 +8267,24 @@ msgstr "MOPSLinux "
 #: ../installer/setup.cpp:2488 ../installer/setup.cpp:2640
 #: ../installer/setup.cpp:2682 ../installer/setup.cpp:2732
 #, c-format
-msgid "MOPSLinux %s setup (build %s)\n"
-msgstr "Установка MOPSLinux %s (сборка %s)\n"
+msgid "AgiliaLinux %s setup (build %s)\n"
+msgstr "Установка AgiliaLinux %s (сборка %s)\n"
 
 #: ../installer/setup.cpp:3078 ../installer/setup.cpp:3123
 #: ../installer/setup.cpp:3275 ../installer/setup.cpp:3338
 #: ../installer/setup.cpp:3393
-msgid "MOPSLinux 7.0 (recovery mode) on "
-msgstr "MOPSLinux 7.0 (режим восстановления) на "
+msgid "AgiliaLinux 10.4 (recovery mode) on "
+msgstr "AgiliaLinux 10.4 (режим восстановления) на "
 
 #: ../installer/setup.cpp:3074 ../installer/setup.cpp:3119
 #: ../installer/setup.cpp:3271 ../installer/setup.cpp:3334
 #: ../installer/setup.cpp:3389
-msgid "MOPSLinux 7.0 on "
-msgstr "MOPSLinux 7.0 на "
+msgid "AgiliaLinux 10.4 on "
+msgstr "AgiliaLinux 10.4 на "
 
 #: ../installer/setup.cpp:1105
 msgid ""
-"MOPSLinux has EXPERIMENTAL support for graphical boot splash implemented "
+"AgiliaLinux has EXPERIMENTAL support for graphical boot splash implemented "
 "using Plymouth.\n"
 "If your hardware supports KMS (kernel modesetting), you can try to enable it "
 "now.\n"
@@ -8294,7 +8294,7 @@ msgid ""
 "\n"
 "Do you want to enable experimental splash screen?"
 msgstr ""
-"MOPSLinux имеет ЭКСПЕРИМЕНТАЛЬНУЮ поддержку графической загрузки, "
+"AgiliaLinux имеет ЭКСПЕРИМЕНТАЛЬНУЮ поддержку графической загрузки, "
 "реализованную через Plymouth.\n"
 "Она позволяет видеть красивую картинку при загрузке, а не вывод консоли.\n"
 "Если ваша видеокарта поддерживает KMS (kernel modesetting), вы можете "
@@ -8312,8 +8312,8 @@ msgstr ""
 #: ../installer/setup.cpp:1257 ../installer/setup.cpp:1265
 #: ../installer/setup.cpp:1274 ../installer/setup.cpp:1304
 #: ../installer/setup.cpp:1320 ../installer/setup.cpp:1342
-msgid "MOPSLinux installation finished successfully. Reboot now?"
-msgstr "Установка MOPSLinux завершена успешно. Перезагрузиться прямо сейчас?"
+msgid "AgiliaLinux installation finished successfully. Reboot now?"
+msgstr "Установка AgiliaLinux завершена успешно. Перезагрузиться прямо сейчас?"
 
 #: pkgeditor.cpp:10 ../lib/pkgeditor.cpp:10
 #, c-format
@@ -8610,10 +8610,10 @@ msgstr "NetworkManager - менеджер сети по умолчанию дл�
 #: ../installer/setup.cpp:1106 ../installer/setup.cpp:1117
 #: ../installer/setup.cpp:1135
 msgid ""
-"New MOPSLinux network manager. Very experimental, but already suitable for "
+"New AgiliaLinux network manager. Very experimental, but already suitable for "
 "Ethernet and Wireless networks"
 msgstr ""
-"Новый менеджер сети MOPSLinux. Очень экспериментальный, но уже пригоден для "
+"Новый менеджер сети AgiliaLinux. Очень экспериментальный, но уже пригоден для "
 "Ethernet и WiFi-сетей."
 
 #: ../lib/mpkg.cpp:2393 ../lib/mpkg.cpp:2396 ../lib/mpkg.cpp:2460
@@ -9982,8 +9982,8 @@ msgid "Scripts directory: %s\n"
 msgstr "Директория для скриптов: %s\n"
 
 #: menu.cpp:59
-msgid "Search and convert legacy packages to MOPSLinux format"
-msgstr "Поиск и конвертация пакетов в формат MOPSLinux"
+msgid "Search and convert legacy packages to AgiliaLinux format"
+msgstr "Поиск и конвертация пакетов в формат AgiliaLinux"
 
 #: installpkg-ng2.cpp:759 installpkg-ng2.cpp:763 installpkg-ng2.cpp:783
 #: installpkg-ng2.cpp:984 installpkg-ng2.cpp:1038 installpkg-ng2.cpp:1107
@@ -10683,8 +10683,8 @@ msgstr "Этот диск уже проиндексирован"
 #: ../installer/setup.cpp:1826 ../installer/setup.cpp:1849
 #: ../installer/setup.cpp:1868 ../installer/setup.cpp:1992
 #: ../installer/setup.cpp:2021 ../installer/setup.cpp:2053
-msgid "This disc doesn't recognized as MOPSLinux installation disc"
-msgstr "Данный диск не распознан как установочный диск MOPSLinux"
+msgid "This disc doesn't recognized as AgiliaLinux installation disc"
+msgstr "Данный диск не распознан как установочный диск AgiliaLinux"
 
 #: string_operations.cpp:602 string_operations.cpp:642
 #: string_operations.cpp:651 ../lib/string_operations.cpp:647
@@ -10702,12 +10702,12 @@ msgstr "Недостаточно аргументов для индексаци�
 #: ../installer/setup.cpp:2102 ../installer/setup.cpp:2232
 #: ../installer/setup.cpp:2261 ../installer/setup.cpp:2295
 msgid ""
-"To install MOPSLinux, you should have at least one Linux partition. Also, it "
+"To install AgiliaLinux, you should have at least one Linux partition. Also, it "
 "is strongly recommended to have a swap partition.\n"
 "If you didn't do this before, you can create it now.\n"
 "Which drive do you want to edit?"
 msgstr ""
-"Для установки MOPSLinux, вы должны иметь хотя бы один раздел Linux. Кроме "
+"Для установки AgiliaLinux, вы должны иметь хотя бы один раздел Linux. Кроме "
 "того, крайне рекомендуется выделить раздел подкачки.\n"
 "Если вы этого не сделали прежде - вы можете создать разделы сейчас.\n"
 "Таблицу раздела какого диска вы хотите отредактировать?"
@@ -11104,12 +11104,12 @@ msgstr "Странный статус пакета, страшновато ег�
 #: ../installer/setup.cpp:166 ../installer/setup.cpp:223
 #: ../installer/setup.cpp:247
 msgid ""
-"Welcome to MOPSLinux!\n"
+"Welcome to AgiliaLinux!\n"
 "\n"
 "Setup program will install the system on your computer and perform initial "
 "configuration.\n"
 msgstr ""
-"Добро пожаловать в MOPSLinux!\n"
+"Добро пожаловать в AgiliaLinux!\n"
 "\n"
 "Инсталлятор осуществит установку системы на ваш компьютер и произведет "
 "первоначальную конфигурацию.\n"

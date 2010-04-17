@@ -2268,7 +2268,7 @@ msgid "Choose root partition"
 msgstr ""
 
 #: ../installer/setup.cpp:358
-msgid "Choose root partition for MOPSLinux:"
+msgid "Choose root partition for AgiliaLinux:"
 msgstr ""
 
 #: ../installer/setup.cpp:2847
@@ -2380,7 +2380,7 @@ msgid "Continue? [Y/n]\n"
 msgstr ""
 
 #: ../lib/menu.cpp:49
-msgid "Convert packages to MOPSLinux format"
+msgid "Convert packages to AgiliaLinux format"
 msgstr ""
 
 #: ../installer/setup.cpp:2274
@@ -3594,25 +3594,25 @@ msgid "MINIMAL"
 msgstr ""
 
 #: ../installer/setup.cpp:41
-msgid "MOPSLinux "
+msgid "AgiliaLinux "
 msgstr ""
 
 #: ../installer/setup.cpp:2732
 #, c-format
-msgid "MOPSLinux %s setup (build %s)\n"
+msgid "AgiliaLinux %s setup (build %s)\n"
 msgstr ""
 
 #: ../installer/setup.cpp:3393
-msgid "MOPSLinux 7.0 (recovery mode) on "
+msgid "AgiliaLinux 10.4 (recovery mode) on "
 msgstr ""
 
 #: ../installer/setup.cpp:3389
-msgid "MOPSLinux 7.0 on "
+msgid "AgiliaLinux 10.4 on "
 msgstr ""
 
 #: ../installer/setup.cpp:1105
 msgid ""
-"MOPSLinux has EXPERIMENTAL support for graphical boot splash implemented "
+"AgiliaLinux has EXPERIMENTAL support for graphical boot splash implemented "
 "using Plymouth.\n"
 "If your hardware supports KMS (kernel modesetting), you can try to enable it "
 "now.\n"
@@ -3624,7 +3624,7 @@ msgid ""
 msgstr ""
 
 #: ../installer/setup.cpp:1342
-msgid "MOPSLinux installation finished successfully. Reboot now?"
+msgid "AgiliaLinux installation finished successfully. Reboot now?"
 msgstr ""
 
 #: ../lib/pkgeditor.cpp:10
@@ -3807,7 +3807,7 @@ msgstr ""
 
 #: ../installer/setup.cpp:1135
 msgid ""
-"New MOPSLinux network manager. Very experimental, but already suitable for "
+"New AgiliaLinux network manager. Very experimental, but already suitable for "
 "Ethernet and Wireless networks"
 msgstr ""
 
@@ -4812,12 +4812,12 @@ msgid "This disc already indexed"
 msgstr ""
 
 #: ../installer/setup.cpp:2053
-msgid "This disc doesn't recognized as MOPSLinux installation disc"
+msgid "This disc doesn't recognized as AgiliaLinux installation disc"
 msgstr ""
 
 #: ../installer/setup.cpp:2295
 msgid ""
-"To install MOPSLinux, you should have at least one Linux partition. Also, it "
+"To install AgiliaLinux, you should have at least one Linux partition. Also, it "
 "is strongly recommended to have a swap partition.\n"
 "If you didn't do this before, you can create it now.\n"
 "Which drive do you want to edit?"
@@ -5014,7 +5014,7 @@ msgstr ""
 
 #: ../installer/setup.cpp:247
 msgid ""
-"Welcome to MOPSLinux!\n"
+"Welcome to AgiliaLinux!\n"
 "\n"
 "Setup program will install the system on your computer and perform initial "
 "configuration.\n"

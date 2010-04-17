@@ -464,7 +464,9 @@ bool MainWindow::validatePkgSources() {
 	return true;
 }
 void MainWindow::savePkgsourceSettings() {
-	if (ui->pkgSourceDVDRadioButton->isChecked()) settings->setValue("pkgsource", "dvd");
+	if (ui->pkgSourceDVDRadioButton->isChecked()) {
+		settings->setValue("pkgsource", "dvd");
+	}
 	else if (ui->pkgSourceISORadioButton->isChecked()) {
 		settings->setValue("pkgsource", QString("iso://%1").arg(isopath));
 	}
@@ -546,6 +548,9 @@ void MainWindow::receiveLoadSetupVariants(bool success) {
 
 		}
 	}
+	settings->setValue("volname", loadSetupVariantsThread->volname.c_str());
+	settings->setValue("rep_location", loadSetupVariantsThread->rep_location.c_str());
+
 	mpkg *core = new mpkg(false);
 	vector<string> rList = core->get_repositorylist();
 	getCustomSetupVariants(rList);
@@ -693,6 +698,7 @@ bool MainWindow::validateMountPoints() {
 	for (size_t i=0; i<mountOptions.size(); ++i) {
 		for (size_t t=0; t<mountOptions.size(); ++t) {
 			if (i==t) continue;
+			if (mountOptions[i].mountpoint.isEmpty()) continue;
 			if (mountOptions[i].mountpoint == mountOptions[t].mountpoint) {
 				QMessageBox::warning(this, tr("Duplicate mount points found"), tr("Duplicate mount points found: %1").arg(mountOptions[i].mountpoint));
 				dupesFound = true;
