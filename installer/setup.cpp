@@ -3374,6 +3374,8 @@ set gfxmode=\"640x480x24;640x480\"\n\
 terminal_output gfxterm\n\
 insmod png\n\
 background_image " + pngpath + "\n\
+set menu_color_normal=black/black\n\
+set menu_color_highlight=white/dark-gray\n\
 # End GRUB global section\n\
 # Linux bootable partition config begins\n\
 menuentry \"" + string(_("AgiliaLinux 10.4 on ")) + systemConfig.rootPartition + "\" {\n\

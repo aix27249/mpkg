@@ -611,11 +611,13 @@ set gfxmode=\"640x480x24;640x480\"\n\
 terminal_output gfxterm\n\
 insmod png\n\
 background_image " + pngpath + "\n\
+set menu_color_normal=black/black\n\
+set menu_color_highlight=white/dark-gray\n\
 # End GRUB global section\n\
 # Linux bootable partition config begins\n\
 menuentry \"" + string(_("AgiliaLinux 10.4 on ")) + rootPartition + "\" {\n\
 \tset root=(" + mapPart(devMap, grubBootPartition, 0) + ")\n" + gfxPayload + \
-"\tlinux " + kernelstring + " ROOTDEV=" + getUUID(rootPartition) + " ro " + settings->value("kernel_options").toString().toStdString()+"\n\t" + initrdstring + "\n}\n\n";
+"\tlinux " + kernelstring + " root=UUID=" + getUUID(rootPartition) + " ro " + settings->value("kernel_options").toString().toStdString()+"\n\t" + initrdstring + "\n}\n\n";
 // Add safe mode
 	grubConfig += "menuentry \"" + string(_("AgiliaLinux 10.4 (recovery mode) on ")) + rootPartition + "\" {\n" + gfxPayload + \
 "\tlinux ("+ mapPart(devMap, grubBootPartition, 0) +")" + kernelstring + " root=" + rootPartition + " ro " + settings->value("kernel_options").toString().toStdString()+" single\n}\n\n";
