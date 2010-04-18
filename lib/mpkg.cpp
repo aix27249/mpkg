@@ -1476,11 +1476,10 @@ installProcess:
 			system("chroot " + SYS_ROOT + " find /usr/share/fonts -type d -exec /usr/bin/mkfontscale {} \\; ");
 			system("chroot " + SYS_ROOT + " /usr/bin/fc-cache -f");
 		}
-		if (needUpdateDesktopCaches) {
-			msay(_("Updating icon cache and mime database"), SAYMODE_NEWLINE);
-			system("chroot " + SYS_ROOT + " /usr/bin/update-all-caches");
+		// Always update mime database, it takes not much time but prevents lots of troubles
+		msay(_("Updating icon cache and mime database"), SAYMODE_NEWLINE);
+		system("chroot " + SYS_ROOT + " /usr/bin/update-all-caches");
 
-		}
 		msay(_("Syncing disks..."), SAYMODE_NEWLINE);
 		system("sync &");
 	}
@@ -1687,9 +1686,10 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": looking for X fonts"));
 
-	for (unsigned int i=0; !needUpdateXFonts && i<package->get_files().size(); i++) {
+	for (size_t i=0; !needUpdateXFonts && i<package->get_files().size(); i++) {
 		if (package->get_files().at(i).get_name().find("usr/share/fonts")!=std::string::npos) needUpdateXFonts = true;
 	}
+
 	currentStatus = statusHeader + _("detecting configuration files");
 	printHtmlProgress();
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": detecting configuration files"));
