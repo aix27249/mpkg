@@ -76,11 +76,13 @@ class MainWindow: public QMainWindow {
 		void saveNvidia();
 		void saveAlternatives();
 		int hasNvidia;
+		map<int, bool> skipPages;
 
 
 
 		
 	public slots:
+		void showHelp();
 		void askQuit();
 		void nextButtonClick();
 		void backButtonClick();
@@ -97,7 +99,9 @@ class MainWindow: public QMainWindow {
 		void loadSetupVariants();
 		void loadTimezones();
 		void loadConfirmationData();
-		void loadNvidia();
+		bool checkNvidiaLoad();
+		bool checkLoad(int page);
+		void showHideReleaseNotes();
 
 		void receiveLoadSetupVariants(bool success);
 

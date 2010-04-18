@@ -4,7 +4,7 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QListWidgetItem>
-
+#include "help.h"
 MainWindow *guiObject;
 
 
@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	guiObject = this;
 	ui->setupUi(this);
+	ui->releaseNotesTextBrowser->hide();
 	setWindowState(Qt::WindowMaximized);
 	connect(ui->nextButton, SIGNAL(clicked()), this, SLOT(nextButtonClick()));
 	connect(ui->backButton, SIGNAL(clicked()), this, SLOT(backButtonClick()));
@@ -65,6 +66,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(ui->mountCustomRadioButton, SIGNAL(toggled(bool)), this, SLOT(updateMountItemUI()));
 	connect(ui->mountFormatOptionsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateMountItemUI()));
 	connect(ui->mountPointEdit, SIGNAL(textEdited(const QString &)), this, SLOT(updateMountItemUI()));
+	connect(ui->releaseNotesButton, SIGNAL(clicked()), this, SLOT(showHideReleaseNotes()));
+	connect(ui->helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 	lockUIUpdate = false;
 	connect(ui->timezoneSearchEdit, SIGNAL(textEdited(const QString &)), this, SLOT(timezoneSearch(const QString &)));
 	ui->stackedWidget->setCurrentIndex(0);
@@ -80,6 +83,19 @@ MainWindow::~MainWindow() {
 	delete settings;
 	delete loadSetupVariantsThread;
 }
+
+void MainWindow::showHelp() {
+	QString text = ReadFile("/usr/share/setup/help/" + IntToStr(ui->stackedWidget->currentIndex()) + ".html").c_str();
+	if (text.isEmpty()) {
+		QMessageBox::information(this, tr("No help available"), tr("Sorry, no help available for this part"));
+		return;
+	}
+	HelpForm *helpForm = new HelpForm(this);
+	helpForm->loadText(text);
+	helpForm->show();
+
+}
+
 void MainWindow::askQuit() {
 	if (QMessageBox::question(this, tr("Really cancel installation?"), tr("Installation is not yet complete. Do you really want to cancel?"), QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) qApp->quit();
 }
@@ -98,19 +114,22 @@ void MainWindow::runInstaller() {
 
 void MainWindow::nextButtonClick() {
 	if (!validatePageSettings(ui->stackedWidget->currentIndex())) return;
+	int shift = 1;
+	while (!checkLoad(ui->stackedWidget->currentIndex()+shift)) shift++;
 	storePageSettings(ui->stackedWidget->currentIndex());
-	if (ui->stackedWidget->currentIndex()==ui->stackedWidget->count()-2) ui->nextButton->hide();
-	else if (ui->stackedWidget->currentIndex()==0) ui->backButton->show();
-	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->currentIndex()+1);
+	if (ui->stackedWidget->currentIndex()==ui->stackedWidget->count()-1-shift) ui->nextButton->setEnabled(false);
+	else if (ui->stackedWidget->currentIndex()==0) ui->backButton->setEnabled(true);
+	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->currentIndex()+shift);
 	ui->statusbar->showMessage(QString("Step %1 of %2").arg(ui->stackedWidget->currentIndex()).arg(ui->stackedWidget->count()-1));
 	updatePageData(ui->stackedWidget->currentIndex());
 }
 
 void MainWindow::backButtonClick() {
-	if (ui->stackedWidget->currentIndex()==1) ui->backButton->hide();
-	else if (ui->stackedWidget->currentIndex()==ui->stackedWidget->count()-1) ui->nextButton->show();
+	if (ui->stackedWidget->currentIndex()==1) ui->backButton->setEnabled(false);
+	else if (ui->stackedWidget->currentIndex()==ui->stackedWidget->count()-1) ui->nextButton->setEnabled(true);
 	int shift = 1;
 	if (ui->stackedWidget->currentIndex()==PAGE_INSTALLTYPE) shift=2;
+	while (!checkLoad(ui->stackedWidget->currentIndex()-shift)) shift--;
 	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->currentIndex()-shift);
 	ui->statusbar->showMessage(QString("Step %1 of %2").arg(ui->stackedWidget->currentIndex()).arg(ui->stackedWidget->count()-1));
 	//updatePageData(ui->stackedWidget->currentIndex());
@@ -239,9 +258,6 @@ void MainWindow::updatePageData(int index) {
 			break;
 		case PAGE_WAITPKGSOURCE:
 			loadSetupVariants();
-			break;
-		case PAGE_NVIDIA:
-			loadNvidia();
 			break;
 		case PAGE_TIMEZONE:
 			loadTimezones();
@@ -731,7 +747,17 @@ void MainWindow::saveNetworking() {
 	else if (ui->netNetconfigRadioButton->isChecked()) settings->setValue("netman", "netconfig");
 }
 
-void MainWindow::loadNvidia() {
+bool MainWindow::checkLoad(int page) {
+	switch(page) {
+		case PAGE_NVIDIA:
+			return checkNvidiaLoad();
+			break;
+		default: 
+			return true;
+	}
+}
+
+bool MainWindow::checkNvidiaLoad() {
 	if (hasNvidia==-1) {
 		string tmp_hw = get_tmp_file();
 		system("lspci > " + tmp_hw);
@@ -741,9 +767,12 @@ void MainWindow::loadNvidia() {
 		}
 		if (hasNvidia == -1) hasNvidia = 0;
 	}
-
-
-	if (!hasNvidia) nextButtonClick();
+	if (!hasNvidia) {
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 void MainWindow::saveNvidia() {
@@ -758,4 +787,16 @@ void MainWindow::saveAlternatives() {
 	settings->remove("alternatives");
 	if (ui->altBFSCheckBox->isChecked()) settings->setValue("alternatives/bfs", true);
 	if (ui->altCleartypeCheckBox->isChecked()) settings->setValue("alternatives/cleartype", true);
+}
+
+void MainWindow::showHideReleaseNotes() {
+	if (ui->releaseNotesTextBrowser->isVisible()) {
+		ui->releaseNotesButton->setText(tr("Show release notes"));
+		ui->releaseNotesTextBrowser->hide();
+	}
+	else {
+		ui->releaseNotesButton->setText(tr("Hide release notes"));
+		ui->releaseNotesTextBrowser->show();
+	}
+
 }
