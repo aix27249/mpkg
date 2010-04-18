@@ -362,7 +362,7 @@ void MParted::showDevMenu(PedDevice *device) {
 int MParted::showMainMenu() {
 	// NCurses initialization
 	dialogMode = true;
-	ncInterface.setTitle(_("MOPSLinux partition manager") + string(" 0.1"));
+	ncInterface.setTitle(_("AgiliaLinux partition manager") + string(" 0.1"));
 	ncInterface.setSubtitle(_("Initialization"));
 
 	// Probing all devices

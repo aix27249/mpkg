@@ -1,5 +1,5 @@
 /************************************************************
- * MOPSLinux package management system
+ * MPKG package management system
  * Message bus implementation
  * $Id: bus.cpp,v 1.15 2007/05/23 14:16:03 i27249 Exp $
  * *********************************************************/

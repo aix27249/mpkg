@@ -1,4 +1,4 @@
-/* New MOPSLinux setup: ncurses-based package source selection tool
+/* New AgiliaLinux setup: ncurses-based package source selection tool
  *
 */
 

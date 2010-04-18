@@ -1,5 +1,5 @@
 /*
-	MOPSLinux packaging system
+	MPKG packaging system
 	Data types descriptions
 	$Id: dataunits.cpp,v 1.82 2007/12/10 03:12:58 i27249 Exp $
 */

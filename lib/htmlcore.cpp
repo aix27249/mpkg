@@ -5,7 +5,7 @@ void newHtmlPage() {
 	string data;
 	string link;
 	if (!htmlNextLink.empty()) link = "<a href=\"" + htmlNextLink + "\">$NEXTNAME</a><br><br>\n";
-	data = "<h1>MPKG: система пакетов MOPSLinux</h1>" + link + "\n";
+	data = "<h1>MPKG: система пакетов MPKG/h1>" + link + "\n";
 	WriteFile(htmlPage, data);
 }
 
@@ -41,7 +41,7 @@ void printHtmlProgress(bool newPage) {
 	string link;
 	if (!htmlNextLink.empty()) link = "<a href=\"" + htmlNextLink + "\">$NEXTNAME</a><br><br>\n";
 
-	if (newPage) data = "<h1>MPKG: система пакетов MOPSLinux</h1>" + link;
+	if (newPage) data = "<h1>MPKG: система пакетов MPKG</h1>" + link;
 	data += "<h3>Прогресс выполнения задач: " + IntToStr((int) (pData.getTotalProgress()/pData.getTotalProgressMax())) + "%</h3>\n<table id=\"progress_table\">\n";
 	int tmp_c;
 	for (unsigned int i=0; i<pData.size(); ++i) {

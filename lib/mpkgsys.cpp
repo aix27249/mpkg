@@ -1,5 +1,5 @@
 /*********************************************************
- * MOPSLinux packaging system: general functions
+ * MPKG packaging system: general functions
  * $Id: mpkgsys.cpp,v 1.62 2007/12/11 11:52:59 i27249 Exp $
  * ******************************************************/
 

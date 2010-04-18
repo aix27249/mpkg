@@ -1,5 +1,5 @@
 /*
-	MOPSLinux packaging system
+	MPKG packaging system
 	Basic data types descriptions
 	Second edition: RISC architecture =)
 	$Id: dataunits.h,v 1.54 2007/12/10 03:12:58 i27249 Exp $

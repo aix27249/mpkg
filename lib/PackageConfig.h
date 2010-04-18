@@ -1,6 +1,6 @@
 /************************************************************
  *
- *	MOPSLinux packaging system
+ *	MPKG packaging system
  *	XML parsing helper: reads XML, creates XML for
  *	packages and whole repository
  *

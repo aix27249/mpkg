@@ -1,4 +1,4 @@
-/* New MOPSLinux setup: ncurses-based partition formatting tool
+/* New AgiliaLinux setup: ncurses-based partition formatting tool
  *
 */
 
@@ -24,7 +24,7 @@ string chooseFormat(CursesInterface &ncInterface, const vector<pEntry> &partList
 int main(int, char **) {
 	dialogMode = true;
 	CursesInterface ncInterface;
-	ncInterface.setTitle(_("MOPSLinux setup"));
+	ncInterface.setTitle(_("AgiliaLinux setup"));
 	ncInterface.setSubtitle(_("Partition formatting"));
 	vector<pEntry> partList = getPartitionList();
 	if (partList.empty()) {

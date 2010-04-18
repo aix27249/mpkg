@@ -1,4 +1,4 @@
-/* New MOPSLinux setup: ncurses-based partition editor selection tool
+/* New AgiliaLinux setup: ncurses-based partition editor selection tool
 */
 
 #include <nwidgets/ncurses_if.h>
@@ -27,7 +27,7 @@ string getPartitionEditor(CursesInterface &ncInterface) {
 int main(int, char **) {
 	dialogMode = true;
 	CursesInterface ncInterface;
-	ncInterface.setTitle(_("MOPSLinux setup"));
+	ncInterface.setTitle(_("AgiliaLinux setup"));
 	ncInterface.setSubtitle(_("Disk partitioning"));
 
 	// There are three options: auto, manual, and do_nothing.

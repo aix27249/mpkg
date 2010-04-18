@@ -1,4 +1,4 @@
-/* New MOPSLinux setup: ncurses-based bootloader selection
+/* New AgiliaLinux setup: ncurses-based bootloader selection
  * This tool only chooses bootloader type from available options
  *
 */
@@ -43,7 +43,7 @@ string getTargetPartition(CursesInterface &ncInterface) {
 int main(int, char **) {
 	dialogMode = true;
 	CursesInterface ncInterface;
-	ncInterface.setTitle(_("MOPSLinux setup"));
+	ncInterface.setTitle(_("AgiliaLinux setup"));
 	ncInterface.setSubtitle(_("Bootloader HDD selection"));
 	vector<MenuItem> menuItems;
 

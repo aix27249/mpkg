@@ -1,6 +1,6 @@
 /********************************************************************************
  *
- * 			Central core for MOPSLinux package system
+ * 			Central core for MPKG package system
  *			TODO: Should be reorganized to objects
  *	$Id: core.cpp,v 1.81 2007/12/10 03:12:58 i27249 Exp $
  *

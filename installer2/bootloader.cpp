@@ -1,4 +1,4 @@
-/* New MOPSLinux setup: ncurses-based bootloader selection
+/* New AgiliaLinux setup: ncurses-based bootloader selection
  * This tool only chooses bootloader type from available options
  *
 */
@@ -11,7 +11,7 @@
 int main(int, char **) {
 	dialogMode = true;
 	CursesInterface ncInterface;
-	ncInterface.setTitle(_("MOPSLinux setup"));
+	ncInterface.setTitle(_("AgiliaLinux setup"));
 	ncInterface.setSubtitle(_("Bootloader selection"));
 	vector<MenuItem> menuItems;
 	menuItems.push_back(MenuItem("GRUB2", _("GRand Unified Bootloader 2 (default)")));

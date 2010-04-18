@@ -1,5 +1,5 @@
 /*
- * MOPSLinux package system - error codes
+ * MPKG package system - error codes
  * $Id: errorcodes.h,v 1.5 2007/08/02 10:39:13 i27249 Exp $
  */
 

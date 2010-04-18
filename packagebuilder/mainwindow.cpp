@@ -1,5 +1,5 @@
 /*******************************************************************
- * MOPSLinux packaging system
+ * MPKG packaging system
  * Package builder
  * $Id: mainwindow.cpp,v 1.58 2007/12/11 05:38:29 i27249 Exp $
  * ***************************************************************/
@@ -495,7 +495,7 @@ void Form::loadData()
 	int ret;
 	if (modified) {
 
-		ret = (QMessageBox::warning(this, tr("MOPSLinux package builder"),
+		ret = (QMessageBox::warning(this, tr("MPKG package builder"),
                    tr("The document has been modified.\n"
                       "Do you want to save your changes?"),
                    QMessageBox::Save | QMessageBox::Discard
@@ -1535,7 +1535,7 @@ void Form::changeHeader()
 {
 	modified=true;
 
-	QString FLabel=tr("MOPSLinux package builder");
+	QString FLabel=tr("MPKG package builder");
 
 	if (!ui.NameEdit->text().isEmpty())
 	{
@@ -1561,7 +1561,7 @@ void Form::changeHeader(const QString &)
 		return;
 	}*/
 	modified=true;
-	QString FLabel=tr("MOPSLinux package builder");
+	QString FLabel=tr("MPKG package builder");
 
 	if (!ui.NameEdit->text().isEmpty())
 	{
@@ -1623,7 +1623,7 @@ void Form::quitApp()
 	int ret;
 	if (modified)
 	{
-		ret = QMessageBox::warning(this, tr("MOPSLinux package builder"),
+		ret = QMessageBox::warning(this, tr("MPKG package builder"),
                    tr("The document has been modified.\n"
                       "Do you want to save your changes?"),
                    QMessageBox::Save | QMessageBox::Discard

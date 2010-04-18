@@ -1,4 +1,4 @@
-/* New MOPSLinux setup: ncurses-based root partition selection tool
+/* New AgiliaLinux setup: ncurses-based root partition selection tool
  *
 */
 
@@ -10,7 +10,7 @@
 int main(int, char **) {
 	dialogMode = true;
 	CursesInterface ncInterface;
-	ncInterface.setTitle(_("MOPSLinux setup"));
+	ncInterface.setTitle(_("AgiliaLinux setup"));
 	ncInterface.setSubtitle(_("Root partition selection"));
 	vector<pEntry> rootList = getPartitionList();
 	if (rootList.empty()) {
@@ -28,7 +28,7 @@ int main(int, char **) {
 
 	string rootPartition;
 	int rootSelectNum;
-	rootSelectNum = ncInterface.showMenu(_("Choose root partition for MOPSLinux:"), menuItems, def_id);
+	rootSelectNum = ncInterface.showMenu(_("Choose root partition for AgiliaLinux:"), menuItems, def_id);
 		
 	if (rootSelectNum<0) return 1;
 	rootPartition = rootList[rootSelectNum].devname;

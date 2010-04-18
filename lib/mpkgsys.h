@@ -1,5 +1,5 @@
 /*********************************************************
- * MOPSLinux packaging system: general functions (header)
+ * MPKG packaging system: general functions (header)
  * $Id: mpkgsys.h,v 1.16 2007/12/04 18:48:34 i27249 Exp $
  * ******************************************************/
 

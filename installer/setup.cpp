@@ -1,5 +1,5 @@
 /****************************************************
- * MOPSLinux: system setup (new generation)
+ * AgiliaLinux: system setup (new generation)
  * $Id: setup.cpp,v 1.55 2007/11/20 00:41:50 i27249 Exp $
  *
  * Required libraries:
@@ -35,10 +35,7 @@ vector<CustomPkgSet> customPkgSetList;
 bool enable_addons = false;
 bool enable_contrib = false;
 bool askForKDE = false;
-/*int mops_auth_x(char *, char *, char *); // I cannot understand what it was for
-int puk();*/ // This I even can't understand... looks like a "puke festival" trail :)
-//string i_menuHead = "Установка MOPSLinux " + (string) MOPSLINUX_VERSION + " [mpkg  v." + mpkgVersion + " build " + mpkgBuild + "]";
-string i_menuHead = _("MOPSLinux ") + (string) MOPSLINUX_VERSION;// + " installation";// + " [mpkg  v." + mpkgVersion + " build " + mpkgBuild + "]";
+string i_menuHead = _("AgiliaLinux ") + (string) DISTRO_VERSION;// + " installation";// + " [mpkg  v." + mpkgVersion + " build " + mpkgBuild + "]";
 bool licenseAccepted = false;
 bool unattended = false;
 SysConfig systemConfig;
@@ -53,8 +50,6 @@ bool onlineDeps=true;
 string kde_branch;
 string rootdev_wait = "1";
 bool ext4_supported=false;
-//bool btrfs_supported = false;
-//bool nilfs_supported = false;
 void generateLangSh(string dir="/mnt/etc/profile.d/") {
 	string lang_sh="#!/bin/sh\n\
 export LANG=$L\n\
@@ -244,7 +239,7 @@ void deleteCore() {
 
 void showGreeting() {
 	ncInterface.setSubtitle(_("Welcome!"));
-	ncInterface.showMsgBox(_("Welcome to MOPSLinux!\n\nSetup program will install the system on your computer and perform initial configuration.\n"));
+	ncInterface.showMsgBox(_("Welcome to AgiliaLinux!\n\nSetup program will install the system on your computer and perform initial configuration.\n"));
 }
 
 int setSwapSpace(string predefined) {
@@ -355,7 +350,7 @@ int setRootPartition(string predefined, string predefinedFormat, bool simple)
 	}
 	string rootPartition;
 	if (predefined.empty()) {
-		int menu_ret = ncInterface.showMenu(_("Choose root partition for MOPSLinux:"), menuItems);
+		int menu_ret = ncInterface.showMenu(_("Choose root partition for AgiliaLinux:"), menuItems);
 		if (menu_ret == -1) return -1;
 		else rootPartition = menuItems[menu_ret].tag;
 	}
@@ -1085,7 +1080,7 @@ void installAdditionalDrivers() {
 
 }
 bool setHostname() {
-	string hostname = ncInterface.showInputBox(_("Enter hostname (for example, mops):"));
+	string hostname = ncInterface.showInputBox(_("Enter hostname (for example, agilia):"));
 	if (hostname.empty()) return false;
 	string netname = ncInterface.showInputBox(_("Enter network name (for example, example.net):"), "example.net");
 	if (netname.empty()) return false;
@@ -1104,7 +1099,7 @@ void enablePlymouth(bool enable) {
 void askPlymouth() {
 	// Asking for plymouth
 	if (FileExists(systemConfig.rootMountPoint + "/etc/rc.d/rc.plymouth")) {
-		enablePlymouth(ncInterface.showYesNo(_("MOPSLinux has EXPERIMENTAL support for graphical boot splash implemented using Plymouth.\nIf your hardware supports KMS (kernel modesetting), you can try to enable it now.\nIt seems to work fine, but it wasn't tested well and may cause problems.\nIn any case, you can change your choice later by changing permissions on /etc/rc.d/rc.plymouth file.\n\nDo you want to enable experimental splash screen?")));
+		enablePlymouth(ncInterface.showYesNo(_("AgiliaLinux has EXPERIMENTAL support for graphical boot splash implemented using Plymouth.\nIf your hardware supports KMS (kernel modesetting), you can try to enable it now.\nIt seems to work fine, but it wasn't tested well and may cause problems.\nIn any case, you can change your choice later by changing permissions on /etc/rc.d/rc.plymouth file.\n\nDo you want to enable experimental splash screen?")));
 	}
 }
 
@@ -1132,10 +1127,6 @@ int performConfig(bool simple)
 	if (FileExists(systemConfig.rootMountPoint+"/usr/sbin/wicd")) {
 		networkManagers.push_back(MenuItem("wicd", _("Wicd is an open source wired and wireless network manager")));
 		system("chmod -x " + systemConfig.rootMountPoint + "/etc/rc.d/rc.wicd >/dev/tty4 2>/dev/tty4");
-	}
-	if (FileExists(systemConfig.rootMountPoint + "/usr/sbin/mopsnetdaemon")) {
-		networkManagers.push_back(MenuItem("mopsnet", _("New MOPSLinux network manager. Very experimental, but already suitable for Ethernet and Wireless networks")));
-		system("chmod -x " + systemConfig.rootMountPoint + "/etc/rc.d/rc.mopsnet >/dev/tty4 2>/dev/tty4");
 	}
 	if (FileExists(systemConfig.rootMountPoint + "/sbin/netconfig")) networkManagers.push_back(MenuItem("netconfig", _("Generic netconfig, Slackware default network settings manager")));
 
@@ -1239,10 +1230,6 @@ try_install_boot:
 		ncInterface.setSubtitle(_("Network setup"));
 	selectNetManagerMode:
 		selectedNetworkManager = ncInterface.showMenu2(_("Please select preferred network manager:"), networkManagers);
-		if (selectedNetworkManager == "mopsnet") {
-			system("chmod +x " + systemConfig.rootMountPoint + "/etc/rc.d/rc.mopsnet >/dev/tty4 2>/dev/tty4");
-			if (!setHostname()) goto selectNetManagerMode;
-		}
 		
 		if (selectedNetworkManager == "NetworkManager") {
 			system("chmod +x " + systemConfig.rootMountPoint + "/etc/rc.d/rc.networkmanager >/dev/tty4 2>/dev/tty4");
@@ -1341,7 +1328,7 @@ bool showFinish(time_t totalTime, time_t pkgTotalTime)
 	if (verbose) {
 		ncInterface.showMsgBox(_("Setup finished. Time:\n") + IntToStr(totalTime/60) + "/" + IntToStr(pkgTotalTime/60));
 	}
-	return ncInterface.showYesNo(_("MOPSLinux installation finished successfully. Reboot now?"));
+	return ncInterface.showYesNo(_("AgiliaLinux installation finished successfully. Reboot now?"));
 }
 
 
@@ -2055,7 +2042,7 @@ int setCDSource(string predefined)
 			}
 			else ncInterface.showMsgBox(_("This disc already indexed"));
 		}
-		else ncInterface.showMsgBox(_("This disc doesn't recognized as MOPSLinux installation disc"));
+		else ncInterface.showMsgBox(_("This disc doesn't recognized as AgiliaLinux installation disc"));
 		system("umount " + systemConfig.cdromDevice + " 2>/dev/tty4 >/dev/tty4");
 		if (!noEject && predefined !="dvd") {
 			system("eject " + systemConfig.cdromDevice + " 2>/dev/tty4 >/dev/tty4");
@@ -2298,7 +2285,7 @@ part_menu:
 		if (ret == "OK" || ret.empty()) return 0;
 	}
 	else ret = "cfdisk";
-	disk_name = ncInterface.showMenu2(_("To install MOPSLinux, you should have at least one Linux partition. Also, it is strongly recommended to have a swap partition.\nIf you didn't do this before, you can create it now.\nWhich drive do you want to edit?"), mDevList);
+	disk_name = ncInterface.showMenu2(_("To install AgiliaLinux, you should have at least one Linux partition. Also, it is strongly recommended to have a swap partition.\nIf you didn't do this before, you can create it now.\nWhich drive do you want to edit?"), mDevList);
 	if (disk_name.find("/dev/")!=0) {
 		//if (!simple || devList.size()>1) goto part_menu;
 		//else {
@@ -2561,11 +2548,11 @@ string selectLanguage() {
 	CursesInterface lselect(false);
 //	lselect._BGF=" ";
 #ifndef X86_64
-	lselect.setTitle("MOPSLinux 7.0 installer");
+	lselect.setTitle("AgiliaLinux 10.4 installer");
 #else
-	lselect.setTitle("MOPSLinux64 7.0 installer");
+	lselect.setTitle("AgiliaLinux64 10.4 installer");
 #endif
-	lselect.setSubtitle("MOPSLinux installer: language selection");
+	lselect.setSubtitle("AgiliaLinux installer: language selection");
 	string lng = lselect.showMenu2("Please, select language:\nПожалуйста, выберите язык:\nВибір мови:\n", menuItems);
 	lselect.uninit();
 	return lng;
@@ -2735,7 +2722,7 @@ int main(int argc, char *argv[])
 			{
 				bindtextdomain( "mpkg", "/usr/share/locale");
 				textdomain("mpkg");
-				printf(_("MOPSLinux %s setup (build %s)\n"), MOPSLINUX_VERSION, MOPSLINUX_BUILD);
+				printf(_("AgiliaLinux %s setup (build %s)\n"), DISTRO_VERSION, MPKG_BUILD);
 				printf(_("Syntax:\n"));
 				printf(_("\tsetup [ OPTIONS ]\nAvailable options:\n"));
 	
@@ -2766,9 +2753,6 @@ int main(int argc, char *argv[])
 	}
 	ext4_supported=checkForExt4();
 	dialogMode=true;
-	//if (ext4_supported) lselect.showMsgBox("EXT4 SUPPORTED");
-	//else lselect.showMsgBox("EXT4 NOT SUPPORTED");
-	//ncInterface.setTitle("MOPSLinux " + string(MOPSLINUX_VERSION) + " setup");
 	if (systemConfig.lang.empty()) {
 		setlocale(LC_ALL, "");
 		systemConfig.lang = selectLanguage();
@@ -2786,8 +2770,8 @@ int main(int argc, char *argv[])
 	textdomain("mpkg");
 	ncInterface.setStrings();
 	ncInterface.cancelStr=_("BACK");
-	if (systemConfig.lang=="ru_RU.UTF-8") i_menuHead = "Установка MOPSLinux " + (string) MOPSLINUX_VERSION;
-	if (systemConfig.lang=="uk_UA.UTF-8") i_menuHead = "Встановлення MOPSLinux " + (string) MOPSLINUX_VERSION;
+	if (systemConfig.lang=="ru_RU.UTF-8") i_menuHead = "Установка AgiliaLinux " + (string) DISTRO_VERSION;
+	if (systemConfig.lang=="uk_UA.UTF-8") i_menuHead = "Встановлення AgiliaLinux " + (string) DISTRO_VERSION;
 	ncInterface.setTitle(i_menuHead);
 
 	if (!isDatabaseLocked()) {
@@ -3100,7 +3084,7 @@ bool liloconfig()
 
 	// Check if /boot is on separate device
 	string liloConfig = \
-"# LILO configuration file (created by MOPSLinux 7.0 setup)\n\
+"# LILO configuration file (created by AgiliaLinux 10.4 setup)\n\
 # Global LILO options section\n\
 lba32 # Allows to boot from cylinders over 1024\n\
 append = \"" + bootConfig.kernelOptions + "\" # Kernel options\n\
@@ -3122,7 +3106,7 @@ image=/boot/vmlinuz\n\
 root=\"UUID=" + getUUID(systemConfig.rootPartition) + "\"\n" + \
 initrdstring + \
 "read-only\n\
-label=MOPSLinux\n\
+label=AgiliaLinux\n\
 \n";
 // Let's add safe mode here
 	liloConfig += "image=/boot/vmlinuz\n\
@@ -3264,16 +3248,16 @@ bool grubconfig()
 		}
 	}
 	system("echo GEN_MENU > /dev/tty4"); //DEBUG
-	string grubConfig = "# GRUB configuration, generated by MOPSLinux 7.0 setup\n\
+	string grubConfig = "# GRUB configuration, generated by AgiliaLinux 10.4 setup\n\
 timeout 30\n\
 color white/green black/light-gray\n\
 # End GRUB global section\n\
 # Linux bootable partition config begins\n\
-title MOPSLinux 7.0 on " + systemConfig.rootPartition + "\n\
+title AgiliaLinux 10.4 on " + systemConfig.rootPartition + "\n\
 root ("+ mapPart(devMap, grubBootPartition) +")\n\
-kernel " + kernelstring + " ROOTDEV=" + getUUID(systemConfig.rootPartition) + " ro vga=" + vgaMode+ " " + bootConfig.kernelOptions+"\n" + initrdstring + "\n";
+kernel " + kernelstring + " root=UUID=" + getUUID(systemConfig.rootPartition) + " ro vga=" + vgaMode+ " " + bootConfig.kernelOptions+"\n" + initrdstring + "\n";
 // Add safe mode:
-	grubConfig += "title MOPSLinux 7.0 (safe mode) on " + systemConfig.rootPartition + "\n\
+	grubConfig += "title AgiliaLinux 10.4 (safe mode) on " + systemConfig.rootPartition + "\n\
 root ("+ mapPart(devMap, grubBootPartition) +")\n\
 kernel " + kernelstring + " root=" + systemConfig.rootPartition + " ro vga=" + vgaMode+ " " + bootConfig.kernelOptions+" init=/bin/sh\n";
 
@@ -3377,7 +3361,7 @@ bool grub2config()
 			break;
 		}
 	}
-	string grubConfig = "# GRUB2 configuration, generated by MOPSLinux 7.0 setup\n\
+	string grubConfig = "# GRUB2 configuration, generated by AgiliaLinux 10.4 setup\n\
 set timeout=10\n\
 set default=0\n\
 set root=("+ mapPart(devMap, grubBootPartition, 0) +")\n\
@@ -3392,19 +3376,14 @@ insmod png\n\
 background_image " + pngpath + "\n\
 # End GRUB global section\n\
 # Linux bootable partition config begins\n\
-menuentry \"" + string(_("MOPSLinux 7.0 on ")) + systemConfig.rootPartition + "\" {\n\
+menuentry \"" + string(_("AgiliaLinux 10.4 on ")) + systemConfig.rootPartition + "\" {\n\
 \tset root=(" + mapPart(devMap, grubBootPartition, 0) + ")\n" + gfxPayload + \
-"\tlinux " + kernelstring + " ROOTDEV=" + getUUID(systemConfig.rootPartition) + " ro " + bootConfig.kernelOptions+"\n\t" + initrdstring + "\n}\n\n";
+"\tlinux " + kernelstring + " root=UUID=" + getUUID(systemConfig.rootPartition) + " ro " + bootConfig.kernelOptions+"\n\t" + initrdstring + "\n}\n\n";
 // Add safe mode
-	grubConfig += "menuentry \"" + string(_("MOPSLinux 7.0 (recovery mode) on ")) + systemConfig.rootPartition + "\" {\n" + gfxPayload + \
+	grubConfig += "menuentry \"" + string(_("AgiliaLinux 10.4 (recovery mode) on ")) + systemConfig.rootPartition + "\" {\n" + gfxPayload + \
 "\tlinux ("+ mapPart(devMap, grubBootPartition, 0) +")" + kernelstring + " root=" + systemConfig.rootPartition + " ro " + bootConfig.kernelOptions+" single\n}\n\n";
 	vector<OsRecord> osList = getOsList();
 	if (osList.size()<1) strReplace(&grubConfig, "timeout=10", "timeout=3");
-	/*for (size_t i=0; i<osList.size(); i++) {
-		if (osList[i].type == "linux") {
-			grubConfig = grubConfig + "menuentry \"" + osList[i].label + _(" on ") + osList[i].root+"\" {\n" + gfxPayload + "\tlinux ("+mapPart(devMap, osList[i].root, 0)+")/boot/vmlinuz ROOTDEV="+getUUID(osList[i].root) + " ro\n}\n\n";
-		}
-	}*/
 	grubConfig = grubConfig + "# Other bootable partition config begins\n";
 	for (size_t i=0; i<osList.size(); i++) {
 		if (osList[i].type == "other") {
@@ -3502,31 +3481,6 @@ string ncGetMountPartition(string header) {
        return "";
 }
 
-
-// This is old function. Please use new one
-/*int buildInitrdOld() {
-	// RAID, LVM, LuKS encrypted volumes, USB drives and so on - all this will be supported now!
-	//ncInterface.uninit();
-	if (ncInterface.showYesNo(_("Do you need a delay to initialize your boot disk?\nIf you're installing system on USB drive, say [YES], otherwise you have a chance to get unbootable system.\n\nIf unsure - say YES, in worst case it just will boot 10 seconds longer."))) rootdev_wait = "10";
-
-	ncInterface.showInfoBox(_("Creating initrd..."));
-	system("chroot /mnt mount -t proc none /proc 2>/dev/null >/dev/null");
-	system("chroot /mnt mkinitrd 2>/dev/null >/dev/null");
-	WriteFile("/mnt/boot/initrd-tree/rootdev", systemConfig.rootPartition);
-	WriteFile("/mnt/boot/initrd-tree/rootfs", systemConfig.rootPartitionType);
-	WriteFile("/mnt/boot/initrd-tree/initrd-name", "mopslinux-7.0-initrd");
-	WriteFile("/mnt/boot/initrd-tree/wait-for-root", rootdev_wait);
-	if (!systemConfig.swapPartition.empty()) WriteFile("/mnt/boot/initrd-tree/resumedev", systemConfig.swapPartition);
-	
-	// To ensure in all cases, let's copy ALL modules to initrd. TODO: remove unneeded tons of them :)
-	// new TODO: add some :)))
-	//system("chroot /mnt cp -R /lib/modules/`uname -r` /boot/initrd-tree/lib/modules/");
-	
-	system("chroot /mnt cp /sbin/mdadm /boot/initrd-tree/sbin/ 2>/dev/null >/dev/null");
-	system("chroot /mnt mkinitrd >/dev/null 2>/dev/null");
-	return 0;
-}
-*/
 
 int buildInitrd() {
 	// RAID, LVM, LuKS encrypted volumes, USB drives and so on - all this will be supported now!

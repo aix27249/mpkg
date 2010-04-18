@@ -1,5 +1,5 @@
 /****************************************************************
- *     MOPSLinux packaging system
+ *     MPKG packaging system
  *     Package builder - main file
  *     $Id: main.cpp,v 1.17 2007/11/23 01:01:45 i27249 Exp $
  ***************************************************************/

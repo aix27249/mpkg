@@ -3,6 +3,7 @@
 
 HelpForm::HelpForm(QWidget *parent) : QWidget(parent), ui(new Ui::HelpFormClass)  {
 	ui->setupUi(this);
+	connect(ui->closeButton, SIGNAL(clicked()), this, SLOT(close()));
 }
 
 HelpForm::~HelpForm() {

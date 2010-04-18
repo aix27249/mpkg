@@ -21,7 +21,7 @@ void showMainMenu(mpkg &core) {
 	//MENUITEM("ACT_DISABLE_REPOSITORY", _("Disable repository"));
 	//MENUITEM("ACT_EDIT_REPOSITORY", _("Edit repository"));
 	//MENUITEM("ACT_SHOWVERSION", _("Show MPKG version"));
-	//MENUITEM("ACT_CONVERT_DIR", _("Convert directory to MOPSLinux format")); // TODO: Deprecated, use ACT_NATIVIZE instead
+	//MENUITEM("ACT_CONVERT_DIR", _("Convert directory to MPKG format")); // TODO: Deprecated, use ACT_NATIVIZE instead
 	
 	MENUITEM("ACT_PACKAGEMENU", _("Package menu")); // TODO: improve, now: OK, actPackageMenu	
 	MENUITEM("ACT_LATESTUPDATES", _("Show latest updates")); // OK
@@ -46,7 +46,7 @@ void showMainMenu(mpkg &core) {
 	MENUITEM("ACT_CLEAN", _("Clean package cache")); // OK, actClean
 	MENUSPACE;
 	MENUITEM("ACT_INDEX", _("Build repository index")); // OK, actIndex
-	MENUITEM("ACT_CONVERT", _("Convert packages to MOPSLinux format")); //OK here, but requires fixes in core - in real it doesn't work.
+	MENUITEM("ACT_CONVERT", _("Convert packages to MPKG format")); //OK here, but requires fixes in core - in real it doesn't work.
 	MENUITEM("ACT_TAG", _("Edit tags of package")); // OK
 	MENUITEM("ACT_GENDEPS", _("Generate dependencies")); // OK
 	MENUSPACE;
@@ -69,7 +69,7 @@ void showMainMenu(mpkg &core) {
 	//MENUITEM("ACT_QUERY", _("Search package database by custom query"));
 	//MENUITEM("ACT_SYNC", _("Syncronize replicated repositories"));
 	//MENUITEM("ACT_SETVER", _("Set package version"));
-	//MENUITEM("ACT_NATIVIZE", _("Search and convert legacy packages to MOPSLinux format"));
+	//MENUITEM("ACT_NATIVIZE", _("Search and convert legacy packages to MPKG format"));
 
 	string ret;
 	do {

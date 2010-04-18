@@ -671,7 +671,7 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 	//mDebug("get_index!");
 	// First: detecting repository type
 	// Trying to download in this order (if successful, we have detected a repository type):
-	// 1. packages.xml.gz 	(Native MOPSLinux)
+	// 1. packages.xml.gz 	(Native MPKG)
 	// 2. PACKAGES.TXT	(Legacy Slackware)
 	// 3. Packages.gz	(Debian)
 	// (and something else for RPM, in future)

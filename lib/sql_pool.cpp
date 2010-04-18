@@ -1,6 +1,6 @@
 
 /*************************************************************************************
- * 	SQL pool for MOPSLinux packaging system
+ * 	SQL pool for MPKG packaging system
  * 	Currently supports SQLite only. Planning support for other database servers
  * 	in future (including networked)
  *	$Id: sql_pool.cpp,v 1.52 2007/11/22 15:32:57 i27249 Exp $

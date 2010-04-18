@@ -90,7 +90,7 @@ void MainWindow::showHelp() {
 		QMessageBox::information(this, tr("No help available"), tr("Sorry, no help available for this part"));
 		return;
 	}
-	HelpForm *helpForm = new HelpForm(this);
+	HelpForm *helpForm = new HelpForm;
 	helpForm->loadText(text);
 	helpForm->show();
 

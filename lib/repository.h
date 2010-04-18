@@ -2,10 +2,8 @@
  * Repository working tools: creating index, decrypts data, etc.
  * 
  * Repository types supported:
- * 	Native MOPSLinux (fully supported)
- * 	Legacy Slackware (in development)
- * 	Debian (planned)
- * 	RPM (planned)
+ * 	Native MPKG (fully supported)
+ * 	Legacy Slackware (generic format is fully supported, extensions support has limitations)
  *
  * $Id: repository.h,v 1.14 2007/10/20 10:34:50 i27249 Exp $
  *****************************************************************/

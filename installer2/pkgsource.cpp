@@ -1,4 +1,4 @@
-/* New MOPSLinux setup: ncurses-based package source selection tool
+/* New AgiliaLinux setup: ncurses-based package source selection tool
  *
 */
 
@@ -11,7 +11,7 @@
 int main(int, char **) {
 	dialogMode = true;
 	CursesInterface ncInterface;
-	ncInterface.setTitle(_("MOPSLinux setup"));
+	ncInterface.setTitle(_("AgiliaLinux setup"));
 	ncInterface.setSubtitle(_("Package source selection"));
 	vector<MenuItem> menuItems;
 	string ret;

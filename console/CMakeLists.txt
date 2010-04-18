@@ -52,6 +52,7 @@ ADD_EXECUTABLE(mpkg-checklibdeps checklibdeps)
 #ADD_EXECUTABLE(mpkg-converttosql converttosql)
 # Installation
 FILE(GLOB aliases "${CMAKE_CURRENT_SOURCE_DIR}/aliases/mpkg-*")
+FILE(GLOB update_all_caches "${CMAKE_CURRENT_SOURCE_DIR}/update-all-caches")
 IF(X86_64)
 	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-create-deltas mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-collectfileindex mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps
 		RUNTIME DESTINATION bin
@@ -66,6 +67,7 @@ ELSE(X86_64)
 	)
 ENDIF(X86_64)
 INSTALL(FILES ${aliases} DESTINATION bin PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE )
+INSTALL(FILES ${update_all_caches} DESTINATION bin PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE )
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mpkg-importsrc" DESTINATION bin PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE )
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/scripts/mpkglddcheck.sh" DESTINATION libexec PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mpkg" DESTINATION ${SYSCONFDIR}/bash_completion.d)

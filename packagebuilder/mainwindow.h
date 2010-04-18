@@ -1,5 +1,5 @@
 /*****************************************************
- * MOPSLinux packaging system
+ * MPKG packaging system
  * Package builder - header
  * $Id: mainwindow.h,v 1.29 2007/12/11 00:57:19 i27249 Exp $
  * ***************************************************/

@@ -1,4 +1,4 @@
-/* New MOPSLinux setup: cache update tool. Works not very well, but should work.
+/* New AgiliaLinux setup: cache update tool. Works not very well, but should work.
  *
 */
 
@@ -109,7 +109,7 @@ string getCDSource(string predefined, CursesInterface &ncInterface)
 			}
 			else ncInterface.showMsgBox(_("This disc already indexed"));
 		}
-		else ncInterface.showMsgBox(_("This disc doesn't recognized as MOPSLinux installation disc"));
+		else ncInterface.showMsgBox(_("This disc doesn't recognized as AgiliaLinux installation disc"));
 		if (predefined=="dvd") system("umount " + cdromDevice + " 2>/dev/tty4 >/dev/tty4");
 		else system("umount " + iso_file + " 2>/dev/tty4 >/dev/tty4");
 	

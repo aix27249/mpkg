@@ -1,5 +1,5 @@
 /********************************************************************************
- * MOPSLinux packaging system: core API
+ * MPKG packaging system: core API
  * $Id: libmpkg.h,v 1.38 2007/12/04 18:48:34 i27249 Exp $
  *
  * Use this header to access the library. No other headers are needed :)

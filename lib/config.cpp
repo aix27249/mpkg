@@ -1,5 +1,5 @@
 /******************************************************
- * MOPSLinux packaging system - global configuration
+ * MPKG packaging system - global configuration
  * $Id: config.cpp,v 1.54 2007/12/10 03:12:58 i27249 Exp $
  *
  * ***************************************************/

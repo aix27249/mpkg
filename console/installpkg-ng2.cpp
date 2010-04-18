@@ -1,5 +1,5 @@
 /**
- *	MOPSLinux packaging system    
+ *	MPKG package system    
  *	CLI interface
  *	
  *	$Id: installpkg-ng2.cpp,v 1.89 2007/12/10 03:12:58 i27249 Exp $
@@ -33,8 +33,7 @@ bool index_filelist = false;
 bool rssMode = false;
 void ShowBanner()
 {
-	const char *copyright="\(c) 2006-2010 RPU NET (http://www.rpunet.ru)";
-	say("MOPSLinux packaging system v.%s (build %s)\n%s\n\n", mpkgVersion, mpkgBuild, copyright);
+	say("MPKG package system v.%s\n", mpkgVersion);
 }
 void cleanDebugFile()
 {
@@ -1291,62 +1290,6 @@ int main (int argc, char **argv)
 		}
 		if (rssMode) {
 			printf("RSS support dropped from mpkg.");
-		/*	
-			string main_url="http://www.mopspackages.ru";
-			SQLRecord sqlSearch;
-			sqlSearch.orderBy = "package_add_date";
-			PACKAGE_LIST pkgList;
-			core.get_packagelist(sqlSearch, &pkgList, true);
-			if (limit == -1) limit = 0;
-			else limit = pkgList.size() - limit;
-			PACKAGE *pkg;
-			string pkgChangelog, pkgShortDescription, pkgDescription, pkgRepTags;
-			XMLNode rssNode=XMLNode::createXMLTopNode("rss");
-			rssNode.addAttribute("version", "2.0");
-			rssNode.addChild("channel");
-			XMLNode* channel = &rssNode.getChildNode("channel");
-			channel->addChild("title");
-			channel->getChildNode("title").addText(_("Latest MOPSLinux repository updates"));
-			channel->addChild("link");
-			channel->getChildNode("link").addText(main_url.c_str());
-			channel->addChild("description");
-			channel->getChildNode("description").addText(string(_("Latest ") + IntToStr(limit) + _(" MOPSLinux repository updates")).c_str());
-			channel->addChild("lang");
-			channel->getChildNode("lang").addText("ru-ru");
-			XMLNode* item;
-			unsigned int cNum=0;
-			for (int i=pkgList.size()-1-skip; i>=0; --i) {
-				pkg = pkgList.get_package_ptr(i);
-				
-				if (pkg->get_changelog()!="0") pkgChangelog = _("Changes: ") + pkg->get_changelog();
-				else pkgChangelog.clear();
-
-				if (pkg->get_short_description()!="0") pkgShortDescription = ": " + pkg->get_short_description();
-				else pkgShortDescription.clear();
-
-				if (pkg->get_description()!="0") pkgDescription = pkg->get_description();
-				else pkgDescription.clear();
-				if (!pkg->get_repository_tags().empty() && pkg->get_repository_tags()!="0") pkgRepTags = _("Branch: ") + pkg->get_repository_tags();
-				else pkgRepTags.clear();
-				channel->addChild("item");
-				item=&channel->getChildNode("item", cNum);
-				item->addChild("title");
-				item->getChildNode("title").addText(string(pkg->get_name() + " " + pkg->get_fullversion() + ": " + pkg->get_short_description()).c_str());
-				item->addChild("link");
-				item->getChildNode("link").addText(string(main_url + "/show.php?id=" + IntToStr(pkg->get_id())).c_str());
-				item->addChild("description");
-				item->getChildNode("description").addText(pkg->get_description().c_str());
-				item->addChild("pubDate");
-				item->getChildNode("pubDate").addText(getTimeString(pkg->add_date).c_str());
-				item->addChild("guid");
-				item->getChildNode("guid").addText(string(main_url + "/show.php?id=" + IntToStr(pkg->get_id())).c_str());
-				cNum++;
-
-				//printf("<p><b>#%d</b> [%s]%s<br> <b><a href=\"show.php?id=%d\">%s %s</a>%s</b><br>%s%s</p>\n", i, getTimeString(pkg->add_date).c_str(), pkgRepTags.c_str(), pkg->get_id(), pkg->get_name().c_str(), pkg->get_fullversion().c_str(), pkgShortDescription.c_str(), pkgDescription.c_str(), pkgChangelog.c_str());
-				if (i+skip==limit) break;
-			}
-			rssNode.writeToFile("rss.xml");
-			*/
 		}
 	}
 

@@ -1,4 +1,4 @@
-/* New MOPSLinux setup: ncurses-based language selection tool
+/* New AgiliaLinux setup: ncurses-based language selection tool
 */
 
 #include <nwidgets/ncurses_if.h>
@@ -7,7 +7,7 @@
 int main(int, char **) {
 	dialogMode = true;
 	CursesInterface ncInterface;
-	ncInterface.setTitle(_("MOPSLinux setup"));
+	ncInterface.setTitle(_("AgiliaLinux setup"));
 	ncInterface.setSubtitle(_("Language selection"));
 	vector<string> availableLanguages = ReadFileStrings(SETUP_LANGUAGES);
 	vector<MenuItem> menuItems;

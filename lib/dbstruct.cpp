@@ -3,7 +3,7 @@ string getDBStructure()
 {
 	return "----------------------------------------------------------------------\n\
 --\n\
---	MOPSLinux package system\n\
+--	MPKG package system\n\
 --	Database creation script\n\
 --	$Id: dbstruct.cpp,v 1.3 2007/11/02 20:19:45 i27249 Exp $\n\
 --\n\

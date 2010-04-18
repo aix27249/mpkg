@@ -1,5 +1,5 @@
 /****************************************************************************
- * MOPSLinux packaging system
+ * MPKG packaging system
  * Package manager - core functions thread
  * $Id: corethread.cpp,v 1.80 2007/11/23 01:01:45 i27249 Exp $
  * *************************************************************************/

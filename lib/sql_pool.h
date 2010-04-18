@@ -1,7 +1,7 @@
 /*************************************************************************************
- * 	SQL pool for MOPSLinux packaging system
- * 	Currently supports SQLite only. Planning support for other database servers
- * 	in future (including networked)
+ * 	SQL pool for MPKG packaging system
+ * 	Currently supports SQLite only.
+ * 	
  *	$Id: sql_pool.h,v 1.21 2007/08/24 06:20:52 i27249 Exp $
  ************************************************************************************/
 
@@ -9,14 +9,10 @@
 
 #ifndef SQL_POOL_H_
 #define SQL_POOL_H_
-///#include "sqlite3.h" // Using internal SQL
 #include <sqlite3.h>
 #include "debug.h"
 #include "core.h"
 #include "config.h"
-//#include "string_operations.h"
-//#include "file_routines.h"
-//#include "mpkg.h"
 class SQLiteDB
 {
 	private:

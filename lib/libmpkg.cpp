@@ -1,5 +1,5 @@
 /*********************************************************************
- * MOPSLinux packaging system: library interface
+ * MPKG packaging system: library interface
  * $Id: libmpkg.cpp,v 1.69 2007/12/04 18:48:34 i27249 Exp $
  * ******************************************************************/
 

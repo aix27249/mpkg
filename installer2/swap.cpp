@@ -1,4 +1,4 @@
-/* New MOPSLinux setup: ncurses-based swap selection tool
+/* New AgiliaLinux setup: ncurses-based swap selection tool
  * 
 */
 
@@ -10,7 +10,7 @@
 int main(int, char **) {
 	dialogMode = true;
 	CursesInterface ncInterface;
-	ncInterface.setTitle(_("MOPSLinux setup"));
+	ncInterface.setTitle(_("AgiliaLinux setup"));
 	ncInterface.setSubtitle(_("Swap partition selection"));
 	vector<pEntry> swapList = getPartitionList();
 	if (swapList.empty()) {

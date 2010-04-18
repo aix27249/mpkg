@@ -1,6 +1,6 @@
 /***********************************************************************
  * 	$Id: mpkg.cpp,v 1.132 2007/12/11 05:38:29 i27249 Exp $
- * 	MOPSLinux packaging system
+ * 	MPKG packaging system
  * ********************************************************************/
 #include "mpkg.h"
 #include "syscommands.h"
@@ -810,7 +810,7 @@ int mpkgDatabase::commit_actions()
 	sqlSearch.setSearchMode(SEARCH_IN);
 	sqlSearch.addField("package_action", ST_REMOVE);
 	sqlSearch.addField("package_action", ST_PURGE);
-	if (dialogMode) ncInterface.setTitle("MOPSLinux " + (string) MOPSLINUX_VERSION);
+	if (dialogMode) ncInterface.setTitle("AgiliaLinux " + (string) DISTRO_VERSION);
 	if (dialogMode) ncInterface.setSubtitle(_("Preparing to package installation"));
 	if (dialogMode) {
 		ncInterface.setProgressText(_("Requesting list of packages marked to remove"));
@@ -1474,6 +1474,12 @@ installProcess:
 			msay(_("Updating font indexes"), SAYMODE_NEWLINE);
 			system("chroot " + SYS_ROOT + " find /usr/share/fonts -type d -exec /usr/bin/mkfontdir {} \\; ");
 			system("chroot " + SYS_ROOT + " find /usr/share/fonts -type d -exec /usr/bin/mkfontscale {} \\; ");
+			system("chroot " + SYS_ROOT + " /usr/bin/fc-cache -f");
+		}
+		if (needUpdateDesktopCaches) {
+			msay(_("Updating icon cache and mime database"), SAYMODE_NEWLINE);
+			system("chroot " + SYS_ROOT + " /usr/bin/update-all-caches");
+
 		}
 		msay(_("Syncing disks..."), SAYMODE_NEWLINE);
 		system("sync &");

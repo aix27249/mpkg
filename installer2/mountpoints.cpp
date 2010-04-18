@@ -1,4 +1,4 @@
-/* New MOPSLinux setup: ncurses-based partition mountting tool
+/* New AgiliaLinux setup: ncurses-based partition mountting tool
  *
 */
 
@@ -12,7 +12,7 @@
 int main(int, char **) {
 	dialogMode = true;
 	CursesInterface ncInterface;
-	ncInterface.setTitle(_("MOPSLinux setup"));
+	ncInterface.setTitle(_("AgiliaLinux setup"));
 	ncInterface.setSubtitle(_("Partition mountting"));
 	vector<pEntry> partList = getPartitionList();
 	if (partList.empty()) {
