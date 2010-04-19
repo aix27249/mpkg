@@ -51,11 +51,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	hasNvidia = -1;
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	guiObject = this;
-	translator = new QTranslator;
-	translator->load(QString("guisetup_Russian"), "/usr/share/setup/l10n");
-	qApp->installTranslator(translator);
+	//translator = new QTranslator;
+	//translator->load(QString("guisetup_Russian"), "/usr/share/setup/l10n");
+	//qApp->installTranslator(translator);
 	ui->setupUi(this);
 	ui->releaseNotesTextBrowser->hide();
+	ui->sendStatCheckBox->hide();
 	setWindowState(Qt::WindowMaximized);
 	connect(ui->nextButton, SIGNAL(clicked()), this, SLOT(nextButtonClick()));
 	connect(ui->backButton, SIGNAL(clicked()), this, SLOT(backButtonClick()));
