@@ -40,8 +40,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	guiObject = this;
 
 	ui->setupUi(this);
-	changePhoto();
 	setWindowState(Qt::WindowMaximized);
+	show();
+	changePhoto();
 	connect(&thread, SIGNAL(setSummaryText(const QString &)), ui->currentSummaryLabel, SLOT(setText(const QString &)));
 	connect(&thread, SIGNAL(setDetailsText(const QString &)), ui->currentDetailsLabel, SLOT(setText(const QString &)));
 	connect(&thread, SIGNAL(setProgress(int)), ui->progressBar, SLOT(setValue(int)));
@@ -58,10 +59,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	timer->setInterval(6000);
 	connect(timer, SIGNAL(timeout()), this, SLOT(changePhoto()));
 	timer->start();
-
-
-
-
 	thread.start();
 
 }
