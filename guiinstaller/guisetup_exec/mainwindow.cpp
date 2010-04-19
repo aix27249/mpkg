@@ -75,7 +75,7 @@ void MainWindow::finish() {
 }
 
 void MainWindow::changePhoto() {
-	if (FileExists("/usr/share/setup/images/" + IntToStr(currentPhoto+1) + ".jpg")) {
+	if (FileExists("/usr/share/setup/images/" + IntToStr(currentPhoto+1) + ".png")) {
 		currentPhoto++;
 	}
 	else {
@@ -83,7 +83,7 @@ void MainWindow::changePhoto() {
 		else return;
 	}
 	//ui->svgWidget->load(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".svg"));
-	ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".jpg")).scaledToHeight(ui->imageLabel->height(), Qt::SmoothTransformation));
+	ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".png")).scaledToHeight(ui->imageLabel->height(), Qt::SmoothTransformation));
 }
 
 void MainWindow::reboot() {
