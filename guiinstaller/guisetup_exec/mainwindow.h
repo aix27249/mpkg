@@ -6,6 +6,7 @@
 #include <mpkg/errorhandler.h>
 #include "thread.h"
 class QListWidgetItem;
+
 namespace Ui {
 	class MainWindowClass;
 }

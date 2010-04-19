@@ -5,6 +5,8 @@
 #include <QSettings>
 #include <QListWidgetItem>
 #include <QTimer>
+//#include <QtSvg/QSvgWidget>
+
 MainWindow *guiObject;
 
 
@@ -83,7 +85,8 @@ void MainWindow::changePhoto() {
 		if (currentPhoto>0) currentPhoto=0;
 		else return;
 	}
-	ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".jpg")).scaledToHeight(ui->imageLabel->height()));
+	//ui->svgWidget->load(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".svg"));
+	ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".jpg")).scaledToHeight(ui->imageLabel->height(), Qt::SmoothTransformation));
 }
 
 void MainWindow::reboot() {
