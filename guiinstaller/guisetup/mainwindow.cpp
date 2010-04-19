@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QListWidgetItem>
+#include <QTranslator>
 #include "help.h"
 MainWindow *guiObject;
 
@@ -51,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	guiObject = this;
 	ui->setupUi(this);
+	translator = NULL;
 	ui->releaseNotesTextBrowser->hide();
 	setWindowState(Qt::WindowMaximized);
 	connect(ui->nextButton, SIGNAL(clicked()), this, SLOT(nextButtonClick()));
@@ -194,6 +196,10 @@ void MainWindow::storePageSettings(int index) {
 	switch(index) {
 		case PAGE_LANGUAGE:
 			settings->setValue("language", ui->languageSelectionWidget->currentItem()->text());
+			if (translator) qApp->removeTranslator(translator);
+			translator = new QTranslator;
+			translator->load(QString("guisetup_%1").arg(settings->value("language").toString()), "/usr/share/setup/l10n");
+			qApp->installTranslator(translator);
 			break;
 		case PAGE_LICENSE:
 			settings->setValue("license_accepted", true);

@@ -6,6 +6,7 @@
 #include <mpkg-parted/mpkg-parted.h>
 #include "thread.h"
 class QListWidgetItem;
+class QTranslator;
 namespace Ui {
 	class MainWindowClass;
 }
@@ -77,6 +78,7 @@ class MainWindow: public QMainWindow {
 		void saveAlternatives();
 		int hasNvidia;
 		map<int, bool> skipPages;
+		QTranslator *translator;
 
 
 

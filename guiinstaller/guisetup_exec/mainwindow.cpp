@@ -39,6 +39,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	guiObject = this;
 
+	QTranslator *translator = new QTranslator;
+	QSettings *settingz = new QSettings("guiinstaller");
+	translator->load(QString("guisetup_exec_%1").arg(settingz->value("language").toString()), "/usr/share/setup/l10n");
+	qApp->installTranslator(translator);
+	delete settingz;
 	ui->setupUi(this);
 	setWindowState(Qt::WindowMaximized);
 	show();
