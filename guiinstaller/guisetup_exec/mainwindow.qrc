@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>icons/agilia_installer.png</file>
+    <file>icons/agilia_installer_head.png</file>
+  </qresource>
+</RCC>
