@@ -71,7 +71,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	lockUIUpdate = false;
 	connect(ui->timezoneSearchEdit, SIGNAL(textEdited(const QString &)), this, SLOT(timezoneSearch(const QString &)));
 	ui->stackedWidget->setCurrentIndex(0);
-	ui->backButton->hide();
 	settings = new QSettings("guiinstaller");
 	loadSetupVariantsThread = new LoadSetupVariantsThread;
 	connect(loadSetupVariantsThread, SIGNAL(finished(bool)), this, SLOT(receiveLoadSetupVariants(bool)));
