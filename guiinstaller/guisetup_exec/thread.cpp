@@ -878,9 +878,22 @@ void SetupThread::setupNetwork() {
 
 void SetupThread::copyMPKGConfig() {
 	mpkg *core = new mpkg(true);
+	system("cp /etc/mpkg.xml /etc/mpkg.xml.backup");
 	core->set_sysroot("/");
+	
+	vector<string> repList;
+#ifdef X86_64
+	repList.push_back("http://core64.agilialinux.org/");
+	repList.push_back("http://userland64.agilialinux.org/");
+#else
+	repList.push_back("http://core32.agilialinux.org/");
+	repList.push_back("http://userland32.agilialinux.org/");
+#endif
+
+	vector<string> disabled_rep_list = core->get_repositorylist();
+	mpkgconfig::set_repositorylist(repList, disabled_rep_list);
 	system("cp /etc/mpkg.xml /mnt/etc/");
-	core->set_sysroot("/mnt/");
+	system("cp /etc/mpkg.xml.backup /etc/mpkg.xml");
 	delete core;
 }
 

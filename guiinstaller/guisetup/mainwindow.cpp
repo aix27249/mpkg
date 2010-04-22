@@ -657,8 +657,8 @@ bool MainWindow::validateUserPasswords() {
 		QMessageBox::information(this, tr("Invalid username"), tr("User root is an administrative account and already exists, please specify another name"));
 		return false;
 	}
-	if (ui->usernameEdit->text().toStdString().find_first_not_of("abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-")==0) {
-		QMessageBox::information(this, tr("Invalid username"), tr("Username cannot start from number. Please specify correct username."));
+	if (ui->usernameEdit->text().toStdString().find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-")==0) {
+		QMessageBox::information(this, tr("Invalid username"), tr("Username contain invalid characters. Please specify correct username."));
 		return false;
 	}
 	if (ui->userPasswordEdit->text()!=ui->userPasswordVerifyEdit->text()) {
