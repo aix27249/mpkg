@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>820</width>
-    <height>725</height>
+    <width>714</width>
+    <height>580</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -15,6 +15,18 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>580</height>
+   </size>
   </property>
   <property name="palette">
    <palette>
@@ -440,6 +452,12 @@
    <string>AgiliaLinux Setup</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="font">
     <font>
      <pointsize>10</pointsize>
@@ -452,7 +470,7 @@
        <number>0</number>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>14</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -525,6 +543,12 @@
             <horstretch>0</horstretch>
             <verstretch>3</verstretch>
            </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
           </property>
           <property name="html">
            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -683,6 +707,12 @@ p, li { white-space: pre-wrap; }
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
            <widget class="QTextBrowser" name="licenseBrowser">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <pointsize>10</pointsize>
@@ -811,6 +841,12 @@ p, li { white-space: pre-wrap; }
               </item>
               <item row="0" column="1">
                <widget class="QLineEdit" name="hostnameEdit">
+                <property name="maximumSize">
+                 <size>
+                  <width>200</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string>agilia</string>
                 </property>
@@ -825,10 +861,42 @@ p, li { white-space: pre-wrap; }
               </item>
               <item row="1" column="1">
                <widget class="QLineEdit" name="netnameEdit">
+                <property name="maximumSize">
+                 <size>
+                  <width>200</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string>example.net</string>
                 </property>
                </widget>
+              </item>
+              <item row="0" column="2">
+               <spacer name="horizontalSpacer_12">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="1" column="2">
+               <spacer name="horizontalSpacer_34">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </item>
@@ -1054,6 +1122,9 @@ p, li { white-space: pre-wrap; }
                 <property name="text">
                  <string>Setup will use an installation DVD in your drive</string>
                 </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
              </layout>
@@ -1104,6 +1175,9 @@ p, li { white-space: pre-wrap; }
                 <property name="text">
                  <string>You can specify downloaded ISO image on your hard drive or USB flash</string>
                 </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
              </layout>
@@ -1153,6 +1227,9 @@ p, li { white-space: pre-wrap; }
                <widget class="QLabel" name="label_8">
                 <property name="text">
                  <string>Get packages directly from internet</string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -1309,6 +1386,9 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Setup is loading repository data, it can take some time&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -1418,7 +1498,14 @@ p, li { white-space: pre-wrap; }
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_13">
           <item>
-           <widget class="QListWidget" name="setupVariantsListWidget"/>
+           <widget class="QListWidget" name="setupVariantsListWidget">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -1944,7 +2031,7 @@ Select partition and edit settings below:</string>
              <set>QAbstractItemView::NoEditTriggers</set>
             </property>
             <property name="alternatingRowColors">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="rootIsDecorated">
              <bool>true</bool>
@@ -2256,11 +2343,11 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QLabel" name="label_49">
           <property name="text">
-           <string>Bootloader should be installed on the disk which your BIOS uses to boot. Usually it is a first hard drive. If you are installing to USB flash drive, select it as bootloader drive, and don't forget to enable boot delay.
-
-In rare cases, you need to load additional kernel modules from initrd to make your system bootable. If you know that you have such case, enter it to appropriate field, separating by semicolon.
-
-Additional kernel options is useful if you are experiencing some sort of boot problems not relevant to HDD detection. If you successfully loaded this installer, you don't need this (unless you had to add options to boot into setup).</string>
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Droid Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Bootloader should be installed on the disk which your BIOS uses to boot. Usually it is a first hard drive. If you are installing to USB flash drive, select it as bootloader drive, and don't forget to enable boot delay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="wordWrap">
            <bool>true</bool>
@@ -2926,7 +3013,14 @@ p, li { white-space: pre-wrap; }
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_13">
             <item>
-             <widget class="QListWidget" name="timezoneListWidget"/>
+             <widget class="QListWidget" name="timezoneListWidget">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QCheckBox" name="utcCheckBox">
@@ -3030,22 +3124,30 @@ p, li { white-space: pre-wrap; }
         </item>
         <item>
          <widget class="QTextBrowser" name="confirmationTextBrowser">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="html">
            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Droid Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Tahoma'; font-weight:600;&quot;&gt;Package source&lt;/span&gt;&lt;span style=&quot; font-family:'Tahoma';&quot;&gt;: DVD&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Tahoma';&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Tahoma'; font-weight:600;&quot;&gt;Installation type&lt;/span&gt;&lt;span style=&quot; font-family:'Tahoma';&quot;&gt;: KDE Desktop&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Tahoma';&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Tahoma'; font-weight:600;&quot;&gt;Partitions that will be FORMATTED&lt;/span&gt;&lt;span style=&quot; font-family:'Tahoma';&quot;&gt;:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Tahoma';&quot;&gt;/dev/sda1 (300Mb, /boot)&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Tahoma';&quot;&gt;/dev/sda2 (30Gb, root)&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Tahoma';&quot;&gt;/dev/sda4 (2Gb, swap)&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Tahoma';&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Tahoma'; font-weight:600;&quot;&gt;Partitions that will NOT be formatted but used:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Tahoma';&quot;&gt;/dev/sda3 (179Gb, /home)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -3238,16 +3340,6 @@ p, li { white-space: pre-wrap; }
      </layout>
     </item>
    </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>820</width>
-     <height>19</height>
-    </rect>
-   </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

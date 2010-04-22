@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	ui->setupUi(this);
 	ui->releaseNotesTextBrowser->hide();
 	ui->sendStatCheckBox->hide();
-	setWindowState(Qt::WindowMaximized);
+	//setWindowState(Qt::WindowMaximized);
 	connect(ui->nextButton, SIGNAL(clicked()), this, SLOT(nextButtonClick()));
 	connect(ui->backButton, SIGNAL(clicked()), this, SLOT(backButtonClick()));
 	connect(ui->mountPointsTreeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), this, SLOT(updateMountsGUI(QTreeWidgetItem *, QTreeWidgetItem *)));

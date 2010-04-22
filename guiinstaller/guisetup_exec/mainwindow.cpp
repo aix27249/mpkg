@@ -82,7 +82,7 @@ void MainWindow::changePhoto() {
 		else return;
 	}
 	//ui->svgWidget->load(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".svg"));
-	ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".png")));
+	ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".png")).scaledToHeight(300));
 }
 
 void MainWindow::reboot() {
