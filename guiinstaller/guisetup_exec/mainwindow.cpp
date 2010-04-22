@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(ui->rebootLaterButton, SIGNAL(clicked()), qApp, SLOT(quit()));
 	currentPhoto = 0;
 	timer = new QTimer;
-	timer->setInterval(15000);
+	timer->setInterval(20000);
 	connect(timer, SIGNAL(timeout()), this, SLOT(changePhoto()));
 	timer->start();
 	thread.start();
@@ -71,6 +71,17 @@ void MainWindow::showError(const QString &err) {
 
 void MainWindow::finish() {
 	ui->stackedWidget->setCurrentIndex(1);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+	if (QMessageBox::question(this, tr("Really cancel installation?"), 
+				tr("Installation is not yet complete. If you interrupt it at this point, you will probably get your system completely unusable. Are you sure?"), 
+				QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
+	
+		thread.terminate();
+		event->accept();
+	}
+	else event->ignore();
 }
 
 void MainWindow::changePhoto() {

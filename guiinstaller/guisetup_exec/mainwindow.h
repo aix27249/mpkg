@@ -32,6 +32,7 @@ class MainWindow: public QMainWindow {
 		void reboot();
 		void minimizeWindow();
 		void maximizeWindow();
+		void closeEvent(QCloseEvent *event);
 
 
 		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);

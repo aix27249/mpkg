@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	ui->setupUi(this);
 	ui->releaseNotesTextBrowser->hide();
 	ui->sendStatCheckBox->hide();
-	//setWindowState(Qt::WindowMaximized);
+	setWindowState(Qt::WindowMaximized);
 	connect(ui->nextButton, SIGNAL(clicked()), this, SLOT(nextButtonClick()));
 	connect(ui->backButton, SIGNAL(clicked()), this, SLOT(backButtonClick()));
 	connect(ui->mountPointsTreeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), this, SLOT(updateMountsGUI(QTreeWidgetItem *, QTreeWidgetItem *)));
@@ -82,6 +82,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 MainWindow::~MainWindow() {
 	delete settings;
 	delete loadSetupVariantsThread;
+}
+void MainWindow::closeEvent(QCloseEvent *event) {
+	if (QMessageBox::question(this, tr("Really cancel installation?"), 
+				tr("Installation is not yet complete. Do you really want to cancel?"), 
+				QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
+		event->accept();
+	}
+	else event->ignore();
 }
 
 void MainWindow::showHelp() {

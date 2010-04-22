@@ -144,9 +144,17 @@ bool SetupThread::prepareInstallQueue() {
 	vector<string> errorList;
 	core = new mpkg;
 	core->install(installset_contains, NULL, NULL, &errorList);
+	core->commit(true);
 	PACKAGE_LIST commitList;
 	SQLRecord sqlSearch;
 	core->get_packagelist(sqlSearch, &commitList);
+	vector<string> queryLog;
+	for (size_t i=0; i<commitList.size(); ++i) {
+		queryLog.push_back(commitList[i].get_name() + " " + commitList[i].get_fullversion() + " " + boolToStr(commitList[i].action()==ST_INSTALL));
+	}
+	WriteFileStrings("/var/log/comlist1.log", queryLog);
+	queryLog.clear();
+
 	vector<string> alternatives;
 	if (settings->value("alternatives/bfs").toBool()) alternatives.push_back("bfs");
 	if (settings->value("alternatives/cleartype").toBool()) alternatives.push_back("cleartype");
@@ -166,8 +174,13 @@ bool SetupThread::prepareInstallQueue() {
 		printf("USED ALT: %s\n", alternatives[i].c_str());
 	}
 	commitList.switchAlternatives(alternatives);
+	for (size_t i=0; i<commitList.size(); ++i) {
+		queryLog.push_back(commitList[i].get_name() + " " + commitList[i].get_fullversion()+ " " + boolToStr(commitList[i].action()==ST_INSTALL));
+	}
+	WriteFileStrings("/var/log/comlist2.log", queryLog);
+	queryLog.clear();
+
 	PACKAGE_LIST commitListFinal;
-	vector<string> queryLog;
 	for (size_t i=0; i<commitList.size(); ++i) {
 		if (commitList[i].action()==ST_INSTALL) {
 			commitListFinal.add(commitList[i]);
@@ -758,7 +771,7 @@ bool SetupThread::postInstallActions() {
 		}
 	}
 	if (_cmdOptions["ramwarp"]=="yes") {
-		system("rm /mnt/var/mpkg/packages.db && mv /mnt/.installer/packages.db /mnt/var/mpkg/packages.db && umount /mnt/.installer && rmdir /mnt/.installer");
+		system("rm /mnt/var/mpkg/packages.db ; mv /mnt/.installer/packages.db /mnt/var/mpkg/packages.db ; umount /mnt/.installer ; rmdir /mnt/.installer");
 	}
 
 	// Post-install configuration

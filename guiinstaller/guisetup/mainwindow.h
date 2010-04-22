@@ -90,6 +90,7 @@ class MainWindow: public QMainWindow {
 		void backButtonClick();
 		void updatePageData(int index);
 		void storePageSettings(int index);
+		void closeEvent(QCloseEvent *event);
 
 		void loadLicense();
 		void loadPartitioningDriveList();
