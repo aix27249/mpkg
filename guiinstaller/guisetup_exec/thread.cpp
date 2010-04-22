@@ -350,11 +350,11 @@ void SetupThread::xorgSetLangHALEx() {
 	vector<MenuItem> langmenu;
 	langmenu.push_back(MenuItem("us", "", "", true));
 	sysconf_lang = "en_US.UTF-8";
-	if (settings->value("language").toString()=="Russian") {
+	if (settings->value("language").toString()=="ru_RU.UTF-8") {
 	       langmenu.push_back(MenuItem("ru", "winkeys", "", true));
 	       sysconf_lang = "ru_RU.UTF-8";
 	}
-	if (settings->value("language").toString()=="Ukrainian") {
+	if (settings->value("language").toString()=="uk_UA.UTF-8") {
 		langmenu.push_back(MenuItem("ua", "winkeys", "", true));
 		sysconf_lang = "uk_UA.UTF-8";
 	}
@@ -686,9 +686,36 @@ void SetupThread::setXwmConfig() {
 	else if (wm=="GNOME") setWM("gnome");
 }
 
+void generateLangSh(string lang, string dir="/mnt/etc/profile.d/") {
+	string lang_sh="#!/bin/sh\n\
+export LANG=$L\n\
+export LC_CTYPE=$L\n\
+export LC_NUMERIC=$L\n\
+export LC_TIME=$L\n\
+export LC_COLLATE=C\n\
+export LC_MONETARY=$L\n\
+export LC_MESSAGES=$L\n\
+export LC_PAPER=$L\n\
+export LC_NAME=$L\n\
+export LC_ADDRESS=$L\n\
+export LC_TELEPHONE=$L\n\
+export LC_MEASUREMENT=$L\n\
+export LC_IDENTIFICATION=$L\n\
+export LESSCHARSET=UTF-8\n";
+	strReplace(&lang_sh, "$L", lang);
+	WriteFile(dir+"lang.sh", lang_sh);
+	strReplace(&lang_sh, "export", "setenv");
+	strReplace(&lang_sh, "/bin/sh", "/bin/csh");
+	WriteFile(dir+"lang.csh", lang_sh);
+}
+
 bool SetupThread::postInstallActions() {
 	emit setSummaryText(tr("Install complete, running post-install actions"));
 	emit setDetailsText("");
+	if (settings->value("language")=="en_US.UTF-8") generateLangSh("en_US.UTF-8");
+	else if (settings->value("language")=="ru_RU.UTF-8") generateLangSh("ru_RU.UTF-8");
+	else if (settings->value("language")=="uk_UA.UTF-8") generateLangSh("uk_UA.UTF-8");
+
 	// Do installed kernel version check
 	vector<string> dirList = getDirectoryList("/mnt/lib/modules");
 	for (size_t i=0; i<dirList.size(); ++i) {
@@ -822,8 +849,12 @@ void SetupThread::umountFilesystems() {
 void SetupThread::setTimezone() {
 	if (settings->value("time_utc").toBool()) {
 		WriteFile("/mnt/etc/hardwareclock", "# Tells how the hardware clock time is stored\n#\nUTC\n");
+		WriteFile("/mnt/etc/conf.d/hwclock", "# Set clock to \"UTC\" if your hardware clock stores time in GMT, or \"local\" if your clock stores local time.\n\nclock=\"UTC\"\n#If you want to sync hardware clock with your system clock at shutdown, set clock_synctohc to YES.\nclock_synctohc=\"YES\"\n\n# You can specify special arguments to hwclock during bootup\n#clock_args=\"\"\n");
 	}
-	else WriteFile("/mnt/etc/hardwareclock", "# Tells how the hardware clock time is stored\n#\nlocaltime\n");
+	else {
+		WriteFile("/mnt/etc/hardwareclock", "# Tells how the hardware clock time is stored\n#\nlocaltime\n");
+		WriteFile("/mnt/etc/conf.d/hwclock", "# Set clock to \"UTC\" if your hardware clock stores time in GMT, or \"local\" if your clock stores local time.\n\nclock=\"local\"\n#If you want to sync hardware clock with your system clock at shutdown, set clock_synctohc to YES.\nclock_synctohc=\"YES\"\n\n# You can specify special arguments to hwclock during bootup\n#clock_args=\"\"\n");
+	}
 
 	if (!settings->value("timezone").toString().isEmpty()) {
 		system("( cd /mnt/etc ; ln -sf /usr/share/zoneinfo/" + settings->value("timezone").toString().toStdString() + " localtime-copied-from )");

@@ -4,7 +4,6 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QListWidgetItem>
-#include <QTranslator>
 #include "help.h"
 MainWindow *guiObject;
 
@@ -51,9 +50,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	hasNvidia = -1;
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	guiObject = this;
-	//translator = new QTranslator;
-	//translator->load(QString("guisetup_Russian"), "/usr/share/setup/l10n");
-	//qApp->installTranslator(translator);
 	ui->setupUi(this);
 	ui->releaseNotesTextBrowser->hide();
 	ui->sendStatCheckBox->hide();
@@ -112,7 +108,7 @@ void MainWindow::runInstaller() {
 		settings->setValue("anonstat", true);
 	}
 	else settings->setValue("anonstat", false);
-	system("nohup guisetup_exec &");
+	system("LC_ALL=" + settings->value("language").toString().toStdString() + " nohup guisetup_exec 2>&1 >/var/log/guisetup_exec.log &");
 	qApp->quit();
 }
 
@@ -142,12 +138,6 @@ void MainWindow::backButtonClick() {
 
 bool MainWindow::validatePageSettings(int index) {
 	switch(index) {
-		case PAGE_LANGUAGE:
-			if (!ui->languageSelectionWidget->currentItem()) {
-				QMessageBox::critical(this, tr("No language selected"), tr("Please select language."));
-				return false;
-			}
-			break;
 		case PAGE_LICENSE:
 			if (!ui->licenseAcceptCheckBox->isChecked()) {
 				QMessageBox::critical(this, tr("License not accepted"), tr("Without accepting license, you cannot proceed."));
@@ -197,13 +187,6 @@ bool MainWindow::validatePageSettings(int index) {
 
 void MainWindow::storePageSettings(int index) {
 	switch(index) {
-		case PAGE_LANGUAGE:
-			settings->setValue("language", ui->languageSelectionWidget->currentItem()->text());
-			if (translator) qApp->removeTranslator(translator);
-			translator = new QTranslator;
-			translator->load(QString("guisetup_%1").arg(settings->value("language").toString()), "/usr/share/setup/l10n");
-			qApp->installTranslator(translator);
-			break;
 		case PAGE_LICENSE:
 			settings->setValue("license_accepted", true);
 			break;
@@ -248,8 +231,6 @@ void MainWindow::storePageSettings(int index) {
 
 void MainWindow::updatePageData(int index) {
 	switch(index) {
-		case PAGE_LANGUAGE:
-			break;
 		case PAGE_LICENSE:
 			loadLicense();
 			break;
@@ -607,6 +588,8 @@ void MainWindow::saveSetupVariant() {
 
 void MainWindow::saveTimezone() {
 	settings->setValue("timezone", ui->timezoneListWidget->currentItem()->text());
+	if (ui->utcCheckBox->isChecked()) settings->setValue("time_utc", true);
+	else settings->setValue("time_utc", false);
 }
 
 void MainWindow::loadConfirmationData() {

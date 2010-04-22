@@ -118,7 +118,6 @@ class MainWindow: public QMainWindow {
 
 enum {
 	PAGE_WELCOME = 0,
-	PAGE_LANGUAGE,
 	PAGE_LICENSE,
 	PAGE_NETWORKING,
 	PAGE_PKGSOURCE,

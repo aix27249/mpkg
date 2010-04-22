@@ -38,12 +38,6 @@ MpkgErrorReturn MainWindow::errorHandler(ErrorDescription err, const string& det
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindowClass) {
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	guiObject = this;
-
-	QTranslator *translator = new QTranslator;
-	QSettings *settingz = new QSettings("guiinstaller");
-	translator->load(QString("guisetup_exec_%1").arg(settingz->value("language").toString()), "/usr/share/setup/l10n");
-	qApp->installTranslator(translator);
-	delete settingz;
 	ui->setupUi(this);
 	setWindowState(Qt::WindowMaximized);
 	show();
@@ -88,7 +82,7 @@ void MainWindow::changePhoto() {
 		else return;
 	}
 	//ui->svgWidget->load(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".svg"));
-	ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".png")).scaledToHeight(ui->imageLabel->height(), Qt::SmoothTransformation));
+	ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".png")));
 }
 
 void MainWindow::reboot() {
