@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(ui->rebootLaterButton, SIGNAL(clicked()), qApp, SLOT(quit()));
 	currentPhoto = 0;
 	timer = new QTimer;
-	timer->setInterval(6000);
+	timer->setInterval(15000);
 	connect(timer, SIGNAL(timeout()), this, SLOT(changePhoto()));
 	timer->start();
 	thread.start();

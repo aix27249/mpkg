@@ -209,11 +209,84 @@ if [ "$RESCUE" = "" ]; then
   mkdir /media
   mkdir /tmpmount
   mount -t tmpfs none /mnt
+
+# Trying to find installation media. From smart detection to brute force :)
+
   echo "Mounting installation media with squashed filesystems"
+  echo "Trying to mount using root=$ROOTDEV and rootfs=$ROOTFS"
   mount -o ro -t $ROOTFS $ROOTDEV /media
   if [ ! -r /media/fs/rootfs.sfs ] ; then
+	umount /media >/dev/null 2>/dev/null
+  	echo "Retrying to mount using root=$ROOTDEV with FS type autodetection"
 	mount -o ro $ROOTDEV /media
   fi
+
+ # If none of above works, lets wait 10 seconds to let devices settle and use brute force detection
+  if [ ! -r /media/fs/rootfs.sfs ] ; then
+	umount /media >/dev/null 2>/dev/null
+	for TESTDEV in `ls /dev/sr* 2>/dev/null` `ls /dev/scd* 2>/dev/null` `ls /dev/sd* 2>/dev/null` `ls /dev/hd* 2>/dev/null` ; do
+		echo "Trying to mount $TESTDEV"
+		mount -o ro $TESTDEV /media
+  		if [ -r /media/fs/rootfs.sfs ] ; then
+			echo "Media found successfully in $TESTDEV, continuing boot"
+			break;
+		fi
+		umount /media >/dev/null 2>/dev/null
+	done
+			
+		
+		
+  	echo "Trying to mount /dev/scd0 directly (as it is most usual DVD-ROM drive name)"
+	mount -o ro /dev/scd0 /media
+  fi
+
+# If nothing helps, let's wait 10 seconds and retry. If fail will occur twice, then enter rescue shell
+echo "Sleeping 10 seconds to let devices to detect"
+sleep 10
+mdev -s
+echo "Retrying to find media"
+  echo "Mounting installation media with squashed filesystems"
+  echo "Trying to mount using root=$ROOTDEV and rootfs=$ROOTFS"
+  mount -o ro -t $ROOTFS $ROOTDEV /media
+  if [ ! -r /media/fs/rootfs.sfs ] ; then
+	umount /media >/dev/null 2>/dev/null
+  	echo "Retrying to mount using root=$ROOTDEV with FS type autodetection"
+	mount -o ro $ROOTDEV /media
+  fi
+
+ # If none of above works, lets wait 10 seconds to let devices settle and use brute force detection
+  if [ ! -r /media/fs/rootfs.sfs ] ; then
+	umount /media >/dev/null 2>/dev/null
+	for TESTDEV in `ls /dev/sr* 2>/dev/null` `ls /dev/scd* 2>/dev/null` `ls /dev/sd* 2>/dev/null` `ls /dev/hd* 2>/dev/null` ; do
+		echo "Trying to mount $TESTDEV"
+		mount -o ro $TESTDEV /media
+  		if [ -r /media/fs/rootfs.sfs ] ; then
+			echo "Media found successfully in $TESTDEV, continuing boot"
+			break;
+		fi
+		umount /media >/dev/null 2>/dev/null
+	done
+			
+		
+		
+  	echo "Trying to mount /dev/scd0 directly (as it is most usual DVD-ROM drive name)"
+	mount -o ro /dev/scd0 /media
+  fi
+
+
+
+
+if [ ! -r /media/fs/rootfs.sfs ] ; then
+	echo "Mounting media failed, entering rescue shell"
+	echo "You can try to mount it manually to /media directory"
+	echo "Then done, type 'exit' to continue booting"
+	/bin/sh
+fi
+
+
+
+
+
 #  if [ "$DEBUG" == "1" ] ; then
 #       echo "Trying to unmount"
 #       umount /media
@@ -243,14 +316,18 @@ if [ "$RESCUE" = "" ]; then
   mkdir -p /mnt/bin
   mkdir -p /mnt/sbin
   mkdir -p /mnt/lib
-  mkdir -p /mnt/lib64
+  if [ -r /media/fs/lib64.sfs ] ; then
+	mkdir -p /mnt/lib64
+  fi
   mkdir -p /mnt/usr
   echo "Assembling live filesystem, FSDIR=$FSDIR"
   
   mount -t squashfs $FSDIR/bin.sfs /mnt/bin
   mount -t squashfs $FSDIR/sbin.sfs /mnt/sbin
   mount -t squashfs $FSDIR/lib.sfs /mnt/lib
-  mount -t squashfs $FSDIR/lib64.sfs /mnt/lib64
+  if [ -r /media/fs/lib64.sfs ] ; then
+  	mount -t squashfs $FSDIR/lib64.sfs /mnt/lib64
+  fi
   mount -t squashfs $FSDIR/usr.sfs /mnt/usr
   if [ "$DEBUG" == "1" ] ; then
      echo "Entering debug mode, type exit when done"
