@@ -1,0 +1,5 @@
+#!/bin/sh
+if [ -d initrd.new ]; then
+    ./update
+    ./make_rootfs.sh
+fi
