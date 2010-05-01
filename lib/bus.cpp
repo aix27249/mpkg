@@ -404,6 +404,7 @@ string getActionName(ActionID id) {
 		case ACTIONID_REMOVE: return _("Removing package");
 		case ACTIONID_INSTALL: return _("Installing package");
 		case ACTIONID_DOWNLOAD: return _("Downloading");
+		case ACTIONID_DOWNLOAD_LINKING: return _("Creating symlink to");
 		default: return _("Unknown action type");
 	}
 }

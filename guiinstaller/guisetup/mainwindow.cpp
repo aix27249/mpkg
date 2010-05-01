@@ -93,7 +93,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 
 void MainWindow::showHelp() {
-	QString text = ReadFile("/usr/share/setup/help/" + IntToStr(ui->stackedWidget->currentIndex()) + ".html").c_str();
+	QString text = ReadFile("/usr/local/share/setup/help/" + IntToStr(ui->stackedWidget->currentIndex()) + ".html").c_str();
 	if (text.isEmpty()) {
 		QMessageBox::information(this, tr("No help available"), tr("Sorry, no help available for this part"));
 		return;
@@ -269,7 +269,7 @@ void MainWindow::updatePageData(int index) {
 
 void MainWindow::loadLicense() {
 	QString lang = settings->value("language").toString();
-	QString license = ReadFile("licenses/license." + lang.toStdString()).c_str();
+	QString license = ReadFile("/usr/local/share/setup/licenses/license." + lang.toStdString()).c_str();
 	ui->licenseBrowser->setPlainText(license);
 }
 

@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 
 
 	setlocale(LC_ALL, "");
-	bindtextdomain( "mpkg", "/usr/share/locale");
+	bindtextdomain( "mpkg", "/usr/local/share/locale");
 	textdomain("mpkg");
 	
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
 	QLocale lc;
 	QTranslator translator;
-	translator.load("guisetup_exec_" + lc.name(), "/usr/share/setup/l10n");
+	translator.load("guisetup_exec_" + lc.name(), "/usr/local/share/setup/l10n");
 	a.installTranslator(&translator);
 
 	MainWindow w;
