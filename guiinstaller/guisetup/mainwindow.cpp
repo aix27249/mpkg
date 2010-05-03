@@ -284,9 +284,48 @@ void MainWindow::loadLicense() {
 	ui->licenseBrowser->setPlainText(license);
 }
 
+/*string getUUID(const string& dev) {
+	string tmp_file = get_tmp_file();
+	string data;
+	int try_count = 0;
+	while (try_count<2 && data.empty()) {
+		system("blkid -s UUID " + dev + " > " + tmp_file);
+		data = ReadFile(tmp_file);
+		try_count++;
+	}
+	if (data.empty()) return "";
+	size_t a = data.find_first_of("\"");
+	if (a==std::string::npos || a==data.size()-1) return "";
+	data.erase(data.begin(), data.begin()+a+1);
+	a = data.find_first_of("\"");
+	if (a==std::string::npos || a==0) return "";
+	return data.substr(0, a);
+}
+*/
+string getLABEL(const string& dev) {
+	string tmp_file = get_tmp_file();
+	string data;
+	int try_count = 0;
+	while (try_count<2 && data.empty()) {
+		system("blkid -s LABEL " + dev + " > " + tmp_file);
+		data = ReadFile(tmp_file);
+		try_count++;
+	}
+	if (data.empty()) return "";
+	size_t a = data.find_first_of("\"");
+	if (a==std::string::npos || a==data.size()-1) return "";
+	data.erase(data.begin(), data.begin()+a+1);
+	a = data.find_first_of("\"");
+	if (a==std::string::npos || a==0) return "";
+	return data.substr(0, a);
+}
 void MainWindow::updatePartitionLists() {
 	drives = getDevList();
 	partitions = getPartitionList();
+	// Since fslabel in libparted means completely other thing, let's get this from blkid
+	for (size_t i=0; i<partitions.size(); ++i) {
+		partitions[i].fslabel = getLABEL(partitions[i].devname).c_str();
+	}
 }
 
 void MainWindow::loadPartitioningDriveList() {
@@ -297,6 +336,7 @@ void MainWindow::loadPartitioningDriveList() {
 	}
 
 }
+
 
 void MainWindow::runPartitioningTool() {
 	Qt::WindowStates winstate = windowState();
@@ -318,9 +358,10 @@ void MainWindow::loadMountsTree() {
 		coreItem->setExpanded(true);
 		for (size_t p=0; p<partitions.size(); ++p) {
 			if (partitions[p].devname.find(drives[i].tag)!=0) continue;
-			if (partitions[p].fslabel.empty()) fslabel.clear();
+			fslabel = partitions[p].fslabel.c_str();
+			if (fslabel.isEmpty()) fslabel = tr(", no label");
 			else fslabel=tr(", label: %1").arg(partitions[p].fslabel.c_str());
-			QTreeWidgetItem *partitionItem = new QTreeWidgetItem(coreItem, QStringList(QString("%1%2 (%3, %4)").arg(fslabel).arg(QString::fromStdString(partitions[p].devname)).arg(QString::fromStdString(humanizeSize((int64_t) atol(partitions[p].size.c_str())*(int64_t) 1048576))).arg(QString::fromStdString(partitions[p].fstype))));
+			QTreeWidgetItem *partitionItem = new QTreeWidgetItem(coreItem, QStringList(QString("%1%2 (%3, %4)").arg(QString::fromStdString(partitions[p].devname)).arg(fslabel).arg(QString::fromStdString(humanizeSize((int64_t) atol(partitions[p].size.c_str())*(int64_t) 1048576))).arg(QString::fromStdString(partitions[p].fstype))));
 			mountOptions.push_back(MountOptions(partitionItem, QString::fromStdString(partitions[p].devname), (int64_t) atol(partitions[p].size.c_str())*(int64_t) 1048576, QString::fromStdString(humanizeSize((int64_t) atol(partitions[p].size.c_str())*(int64_t) 1048576)),QString::fromStdString(partitions[p].fstype)));
 		}
 	}
