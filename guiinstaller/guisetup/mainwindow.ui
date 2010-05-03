@@ -470,7 +470,7 @@
        <number>0</number>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -555,10 +555,10 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Droid Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 10.4 Release Notes&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 10.4 RC2 Release Notes&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This is a beta release and isn't intended for any sort of everyday use. It contains bugs, possible - critical and dangerous ones. However, we hope you will find it useful.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
-&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;New GUI-based installer&lt;/li&gt;
-&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;OpenRC-based init system&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;AgiliaLinux is based on MOPSLinux 7.0 release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -2016,11 +2016,16 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QLabel" name="label_46">
           <property name="text">
-           <string>We have partitions on your hard disk drives, and now we should specify it's usage.
-
-The main partition is root partition. It is the main partition where OS will be installed. Also, you can specify mount points for other drives (such as /home, /boot) and their formatting options.
-
-Select partition and edit settings below:</string>
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Droid Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;We have partitions on your hard disk drives, and now we should specify it's usage.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The main partition is root partition. It is the main partition where OS will be installed. Also, you can specify mount points for other drives (such as /home, /boot) and their formatting options. &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Please note that there are some technical limits, especially about boot filesystem. For more information, see help.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Select partition and edit settings below:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="wordWrap">
            <bool>true</bool>
@@ -2240,21 +2245,6 @@ Select partition and edit settings below:</string>
                  </item>
                  <item>
                   <property name="text">
-                   <string>fat32</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>fat16</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>ntfs</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
                    <string>btrfs</string>
                   </property>
                  </item>
@@ -2288,7 +2278,7 @@ Select partition and edit settings below:</string>
        </layout>
       </widget>
       <widget class="QWidget" name="bootLoaderPage">
-       <layout class="QVBoxLayout" name="verticalLayout_22">
+       <layout class="QVBoxLayout" name="verticalLayout_16">
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_39">
           <item>
@@ -2381,117 +2371,122 @@ p, li { white-space: pre-wrap; }
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_28">
+         <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_16">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_27">
-              <item>
-               <widget class="QLabel" name="label_24">
-                <property name="text">
-                 <string>Select boot device:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="bootLoaderComboBox">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_16">
-              <item>
-               <widget class="QLabel" name="label_30">
-                <property name="text">
-                 <string>Framebuffer resolution:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="fbResolutionComboBox">
-                <item>
-                 <property name="text">
-                  <string>text</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>640x480</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>800x600</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>1024x768</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>1280x1024</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>1600x1200</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_31">
-                <property name="text">
-                 <string>Color depth:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="fbColorComboBox">
-                <item>
-                 <property name="text">
-                  <string>32</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>16</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>8</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_6">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-           </layout>
+           <widget class="QLabel" name="label_24">
+            <property name="text">
+             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Droid Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Select boot device:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="bootLoaderComboBox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_4">
+          <property name="title">
+           <string>Framebuffer settings</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_16">
+             <item>
+              <widget class="QLabel" name="label_30">
+               <property name="text">
+                <string>Framebuffer resolution:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="fbResolutionComboBox">
+               <item>
+                <property name="text">
+                 <string>text</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>640x480</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>800x600</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1024x768</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1280x1024</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1600x1200</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_31">
+               <property name="text">
+                <string>Color depth:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="fbColorComboBox">
+               <item>
+                <property name="text">
+                 <string>32</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>16</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>8</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_6">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item>
          <widget class="QGroupBox" name="groupBox">
@@ -3328,6 +3323,12 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="text">
          <string>Next</string>
+        </property>
+        <property name="autoDefault">
+         <bool>true</bool>
+        </property>
+        <property name="default">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

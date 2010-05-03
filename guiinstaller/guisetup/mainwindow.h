@@ -120,6 +120,11 @@ class MainWindow: public QMainWindow {
 		void showSetupVariantDescription(int);
 		void calculatePkgSetSize(CustomPkgSet &set);
 
+		void mountFilterNoFormat(bool);
+		void mountFilterCustom(bool);
+		void mountFilterSwap(bool);
+		void mountFilterRoot(bool);
+		void mountFilterDontUse(bool);
 	
 };
 

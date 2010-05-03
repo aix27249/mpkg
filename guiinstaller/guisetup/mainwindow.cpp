@@ -81,6 +81,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	// Setup variants handling
 	connect(ui->setupVariantsListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(showSetupVariantDescription(int)));
 
+	// Mountpoints action filtering
+	connect(ui->mountDontUseRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterDontUse(bool)));
+	connect(ui->mountRootRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterRoot(bool)));
+	connect(ui->mountSwapRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterSwap(bool)));
+	connect(ui->mountCustomRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterCustom(bool)));
+	connect(ui->mountNoFormatRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterNoFormat(bool)));
+
 }
 
 MainWindow::~MainWindow() {
@@ -744,18 +751,54 @@ void MainWindow::timezoneSearch(const QString &search) {
 bool MainWindow::validateMountPoints() {
 	bool hasRoot = false, hasSwap = false;
 	uint64_t rootSize = 0;
+	bool hasSeparateBoot = false;
+	QString bootfs;
+	// Check for incorrect input: invalid mount points
+	for (size_t i=0; i<mountOptions.size(); ++i) {
+		if (mountOptions[i].mountpoint=="swap") continue;
+		if (mountOptions[i].mountpoint.isEmpty()) continue;
+		if (mountOptions[i].mountpoint[0]!='/') {
+			QMessageBox::warning(this, tr("Invalid mount point"), tr("Mount point '%1' is invalid: it should be an absolute path. For more information, see help.").arg(mountOptions[i].mountpoint));
+			return false;
+		}
+		if (mountOptions[i].mountpoint.toStdString().find_first_of(" \t\n\\\'\"()&$*?;><|")!=std::string::npos) {
+			QMessageBox::warning(this, tr("Invalid mount point"), tr("Mount point '%1' contains invalid characters. For more information, see help.").arg(mountOptions[i].mountpoint));
+			return false;
+		}
+		// Also we can check if we have separate /boot and check filesystem on it.
+		if (mountOptions[i].mountpoint=="/boot") {
+			hasSeparateBoot=true;
+			if (mountOptions[i].newfs.isEmpty()) bootfs = mountOptions[i].currentfs;
+			else bootfs = mountOptions[i].newfs;
+		}
+		// Check for filesystem if no formatting is performed
+		if (mountOptions[i].newfs.isEmpty()) continue;
+		if (mountOptions[i].currentfs.isEmpty() || mountOptions[i].currentfs=="unformatted") {
+			QMessageBox::warning(this, tr("Unformatted filesystem mount"), tr("You are attempting to mount an unformatted partition to '%1'. It is impossible, please mark it to format or leave unused.").arg(mountOptions[i].mountpoint));
+
+		}	
+	}
 	// Check for nessecary partitions
 	for (size_t i=0; i<mountOptions.size(); ++i) {
 		if (mountOptions[i].mountpoint == "swap") hasSwap = true;
 		if (mountOptions[i].mountpoint == "/") {
 			hasRoot = true;
 			rootSize = mountOptions[i].psize;
+			// If no separate boot - check for root filesystem too
+			if (!hasSeparateBoot) {
+				if (mountOptions[i].newfs.isEmpty()) bootfs = mountOptions[i].currentfs;
+				else bootfs = mountOptions[i].newfs;
+			}
 		}
 	}
 	if (!hasSwap && QMessageBox::question(this, tr("No swap partition"), tr("You didn't specified swap partition. It is OK for systems with lots of RAM (2Gb or more), but you will be unable to use suspend-to-disk. Are you sure?"), QMessageBox::Yes|QMessageBox::No)!=QMessageBox::Yes) return false;
 	if (!hasRoot) {
 		QMessageBox::warning(this, tr("No root partition"), tr("You didn't specified root partition. Without this, system cannot be installed."));
 		return false;
+	}
+	// Check boot filesystem
+	if (bootfs!="ext2" && bootfs!="ext3" && bootfs!="ext4" && bootfs!="jfs" && bootfs!="reiserfs") {
+		if (QMessageBox::question(this, tr("Unsupported root filesystem"), tr("Unfortunately, GRUB boot loader cannot be installed on %1 filesystem.\nYou can ignore this warning if you really know what are you going to do. \nDo you want to make your system bootable without red-eye horror?").arg(bootfs), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes)==QMessageBox::Yes) return false;
 	}
 
 	// Check for dupes
@@ -859,3 +902,35 @@ void MainWindow::showHideReleaseNotes() {
 	}
 
 }
+
+void MainWindow::mountFilterNoFormat(bool enabled) {
+	ui->mountFormatOptionsComboBox->setEnabled(!enabled);	
+}
+void MainWindow::mountFilterCustom(bool enabled) {
+	ui->mountPointEdit->setEnabled(enabled);
+	if (!enabled) return;
+	ui->mountNoFormatRadioButton->setEnabled(true);
+	ui->mountDoFormatRadioButton->setEnabled(true);
+	
+}
+
+void MainWindow::mountFilterSwap(bool enabled) {
+	if (!enabled) return;
+	ui->mountNoFormatRadioButton->setEnabled(false);
+	ui->mountDoFormatRadioButton->setEnabled(false);
+	ui->mountNoFormatRadioButton->setChecked(true);
+}
+void MainWindow::mountFilterRoot(bool enabled) {
+	if (!enabled) return;
+	ui->mountNoFormatRadioButton->setEnabled(false);
+	ui->mountDoFormatRadioButton->setEnabled(true);
+	ui->mountDoFormatRadioButton->setChecked(true);
+}
+
+void MainWindow::mountFilterDontUse(bool enabled) {
+	if (!enabled) return;
+	ui->mountNoFormatRadioButton->setEnabled(false);
+	ui->mountDoFormatRadioButton->setEnabled(false);
+	ui->mountNoFormatRadioButton->setChecked(true);
+}
+	
