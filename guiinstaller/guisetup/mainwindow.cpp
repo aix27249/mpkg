@@ -312,12 +312,15 @@ void MainWindow::loadMountsTree() {
 	updatePartitionLists();
 	ui->mountPointsTreeWidget->clear();
 	mountOptions.clear();
+	QString fslabel;
 	for (size_t i=0; i<drives.size(); ++i) {
 		QTreeWidgetItem *coreItem = new QTreeWidgetItem(ui->mountPointsTreeWidget, QStringList(QString("%1 (%2)").arg(QString::fromStdString(drives[i].tag)).arg(QString::fromStdString(drives[i].value))));
 		coreItem->setExpanded(true);
 		for (size_t p=0; p<partitions.size(); ++p) {
 			if (partitions[p].devname.find(drives[i].tag)!=0) continue;
-			QTreeWidgetItem *partitionItem = new QTreeWidgetItem(coreItem, QStringList(QString("%1 (%2, %3)").arg(QString::fromStdString(partitions[p].devname)).arg(QString::fromStdString(humanizeSize((int64_t) atol(partitions[p].size.c_str())*(int64_t) 1048576))).arg(QString::fromStdString(partitions[p].fstype))));
+			if (partitions[p].fslabel.empty()) fslabel.clear();
+			else fslabel=tr(", label: %1").arg(partitions[p].fslabel.c_str());
+			QTreeWidgetItem *partitionItem = new QTreeWidgetItem(coreItem, QStringList(QString("%1%2 (%3, %4)").arg(fslabel).arg(QString::fromStdString(partitions[p].devname)).arg(QString::fromStdString(humanizeSize((int64_t) atol(partitions[p].size.c_str())*(int64_t) 1048576))).arg(QString::fromStdString(partitions[p].fstype))));
 			mountOptions.push_back(MountOptions(partitionItem, QString::fromStdString(partitions[p].devname), (int64_t) atol(partitions[p].size.c_str())*(int64_t) 1048576, QString::fromStdString(humanizeSize((int64_t) atol(partitions[p].size.c_str())*(int64_t) 1048576)),QString::fromStdString(partitions[p].fstype)));
 		}
 	}
