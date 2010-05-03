@@ -470,7 +470,7 @@
        <number>0</number>
       </property>
       <property name="currentIndex">
-       <number>14</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -1508,6 +1508,16 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="setupVariantDescription">
+          <property name="text">
+           <string>Setup type description will be here</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -3023,13 +3033,6 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="utcCheckBox">
-              <property name="text">
-               <string>My hardware clock stores time in UTC instead of localtime</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <layout class="QHBoxLayout" name="horizontalLayout_14">
               <item>
                <widget class="QLabel" name="label_12">
@@ -3042,6 +3045,13 @@ p, li { white-space: pre-wrap; }
                <widget class="QLineEdit" name="timezoneSearchEdit"/>
               </item>
              </layout>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="utcCheckBox">
+              <property name="text">
+               <string>My hardware clock stores time in UTC instead of localtime</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>

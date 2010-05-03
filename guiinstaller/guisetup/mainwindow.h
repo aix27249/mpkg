@@ -14,17 +14,20 @@ class QSettings;
 
 struct CustomPkgSet {
 	string name, desc, full;
+	uint64_t csize, isize;
+	size_t count;
 };
 
 
 class MountOptions {
 	public:
-		MountOptions(QTreeWidgetItem *item, QString _partition, QString _size, QString _currentfs, QString _mountpoint="", bool _format=false, QString _newfs="");
+		MountOptions(QTreeWidgetItem *item, QString _partition, uint64_t _psize, QString _size, QString _currentfs, QString _mountpoint="", bool _format=false, QString _newfs="");
 		~MountOptions();
 
 		QTreeWidgetItem *itemPtr;
 		QString partition;
 		QString mountpoint;
+		uint64_t psize;
 		QString size;
 		QString currentfs;
 		bool format;
@@ -113,6 +116,9 @@ class MainWindow: public QMainWindow {
 
 		void runInstaller();
 		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);
+		
+		void showSetupVariantDescription(int);
+		void calculatePkgSetSize(CustomPkgSet &set);
 
 	
 };

@@ -31,9 +31,10 @@ MpkgErrorReturn MainWindow::errorHandler(ErrorDescription err, const string& det
 	return MPKG_RETURN_ABORT;
 }
 
-MountOptions::MountOptions(QTreeWidgetItem *_item, QString _partition, QString _size, QString _currentfs, QString _mountpoint, bool _format, QString _newfs) {
+MountOptions::MountOptions(QTreeWidgetItem *_item, QString _partition, uint64_t _psize, QString _size, QString _currentfs, QString _mountpoint, bool _format, QString _newfs) {
 	itemPtr = _item;
 	partition = _partition;
+	psize = _psize;
 	size = _size;
 	currentfs = _currentfs;
 	mountpoint = _mountpoint;
@@ -76,6 +77,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	loadSetupVariantsThread = new LoadSetupVariantsThread;
 	connect(loadSetupVariantsThread, SIGNAL(finished(bool)), this, SLOT(receiveLoadSetupVariants(bool)));
 	connect(ui->quitButton, SIGNAL(clicked()), this, SLOT(askQuit()));
+
+	// Setup variants handling
+	connect(ui->setupVariantsListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(showSetupVariantDescription(int)));
 
 }
 
@@ -307,7 +311,7 @@ void MainWindow::loadMountsTree() {
 		for (size_t p=0; p<partitions.size(); ++p) {
 			if (partitions[p].devname.find(drives[i].tag)!=0) continue;
 			QTreeWidgetItem *partitionItem = new QTreeWidgetItem(coreItem, QStringList(QString("%1 (%2, %3)").arg(QString::fromStdString(partitions[p].devname)).arg(QString::fromStdString(humanizeSize(atol(partitions[p].size.c_str())*1048576))).arg(QString::fromStdString(partitions[p].fstype))));
-			mountOptions.push_back(MountOptions(partitionItem, QString::fromStdString(partitions[p].devname), QString::fromStdString(humanizeSize(atol(partitions[p].size.c_str())*1048576)),QString::fromStdString(partitions[p].fstype)));
+			mountOptions.push_back(MountOptions(partitionItem, QString::fromStdString(partitions[p].devname), atol(partitions[p].size.c_str())*1048576, QString::fromStdString(humanizeSize(atol(partitions[p].size.c_str())*1048576)),QString::fromStdString(partitions[p].fstype)));
 		}
 	}
 
@@ -506,7 +510,41 @@ CustomPkgSet MainWindow::getCustomPkgSet(const string& name) {
 	}
 	if (ret.desc.empty()) ret.desc = gendesc;
 	if (ret.full.empty()) ret.full = genfull;
+	calculatePkgSetSize(ret);
 	return ret;
+}
+
+void MainWindow::calculatePkgSetSize(CustomPkgSet &set) {
+	vector<string> list = ReadFileStrings("/tmp/setup_variants/" + set.name + ".list");
+	PACKAGE_LIST pkgList;
+	SQLRecord record;
+	mpkg *core = new mpkg;
+	core->get_packagelist(record, &pkgList, true);
+	delete core;
+	int64_t csize = 0, isize = 0;
+	size_t count = 0;
+	vector<string> was;
+	bool pkgWas;
+	for (size_t i=0; i<list.size(); ++i) {
+		if (list[i].find("#")!=std::string::npos) continue;
+		if (cutSpaces(list[i]).empty()) continue;
+		pkgWas = false;
+		for (size_t w=0; !pkgWas && w<was.size(); ++w) {
+			if (was[w]==cutSpaces(list[i])) pkgWas = true;
+		}
+		if (pkgWas) continue;
+		for (size_t t=0; t<pkgList.size(); ++t) {
+			if (pkgList[t].get_name()!=cutSpaces(list[i])) continue;
+			was.push_back(cutSpaces(list[i]));
+			csize += atol(pkgList[t].get_compressed_size().c_str());
+			isize += atol(pkgList[t].get_installed_size().c_str());
+			count++;
+		}
+	}
+	set.isize = isize;
+	set.csize = csize;
+	set.count = count;
+
 }
 
 // Get setup variants
@@ -540,6 +578,14 @@ void MainWindow::loadSetupVariants() {
 	//loadSetupVariantsThread->rep_location = rep_location;
 	loadSetupVariantsThread->start();
 	ui->nextButton->setEnabled(false);
+}
+
+void MainWindow::showSetupVariantDescription(int index) {
+	if (index<0 || index>=(int) customPkgSetList.size()) {
+		ui->setupVariantDescription->clear();
+		return;
+	}
+	ui->setupVariantDescription->setText(tr("<p><b>Description:</b> %1</p><p><b>Packages to install:</b> %2 (%3)</p><p><b>Disk space required:</b> %4</p><p>Please note that space requirement is estimated very approximately and does not respect partitioning scheme, temporary files and required space for work.</p>").arg(customPkgSetList[index].full.c_str()).arg(customPkgSetList[index].count).arg(humanizeSize(customPkgSetList[index].csize).c_str()).arg(humanizeSize(customPkgSetList[index].isize).c_str()));
 }
 
 void MainWindow::receiveLoadSetupVariants(bool success) {
@@ -697,10 +743,14 @@ void MainWindow::timezoneSearch(const QString &search) {
 
 bool MainWindow::validateMountPoints() {
 	bool hasRoot = false, hasSwap = false;
+	uint64_t rootSize = 0;
 	// Check for nessecary partitions
 	for (size_t i=0; i<mountOptions.size(); ++i) {
 		if (mountOptions[i].mountpoint == "swap") hasSwap = true;
-		if (mountOptions[i].mountpoint == "/") hasRoot = true;
+		if (mountOptions[i].mountpoint == "/") {
+			hasRoot = true;
+			rootSize = mountOptions[i].psize;
+		}
 	}
 	if (!hasSwap && QMessageBox::question(this, tr("No swap partition"), tr("You didn't specified swap partition. It is OK for systems with lots of RAM (2Gb or more), but you will be unable to use suspend-to-disk. Are you sure?"), QMessageBox::Yes|QMessageBox::No)!=QMessageBox::Yes) return false;
 	if (!hasRoot) {
@@ -721,6 +771,16 @@ bool MainWindow::validateMountPoints() {
 		}
 	}
 	if (dupesFound) return false;
+
+	// Now check for enough free space
+	string setupName = settings->value("setup_variant").toString().toStdString();
+	for (size_t i=0; i<customPkgSetList.size(); ++i) {
+		if (customPkgSetList[i].name==setupName) {
+			if (customPkgSetList[i].isize + customPkgSetList[i].isize*0.2 > rootSize) {
+				if (QMessageBox::question(this, tr("Not enough space"), tr("Size of root filesystem may be not enough for this installation type. You need to have at least %1 of space. Note that this check doesn't respect complex partitioning schemes such as separate /usr, so you can ignore this warning if you sure.\n\nDo you want to re-check your partitioning scheme?").arg(humanizeSize(customPkgSetList[i].isize).c_str()), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes)==QMessageBox::Yes) return false;
+			}
+		}
+	}
 
 	return true;
 }
