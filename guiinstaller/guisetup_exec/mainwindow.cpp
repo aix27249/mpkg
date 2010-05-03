@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	guiObject = this;
 	ui->setupUi(this);
-	setWindowState(Qt::WindowMaximized);
+	//setWindowState(Qt::WindowMaximized);
 	show();
 	changePhoto();
 	connect(&thread, SIGNAL(setSummaryText(const QString &)), ui->currentSummaryLabel, SLOT(setText(const QString &)));
@@ -48,8 +48,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(&thread, SIGNAL(setProgressMax(int)), ui->progressBar, SLOT(setMaximum(int)));
 	connect(&thread, SIGNAL(reportError(const QString &)), this, SLOT(showError(const QString &)));
 	connect(&thread, SIGNAL(reportFinish()), this, SLOT(finish()));
-	connect(&thread, SIGNAL(minimizeWindow()), this, SLOT(minimizeWindow()));
-	connect(&thread, SIGNAL(maximizeWindow()), this, SLOT(maximizeWindow()));
+	//connect(&thread, SIGNAL(minimizeWindow()), this, SLOT(minimizeWindow()));
+	//connect(&thread, SIGNAL(maximizeWindow()), this, SLOT(maximizeWindow()));
 
 	connect(ui->rebootNowButton, SIGNAL(clicked()), this, SLOT(reboot()));
 	connect(ui->rebootLaterButton, SIGNAL(clicked()), qApp, SLOT(quit()));
@@ -94,7 +94,7 @@ void MainWindow::changePhoto() {
 		else return;
 	}
 	//ui->svgWidget->load(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".svg"));
-	ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/local/share/setup/images/" + IntToStr(currentPhoto) + ".png")).scaledToHeight(300));
+	//ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/local/share/setup/images/" + IntToStr(currentPhoto) + ".png")).scaledToHeight(300));
 }
 
 void MainWindow::reboot() {
