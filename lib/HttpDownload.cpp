@@ -216,6 +216,7 @@ try_mount:
 			mDebug("Mount using system");
 			string loop_option;
 			if (CDROM_DEVICE.find("/dev/")!=0) loop_option = " -o loop ";
+			if (!mConfig.getValue("cdrom_mountoptions").empty()) loop_option = " " + mConfig.getValue("cdrom_mountoptions") + " ";
 			string mnt_cmd = "mount " + loop_option + CDROM_DEVICE + " " + CDROM_MOUNTPOINT;
 		       	if (!setupMode) mnt_cmd += " 2>/dev/null >/dev/null";
 		       	if (setupMode) mnt_cmd+= " 2>/dev/tty4 > /dev/tty4";

@@ -10,7 +10,7 @@ class LoadSetupVariantsThread: public QThread {
 		QString dvdDevice;
 		string volname, rep_location;
 		QString pkgsource;
-		bool mountDVD(QString device="", bool iso=false);
+		bool mountDVD(QString device="", QString mountOptions="", bool iso=false);
 		bool umountDVD();
 
 
