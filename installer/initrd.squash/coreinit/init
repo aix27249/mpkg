@@ -285,15 +285,23 @@ fi
   FSDIR=/media/fs
   if [ "$FULL_INRAM" == "1" ] ; then
        echo "Copying images into RAM"
-  	mkdir -p /mnt/squashfs
-        cp $FSDIR/*.sfs /mnt/squashfs/
-        FSDIR=/mnt/squashfs
+  	mkdir -p /squashfs
+        cp $FSDIR/*.sfs /squashfs/
+        FSDIR=/squashfs
         umount /media
+	echo "Copy complete, changing FSDIR to $FSDIR"
   else 
         mkdir -p /mnt/bootmedia
         mount -o bind /media /mnt/bootmedia
   fi
-
+  echo ""
+  echo "----------------------------------------------------------"
+  echo ""
+  echo "FSDIR contents:"
+  ls -l $FSDIR
+  echo ""
+  echo ""
+  echo ""
 
 
   echo "Mounting rootfs.sfs"
@@ -309,7 +317,7 @@ fi
   mkdir -p /mnt/lib
   mkdir -p /squash/lib
   mkdir -p /squash/lib.tmp
-  if [ -r /media/fs/lib64.sfs ] ; then
+  if [ -r $FSDIR/lib64.sfs ] ; then
 	mkdir -p /mnt/lib64
 	mkdir -p /squash/lib64.tmp
 	mkdir -p /squash/lib64
@@ -332,7 +340,7 @@ fi
   mount -t tmpfs none /squash/lib.tmp
   mount -t aufs -o dirs=/squash/lib.tmp:/squash/lib=ro none /mnt/lib
 
-  if [ -r /media/fs/lib64.sfs ] ; then
+  if [ -r $FSDIR/lib64.sfs ] ; then
   	mount -t squashfs $FSDIR/lib64.sfs /squash/lib64
 	mount -t tmpfs none /squash/lib64.tmp
 	mount -t aufs -o dirs=/squash/lib64.tmp:/squash/lib64=ro none /mnt/lib64
