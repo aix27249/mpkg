@@ -290,9 +290,6 @@ fi
         FSDIR=/squashfs
         umount /media
 	echo "Copy complete, changing FSDIR to $FSDIR"
-  else 
-        mkdir -p /mnt/bootmedia
-        mount -o bind /media /mnt/bootmedia
   fi
   echo ""
   echo "----------------------------------------------------------"
@@ -307,6 +304,14 @@ fi
   echo "Mounting rootfs.sfs"
   mount -t squashfs $FSDIR/rootfs.sfs /tmpmount
   mount -t aufs -o dirs=/tmpfs:/tmpmount=ro none /mnt
+
+  echo "Binding fallback disk mount to /bootmedia"
+  if [ "$FULL_INRAM" == "1" ] ; then
+	echo "Skipping media bind"
+  else
+	mkdir -p /mnt/bootmedia
+        mount -o bind /media /mnt/bootmedia
+  fi
 
   mkdir -p /mnt/bin
   mkdir -p /squash/bin

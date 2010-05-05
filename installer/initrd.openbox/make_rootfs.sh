@@ -1,7 +1,7 @@
 mksquashfs /mnt/hd/initrd.openbox rootfs.sfs -e bin lib lib64 sbin usr
-if [ "$1"=="root" ] ; then
-	exit 0
-fi
+#if [ "$1"=="root" ] ; then
+#	exit 0
+#fi
 
 ARCH=`uname -m`
 
