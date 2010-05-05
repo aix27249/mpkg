@@ -46,7 +46,10 @@ QString LoadSetupVariantsThread::detectDVDDevice(QString isofile) {
 	if (isofile.isEmpty()) {
 		system("getcdromlist.sh " + cdlist + " 2>/dev/null >/dev/null");
 		ret = ReadFileStrings(cdlist);
-		mOptions.resize(ret.size());
+		for (size_t i=0; i<ret.size(); ++i) {
+			ret[i] = "/dev/" + ret[i];
+			mOptions.push_back("");
+		}
 		unlink(cdlist.c_str());
 	}
 	else ret.push_back(isofile.toStdString());
@@ -67,8 +70,8 @@ QString LoadSetupVariantsThread::detectDVDDevice(QString isofile) {
 	while (dvdDevice.isEmpty()) {
 		for (size_t i=0; i<ret.size(); ++i) {
 			if (isofile.isEmpty()) {
-				testdev = QString("/dev/") + ret[i].c_str();
-				testoptions = QString("/dev/") + mOptions[i].c_str();
+				testdev = ret[i].c_str();
+				testoptions = mOptions[i].c_str();
 			}
 			else {
 				testdev = isofile;
