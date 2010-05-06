@@ -4,12 +4,12 @@
 <context>
     <name>HelpFormClass</name>
     <message>
-        <location filename="help.ui" line="435"/>
+        <location filename="help.ui" line="20"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="help.ui" line="443"/>
+        <location filename="help.ui" line="28"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -22,7 +22,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;Справка&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="help.ui" line="936"/>
+        <location filename="help.ui" line="521"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
@@ -36,61 +36,53 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="mainwindow.cpp" line="98"/>
+        <location filename="mainwindow.cpp" line="119"/>
+        <source>Really cancel installation?</source>
+        <translation>Действительно прервать установку?</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="99"/>
+        <location filename="mainwindow.cpp" line="119"/>
+        <source>Installation is not yet complete. Do you really want to cancel?</source>
+        <translation>Установка еще не завершена. Вы действительно хотите прервать установку?</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="109"/>
         <source>No help available</source>
         <translation>Справка недоступна</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="98"/>
+        <location filename="mainwindow.cpp" line="109"/>
         <source>Sorry, no help available for this part</source>
-        <translation>К сожалению, справка недоступна для этой части</translation>
+        <translation>К сожалению, для данного раздела справка отсутствует</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="87"/>
-        <location filename="mainwindow.cpp" line="108"/>
-        <source>Really cancel installation?</source>
-        <translation>Действительно отменить установку?</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="88"/>
-        <location filename="mainwindow.cpp" line="108"/>
-        <source>Installation is not yet complete. Do you really want to cancel?</source>
-        <translation>Установка еще не завершена. Вы действительно хотите отменить ее?</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="112"/>
+        <location filename="mainwindow.cpp" line="123"/>
         <source>Please confirm settings</source>
-        <translation>Пожалуйста, подтвердите настройки</translation>
+        <translation>Проверьте правильность настроек</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="112"/>
+        <location filename="mainwindow.cpp" line="123"/>
         <source>You chould confirm that settings are OK. Check the appropriate check box.</source>
-        <translation>Вы должны подтвердить, что настройки в порядке. Вам необходимо отметить соответствующий флажок.</translation>
+        <translation>Вы должны подтвердить правильность настроек перед началом установки. Поставьте галочку в соответствующем месте.</translation>
     </message>
     <message>
-        <source>No language selected</source>
-        <translation type="obsolete">Не выбран язык</translation>
-    </message>
-    <message>
-        <source>Please select language.</source>
-        <translation type="obsolete">Пожалуйста, выберите язык.</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="151"/>
+        <location filename="mainwindow.cpp" line="162"/>
         <source>License not accepted</source>
-        <translation>Не приняты условия лицензии</translation>
+        <translation>Условия лицензии не приняты</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="151"/>
+        <location filename="mainwindow.cpp" line="162"/>
         <source>Without accepting license, you cannot proceed.</source>
-        <translation>Вы не можете продолжить, не приняв условия лицензии.</translation>
+        <translation>Без принятия условий лицензии установка невозможна.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="159"/>
+        <location filename="mainwindow.cpp" line="170"/>
         <source>No hard drives detected</source>
-        <translation>Не обнаружены жесткие диски</translation>
+        <translation>Жесткие диски не обнаружены</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="159"/>
+        <location filename="mainwindow.cpp" line="170"/>
         <source>Installer cannot detect any hard drives in your computer. It may be caused by:
  - You really didn&apos;t have any hard drives,
  - Sort of hardware problems (check cables first),
@@ -98,403 +90,444 @@ p, li { white-space: pre-wrap; }
  - currently unsupported hardware (in this case, please report to developers).
 
 Installation cannot continue and will exit now.</source>
-        <translation type="unfinished">Программа установки не может обнаружить ни один жесткий диск вашего компьютера. Она может быть вызвана:
- - Вы на самом деле не используете никаких жестких дисков
- - Аппаратная проблема (проверитьте соединительные кабеля),
- - Неверная конфигурация BIOS (убедитесь, что ваш контроллер дисков включен),
- - В настоящее время ваше оборудование не поддерживается (в данном случае, пожалуйста, сообщите разработчикам).
+        <translation>Программа установки не смогла определить ни одного жесткого диска в вашем компьютере. Возможные причины:
+ - Дисков действительно нет,
+ - Проблемы с оборудованием (в первую очередь, проверьте кабели),
+ - Неправильная настройка BIOS (убедитесь, что IDE или SATA контроллер жестких дисков включен),
+ - Неподдерживаемое оборудование (если это так - сообщите об этом разработчикам).
 
-Установка не может продолжаться и будет завершена.</translation>
+Продолжение установки невозможно.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="163"/>
+        <location filename="mainwindow.cpp" line="174"/>
         <source>No partitions detected</source>
-        <translation type="unfinished">Не выбраны разделы</translation>
+        <translation>Не обнаружено разделов на жестких дисках</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="163"/>
+        <location filename="mainwindow.cpp" line="174"/>
         <source>You have no partitions on your hard drive. Please create it first.</source>
-        <translation type="unfinished">У вас нет разделов на жестком диске. Пожалуйста, создайте их.</translation>
+        <translation>У вас нет ни одного раздела на жестких дисках. Вы должны их создать предварительно.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="184"/>
+        <location filename="mainwindow.cpp" line="195"/>
         <source>Timezone not selected</source>
-        <translation type="unfinished">Часовой пояс не выбран</translation>
+        <translation>Не выбран часовой пояс</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="184"/>
+        <location filename="mainwindow.cpp" line="195"/>
         <source>Please select timezone</source>
-        <translation type="unfinished">Пожалуйста, выберите часовой пояс</translation>
+        <translation>Пожалуйста, выберите ваш часовой пояс</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="334"/>
-        <location filename="mainwindow.cpp" line="367"/>
-        <location filename="mainwindow.cpp" line="614"/>
+        <location filename="mainwindow.cpp" line="362"/>
+        <source>, no label</source>
+        <translation>, без метки</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="363"/>
+        <source>, label: %1</source>
+        <translation>, метка: %1</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="389"/>
+        <location filename="mainwindow.cpp" line="422"/>
+        <location filename="mainwindow.cpp" line="711"/>
         <source>, format to: %1</source>
-        <translation type="unfinished">, форматировать в: %1</translation>
+        <translation>, форматировать в: %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="451"/>
+        <location filename="mainwindow.cpp" line="506"/>
         <source>No bootloader disk selected</source>
-        <translation type="unfinished">Не выбран диск для загрузчика</translation>
+        <translation>Не выбран диск для загрузчика</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="451"/>
+        <location filename="mainwindow.cpp" line="506"/>
         <source>You should specify drive or partition where bootloader will be installed.</source>
-        <translation type="unfinished">Вы должны указать диск или раздел, в котором загрузчик будет установлен.</translation>
+        <translation>Вы должны указать диск или раздел, на который будет установлен загрузчик.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="471"/>
+        <location filename="mainwindow.cpp" line="526"/>
         <source>Specify ISO image</source>
-        <translation type="unfinished">Укажите ISO образ</translation>
+        <translation>Укажите файл ISO-образа</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="471"/>
+        <location filename="mainwindow.cpp" line="526"/>
         <source>ISO image (*.iso)</source>
-        <translation type="unfinished">ISO образ (*.iso)</translation>
+        <translation>Файл ISO-образа (*.iso)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="548"/>
+        <location filename="mainwindow.cpp" line="639"/>
+        <source>&lt;p&gt;&lt;b&gt;Description:&lt;/b&gt; %1&lt;/p&gt;&lt;p&gt;&lt;b&gt;Packages to install:&lt;/b&gt; %2 (%3)&lt;/p&gt;&lt;p&gt;&lt;b&gt;Disk space required:&lt;/b&gt; %4&lt;/p&gt;&lt;p&gt;Please note that space requirement is estimated very approximately and does not respect partitioning scheme, temporary files and required space for work.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;&lt;b&gt;Описание:&lt;/b&gt; %1&lt;/p&gt;&lt;p&gt;&lt;b&gt;Количество пакетов:&lt;/b&gt; %2 (%3)&lt;/p&gt;&lt;p&gt;&lt;b&gt;Требуемое место на диске:&lt;/b&gt; %4&lt;/p&gt;&lt;p&gt;Обратите внимание, что требования к дисковому пространству рассчитаны очень приблизительно и не учитывают схему разбиения диска, временные файлы и пространство необходимое для работы.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="645"/>
         <source>DVD detection failed</source>
-        <translation type="unfinished">Ошибка определения DVD</translation>
+        <translation>Не удалось определить DVD-привод</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="548"/>
+        <location filename="mainwindow.cpp" line="645"/>
         <source>Failed to detect DVD drive. Be sure you inserted installation DVD into this. Retry?</source>
-        <translation type="unfinished">Не удалось обнаружить DVD привод. Убедитесь, что вы вставили установочный DVD диск. Повторить?</translation>
+        <translation>Не удалось определить привод с установочным DVD. Проверьте, вставлен ли у вас установочный диск. Повторить попытку?</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="555"/>
+        <location filename="mainwindow.cpp" line="652"/>
         <source>Repository connection failed</source>
-        <translation type="unfinished">Не удалось подключиться к репозиторию</translation>
+        <translation>Ошибка подключения к репозиторию</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="555"/>
+        <location filename="mainwindow.cpp" line="652"/>
         <source>Failed to connect to repository. If you trying to access network repository, check your network settings. Retry?</source>
-        <translation type="unfinished">Не удалось подключиться к репозиторию. Если вы пытаетесь получить доступ к сетевому репозиторию, проверьте настройки сети. Повторить?</translation>
+        <translation>Не удалось подключиться к репозиторию. Если вы пытаетесь использовать сетевой репозиторий, проверьте ваши настройки сети. Повторить?</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="619"/>
+        <location filename="mainwindow.cpp" line="716"/>
         <source>&lt;p&gt;&lt;b&gt;Package source:&lt;/b&gt; %1&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Installation type:&lt;/b&gt; %2&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Partitions that will be FORMATTED:&lt;/b&gt;&lt;ul&gt;%3&lt;/ul&gt;&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Partitions that will NOT be formatted but used:&lt;/b&gt;&lt;ul&gt;%4&lt;/ul&gt;&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Boot loader will be installed to:&lt;/b&gt; %5&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;&lt;b&gt;Источник пакета:&lt;/b&gt; %1&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Тип установки:&lt;/b&gt; %2&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Разделы, которые будут отформатированы:&lt;/b&gt;&lt;ul&gt;%3&lt;/ul&gt;&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Разделы, которые не будут отформатированны, но используют:&lt;/b&gt;&lt;ul&gt;%4&lt;/ul&gt;&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Загрузчик системы будет установлен в:&lt;/b&gt; %5&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;&lt;b&gt;Источник пакетов:&lt;/b&gt; %1&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Тип установки:&lt;/b&gt; %2&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Разделы, которые будут ОТФОРМАТИРОВАНЫ:&lt;/b&gt;&lt;ul&gt;%3&lt;/ul&gt;&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Разделы, которые используются но НЕ БУДУТ ОТФОРМАТИРОВАНЫ:&lt;/b&gt;&lt;ul&gt;%4&lt;/ul&gt;&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Загрузчик будет установлен в:&lt;/b&gt; %5&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="642"/>
-        <location filename="mainwindow.cpp" line="673"/>
+        <location filename="mainwindow.cpp" line="739"/>
+        <location filename="mainwindow.cpp" line="770"/>
         <source>Verification failed</source>
-        <translation type="unfinished">Не удалось выполнить проверку</translation>
+        <translation>Пароли не совпадают</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="642"/>
-        <location filename="mainwindow.cpp" line="673"/>
+        <location filename="mainwindow.cpp" line="739"/>
+        <location filename="mainwindow.cpp" line="770"/>
         <source>Passwords doesn&apos;t match. Please enter it more carefully.</source>
-        <translation type="unfinished">Пароли не совпадают. Пожалуйста, будьте внимательнее.</translation>
+        <translation>Введенные пароли не совпадают. Пожалуйста, введите их аккуратней.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="648"/>
-        <location filename="mainwindow.cpp" line="679"/>
+        <location filename="mainwindow.cpp" line="745"/>
+        <location filename="mainwindow.cpp" line="776"/>
         <source>Empty password</source>
-        <translation type="unfinished">Пустой пароль</translation>
+        <translation>Пустой пароль</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="648"/>
+        <location filename="mainwindow.cpp" line="745"/>
         <source>Root password cannot be empty, it is very insecure!</source>
-        <translation type="unfinished">Пароль администратора не может быть пустым, это не безопасно!</translation>
+        <translation>Пароль root не может быть пустым, это очень небезопасно!</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="657"/>
+        <location filename="mainwindow.cpp" line="754"/>
         <source>Username not specified</source>
-        <translation type="unfinished">Имя пользователя не указано</translation>
+        <translation>Не указано имя пользователя</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="657"/>
+        <location filename="mainwindow.cpp" line="754"/>
         <source>Please, enter username</source>
-        <translation type="unfinished">Пожалуйста, введите имя пользователя</translation>
+        <translation>Пожалуйста, укажите имя пользователя</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="661"/>
-        <location filename="mainwindow.cpp" line="665"/>
-        <location filename="mainwindow.cpp" line="669"/>
+        <location filename="mainwindow.cpp" line="758"/>
+        <location filename="mainwindow.cpp" line="762"/>
+        <location filename="mainwindow.cpp" line="766"/>
         <source>Invalid username</source>
-        <translation type="unfinished">Неправильное имя пользователя</translation>
+        <translation>Некорректное имя пользователя</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="661"/>
+        <location filename="mainwindow.cpp" line="758"/>
         <source>Username cannot start from number. Please specify correct username.</source>
-        <translation type="unfinished">Имя пользователя не может начинаться с цифры. Пожалуйста, введите корректное имя пользователя.</translation>
+        <translation>Имя пользователя не может начинаться с цифры. Пожалуйста, укажите корректное имя пользователя.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="665"/>
+        <location filename="mainwindow.cpp" line="762"/>
         <source>User root is an administrative account and already exists, please specify another name</source>
-        <translation type="unfinished">Учетная запись администратора (root) уже существует, пожалуйста, укажите другое имя</translation>
+        <translation>Пользователь root - административный аккаунт и уже существует, пожалуйста укажите другое имя</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="669"/>
+        <location filename="mainwindow.cpp" line="766"/>
         <source>Username contain invalid characters. Please specify correct username.</source>
-        <translation type="unfinished"></translation>
+        <translation>Имя пользователя содержит недопустимые символы. Укажите корректное имя пользователя.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="679"/>
+        <location filename="mainwindow.cpp" line="776"/>
         <source>You cannot create user with no password. If you still want this, you can change password after installation.</source>
-        <translation type="unfinished">Вы не можете создавать пользователей без пароля. Если вы все еще хотите этого, вы можете изменить пароль после установки.</translation>
+        <translation>Вы не можете создать пользователя с пустым паролем. Если вы по прежнему хотите пустой пароль, вы сможете сделать это после установки.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="705"/>
+        <location filename="mainwindow.cpp" line="805"/>
+        <location filename="mainwindow.cpp" line="809"/>
+        <source>Invalid mount point</source>
+        <translation>Некорректная точка монтирования</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="805"/>
+        <source>Mount point &apos;%1&apos; is invalid: it should be an absolute path. For more information, see help.</source>
+        <translation>Точка монтирования &apos;%1&apos; некорректна: это должен быть абсолютный путь. Для дополнительной информации смотрите справку.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="809"/>
+        <source>Mount point &apos;%1&apos; contains invalid characters. For more information, see help.</source>
+        <translation>Точка монтирования &apos;%1&apos; содержит недопустимые символы. Для дополнительной информации смотрите справку.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="821"/>
+        <source>Unformatted filesystem mount</source>
+        <translation>Неотформатированная файловая система</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="821"/>
+        <source>You are attempting to mount an unformatted partition to &apos;%1&apos;. It is impossible, please mark it to format or leave unused.</source>
+        <translation>Вы пытаетесь подключить неотформатированный раздел в &apos;%1&apos;. Это невозможно: либо назначьте форматирование этого раздела, либо не используйте его.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="838"/>
         <source>No swap partition</source>
-        <translation type="unfinished">Нет раздела подкачки</translation>
+        <translation>Отсутствует раздел подкачки</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="705"/>
+        <location filename="mainwindow.cpp" line="838"/>
         <source>You didn&apos;t specified swap partition. It is OK for systems with lots of RAM (2Gb or more), but you will be unable to use suspend-to-disk. Are you sure?</source>
-        <translation type="unfinished">Вы не указали раздел.подкачки. Это нормально для систем с большим объемом оперативной памяти (2 ГБ или более), но вы не сможете использовать спящий режим. Вы уверены?</translation>
+        <translation>Вы не указали раздел подкачки (swap). Это допустимо для систем с большим количеством оперативной памяти (2Gb или более), в противном случае вы рискуете столкнуться с нехваткой памяти. В любом случае вы лишитесь возможности использовать засыпание на диск (suspend-to-disk). Вы уверены?</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="707"/>
+        <location filename="mainwindow.cpp" line="840"/>
         <source>No root partition</source>
-        <translation type="unfinished">Не указан корневой раздел</translation>
+        <translation>Отсутствует корневой раздел</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="707"/>
+        <location filename="mainwindow.cpp" line="840"/>
         <source>You didn&apos;t specified root partition. Without this, system cannot be installed.</source>
-        <translation type="unfinished">Вы не указли корневой раздел. Без этого, система не может быть установлена.</translation>
+        <translation>Вы не указали корневой раздел. Без него система не может быть установлена.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="718"/>
+        <location filename="mainwindow.cpp" line="845"/>
+        <source>Unsupported root filesystem</source>
+        <translation>Неподдерживаемая корневая файловая система</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="845"/>
+        <source>Unfortunately, GRUB boot loader cannot be installed on %1 filesystem.
+You can ignore this warning if you really know what are you going to do. 
+Do you want to make your system bootable without red-eye horror?</source>
+        <translation>К сожалению, загрузчик GRUB не может быть установлен на файловую систему %1.
+Вы можете проигнорировать данное предупреждение, если хорошо понимаете что делаете. 
+Вы хотите сделать свою систему загружаемой?</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="855"/>
         <source>Duplicate mount points found</source>
-        <translation type="unfinished">Найдены повторяющиеся точки монтирования</translation>
+        <translation>Обнаружены совпадающие точки монтирования</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="718"/>
+        <location filename="mainwindow.cpp" line="855"/>
         <source>Duplicate mount points found: %1</source>
-        <translation type="unfinished">Найдены повторяющиеся точки монтирования: %1</translation>
+        <translation>Обнаружены совпадающие точки монтирования: %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="730"/>
-        <location filename="mainwindow.cpp" line="735"/>
+        <location filename="mainwindow.cpp" line="867"/>
+        <source>Not enough space</source>
+        <translation>Недостаточно места на диске</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="867"/>
+        <source>Size of root filesystem may be not enough for this installation type. You need to have at least %1 of space. Note that this check doesn&apos;t respect complex partitioning schemes such as separate /usr, so you can ignore this warning if you sure.
+
+Do you want to re-check your partitioning scheme?</source>
+        <translation>Размер корневого раздела может быть недостаточным для выбранного типа установки. Вам необходимо хотя бы %1. Обратите внимание, что данная проверка не учитывает сложные схемы разбиения (например, с отдельным /usr), поэтому вы можете игнорировать данное предупреждение, если уверены в этом.
+
+Вы хотите исправить схему использования диска?</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="877"/>
+        <location filename="mainwindow.cpp" line="882"/>
         <source>Network settings error</source>
-        <translation type="unfinished">Ошибка в настойках сети</translation>
+        <translation>Ошибка в сетевых настройках</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="730"/>
+        <location filename="mainwindow.cpp" line="877"/>
         <source>Please specify hostname</source>
-        <translation type="unfinished">Пожалуйста, укажите имя хоста</translation>
+        <translation>Пожалуйста, укажите имя хоста</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="735"/>
+        <location filename="mainwindow.cpp" line="882"/>
         <source>Please specify network name</source>
-        <translation type="unfinished">Пожалуйста, укажите сетевое имя</translation>
+        <translation>Пожалуйста, укажите имя сети</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="793"/>
+        <location filename="mainwindow.cpp" line="940"/>
         <source>Show release notes</source>
-        <translation type="unfinished">Информация о выпуске</translation>
+        <translation>Показать заметки о выпуске</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="797"/>
+        <location filename="mainwindow.cpp" line="944"/>
         <source>Hide release notes</source>
-        <translation type="unfinished">Спрятать информацию о выпуске</translation>
+        <translation>Скрыть заметки о выпуске</translation>
     </message>
 </context>
 <context>
     <name>MainWindowClass</name>
     <message>
-        <location filename="mainwindow.ui" line="452"/>
+        <location filename="mainwindow.ui" line="37"/>
         <source>AgiliaLinux Setup</source>
-        <translation type="unfinished">Установка AgilaiLinux</translation>
+        <translation>Установка AgiliaLinux</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="554"/>
+        <location filename="mainwindow.ui" line="139"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 10.4 Release Notes&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 10.4 RC2 Release Notes&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This is a beta release and isn&apos;t intended for any sort of everyday use. It contains bugs, possible - critical and dangerous ones. However, we hope you will find it useful.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
-&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;New GUI-based installer&lt;/li&gt;
-&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;OpenRC-based init system&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;AgiliaLinux is based on MOPSLinux 7.0 release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 10.4 Информация о выпуске&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;Заметки о выпуске: AgiliaLinux 10.4 RC2&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Внимание! Данный выпуск является бета-версией и предназначен в первую очередь для тестирования. &lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
-&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Новый графический установщик&lt;/li&gt;
-&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Система инициализациии OpenRC&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;AgiliaLinux основан на MOPSLinux 7.0.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="583"/>
+        <location filename="mainwindow.ui" line="168"/>
         <source>Show release notes</source>
-        <translation type="unfinished">Показать информацию о выпуске</translation>
+        <translation>Показать заметки о выпуске</translation>
     </message>
     <message>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Language selection&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="obsolete">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Выбор языка&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>Before starting setup process, choose your preferred language. This language will be used both in installer and your new system.</source>
-        <translation type="obsolete">Перед началом процесса настройки, выберите нужный язык. Этот язык будет использоваться как в программе установки, так и в новой системе.</translation>
-    </message>
-    <message>
-        <source>English</source>
-        <translation type="obsolete">Английский</translation>
-    </message>
-    <message>
-        <source>Russian</source>
-        <translation type="obsolete">Русский</translation>
-    </message>
-    <message>
-        <source>Ukrainian</source>
-        <translation type="obsolete">Украинский</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="624"/>
+        <location filename="mainwindow.ui" line="209"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;License&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Лицензия&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="683"/>
+        <location filename="mainwindow.ui" line="268"/>
         <source>This operating system distributes under terms of open license. You should accept these terms to continue.</source>
-        <translation type="unfinished">Эта операционная система распространяется по условиям открытой лицензии. Вы должны принять эти условия, чтобы продолжить.</translation>
+        <translation>Данная операционная система распространяется на условиях свободной лицензии. Вы должны принять ее условия прежде чем продолжить.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="735"/>
+        <location filename="mainwindow.ui" line="320"/>
         <source>I accept</source>
-        <translation type="unfinished">Я согласен</translation>
+        <translation>Я принимаю</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="763"/>
+        <location filename="mainwindow.ui" line="348"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Network settings&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Настройки сети&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Настройка сети&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="822"/>
+        <location filename="mainwindow.ui" line="407"/>
         <source>Even if your computer is not connected to any network, you should setup it properly. Many programs require so-called &apos;loopback&apos; connection and need to know computer name (&apos;hostname&apos;).</source>
-        <translation type="unfinished">Даже если ваш компьютер не подключен к сети, необходимо настроить его правильно. Многие программы требуют настроенного &quot;loopback&quot; соединения, необходимо указать имя компьютера (&apos;имя хоста&apos;).</translation>
+        <translation>Даже если ваш компьютер полностью автономен, вы должны указать настройки сети. Многие программы нуждаются в так называемом &apos;loopback&apos;-соединении, и должны знать сетевое имя компьютера (&apos;hostname&apos;).</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="838"/>
+        <location filename="mainwindow.ui" line="423"/>
         <source>Hostname:</source>
-        <translation type="unfinished">Имя хоста:</translation>
+        <translation>Имя хоста:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="851"/>
+        <location filename="mainwindow.ui" line="436"/>
         <source>agilia</source>
-        <translation type="unfinished">agilia</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="858"/>
+        <location filename="mainwindow.ui" line="443"/>
         <source>Network name:</source>
-        <translation type="unfinished">Сетевое имя:</translation>
+        <translation>Имя сети:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="871"/>
+        <location filename="mainwindow.ui" line="456"/>
         <source>example.net</source>
-        <translation type="unfinished">example.net</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="922"/>
+        <location filename="mainwindow.ui" line="507"/>
         <source>Preferred network management program:</source>
-        <translation type="unfinished">Популярные программы настройки сети:</translation>
+        <translation>Предпочитаемая система управления сетью:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="939"/>
+        <location filename="mainwindow.ui" line="524"/>
         <source>NetworkManager (recommended, best tool for desktop usage)</source>
-        <translation type="unfinished">NetworkManager (рекомендуемый выбор)</translation>
+        <translation>NetworkManager (рекомендуется для десктоп-применения)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="949"/>
+        <location filename="mainwindow.ui" line="534"/>
         <source>Wicd (in case you don&apos;t like NM but still want to have GUI)</source>
-        <translation type="unfinished">Wicd (В случае, если вы по каким-либо причинам не желаете использовать NM)</translation>
+        <translation>Wicd (для тех кто не любит NM но хочет иметь GUI)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="956"/>
+        <location filename="mainwindow.ui" line="541"/>
         <source>Netconfig (manual network management)</source>
-        <translation type="unfinished">Netconfig (ручная настройка сети)</translation>
+        <translation>Netconfig (ручное управление сетью)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="990"/>
+        <location filename="mainwindow.ui" line="575"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Package source&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Источник пакетов&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1049"/>
+        <location filename="mainwindow.ui" line="634"/>
         <source>Agilia is flexible. You can choose where to get packages to install:</source>
-        <translation type="unfinished">AgiliaLinux -  гибкая система. Вы можете выбрать, где взять пакеты для установки:</translation>
+        <translation>Выберите источник пакетов для установки:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1085"/>
+        <location filename="mainwindow.ui" line="670"/>
         <source>DVD disc</source>
-        <translation type="unfinished">Диск DVD</translation>
+        <translation>DVD диск</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1123"/>
+        <location filename="mainwindow.ui" line="708"/>
         <source>Setup will use an installation DVD in your drive</source>
-        <translation type="unfinished">Использовать установочный образ DVD</translation>
+        <translation>Программа установки будет использовать установочный DVD в приводе</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1141"/>
+        <location filename="mainwindow.ui" line="726"/>
         <source>ISO image on HDD</source>
-        <translation type="unfinished">Образ ISO на HDD</translation>
+        <translation>ISO-образ диска</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1176"/>
+        <location filename="mainwindow.ui" line="761"/>
         <source>You can specify downloaded ISO image on your hard drive or USB flash</source>
-        <translation type="unfinished">Вы можете указать загруженный ISO образ на вашем жестком диске или флешке</translation>
+        <translation>Вы можете выбрать скачанный файл ISO-образа, расположенный на жестком диске или USB-флешке</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1194"/>
+        <location filename="mainwindow.ui" line="779"/>
         <source>Official online repository</source>
-        <translation type="unfinished">Официальный онлайн репозиторий</translation>
+        <translation>Официальный сетевой репозиторий</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1229"/>
+        <location filename="mainwindow.ui" line="814"/>
         <source>Get packages directly from internet</source>
-        <translation type="unfinished">Получить пакеты непосредственно из сети Интернет</translation>
+        <translation>Установка по сети - самые свежие версии пакетов напрямую из репозиториев в интернете</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1250"/>
+        <location filename="mainwindow.ui" line="835"/>
         <source>Custom repository set...</source>
-        <translation type="unfinished">Пользовательский или неофициальный репозиторий...</translation>
+        <translation>Другой набор репозиториев...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1288"/>
+        <location filename="mainwindow.ui" line="873"/>
         <source>You can specify repository on your local hard drive, in your LAN, custom online repository, or even combine all kinds of package sources</source>
-        <translation type="unfinished">Вы можете указать хранилище на локальном жестком диске, в локальной сети, пользовательском хранилище в Интернет, или даже объединить все виды источников пакетов</translation>
+        <translation>Вы можете указать репозитории на жестком диске, в вашей локальной сети, любой онлайн-репозиторий, причем в любых количествах и комбинациях</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1381"/>
+        <location filename="mainwindow.ui" line="966"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -502,490 +535,484 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:36pt; font-weight:600;&quot;&gt;Please wait&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Setup is loading repository data, it can take some time&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Tahoma&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:36pt; font-weight:600;&quot;&gt;Пожалуйста, подождите&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:36pt; font-weight:600;&quot;&gt;Подождите&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Программа установки загружает данные из репозитория, это может занять некоторое время&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Программа установки загружает информацию из репозиториев, это займет некоторое время&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1416"/>
+        <location filename="mainwindow.ui" line="1001"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Installation type&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Тип установки&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Вариант установки&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1475"/>
+        <location filename="mainwindow.ui" line="1060"/>
         <source>Please, choose your preferred package set. Based on your choice, you can get different system configurations.</source>
-        <translation type="unfinished">Пожалуйста, выберите нужный набор пакетов. В зависимости от вашего выбора, вы можете получить различные конфигурации системы.</translation>
+        <translation>Пожалуйста, выберите предпочитаемый вами набор пакетов. На основе данного выбора, вы можете получить различные конфигурации системы.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1521"/>
+        <location filename="mainwindow.ui" line="1100"/>
+        <source>Setup type description will be here</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="1116"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Alternatives&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Альтернативы&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1580"/>
+        <location filename="mainwindow.ui" line="1175"/>
         <source>Some packages have alternate builds. You can choose them by selecting appropriate checkboxes. If not sure - just leave it as is.</source>
-        <translation type="unfinished">Некоторые пакеты имеют альтернативные версии. Вы можете выбрать их, выбрав соответствующие флажки. Если вы не уверены - просто оставьте все как есть.</translation>
+        <translation>Некоторые пакеты имеют альтернативные сборки.Если хотите, вы можете их выбрать. Если не уверены - оставьте как есть.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1606"/>
+        <location filename="mainwindow.ui" line="1201"/>
         <source>Cleartype-patched fonts</source>
-        <translation type="unfinished">Шрифты с патчами Cleartype</translation>
+        <translation>Шрифты с патчами cleartype</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1613"/>
+        <location filename="mainwindow.ui" line="1208"/>
         <source>BFS kernel</source>
-        <translation type="unfinished">Ядро с планировщиком BFS</translation>
+        <translation>Ядро с BFS-планировщиком</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1639"/>
+        <location filename="mainwindow.ui" line="1234"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;NVIDIA drivers&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Драйвера NVIDIA&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1698"/>
+        <location filename="mainwindow.ui" line="1293"/>
         <source>Installer detected NVIDIA video card in your hardware. If you want accelerated graphics and 3D, select driver appropriate to your card. By default, opensource driver is used, but it has no acceleration at all.</source>
-        <translation type="unfinished">Установщик обнаружил видеокарту NVIDIA. Если вы желаете использовать возможности 3D ускорения графики, выберите драйвер, соответствующий вашей видеокарте. По умолчанию используется драйвер с открытыми исходными кодами, оденако он не поддерживает 3D ускорение.</translation>
+        <translation>Программа установки обнаружила видеокарту NVIDIA в вашем компьютере. Если вы хотите аппаратное ускорение графики и 3D, выберите соответствующий вашей карте драйвер. По умолчанию используется открытый драйвер, однако он не поддерживает какого-либо ускорения вовсе.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1724"/>
+        <location filename="mainwindow.ui" line="1319"/>
         <source>190.xx (GeForce 6 and later)</source>
-        <translation type="unfinished">190.xx (GeForce 6 и более поздние)</translation>
+        <translation>190.xx (GeForce 6 и новее)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1734"/>
+        <location filename="mainwindow.ui" line="1329"/>
         <source>173.xx (GeForce FX)</source>
-        <translation type="unfinished">173.xx (GeForce FX)</translation>
+        <translation>173.xx (GeForce FX)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1741"/>
+        <location filename="mainwindow.ui" line="1336"/>
         <source>96.xx (GeForce 4 and older)</source>
-        <translation type="unfinished">96.xx (GeForce 4 и более поздние)</translation>
+        <translation>96.xx (GeForce 4 и более старые)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1748"/>
+        <location filename="mainwindow.ui" line="1343"/>
         <source>Use open source driver (nv)</source>
-        <translation type="unfinished">Использовать открытый драйвер (nv)</translation>
+        <translation>Использовать открытый драйвер (nv)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1777"/>
+        <location filename="mainwindow.ui" line="1372"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Partitioning&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Разметка диска&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Разбивка диска на разделы&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1836"/>
+        <location filename="mainwindow.ui" line="1431"/>
         <source>To install system, you need to create partitions on your hard drive.</source>
-        <translation type="unfinished">Для установки системы, необходимо создать разделы на жестком диске.</translation>
+        <translation>Для установки операционной системы вы должны выделить под нее разделы на жестком диске.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1868"/>
+        <location filename="mainwindow.ui" line="1463"/>
         <source>I have already created partitions on my hard drive, don&apos;t edit</source>
-        <translation type="unfinished">Я уже создал разделы на жестком диске, не редактировать</translation>
+        <translation>Я уже создал все необходимые разделы, редактирование не требуется</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1878"/>
+        <location filename="mainwindow.ui" line="1473"/>
         <source>Edit partitions manually using gparted</source>
-        <translation type="unfinished">Редактировать разделы жесткого диска с помощью gparted</translation>
+        <translation>Редактировать разделы вручную с помощью gparted</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1893"/>
+        <location filename="mainwindow.ui" line="1488"/>
         <source>Erase all disk and create partitions automatically:</source>
-        <translation type="unfinished">Стереть содержимое всех дисков и создать разделы автоматически:</translation>
+        <translation>Очистить весь диск и создать разделы автоматически:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1934"/>
+        <location filename="mainwindow.ui" line="1529"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Mount points&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Точки монтирования&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2009"/>
-        <source>We have partitions on your hard disk drives, and now we should specify it&apos;s usage.
-
-The main partition is root partition. It is the main partition where OS will be installed. Also, you can specify mount points for other drives (such as /home, /boot) and their formatting options.
-
-Select partition and edit settings below:</source>
-        <translation type="unfinished">У нас есть разделы жесткого диска, и теперь мы должны указать их назначение.
-
-Основной раздел - корневой раздел. Это основной раздел, в котором будет установлена операционная система. Кроме того, можно указать точки монтирования для других дисков (например, /home /boot), и их параметры форматирования.
-
-Выберите раздел и укажите его настройки:</translation>
+        <location filename="mainwindow.ui" line="1604"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;We have partitions on your hard disk drives, and now we should specify it&apos;s usage.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The main partition is root partition. It is the main partition where OS will be installed. Also, you can specify mount points for other drives (such as /home, /boot) and their formatting options. &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Please note that there are some technical limits, especially about boot filesystem. For more information, see help.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Select partition and edit settings below:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Мы имеем все необходимые разделы на жестком диске, и теперь необходимо указать как их следует использовать.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Главный раздел - это корневой раздел. Он является главным разделом, куда будет установлена система. Кроме него, вы можете указать точки монтирования других разделов (например /home, /boot) и их опции форматирования. &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Учтите, что существуют некоторые технические ограничения, особенно в части загрузочных разделов. Для дополнительной информации смотрите справку.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Выберите раздел и укажите настройки для него:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2059"/>
+        <location filename="mainwindow.ui" line="1659"/>
         <source>HDD</source>
-        <translation type="unfinished">HDD</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2064"/>
+        <location filename="mainwindow.ui" line="1664"/>
         <source>/dev/sda (200 Gb SAMSUNG LX237AS)</source>
-        <translation type="unfinished">/dev/sda (200 Gb SAMSUNG LX237AS)</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2068"/>
+        <location filename="mainwindow.ui" line="1668"/>
         <source>/dev/sda1 (300 Mb): /boot, format to: ext4</source>
-        <translation type="unfinished">/dev/sda1 (300 Mb): /boot, форматировать в: ext4</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2073"/>
+        <location filename="mainwindow.ui" line="1673"/>
         <source>/dev/sda2 (30 Gb): / (root filesystem), format to: ext4</source>
-        <translation type="unfinished">/dev/sda2 (30 Gb): / (root filesystem), форматировать в: ext4</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2078"/>
+        <location filename="mainwindow.ui" line="1678"/>
         <source>/dev/sda3 (169.7 Gb): /home, keep data</source>
-        <translation type="unfinished">/dev/sda3 (169.7 Gb): /home, сохранить данные</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2083"/>
+        <location filename="mainwindow.ui" line="1683"/>
         <source>/dev/sda4 (2 Gb): swap</source>
-        <translation type="unfinished">/dev/sda4 (2 Gb): swap</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2089"/>
+        <location filename="mainwindow.ui" line="1689"/>
         <source>/dev/sdb (80 Gb MAXTOR MR3180RA)</source>
-        <translation type="unfinished">/dev/sdb (80 Gb MAXTOR MR3180RA)</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2093"/>
+        <location filename="mainwindow.ui" line="1693"/>
         <source>/dev/sdb1 (10Gb): unused</source>
-        <translation type="unfinished">/dev/sdb1 (10Gb): unused</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2098"/>
+        <location filename="mainwindow.ui" line="1698"/>
         <source>/dev/sdb2 (70Gb): unused</source>
-        <translation type="unfinished">/dev/sdb2 (70Gb): unused</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2111"/>
+        <location filename="mainwindow.ui" line="1711"/>
         <source>Mount options</source>
-        <translation type="unfinished">Опции монтирования</translation>
+        <translation>Опции монтирования</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2117"/>
+        <location filename="mainwindow.ui" line="1717"/>
         <source>Do not use</source>
-        <translation type="unfinished">Не использовать</translation>
+        <translation>Не использовать</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2127"/>
+        <location filename="mainwindow.ui" line="1727"/>
         <source>/ (Root filesystem)</source>
-        <translation type="unfinished">/ (Корневая файловая система)</translation>
+        <translation>/ (корневой раздел)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2134"/>
+        <location filename="mainwindow.ui" line="1734"/>
         <source>Swap</source>
-        <translation type="unfinished">Раздел подкачки</translation>
+        <translation>Раздел подкачки</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2143"/>
+        <location filename="mainwindow.ui" line="1743"/>
         <source>Mount as:</source>
-        <translation type="unfinished">Монтировать как:</translation>
+        <translation>Монтировать как:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2171"/>
+        <location filename="mainwindow.ui" line="1771"/>
         <source>Format options</source>
-        <translation type="unfinished">Опции форматирования</translation>
+        <translation>Опции форматирования</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2177"/>
+        <location filename="mainwindow.ui" line="1777"/>
         <source>Do not format (keep data)</source>
-        <translation type="unfinished">Не форматировать (сохранить данные)</translation>
+        <translation>Не форматировать (сохранить данные)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2189"/>
+        <location filename="mainwindow.ui" line="1789"/>
         <source>Format to:</source>
-        <translation type="unfinished">Форматировать в:</translation>
+        <translation>Форматировать в:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2203"/>
+        <location filename="mainwindow.ui" line="1803"/>
         <source>ext4</source>
-        <translation type="unfinished">ext4</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2208"/>
+        <location filename="mainwindow.ui" line="1808"/>
         <source>ext3</source>
-        <translation type="unfinished">ext3</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2213"/>
+        <location filename="mainwindow.ui" line="1813"/>
         <source>ext2</source>
-        <translation type="unfinished">ext2</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2218"/>
+        <location filename="mainwindow.ui" line="1818"/>
         <source>xfs</source>
-        <translation type="unfinished">xfs</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2223"/>
+        <location filename="mainwindow.ui" line="1823"/>
         <source>jfs</source>
-        <translation type="unfinished">jfs</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2228"/>
+        <location filename="mainwindow.ui" line="1828"/>
         <source>reiserfs</source>
-        <translation type="unfinished">reiserfs</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2233"/>
-        <source>fat32</source>
-        <translation type="unfinished">fat32</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="2238"/>
-        <source>fat16</source>
-        <translation type="unfinished">fat16</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="2243"/>
-        <source>ntfs</source>
-        <translation type="unfinished">ntfs</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="2248"/>
+        <location filename="mainwindow.ui" line="1833"/>
         <source>btrfs</source>
-        <translation type="unfinished">btrfs</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2253"/>
+        <location filename="mainwindow.ui" line="1838"/>
         <source>nilfs2</source>
-        <translation type="unfinished">nilfs2</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2287"/>
+        <location filename="mainwindow.ui" line="1872"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Boot loader&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Системный загрузчик&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Загрузчик&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2346"/>
+        <location filename="mainwindow.ui" line="1931"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Bootloader should be installed on the disk which your BIOS uses to boot. Usually it is a first hard drive. If you are installing to USB flash drive, select it as bootloader drive, and don&apos;t forget to enable boot delay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Загрузчик должен быть установлен на диск, с которого ваш BIOS начинает загрузку. Обычно это первый жесткий диск. Если вы устанавливаете систему на флешку, выберите ее в качестве диска для загрузчика, и не забудьте включить задержку при загрузке.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="3146"/>
+        <location filename="mainwindow.ui" line="1963"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Select boot device:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Выберите диск для загрузчика:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <source>Bootloader should be installed on the disk which your BIOS uses to boot. Usually it is a first hard drive. If you are installing to USB flash drive, select it as bootloader drive, and don&apos;t forget to enable boot delay.
-
-In rare cases, you need to load additional kernel modules from initrd to make your system bootable. If you know that you have such case, enter it to appropriate field, separating by semicolon.
-
-Additional kernel options is useful if you are experiencing some sort of boot problems not relevant to HDD detection. If you successfully loaded this installer, you don&apos;t need this (unless you had to add options to boot into setup).</source>
-        <translation type="obsolete">Загрузчик должен быть установлен на диск, который ваш BIOS использует для загрузки. Обычно это первый жесткий диск. Если вы устанавливаете систему на флэш-накопитель USB, выберите его в качестве загрузчика дисков, и не забудьте включить задержку загрузки.
-
-В редких случаях, вам нужно загрузить дополнительные модули ядра. Если вы знаете, что у вас такой случай, введите их в соответствующие поля, разделяя точкой с запятой.
-
-Дополнительные параметры ядра может пригодиться, если вы испытываете какие-то проблем с загрузкой. Если вы успешно загрузили этот инсталлятор, вам не нужно добавлять параметры для загрузки.</translation>
+        <location filename="mainwindow.ui" line="1986"/>
+        <source>Framebuffer settings</source>
+        <translation>Настройки фреймбуффера</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2382"/>
-        <source>Select boot device:</source>
-        <translation type="unfinished">Выберите загрузочное устройство:</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="2403"/>
+        <location filename="mainwindow.ui" line="1994"/>
         <source>Framebuffer resolution:</source>
-        <translation type="unfinished">Разрешение фреймбуффера:</translation>
+        <translation>Разрешение фреймбуффера:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2411"/>
+        <location filename="mainwindow.ui" line="2002"/>
         <source>text</source>
-        <translation type="unfinished">текст</translation>
+        <translation>text</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2416"/>
+        <location filename="mainwindow.ui" line="2007"/>
         <source>640x480</source>
-        <translation type="unfinished">640x480</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2421"/>
+        <location filename="mainwindow.ui" line="2012"/>
         <source>800x600</source>
-        <translation type="unfinished">800x600</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2426"/>
+        <location filename="mainwindow.ui" line="2017"/>
         <source>1024x768</source>
-        <translation type="unfinished">1024x768</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2431"/>
+        <location filename="mainwindow.ui" line="2022"/>
         <source>1280x1024</source>
-        <translation type="unfinished">1280x1024</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2436"/>
+        <location filename="mainwindow.ui" line="2027"/>
         <source>1600x1200</source>
-        <translation type="unfinished">1600x1200</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2444"/>
+        <location filename="mainwindow.ui" line="2035"/>
         <source>Color depth:</source>
-        <translation type="unfinished">Глубина цвета:</translation>
+        <translation>Глубина цвета:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2452"/>
+        <location filename="mainwindow.ui" line="2043"/>
         <source>32</source>
-        <translation type="unfinished">32</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2457"/>
+        <location filename="mainwindow.ui" line="2048"/>
         <source>16</source>
-        <translation type="unfinished">16</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2462"/>
+        <location filename="mainwindow.ui" line="2053"/>
         <source>8</source>
-        <translation type="unfinished">8</translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2489"/>
+        <location filename="mainwindow.ui" line="2079"/>
         <source>Advanced boot options</source>
-        <translation type="unfinished">Дополнительные параметры загрузки</translation>
+        <translation>Дополнительные опции загрузки</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2495"/>
+        <location filename="mainwindow.ui" line="2085"/>
         <source>In some cases you need to specify additional options to make your system bootable.</source>
-        <translation type="unfinished">В некоторых случаях вам нужно будет указать дополнительные параметры загрузки ядра, чтобы ваша система могла загрузится.</translation>
+        <translation>В некоторых случаях вам необходимо указать дополнительные опции для того, чтобы ваша система загружалась.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2502"/>
+        <location filename="mainwindow.ui" line="2092"/>
         <source>Enable boot delay (check this if you&apos;re installing on USB drive)</source>
-        <translation type="unfinished">Включить задержку загрузки (необходимо в случае установки AgiliaLinux на USB флеш)</translation>
+        <translation>Включить задержку при загрузке (необходимо в случае установки на флешку или другой USB-носитель)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2509"/>
+        <location filename="mainwindow.ui" line="2099"/>
         <source>Specify additional kernel options</source>
-        <translation type="unfinished">Указать дополнительные опции ядра</translation>
+        <translation>Указать дополнительные опции ядра</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2539"/>
+        <location filename="mainwindow.ui" line="2129"/>
         <source>Add some modules to initrd</source>
-        <translation type="unfinished">Добавить модули в initrd</translation>
+        <translation>Добавить модули в initrd</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2591"/>
+        <location filename="mainwindow.ui" line="2181"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Root password&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Пароль учетной записи администратора&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Пароль root&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2650"/>
+        <location filename="mainwindow.ui" line="2240"/>
         <source>The most important user in linux is root. He is an administrator of the system, and has permissions to do everything. You will be required to use root privileges to change system-wide things, such as install programs, set up servers, change date and time, and so on. Because of said below, keeping root password in safety is very important - anyone who aquire root password will have full access to your system.</source>
-        <translation type="unfinished">Наиболее важный пользователь в системе Linux - Root. Он является администратором системы и имеет разрешение на любые действия. Административнй доступ необходим для того, чтобы устанаваливать и обновлять программы, создавать и настраивать дату и время, и так далее.</translation>
+        <translation>Самый важный пользователь в Linux - это root. Он является администратором системы и имеет право делать абсолютно всё. Вам понадобятся привилегии root для выполнения любых действий, затрагивающих всю систему целиком, таких как обновления, установка и удаление программ, настройка сервисов, изменения даты и времени, и многого другого. Поэтому, хранить пароль root в секрете очень важно - любой кто получит root-доступ на вашу машину, будет иметь к ней полный доступ.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2680"/>
+        <location filename="mainwindow.ui" line="2270"/>
         <source>Please, specify root password:</source>
-        <translatorcomment>Пожалуйста, укажите пароль администратора (root):</translatorcomment>
-        <translation type="unfinished">Пожалуйста, укажите пароль администратора (root):</translation>
+        <translation>Пожалуйста, укажите пароль root:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2694"/>
+        <location filename="mainwindow.ui" line="2284"/>
         <source>Repeat it again to verify:</source>
-        <translatorcomment>ожалуйста, повторите снова, чтобы знать как оно звучит:</translatorcomment>
-        <translation type="unfinished">Пожалуйста, повторите снова, чтобы знать как оно звучит:</translation>
+        <translation>Повторите ввод для проверки:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2737"/>
+        <location filename="mainwindow.ui" line="2327"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Create your user&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Создание нового пользователя&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Создание пользователя&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2796"/>
+        <location filename="mainwindow.ui" line="2386"/>
         <source>You need to create a user for everyday usage. Altrough it is possible to use root account for all tasks, it is very insecure and dangerous. Also, some programs explicitly refuse to start with root privileges.</source>
-        <translation type="unfinished">Вы должны создать учетную запись пользователя для повседневного использования. Несмотря на то, что вы можете использовать любую учетную запись, большинство программ таки не рабоатет.</translation>
+        <translation>Вы должны создать пользователя для повседневного использования. Несмотря на то, что технически возможно использовать аккаунт root для всех задач, это весьма опасно. Кроме того, некоторые пользовательские программы отказываются работать из-под root.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2826"/>
+        <location filename="mainwindow.ui" line="2416"/>
         <source>New username:</source>
-        <translation type="unfinished">Новое имя пользователя:</translation>
+        <translation>Имя пользователя:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2836"/>
+        <location filename="mainwindow.ui" line="2426"/>
         <source>Password:</source>
-        <translation type="unfinished">Пароль:</translation>
+        <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2850"/>
+        <location filename="mainwindow.ui" line="2440"/>
         <source>Verify password:</source>
-        <translation type="unfinished">Проверка пароля:</translation>
+        <translation>Подтвердите пароль:</translation>
     </message>
     <message utf8="true">
-        <location filename="mainwindow.ui" line="2880"/>
+        <location filename="mainwindow.ui" line="2470"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -993,110 +1020,117 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Username should contain &lt;span style=&quot; font-weight:600;&quot;&gt;only latin characters&lt;/span&gt; and &lt;span style=&quot; font-weight:600;&quot;&gt;cannot start from number&lt;/span&gt;. &lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Good examples: michael, alex2; &lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Bad examples: 1user, вася.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Tahoma&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Имя должно содержать &lt;span style=&quot; font-weight:600;&quot;&gt;only latin characters&lt;/span&gt; and &lt;span style=&quot; font-weight:600;&quot;&gt;Невозможно туда атакого напихали&lt;/span&gt;. &lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Хорошие примеры: michael, alex2; &lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Плохие работали: 1user, вася.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Имя пользователя должно содержать &lt;span style=&quot; font-weight:600;&quot;&gt;только латинские символы&lt;/span&gt; и &lt;span style=&quot; font-weight:600;&quot;&gt;не может начинаться с цифры&lt;/span&gt;. &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Правильно: michael, alex2; &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Неправильно: 1user, вася.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2916"/>
+        <location filename="mainwindow.ui" line="2506"/>
         <source>If you want to create additional users (for example, for other persons who will use this computer), check this box.</source>
-        <translation type="unfinished">Если вы хотите создать дополнительных пользователей (например, для других лиц, которые будут использовать этот компьютер), установите этот флажок.</translation>
+        <translation>Отметьте тут, если вы хотите создать дополнительных пользователей (например, для других людей, кто будет использовать этот компьютер).</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2929"/>
+        <location filename="mainwindow.ui" line="2519"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Time zone&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Часовой пояс (временная зона)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Часовой пояс&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2988"/>
+        <location filename="mainwindow.ui" line="2578"/>
         <source>Where do you live? Please specify your time zone.</source>
-        <translation type="unfinished">Где вы проживаете? Пожалуйста, укажите ваш часовой пояс.</translation>
+        <translation>Где вы живете? Пожалуйста, укажите ваш часовой пояс. Для удобства вы можете воспользоваться быстрым поиском по имени города (латиницей).</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="3028"/>
-        <source>My hardware clock stores time in UTC instead of localtime</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="3037"/>
+        <location filename="mainwindow.ui" line="2620"/>
         <source>Quick search:</source>
-        <translation type="unfinished">Быстрый и так быстрый)
-</translation>
+        <translation>Быстрый поиск:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="3059"/>
+        <location filename="mainwindow.ui" line="2632"/>
+        <source>My hardware clock stores time in UTC instead of localtime</source>
+        <translation>Часы в моем компьютере хранят время в формате UTC вместо локального времени</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="2649"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Ready to install&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translatorcomment>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Часовой пояс&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translatorcomment>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Time zone&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Tahoma&apos;; font-size:24pt; font-weight:600;&quot;&gt;Подтверждение настроек&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="3118"/>
+        <location filename="mainwindow.ui" line="2708"/>
         <source>Please, check your settings carefully. Setup is fast, recovering from errors is not. Ensure that you are not going to format partitions that contain important data such as your documents, photos, unique developments etc.</source>
-        <translation type="unfinished">Пожалуйста, тщательно проверьте настройки. Убедитесь, что вы не собираетесь форматировать разделы, которые содержат важные данные, такие как документы, фотографии, уникальные разработки т.д.</translation>
+        <translation>Пожалуйста,.внимательно проверьте выбранные настройки. Установка проходит быстро, а исправление ошибок порой невозможно. Убедитесь в том, что вы не собираетесь форматировать разделы, содержащие важную информацию, такую как ваши документы, фотографии, уникальные разработки и тому подобное.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="3159"/>
+        <location filename="mainwindow.ui" line="2736"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="2749"/>
         <source>I confirm, everything is OK</source>
-        <translation type="unfinished"></translation>
+        <translation>Всё проверено, всё впорядке - можно начинать установку</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="3181"/>
+        <location filename="mainwindow.ui" line="2771"/>
         <source>Send anonymous statistics (will be sent once at installation time)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="3213"/>
+        <location filename="mainwindow.ui" line="2803"/>
         <source>Install</source>
-        <translation type="unfinished"></translation>
+        <translation>Начать установку</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="3262"/>
+        <location filename="mainwindow.ui" line="2852"/>
         <source>Cancel installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Прервать установку</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="3277"/>
+        <location filename="mainwindow.ui" line="2867"/>
         <source>Show help (F1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Справка (F1)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="3280"/>
+        <location filename="mainwindow.ui" line="2870"/>
         <source>F1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="3305"/>
+        <location filename="mainwindow.ui" line="2895"/>
         <source>Back</source>
-        <translation type="unfinished"></translation>
+        <translation>Назад</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="3320"/>
+        <location filename="mainwindow.ui" line="2910"/>
         <source>Next</source>
-        <translation type="unfinished"></translation>
+        <translation>Далее</translation>
     </message>
 </context>
 </TS>
