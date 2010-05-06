@@ -9,20 +9,30 @@
         <translation type="unfinished">Помилка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="70"/>
+        <location filename="mainwindow.cpp" line="69"/>
         <source>Fatal error</source>
         <translation type="unfinished">Критична помилка</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="77"/>
+        <source>Really cancel installation?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="78"/>
+        <source>Installation is not yet complete. If you interrupt it at this point, you will probably get your system completely unusable. Are you sure?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindowClass</name>
     <message>
-        <location filename="mainwindow.ui" line="434"/>
+        <location filename="mainwindow.ui" line="25"/>
         <source>Agilia Linux: installing</source>
         <translation type="unfinished">Встановлення AgiliaLinux</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="455"/>
+        <location filename="mainwindow.ui" line="46"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -35,22 +45,26 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;Встановлення&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="511"/>
         <source>Please wait while setup installs Agilia Linux to your computer. It will take about 10-15 minutes on modern hardware.</source>
-        <translation type="unfinished">Будь ласка, почекайте, поки програма установки встановлює Agilia Linux на ваш комп&apos;ютер. Це займе близько 10-15 хвилин на сучасному обладнанні.</translation>
+        <translation type="obsolete">Будь ласка, почекайте, поки програма установки встановлює Agilia Linux на ваш комп&apos;ютер. Це займе близько 10-15 хвилин на сучасному обладнанні.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="642"/>
+        <location filename="mainwindow.ui" line="102"/>
+        <source>Please wait while setup installs Agilia Linux to your computer. It will take about 15-20 minutes on modern hardware.</source>
+        <translation type="unfinished">Будь ласка, почекайте, поки програма установки встановлює Agilia Linux на ваш комп&apos;ютер. Це займе близько 10-15 хвилин на сучасному обладнанні. {15-20 ?}</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="141"/>
         <source>Installing package ConsoleKit 0.7.9</source>
         <translation type="unfinished">Встановлення ConsoleKit 0.7.9</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="662"/>
+        <location filename="mainwindow.ui" line="161"/>
         <source>Extracting files</source>
         <translation type="unfinished">Розпакування файлів</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="734"/>
+        <location filename="mainwindow.ui" line="226"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -63,12 +77,12 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:28pt; font-weight:600;&quot;&gt;Встановлення завершено!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="778"/>
+        <location filename="mainwindow.ui" line="270"/>
         <source>Reboot now</source>
         <translation type="unfinished">Перезавантажити зараз</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="785"/>
+        <location filename="mainwindow.ui" line="277"/>
         <source>Exit without reboot</source>
         <translation type="unfinished">Вихід без перезавантаження</translation>
     </message>
@@ -166,102 +180,102 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Набір пакетів не містить пакетів, встановлення неможливе</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="180"/>
+        <location filename="thread.cpp" line="201"/>
         <source>Validating queue</source>
         <translation type="unfinished">Перевірка черги</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="188"/>
+        <location filename="thread.cpp" line="209"/>
         <source>Commit failed: probably dependency errors</source>
         <translation type="unfinished">Виконати не вдалося: можливо, помилки залежностей</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="196"/>
+        <location filename="thread.cpp" line="217"/>
         <source>Formatting /dev/%2</source>
         <translation type="unfinished">Форматування /dev/%2</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="206"/>
+        <location filename="thread.cpp" line="227"/>
         <source>Creating swapspace</source>
         <translation type="unfinished">Створення розділу підкачки</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="207"/>
+        <location filename="thread.cpp" line="228"/>
         <source>Creating swap in %1</source>
         <translation type="unfinished">Створення розділу підкачки в %1</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="215"/>
+        <location filename="thread.cpp" line="236"/>
         <source>Activating swap</source>
         <translation type="unfinished">Активація розділу підкачки</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="216"/>
+        <location filename="thread.cpp" line="237"/>
         <source>Activating swap in %1</source>
         <translation type="unfinished">Активація розділу підкачки в %1</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="222"/>
+        <location filename="thread.cpp" line="243"/>
         <source>Formatting partitions</source>
         <translation type="unfinished">Форматування розділів</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="252"/>
+        <location filename="thread.cpp" line="273"/>
         <source>Mounting partitions</source>
         <translation type="unfinished">Монтування розділів</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="314"/>
+        <location filename="thread.cpp" line="335"/>
         <source>Failed to mount partition %1</source>
         <translation type="unfinished">Помилка монтування розділу %1</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="323"/>
+        <location filename="thread.cpp" line="344"/>
         <source>Moving database</source>
         <translation type="unfinished">Переміщення бази даних</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="326"/>
+        <location filename="thread.cpp" line="347"/>
         <source>An error occured while moving database to hard drive</source>
         <translation type="unfinished">Сталася помилка при переміщенні бази даних на жорсткий диск</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="337"/>
+        <location filename="thread.cpp" line="358"/>
         <source>Installing packages</source>
         <translation type="unfinished">Встановлення пакетів</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="338"/>
+        <location filename="thread.cpp" line="359"/>
         <source>Preparing to installation</source>
         <translation type="unfinished">Підготовка до встановлення</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="474"/>
+        <location filename="thread.cpp" line="517"/>
         <source>Creating initrd</source>
         <translation type="unfinished">Створення initrd</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="556"/>
+        <location filename="thread.cpp" line="599"/>
         <source>Installing GRUB2 to %1</source>
         <translation type="unfinished">Встановлення GRUB2 до %1</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="664"/>
+        <location filename="thread.cpp" line="710"/>
         <source>Generating font index</source>
         <translation type="unfinished">Створення індексу шрифтів</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="668"/>
+        <location filename="thread.cpp" line="714"/>
         <source>Generating font cache</source>
         <translation type="unfinished">Створення кешу шрифтів</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="690"/>
+        <location filename="thread.cpp" line="759"/>
         <source>Install complete, running post-install actions</source>
         <translation type="unfinished">Встановлення завершено, виконання службових дій</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="814"/>
+        <location filename="thread.cpp" line="887"/>
         <source>Unmounting filesystems and syncing disks</source>
         <translation type="unfinished">Відключення розділів та синхронізація дисків</translation>
     </message>
