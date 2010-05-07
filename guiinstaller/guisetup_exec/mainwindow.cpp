@@ -54,6 +54,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(ui->rebootNowButton, SIGNAL(clicked()), this, SLOT(reboot()));
 	connect(ui->rebootLaterButton, SIGNAL(clicked()), qApp, SLOT(quit()));
 
+	connect(ui->showLogButton, SIGNAL(clicked()), this, SLOT(showLog()));
+
 	// GTFO mounted cd :)
 	system("umount /var/log/mount");
 
@@ -114,4 +116,8 @@ void MainWindow::minimizeWindow() {
 
 void MainWindow::maximizeWindow() {
 	setWindowState(Qt::WindowMaximized);
+}
+
+void MainWindow::showLog() {
+	system("xterm -T 'Installation log' -e tail -f /var/log/guisetup_exec.log &");
 }

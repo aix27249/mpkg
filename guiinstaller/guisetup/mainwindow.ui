@@ -1706,7 +1706,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_22">
           <item>
-           <widget class="QGroupBox" name="groupBox_2">
+           <widget class="QGroupBox" name="mountOptionsGroupBox">
             <property name="title">
              <string>Mount options</string>
             </property>
@@ -1766,7 +1766,7 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
           <item>
-           <widget class="QGroupBox" name="groupBox_3">
+           <widget class="QGroupBox" name="formatOptionsGroupBox">
             <property name="title">
              <string>Format options</string>
             </property>

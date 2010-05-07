@@ -412,6 +412,9 @@ void MainWindow::updateMountsGUI(QTreeWidgetItem *nextItem, QTreeWidgetItem *pre
 			break;
 		}
 	}
+	ui->mountOptionsGroupBox->setEnabled(true);
+	ui->formatOptionsGroupBox->setEnabled(true);
+
 
 	QString newdata, formatdata;
 	if (prevMountPtr && prevItem) {
@@ -444,6 +447,10 @@ void MainWindow::updateMountsGUI(QTreeWidgetItem *nextItem, QTreeWidgetItem *pre
 		else {
 			ui->mountNoFormatRadioButton->setChecked(true);
 		}
+	}
+	else {
+		ui->mountOptionsGroupBox->setEnabled(false);
+		ui->formatOptionsGroupBox->setEnabled(false);
 	}
 	lockUIUpdate = false;
 }
@@ -609,6 +616,7 @@ void MainWindow::getCustomSetupVariants(const vector<string>& rep_list) {
 		path = rep_list[z];
 		CommonGetFile(path + "/setup_variants.list", tmpfile);
 		vector<string> list = ReadFileStrings(tmpfile);
+		printf("Received %d setup variants\n", list.size());
 		vector<CustomPkgSet> ret;
 		for (size_t i=0; i<list.size(); ++i) {
 			CommonGetFile(path + "/setup_variants/" + list[i] + ".desc", "/tmp/setup_variants/" + list[i] + ".desc");
@@ -629,6 +637,7 @@ void MainWindow::loadSetupVariants() {
 	//loadSetupVariantsThread->rep_location = rep_location;
 	loadSetupVariantsThread->start();
 	ui->nextButton->setEnabled(false);
+	ui->backButton->setEnabled(false);
 }
 
 void MainWindow::showSetupVariantDescription(int index) {
@@ -643,14 +652,16 @@ void MainWindow::receiveLoadSetupVariants(bool success) {
 	if (!success) {
 		if (settings->value("pkgsource")=="dvd") {
 			if (QMessageBox::question(this, tr("DVD detection failed"), tr("Failed to detect DVD drive. Be sure you inserted installation DVD into this. Retry?"), QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
-				loadSetupVariants();
+				backButtonClick();
+				//loadSetupVariants();
 				return;
 			}
 			else qApp->quit();
 		}
 		else {
 			if (QMessageBox::question(this, tr("Repository connection failed"), tr("Failed to connect to repository. If you trying to access network repository, check your network settings. Retry?"), QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
-				loadSetupVariants();
+				backButtonClick();
+				//loadSetupVariants();
 				return;
 			}
 			else qApp->quit();
@@ -663,7 +674,12 @@ void MainWindow::receiveLoadSetupVariants(bool success) {
 
 	mpkg *core = new mpkg(false);
 	vector<string> rList = core->get_repositorylist();
+	printf("Got %d repositories\n", rList.size());
+	for (size_t i=0; i<rList.size(); ++i) {
+		printf("Repo %d: %s\n", i, rList[i].c_str());
+	}
 	getCustomSetupVariants(rList);
+	system("umount /var/log/mount");
 	ui->setupVariantsListWidget->clear();
 	QListWidgetItem *item;
 	for (size_t i=0; i<customPkgSetList.size(); ++i) {
@@ -671,6 +687,7 @@ void MainWindow::receiveLoadSetupVariants(bool success) {
 	}
 	delete core;
 	ui->nextButton->setEnabled(true);
+	ui->backButton->setEnabled(true);
 	nextButtonClick();
 }
 
