@@ -25,6 +25,7 @@ void LoadSetupVariantsThread::run() {
 	if (pkgsource=="dvd") {
 		mountDVD();
 		cacheCdromIndex(volname, rep_location);
+		umountDVD();
 	}
 	core->set_repositorylist(rList, dlist);
 	core->update_repository_data();
@@ -41,6 +42,7 @@ void LoadSetupVariantsThread::run() {
 
 QString LoadSetupVariantsThread::detectDVDDevice(QString isofile) {
 	if (!dvdDevice.isEmpty()) return dvdDevice;
+	system("umount /var/log/mount");
 	string cdlist = get_tmp_file();
 	vector<string> ret, mOptions;
 	if (isofile.isEmpty()) {

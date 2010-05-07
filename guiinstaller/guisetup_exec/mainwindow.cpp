@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	ui->setupUi(this);
 	//setWindowState(Qt::WindowMaximized);
 	show();
-	changePhoto();
+	//changePhoto();
 	connect(&thread, SIGNAL(setSummaryText(const QString &)), ui->currentSummaryLabel, SLOT(setText(const QString &)), Qt::QueuedConnection);
 	connect(&thread, SIGNAL(setDetailsText(const QString &)), ui->currentDetailsLabel, SLOT(setText(const QString &)), Qt::QueuedConnection);
 	connect(&thread, SIGNAL(setProgress(int)), ui->progressBar, SLOT(setValue(int)), Qt::QueuedConnection);
@@ -53,6 +53,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 	connect(ui->rebootNowButton, SIGNAL(clicked()), this, SLOT(reboot()));
 	connect(ui->rebootLaterButton, SIGNAL(clicked()), qApp, SLOT(quit()));
+
+	// GTFO mounted cd :)
+	system("umount /var/log/mount");
+
 	currentPhoto = 0;
 	//timer = new QTimer;
 	//timer->setInterval(20000);
