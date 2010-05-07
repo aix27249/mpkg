@@ -15,6 +15,7 @@ ProgressData::ProgressData()
 	downloadAction=false;
 	eventHandler = NULL;
 	lastChangedItem=-1;
+	sendEvents = true;
 }
 
 ProgressData::~ProgressData(){}
@@ -26,12 +27,23 @@ void ProgressData::unregisterEventHandler() {
 	eventHandler=NULL;
 }
 void ProgressData::callEvent() {
-	if (eventHandler<=0) return;
+	if (eventHandler<=0 || !sendEvents) return;
 	ItemState a;
 	a.name=getItemName(lastChangedItem);
 	a.currentAction=getItemCurrentAction(lastChangedItem);
 	a.progress=10000.0f*(getItemProgress(lastChangedItem)/getItemProgressMaximum(lastChangedItem))/112;
 	a.totalProgress=10000.0f*(getTotalProgress()/getTotalProgressMax())/112;
+	int64_t totalMem = 0;
+	for (size_t i=0; i<itemName.size(); ++i) {
+		totalMem += itemName[i].size();
+	}
+	for (size_t i=0; i<itemCurrentAction.size(); ++i) {
+		totalMem += itemCurrentAction[i].size();
+	}
+	
+	// This stuff is useful for debug: counts and shows events
+	//eventCounter++;
+	//fprintf(stderr, "[%d] callEvent: %s, queue size: %Ld, total mem: %Ld (%s)\n", eventCounter, a.currentAction.c_str(), itemName.size(), totalMem, humanizeSize(totalMem).c_str());
 	(*eventHandler) (a);
 }
 int ProgressData::addItem(string iName, double maxProgress, int iState)
@@ -43,11 +55,12 @@ int ProgressData::addItem(string iName, double maxProgress, int iState)
 	idleTime.push_back(0);
 	itemProgressMaximum.push_back(maxProgress);
 	itemState.push_back(iState);
-	callEvent();
+	//callEvent();
 	return itemName.size()-1;
 }
 void ProgressData::clear()
 {
+	sendEvents = false;
 	itemName.resize(0);
 	itemCurrentAction.resize(0);
 	itemProgress.resize(0);
@@ -55,7 +68,8 @@ void ProgressData::clear()
 	itemState.resize(0);
 	currentAction.clear();
 	itemChanged.resize(0);
-	callEvent();
+	sendEvents = true;
+	//callEvent();
 }
 unsigned int ProgressData::size()
 {
@@ -97,7 +111,7 @@ void ProgressData::setItemUnchanged(int itemID)
 void ProgressData::setItemName(int itemID, string name)
 {
 	if (itemName.size()>(unsigned int) itemID) itemName.at(itemID)=name;
-	setItemChanged(itemID);
+	//setItemChanged(itemID);
 }
 
 void ProgressData::setItemCurrentAction(int itemID, string action)
@@ -116,14 +130,14 @@ void ProgressData::setItemProgressMaximum(int itemID, double progress)
 {
 	if (itemProgressMaximum.size()>(unsigned int) itemID) {
 		itemProgressMaximum.at(itemID)=progress;
-		callEvent();
+		//callEvent();
 	}
 }
 
 void ProgressData::setItemState(int itemID, int state)
 {
 	if (itemState.size()>(unsigned int)itemID) itemState.at(itemID)=state;
-	setItemChanged(itemID);
+	//setItemChanged(itemID);
 }
 
 void ProgressData::increaseIdleTime(int itemID)
@@ -135,12 +149,13 @@ void ProgressData::resetIdleTime(int itemID)
 {
 	if (idleTime.size()>(unsigned int) itemID) {
 		idleTime.at(itemID)=0;
-		callEvent();
+		//callEvent();
 	}
 }
 
 int ProgressData::getIdleTime(int itemID)
 {
+	// seems that this stuff doesn't used in any sort of actions, reset them
 	if (idleTime.size()>(unsigned int) itemID) return idleTime.at(itemID);
 	else return 0;
 }
@@ -151,14 +166,15 @@ bool ProgressData::itemUpdated(int itemID)
 }
 void ProgressData::resetItems(string action, double __currentProgress, double __maxProgress, int state)
 {
+	sendEvents = false;
 	for (unsigned int i=0; i<itemName.size(); i++)
 	{
 		setItemState(i, state);
 		setItemCurrentAction(i, action);
 		setItemProgressMaximum(i, __maxProgress);
 		setItemProgress(i,__currentProgress);
-		resetIdleTime(i);
 	}
+	sendEvents = true;
 }
 void ProgressData::increaseItemProgress(int itemID)
 {

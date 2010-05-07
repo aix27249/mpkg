@@ -449,10 +449,11 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 
     				for ( unsigned int j = 0; j < item->url_list.size(); j++ ) {
 					mDebug("Downloading " + item->url_list.at(j));
-					if (prData->size()>0) {
-						prData->setItemCurrentAction(item->itemID, "Downloading");
+					/*if (prData->size()>0) {
+						prData->setItemCurrentAction(item->itemID, "Creating symlink");
 						prData->setItemState(item->itemID,ITEMSTATE_INPROGRESS);
-					}
+					}*/
+
 					if (item->url_list.at(j).find("local://")==0) {
 						if (fileLinker(item->url_list.at(j).substr(strlen("local://")), item->file)==0) {
 							if (item->usedSource!=NULL) *item->usedSource = item->url_list.at(j);
@@ -472,13 +473,19 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 						if (cdromFetch(item->url_list.at(j).substr(strlen("cdrom://")), item->file, false)==0) {
 							if (item->usedSource!=NULL) *item->usedSource = item->url_list.at(j);
 							result=CURLE_OK;
-							prData->setItemProgress(item->itemID, prData->getItemProgressMaximum(item->itemID));
-							prData->setItemState(item->itemID, ITEMSTATE_FINISHED);
+							//prData->setItemProgress(item->itemID, prData->getItemProgressMaximum(item->itemID));
+							//prData->setItemState(item->itemID, ITEMSTATE_FINISHED);
 						}
 						else result=CURLE_READ_ERROR;
 					}
 
 					else if (item->url_list.at(j).find("file://")!=0 && item->url_list.at(j).find("cdrom://")!=0) {
+						if (prData->size()>0) {
+							prData->downloadAction=true;
+							prData->setItemCurrentAction(item->itemID, _("Downloading"));
+							prData->setItemState(item->itemID,ITEMSTATE_INPROGRESS);
+						}
+
 						long long size=0;
 						if (enableDownloadResume) {
 							struct stat fStat;
@@ -571,8 +578,8 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 						}
 						item->status = DL_STATUS_OK;
 						if (prData->size()>0) {
-							prData->setItemCurrentAction(item->itemID, _("Downloading finished"));
-							prData->setItemState(item->itemID, ITEMSTATE_FINISHED);
+							//prData->setItemCurrentAction(item->itemID, _("Downloading finished"));
+							if (!setupMode) prData->setItemState(item->itemID, ITEMSTATE_FINISHED);
 						}
     						break;
 					}
@@ -585,7 +592,7 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 #endif
 							return DOWNLOAD_ERROR;
 						}
-						if (prData->size()>0) prData->setItemState(item->itemID, ITEMSTATE_FAILED);
+						if (!setupMode && prData->size()>0) prData->setItemState(item->itemID, ITEMSTATE_FAILED);
 
 						mError(_("Downloading ") + item->name + _(" is failed: error while downloading"));
     			    			is_have_error = true;

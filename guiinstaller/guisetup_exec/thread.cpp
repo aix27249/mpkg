@@ -363,6 +363,10 @@ bool SetupThread::processInstall() {
 		delete core;
 		return false;
 	}
+	emit setSummaryText(tr("Finishing installation"));
+	emit setDetailsText(tr("Exporting pkgtools-compatible database"));
+	core->exportBase();
+
 	delete core;
 	return true;
 }
@@ -758,6 +762,7 @@ export LESSCHARSET=UTF-8\n";
 bool SetupThread::postInstallActions() {
 	emit setSummaryText(tr("Install complete, running post-install actions"));
 	emit setDetailsText("");
+
 	if (settings->value("language")=="en_US.UTF-8") generateLangSh("en_US.UTF-8");
 	else if (settings->value("language")=="ru_RU.UTF-8") generateLangSh("ru_RU.UTF-8");
 	else if (settings->value("language")=="uk_UA.UTF-8") generateLangSh("uk_UA.UTF-8");

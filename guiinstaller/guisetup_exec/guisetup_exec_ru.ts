@@ -14,12 +14,22 @@
         <translation>Критическая ошибка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="77"/>
+        <location filename="mainwindow.cpp" line="70"/>
+        <source>Setup failed</source>
+        <translation>Установка завершилась неудачей</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="70"/>
+        <source>Setup failed and will exit now. You can look in /var/log/guisetup_exec.log to see what can cause failure.</source>
+        <translation>Процесс установки столкнулся с критической ошибкой и будет прерван. Вы можете взглянуть в /var/log/guisetup_exec.log, чтобы выяснить что привело к этому.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="79"/>
         <source>Really cancel installation?</source>
         <translation>Действительно прервать установку?</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="78"/>
+        <location filename="mainwindow.cpp" line="80"/>
         <source>Installation is not yet complete. If you interrupt it at this point, you will probably get your system completely unusable. Are you sure?</source>
         <translation>Установка еще не завершена. Если вы прервете ее на данном этапе, есть вероятность что вы получите полностью нерабочую систему. Вы уверены?</translation>
     </message>
@@ -250,32 +260,42 @@ p, li { white-space: pre-wrap; }
         <translation>Подготовка к установке</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="517"/>
+        <location filename="thread.cpp" line="366"/>
+        <source>Finishing installation</source>
+        <translation>Завершение установки</translation>
+    </message>
+    <message>
+        <location filename="thread.cpp" line="367"/>
+        <source>Exporting pkgtools-compatible database</source>
+        <translation>Экспорт pkgtools-совместимой базы пакетов</translation>
+    </message>
+    <message>
+        <location filename="thread.cpp" line="521"/>
         <source>Creating initrd</source>
         <translation>Создание initrd</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="599"/>
+        <location filename="thread.cpp" line="603"/>
         <source>Installing GRUB2 to %1</source>
         <translation>Установка загрузчика GRUB2 в %1</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="710"/>
+        <location filename="thread.cpp" line="714"/>
         <source>Generating font index</source>
         <translation>Генерация индекса шрифтов</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="714"/>
+        <location filename="thread.cpp" line="718"/>
         <source>Generating font cache</source>
         <translation>Генерация кеша шрифтов</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="759"/>
+        <location filename="thread.cpp" line="763"/>
         <source>Install complete, running post-install actions</source>
         <translation>Установка пакетов завершена, создание первоначальной конфигурации</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="887"/>
+        <location filename="thread.cpp" line="892"/>
         <source>Unmounting filesystems and syncing disks</source>
         <translation>Отключение файловых систем и синхронизация дисков</translation>
     </message>

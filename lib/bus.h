@@ -78,6 +78,8 @@ class ProgressData
 		
 		vector<int> idleTime;
 		void (*eventHandler) (ItemState);
+		bool sendEvents;
+		int eventCounter;
 		
 		string currentAction;
 		int lastChangedItem;

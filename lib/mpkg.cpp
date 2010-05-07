@@ -1122,10 +1122,10 @@ int mpkgDatabase::commit_actions()
 				skip=true;
 			}
 
-			pData.setItemState(install_list[i].itemID, ITEMSTATE_INPROGRESS);
+			/*pData.setItemState(install_list[i].itemID, ITEMSTATE_INPROGRESS);
 			pData.setItemCurrentAction(install_list[i].itemID, _("Checking package cache"));
 			pData.setItemProgressMaximum(install_list[i].itemID, 1);
-			pData.setItemProgress(install_list[i].itemID, 0);
+			pData.setItemProgress(install_list[i].itemID, 0);*/
 	
 		
 			// Clear broken symlinks
@@ -1137,8 +1137,8 @@ int mpkgDatabase::commit_actions()
 				needFullDownload[i]=!tryGetDelta(install_list.get_package_ptr(i));
 			}
 			if (needFullDownload[i]) {
-				if (!skip) pData.setItemCurrentAction(install_list[i].itemID, _("not cached"));
-				else pData.setItemCurrentAction(install_list[i].itemID, _("check skipped"));
+				//if (!skip) pData.setItemCurrentAction(install_list[i].itemID, _("not cached"));
+				//else pData.setItemCurrentAction(install_list[i].itemID, _("check skipped"));
 
 				itemLocations.clear();
 				
@@ -1160,10 +1160,12 @@ int mpkgDatabase::commit_actions()
 				tmpDownloadItem.url_list = itemLocations;
 				downloadQueue.push_back(tmpDownloadItem);
 			}
-			else pData.setItemCurrentAction(install_list[i].itemID, _("cached"));
+			//else pData.setItemCurrentAction(install_list[i].itemID, _("cached"));
 	
-			pData.increaseItemProgress(install_list[i].itemID);
-			pData.setItemState(install_list[i].itemID, ITEMSTATE_FINISHED);
+			if (!setupMode) {
+				pData.increaseItemProgress(install_list[i].itemID);
+				pData.setItemState(install_list[i].itemID, ITEMSTATE_FINISHED);
+			}
 		}
 		ncInterface.setProgress(0);
 		actionBus.setActionState(ACTIONID_CACHECHECK);
@@ -1176,7 +1178,7 @@ download_process:
 		while(do_download)
 		{
 			do_download = false;
-			pData.downloadAction=true;
+			//pData.downloadAction=true;
 
 			if (CommonGetFileEx(downloadQueue, &currentItem) == DOWNLOAD_ERROR)
 			{
@@ -1250,15 +1252,15 @@ installProcess:
 			//else say(_("Checking MD5 for %s\n"), install_list[i].get_filename().c_str());
 			msay(_("Checking md5 of downloaded files: ") + install_list[i].get_name());
 	
-			pData.setItemState(install_list[i].itemID, ITEMSTATE_INPROGRESS);
+			/*pData.setItemState(install_list[i].itemID, ITEMSTATE_INPROGRESS);
 			pData.setItemCurrentAction(install_list[i].itemID, _("Checking md5"));
 			pData.setItemProgressMaximum(install_list[i].itemID, 1);
-			pData.setItemProgress(install_list[i].itemID, 0);
+			pData.setItemProgress(install_list[i].itemID, 0);*/
 	
 			if (!check_cache(install_list.get_package_ptr(i), false, false))
 			{
-				pData.setItemCurrentAction(install_list[i].itemID, _("md5 incorrect"));
-				pData.increaseItemProgress(install_list[i].itemID);
+				//pData.setItemCurrentAction(install_list[i].itemID, _("md5 incorrect"));
+				//if (!setupMode) pData.increaseItemProgress(install_list[i].itemID);
 				pData.setItemState(install_list[i].itemID, ITEMSTATE_FAILED);
 	
 				MpkgErrorReturn errRet = mpkgErrorHandler.callError(MPKG_DOWNLOAD_ERROR, _("Invalid checksum in downloaded file"));
@@ -1284,9 +1286,9 @@ installProcess:
 			}
 			else
 			{
-				pData.setItemCurrentAction(install_list[i].itemID, "MD5 OK");
-				pData.increaseItemProgress(install_list[i].itemID);
-				pData.setItemState(install_list[i].itemID, ITEMSTATE_FINISHED);
+				//pData.setItemCurrentAction(install_list[i].itemID, "MD5 OK");
+				if (!setupMode) pData.increaseItemProgress(install_list[i].itemID);
+				//pData.setItemState(install_list[i].itemID, ITEMSTATE_FINISHED);
 			}
 		}
 		if (dialogMode) {
@@ -1309,8 +1311,8 @@ installProcess:
 		{
 			removeItemID=remove_list[i].itemID;
 			pData.setItemState(removeItemID, ITEMSTATE_WAIT);
-			pData.setItemCurrentAction(removeItemID, _("Waiting"));
-			pData.resetIdleTime(removeItemID);
+			/*pData.setItemCurrentAction(removeItemID, _("Waiting"));
+			pData.resetIdleTime(removeItemID);*/
 			pData.setItemProgress(removeItemID, 0);
 			pData.setItemProgressMaximum(removeItemID,8);
 		}
@@ -1365,28 +1367,30 @@ installProcess:
 	{	
 		// Actually installing
 
-		actionBus.setCurrentAction(ACTIONID_INSTALL);
-		pData.resetItems(_("waiting"), 0, 1, ITEMSTATE_WAIT);
-	
 		pData.setCurrentAction(_("Installing packages"));
 		int installItemID;
 		uint64_t sz = 0;
 		for(unsigned int i=0; i<install_list.size(); i++)
 		{
-			installItemID=install_list[i].itemID;
+			/*installItemID=install_list[i].itemID;
 			pData.setItemState(installItemID, ITEMSTATE_WAIT);
 			pData.setItemCurrentAction(installItemID, _("Waiting"));
 			pData.resetIdleTime(installItemID);
 			pData.setItemProgress(installItemID, 0);
-			pData.setItemProgressMaximum(installItemID,8);
+			pData.setItemProgressMaximum(installItemID,8);*/
 			if (dialogMode) sz += atol(install_list[i].get_installed_size().c_str());
 		}
+		actionBus.setCurrentAction(ACTIONID_INSTALL);
+		pData.resetItems(_("waiting"), 0, 8, ITEMSTATE_WAIT);
+	
+
 		if (dialogMode) {
 			ncInterface.setSubtitle(_("Installing packages"));
 			ncInterface.setProgressMax(install_list.size());
 			//ncInterface.setProgressMax(sz);
 		}
 		vector<time_t> pkgInstallTime;
+		vector<int64_t> pkgInstallSize;
 		time_t pkgInstallStartTime=0, pkgInstallEndTime=0, pkgTotalInstallTime=0;
 		int64_t pkgInstallCurrentSize=0;
 		long double pkgInstallSpeed=0;
@@ -1403,8 +1407,10 @@ installProcess:
 				actionBus.setActionState(ACTIONID_INSTALL, ITEMSTATE_ABORTED);
 				return MPKGERROR_ABORTED;
 			}
+			pData.setItemCurrentAction(install_list[i].itemID, string("installing [") + humanizeSize(IntToStr(pkgInstallSpeed)) + _("/s, ETA: ") + IntToStr(((ins_size-pkgInstallCurrentSize)/pkgInstallSpeed)/60) + _(" min") + string("]"));
 			pData.setItemState(install_list[i].itemID, ITEMSTATE_INPROGRESS);
 			msay(_("Installing package ") + install_list[i].get_name());
+
 			if (dialogMode)
 			{
 				if (pkgInstallTime.size()>1 && pkgInstallSpeed!=0) {
@@ -1433,13 +1439,21 @@ installProcess:
 					fillEssentialFiles(true); // Force update of essential files
 					if (verbose && !dialogMode) printf("glibc update mode\n");
 				}
-				pData.setItemCurrentAction(install_list[i].itemID, _("Installed"));
+				//pData.setItemCurrentAction(install_list[i].itemID, _("Installed"));
 				pData.setItemState(install_list[i].itemID, ITEMSTATE_FINISHED);
 			}
 			pkgInstallEndTime=time(NULL);
 			pkgInstallTime.push_back(pkgInstallEndTime-pkgInstallStartTime);
+			pkgInstallSize.push_back(atoi(install_list[i].get_installed_size().c_str()));
+			
+			// Approximate by total stats time, not so good
 			pkgTotalInstallTime+=(pkgInstallEndTime-pkgInstallStartTime);
 			pkgInstallCurrentSize += atoi(install_list[i].get_installed_size().c_str());
+			// Let's cut off by last 20 packages
+			if (pkgInstallTime.size()>20) {
+				pkgTotalInstallTime-=pkgInstallTime[pkgInstallTime.size()-20];
+				pkgInstallCurrentSize -= pkgInstallSize[pkgInstallSize.size()-20];
+			}
 			if (pkgTotalInstallTime!=0) pkgInstallSpeed=pkgInstallCurrentSize/pkgTotalInstallTime;
 
 		}
@@ -1506,7 +1520,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 			index_hole += " ";
 		}
 	}
-	pData.setItemCurrentAction(package->itemID, _("installing"));
+	//if (!setupMode) pData.setItemCurrentAction(package->itemID, _("installing"));
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": initialization"), SAYMODE_INLINE_START);
 	string statusHeader = "["+IntToStr((int) actionBus.progress())+"/"+IntToStr((int)actionBus.progressMaximum())+"] "+_("Installing package ") + package->get_name()+": ";
 	currentStatus = statusHeader + _("initialization");
@@ -1893,7 +1907,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	if (_cmdOptions["warpmode"]!="yes") sqlFlush();
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": exporting legacy data"));
 	printHtmlProgress();
-	exportPackage(SYS_ROOT+"/"+legacyPkgDir, *package);
+	if (!setupMode) exportPackage(SYS_ROOT+"/"+legacyPkgDir, *package);
 	pData.increaseItemProgress(package->itemID);
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": complete"), SAYMODE_INLINE_END);
 	package->set_action(ST_NONE, "install_complete");
@@ -1903,7 +1917,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 
 // New optimized exportPackage function.
 void mpkgDatabase::exportPackage(const string& output_dir, PACKAGE& p) {
-	system("mkdir -p " + output_dir);
+	//system("mkdir -p " + output_dir);
 	ofstream filestr;
 	filestr.open(string(output_dir+"/"+p.get_name()+"-"+p.get_version()+"-"+p.get_arch()+"-"+p.get_build()).c_str());
 	if (!filestr.is_open()) {
@@ -1925,36 +1939,6 @@ void mpkgDatabase::exportPackage(const string& output_dir, PACKAGE& p) {
 	return;
 }
 
-/*void mpkgDatabase::exportPackage(const string& output_dir, PACKAGE& p)
-{
-	system("mkdir -p " + output_dir);
-	mstring data;
-	data = (string) "PACKAGE NAME:\t" + p.get_name() +"-"+p.get_version()+"-"+p.get_arch()+"-"+p.get_build() +\
-		"\nCOMPRESSED PACKAGE SIZE:\t"+p.get_compressed_size()+ \
-		"\nUNCOMPRESSED PACKAGE SIZE:\t"+p.get_installed_size()+\
-		"\nPACKAGE LOCATION:\t/var/log/mount/"+p.get_filename()+\
-		"\nPACKAGE DESCRIPTION:\n" + p.get_name() + ":  " + p.get_short_description()+\
-		"\nFILE LIST:\n";
-	if (p.get_files().size()==0) get_filelist(p.get_id(), p.get_files_ptr());
-	vector<mstring> matrix;
-	int limiter=250;
-	for (unsigned int f=0; f<p.get_files().size(); f++)
-	{
-		if (limiter==250) {
-			matrix.resize(matrix.size()+1);
-			limiter=0;
-		}
-		matrix[matrix.size()-1]+=p.get_files().at(f).get_name()+"\n";
-		limiter++;
-	}
-	for (unsigned int i=0; i<matrix.size(); i++) {
-		data += matrix[i];
-		matrix[i].clear();
-	}
-	matrix.clear();
-	data+="\n";
-	WriteFile(output_dir+"/"+p.get_name()+"-"+p.get_version()+"-"+p.get_arch()+"-"+p.get_build(), data.s_str());
-}*/	
 void mpkgDatabase::unexportPackage(const string& output_dir, const PACKAGE& p)
 {
 	string victim = output_dir+"/"+p.get_name()+"-"+p.get_version()+"-"+p.get_arch()+"-"+p.get_build();

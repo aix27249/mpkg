@@ -42,11 +42,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	//setWindowState(Qt::WindowMaximized);
 	show();
 	changePhoto();
-	connect(&thread, SIGNAL(setSummaryText(const QString &)), ui->currentSummaryLabel, SLOT(setText(const QString &)));
-	connect(&thread, SIGNAL(setDetailsText(const QString &)), ui->currentDetailsLabel, SLOT(setText(const QString &)));
-	connect(&thread, SIGNAL(setProgress(int)), ui->progressBar, SLOT(setValue(int)));
-	connect(&thread, SIGNAL(setProgressMax(int)), ui->progressBar, SLOT(setMaximum(int)));
-	connect(&thread, SIGNAL(reportError(const QString &)), this, SLOT(showError(const QString &)));
+	connect(&thread, SIGNAL(setSummaryText(const QString &)), ui->currentSummaryLabel, SLOT(setText(const QString &)), Qt::QueuedConnection);
+	connect(&thread, SIGNAL(setDetailsText(const QString &)), ui->currentDetailsLabel, SLOT(setText(const QString &)), Qt::QueuedConnection);
+	connect(&thread, SIGNAL(setProgress(int)), ui->progressBar, SLOT(setValue(int)), Qt::QueuedConnection);
+	connect(&thread, SIGNAL(setProgressMax(int)), ui->progressBar, SLOT(setMaximum(int)), Qt::QueuedConnection);
+	connect(&thread, SIGNAL(reportError(const QString &)), this, SLOT(showError(const QString &)), Qt::QueuedConnection);
 	connect(&thread, SIGNAL(reportFinish()), this, SLOT(finish()));
 	//connect(&thread, SIGNAL(minimizeWindow()), this, SLOT(minimizeWindow()));
 	//connect(&thread, SIGNAL(maximizeWindow()), this, SLOT(maximizeWindow()));
@@ -54,10 +54,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(ui->rebootNowButton, SIGNAL(clicked()), this, SLOT(reboot()));
 	connect(ui->rebootLaterButton, SIGNAL(clicked()), qApp, SLOT(quit()));
 	currentPhoto = 0;
-	timer = new QTimer;
-	timer->setInterval(20000);
-	connect(timer, SIGNAL(timeout()), this, SLOT(changePhoto()));
-	timer->start();
+	//timer = new QTimer;
+	//timer->setInterval(20000);
+	//connect(timer, SIGNAL(timeout()), this, SLOT(changePhoto()));
+	//timer->start(QThread::HighestPriority);
 	thread.start();
 
 }
@@ -67,6 +67,8 @@ MainWindow::~MainWindow() {
 
 void MainWindow::showError(const QString &err) {
 	QMessageBox::critical(this, tr("Fatal error"), err);
+	QMessageBox::critical(this, tr("Setup failed"), tr("Setup failed and will exit now. You can look in /var/log/guisetup_exec.log to see what can cause failure."));
+	qApp->quit();
 }
 
 void MainWindow::finish() {
