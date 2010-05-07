@@ -365,7 +365,7 @@ bool SetupThread::processInstall() {
 	}
 	emit setSummaryText(tr("Finishing installation"));
 	emit setDetailsText(tr("Exporting pkgtools-compatible database"));
-	core->exportBase();
+	core->exportBase("/mnt/var/log/packages");
 
 	delete core;
 	return true;
@@ -600,8 +600,7 @@ bool SetupThread::grub2config() {
 	 
 	 */
 	string bootDevice = settings->value("bootloader").toString().toStdString();
-	emit setSummaryText(tr("Installing GRUB2 to %1").arg(bootDevice.c_str()));
-	emit setDetailsText("");
+	emit setDetailsText(tr("Installing GRUB2 to %1").arg(bootDevice.c_str()));
 	string grubcmd = "chroot /mnt grub-install --no-floppy " + bootDevice + " 2>/dev/tty4 >/tmp/grubinstall-logfile";
 	system(grubcmd);
 	// Get the device map
