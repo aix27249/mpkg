@@ -66,7 +66,7 @@ class MainWindow: public QMainWindow {
 		void saveMountSettings();
 		void saveBootloaderSettings();
 		void savePkgsourceSettings();
-		QString isopath;
+		QString isopath, hddpath, urlpath;
 
 		vector<CustomPkgSet> customPkgSetList;
 		void getCustomSetupVariants(const vector<string>& rep_list);

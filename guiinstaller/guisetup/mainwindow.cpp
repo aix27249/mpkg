@@ -534,8 +534,24 @@ bool MainWindow::validatePkgSources() {
 		if (isopath.isEmpty() || !FileExists(isopath.toStdString())) {
 			return false;
 		}
+		printf("Got ISO image in %s\n", isopath.toStdString().c_str());
 	}
-	printf("Got ISO image in %s\n", isopath.toStdString().c_str());
+	else if (ui->pkgSourceHDDRadioButton->isChecked()) {
+		hddpath = QFileDialog::getExistingDirectory(this, tr("Specify directory with packages"), "/media", QFileDialog::DontUseNativeDialog);
+		if (hddpath.isEmpty() || !FileExists(hddpath.toStdString())) {
+			return false;
+		}
+		if (!FileExists(hddpath.toStdString() + "/packages.xml.gz")) {
+			QMessageBox::information(this, tr("Incorrect directory"), tr("Specified directory does not contain repository index."));
+			return false;
+		}
+		printf("Got HDD dir in %s\n", hddpath.toStdString().c_str());
+	}
+	else if (ui->pkgSourceCustomRadioButton->isChecked()) {
+		urlpath = QInputDialog::getText(this, tr("Specify repository URL"), tr("Please, enter repository URL, for example, http://core32.agilialinux.ru/"));
+		if (urlpath.isEmpty()) return false;
+	}
+
 	return true;
 }
 void MainWindow::savePkgsourceSettings() {
@@ -545,8 +561,19 @@ void MainWindow::savePkgsourceSettings() {
 	else if (ui->pkgSourceISORadioButton->isChecked()) {
 		settings->setValue("pkgsource", QString("iso://%1").arg(isopath));
 	}
-	else if (ui->pkgSourceNetworkRadioButton->isChecked()) settings->setValue("pkgsource", "http://core64.mopspackages.ru/");
-	// TODO: Don't forget about pkgSourceCustomRadioButton!
+	else if (ui->pkgSourceHDDRadioButton->isChecked()) {
+		settings->setValue("pkgsource", QString("file://%1/").arg(hddpath));
+	}
+	else if (ui->pkgSourceCustomRadioButton->isChecked()) {
+		settings->setValue("pkgsource", urlpath);
+	}
+	else if (ui->pkgSourceNetworkRadioButton->isChecked()) {
+#ifdef X86_64
+		settings->setValue("pkgsource", "http://core64.agilialinux.ru/");
+#else
+		settings->setValue("pkgsource", "http://core32.agilialinux.ru/");
+#endif
+	}
 }
 
 
