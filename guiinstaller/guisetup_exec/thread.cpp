@@ -634,7 +634,7 @@ bool SetupThread::grub2config() {
 		settings->endGroup();
 		partConfigs.push_back(*pConfig);
 		if (pConfig->mountpoint=="/boot") {
-			grubBootPartition = "/dev/" + pConfig[i].partition;
+			grubBootPartition = "/dev/" + pConfig->partition;
 			if (initrdstring.find("/boot")!=std::string::npos) initrdstring = "initrd /initrd.gz";
 			if (kernelstring.find("/boot")==0) kernelstring = "/vmlinuz";
 			fontpath = "/grub/unifont.pf2";
