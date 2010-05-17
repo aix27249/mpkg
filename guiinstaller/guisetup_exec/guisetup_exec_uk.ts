@@ -9,17 +9,27 @@
         <translation type="unfinished">Помилка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="69"/>
+        <location filename="mainwindow.cpp" line="75"/>
         <source>Fatal error</source>
         <translation type="unfinished">Критична помилка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="77"/>
+        <location filename="mainwindow.cpp" line="76"/>
+        <source>Setup failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="76"/>
+        <source>Setup failed and will exit now. You can look in /var/log/guisetup_exec.log to see what can cause failure.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="85"/>
         <source>Really cancel installation?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="78"/>
+        <location filename="mainwindow.cpp" line="86"/>
         <source>Installation is not yet complete. If you interrupt it at this point, you will probably get your system completely unusable. Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -64,7 +74,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Розпакування файлів</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="226"/>
+        <location filename="mainwindow.ui" line="224"/>
+        <source>Show log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="250"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -77,12 +92,12 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:28pt; font-weight:600;&quot;&gt;Встановлення завершено!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="270"/>
+        <location filename="mainwindow.ui" line="294"/>
         <source>Reboot now</source>
         <translation type="unfinished">Перезавантажити зараз</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="277"/>
+        <location filename="mainwindow.ui" line="301"/>
         <source>Exit without reboot</source>
         <translation type="unfinished">Вихід без перезавантаження</translation>
     </message>
@@ -250,32 +265,42 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Підготовка до встановлення</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="517"/>
+        <location filename="thread.cpp" line="366"/>
+        <source>Finishing installation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="thread.cpp" line="367"/>
+        <source>Exporting pkgtools-compatible database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="thread.cpp" line="521"/>
         <source>Creating initrd</source>
         <translation type="unfinished">Створення initrd</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="599"/>
+        <location filename="thread.cpp" line="603"/>
         <source>Installing GRUB2 to %1</source>
         <translation type="unfinished">Встановлення GRUB2 до %1</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="710"/>
+        <location filename="thread.cpp" line="713"/>
         <source>Generating font index</source>
         <translation type="unfinished">Створення індексу шрифтів</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="714"/>
+        <location filename="thread.cpp" line="717"/>
         <source>Generating font cache</source>
         <translation type="unfinished">Створення кешу шрифтів</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="759"/>
+        <location filename="thread.cpp" line="762"/>
         <source>Install complete, running post-install actions</source>
         <translation type="unfinished">Встановлення завершено, виконання службових дій</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="887"/>
+        <location filename="thread.cpp" line="891"/>
         <source>Unmounting filesystems and syncing disks</source>
         <translation type="unfinished">Відключення розділів та синхронізація дисків</translation>
     </message>

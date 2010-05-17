@@ -219,7 +219,7 @@ bool SetupThread::formatPartition(PartConfig pConfig) {
 	if (pConfig.fs=="jfs") fs_options="-q";
 	else if (pConfig.fs=="xfs") fs_options="-f -q";
 	else if (pConfig.fs=="reiserfs") fs_options="-q";
-	if (system("umount -l /dev/" + pConfig.partition +  " 2>/var/log/mpkg-lasterror.log ; mkfs -t " + pConfig.fs + " " + fs_options + " /dev/" + pConfig.partition + " 2>> /var/log/mpkg-lasterror.log 1>>/var/log/mkfs.log")==0) return true;
+	if (system("umount -l /dev/" + pConfig.partition +  " ; mkfs -t " + pConfig.fs + " " + fs_options + " /dev/" + pConfig.partition)==0) return true;
 	else return false;
 }
 
@@ -300,8 +300,8 @@ bool SetupThread::mountPartitions() {
 	string mount_cmd;
 	string mkdir_cmd;
 
-	mkdir_cmd = "mkdir -p /mnt 2>/var/log/mpkg-lasterror.log >/dev/null";
-	mount_cmd = "mount " + rootPartition + " /mnt 2>>/var/log/mpkg-lasterror.log >/dev/null";
+	mkdir_cmd = "mkdir -p /mnt";
+	mount_cmd = "mount " + rootPartition + " /mnt";
 	if (system(mkdir_cmd) !=0 || system(mount_cmd)!=0) return false;
 
 	// Sorting mount points
@@ -326,10 +326,10 @@ bool SetupThread::mountPartitions() {
 	
 	for (size_t i=0; i<mountOrder.size(); i++) {
 		if (partConfigs[mountOrder[i]].mountpoint=="/") continue;
-		mkdir_cmd = "mkdir -p /mnt" + partConfigs[mountOrder[i]].mountpoint + " 2>/var/log/mpkg-lasterror.log >/dev/null";
-		if (partConfigs[mountOrder[i]].fs=="ntfs")  mount_cmd = "ntfs-3g -o force /dev/" + partConfigs[mountOrder[i]].partition + " /mnt" + partConfigs[mountOrder[i]].mountpoint + " 2>>/var/log/mpkg-lasterror.log >/dev/null";
-		else mount_cmd = "mount /dev/" + partConfigs[mountOrder[i]].partition + " /mnt" + partConfigs[mountOrder[i]].mountpoint + " 2>>/var/log/mpkg-lasterror.log >/dev/null";
-		if (partConfigs[mountOrder[i]].fs=="jfs") mount_cmd = "fsck /dev/" + partConfigs[mountOrder[i]].partition + " 2>>/var/log/mpkg-lasterror.log >/dev/null && " + mount_cmd;
+		mkdir_cmd = "mkdir -p /mnt" + partConfigs[mountOrder[i]].mountpoint;
+		if (partConfigs[mountOrder[i]].fs=="ntfs")  mount_cmd = "ntfs-3g -o force /dev/" + partConfigs[mountOrder[i]].partition + " /mnt" + partConfigs[mountOrder[i]].mountpoint;
+		else mount_cmd = "mount /dev/" + partConfigs[mountOrder[i]].partition + " /mnt" + partConfigs[mountOrder[i]].mountpoint;
+		if (partConfigs[mountOrder[i]].fs=="jfs") mount_cmd = "fsck /dev/" + partConfigs[mountOrder[i]].partition + "  && " + mount_cmd;
 
 		if (system(mkdir_cmd)!=0 || system(mount_cmd)!=0) {
 			emit reportError(tr("Failed to mount partition %1").arg(partConfigs[mountOrder[i]].partition.c_str()));
@@ -343,7 +343,7 @@ bool SetupThread::mountPartitions() {
 bool SetupThread::moveDatabase() {
 	emit setSummaryText(tr("Moving database"));
 	emit setDetailsText("");
-	if (system("rm -rf /mnt/var/mpkg 2>/dev/tty4 >/dev/tty4; mkdir -p /mnt/var/log 2>/dev/tty4 >/dev/tty4; cp -R /var/mpkg /mnt/var/ 2>/dev/tty4 >/dev/tty4 && rm -rf /var/mpkg 2>/dev/tty4 >/dev/tty4 && ln -s /mnt/var/mpkg /var/mpkg 2>/dev/tty4 >/dev/tty4")!=0) {
+	if (system("rm -rf /mnt/var/mpkg ; mkdir -p /mnt/var/log ; cp -R /var/mpkg /mnt/var/ && rm -rf /var/mpkg && ln -s /mnt/var/mpkg /var/mpkg")!=0) {
 		emit reportError(tr("An error occured while moving database to hard drive"));
 		return false;
 	}
@@ -401,7 +401,7 @@ void SetupThread::xorgSetLangHALEx() {
   <merge key=\"input.xkb.layout\" type=\"string\">" + lang + "</merge>\n" + variant + \
 "  <merge key=\"input.xkb.options\" type=\"string\">terminate:ctrl_alt_bksp,grp:ctrl_shift_toggle,grp_led:scroll</merge>\n\
 </match>\n";
-	system("mkdir -p /mnt/etc/hal/fdi/policy 2>/dev/null >/dev/null");
+	system("mkdir -p /mnt/etc/hal/fdi/policy ");
 	WriteFile("/mnt/etc/hal/fdi/policy/10-x11-input.fdi", fdi);
 }
 
@@ -503,7 +503,7 @@ void SetupThread::buildInitrd() {
 	string rootdev_wait = "0";
 	if (settings->value("initrd_delay").toBool()) rootdev_wait = "10";
 
-	system("chroot /mnt mount -t proc none /proc 2>/dev/null >/dev/null");
+	system("chroot /mnt mount -t proc none /proc ");
 	string rootdev;
 	string rootUUID = getUUID(rootPartition);
 	if (rootUUID.empty()) rootUUID=rootPartition;
@@ -601,7 +601,7 @@ bool SetupThread::grub2config() {
 	 */
 	string bootDevice = settings->value("bootloader").toString().toStdString();
 	emit setDetailsText(tr("Installing GRUB2 to %1").arg(bootDevice.c_str()));
-	string grubcmd = "chroot /mnt grub-install --no-floppy " + bootDevice + " 2>/dev/tty4 >/tmp/grubinstall-logfile";
+	string grubcmd = "chroot /mnt grub-install --no-floppy " + bootDevice;
 	system(grubcmd);
 	// Get the device map
 	StringMap devMap = getDeviceMap("/mnt/boot/grub/device.map");
@@ -705,8 +705,8 @@ void SetupThread::setDefaultRunlevel(const string& lvl) {
 	WriteFile("/mnt/etc/inittab", data);
 }
 void SetupThread::enablePlymouth(bool enable) {
-	if (enable) system("chmod +x /mnt/etc/rc.d/rc.plymouth >/dev/tty4 2>/dev/tty4");
-	else system("chmod -x /mnt/etc/rc.d/rc.plymouth >/dev/tty4 2>/dev/tty4");
+	if (enable) system("chroot /mnt rc-update add plymouth default");
+	else system("chroot /mnt rc-update del plymouth plymouth");
 }
 
 void SetupThread::generateFontIndex() {
@@ -853,7 +853,7 @@ bool setPasswd(string username, string passwd) {
 	string tmp_file = "/mnt/tmp/wtf";
 	string data = passwd + "\n" + passwd + "\n";
 	WriteFile(tmp_file, data);
-	string passwd_cmd = "#!/bin/sh\ncat /tmp/wtf | passwd " + username+" > /dev/null 2>/dev/tty4\n";
+	string passwd_cmd = "#!/bin/sh\ncat /tmp/wtf | passwd " + username+" \n";
 	WriteFile("/mnt/tmp/run_passwd", passwd_cmd);
 	int ret = system("chroot /mnt sh /tmp/run_passwd");
 	for (size_t i=0; i<data.size(); i++) {
@@ -869,9 +869,9 @@ bool setPasswd(string username, string passwd) {
 bool addUser(string username) {
 	//string extgroup="audio,cdrom,disk,floppy,lp,scanner,video,wheel"; // Old default groups
 	string extgroup="audio,cdrom,floppy,video,netdev,plugdev,power"; // New default groups, which conforms current guidelines
-	system("chroot /mnt /usr/sbin/useradd -d /home/" + username + " -m -g users -G " + extgroup + " -s /bin/bash " + username + " 2>/dev/tty4 >/dev/tty4");
-	system("chroot /mnt chown -R " + username+":users /home/"+username + " 2>/dev/tty4 >/dev/tty4");
-	system("chmod 711 /mnt/home/" + username + " 2>/dev/tty4 >/dev/tty4");
+	system("chroot /mnt /usr/sbin/useradd -d /home/" + username + " -m -g users -G " + extgroup + " -s /bin/bash " + username);
+	system("chroot /mnt chown -R " + username+":users /home/"+username);
+	system("chmod 711 /mnt/home/" + username);
 	return true;
 }
 

@@ -9,27 +9,27 @@
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="69"/>
+        <location filename="mainwindow.cpp" line="75"/>
         <source>Fatal error</source>
         <translation>Критическая ошибка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="70"/>
+        <location filename="mainwindow.cpp" line="76"/>
         <source>Setup failed</source>
         <translation>Установка завершилась неудачей</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="70"/>
+        <location filename="mainwindow.cpp" line="76"/>
         <source>Setup failed and will exit now. You can look in /var/log/guisetup_exec.log to see what can cause failure.</source>
         <translation>Процесс установки столкнулся с критической ошибкой и будет прерван. Вы можете взглянуть в /var/log/guisetup_exec.log, чтобы выяснить что привело к этому.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="79"/>
+        <location filename="mainwindow.cpp" line="85"/>
         <source>Really cancel installation?</source>
         <translation>Действительно прервать установку?</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="80"/>
+        <location filename="mainwindow.cpp" line="86"/>
         <source>Installation is not yet complete. If you interrupt it at this point, you will probably get your system completely unusable. Are you sure?</source>
         <translation>Установка еще не завершена. Если вы прервете ее на данном этапе, есть вероятность что вы получите полностью нерабочую систему. Вы уверены?</translation>
     </message>
@@ -74,7 +74,12 @@ p, li { white-space: pre-wrap; }
         <translation>Распаковка файлов</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="226"/>
+        <location filename="mainwindow.ui" line="224"/>
+        <source>Show log</source>
+        <translation>Показать лог</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="250"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -87,12 +92,12 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:28pt; font-weight:600;&quot;&gt;Установка завершена!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="270"/>
+        <location filename="mainwindow.ui" line="294"/>
         <source>Reboot now</source>
         <translation>Перезагрузиться сейчас</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="277"/>
+        <location filename="mainwindow.ui" line="301"/>
         <source>Exit without reboot</source>
         <translation>Выход без перезагрузки</translation>
     </message>
@@ -280,22 +285,22 @@ p, li { white-space: pre-wrap; }
         <translation>Установка загрузчика GRUB2 в %1</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="714"/>
+        <location filename="thread.cpp" line="713"/>
         <source>Generating font index</source>
         <translation>Генерация индекса шрифтов</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="718"/>
+        <location filename="thread.cpp" line="717"/>
         <source>Generating font cache</source>
         <translation>Генерация кеша шрифтов</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="763"/>
+        <location filename="thread.cpp" line="762"/>
         <source>Install complete, running post-install actions</source>
         <translation>Установка пакетов завершена, создание первоначальной конфигурации</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="892"/>
+        <location filename="thread.cpp" line="891"/>
         <source>Unmounting filesystems and syncing disks</source>
         <translation>Отключение файловых систем и синхронизация дисков</translation>
     </message>
