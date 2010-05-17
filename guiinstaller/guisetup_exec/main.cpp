@@ -5,6 +5,25 @@
 #include <QLocale>
 #include <QTranslator>
 int main(int argc, char *argv[]) {
+	// Check for already running process
+	if (FileExists("/var/run/guisetup.pid")) {
+		string pid_locked = ReadFile("/var/run/guisetup.pid").c_str();
+		if (isProcessRunning(pid_locked)) {
+			fprintf(stderr, "Another setup process %s is alrealy running.\n", pid_locked.c_str());
+			return 1;
+		}
+	}
+
+	// Store lock file
+	pid_t pid = getpid();
+	if (FileExists("/var/run/guisetup_exec.pid")) {
+		string pid_locked = ReadFile("/var/run/guisetup_exec.pid").c_str();
+		if (isProcessRunning(pid_locked)) {
+			fprintf(stderr, "Another setup process %s is alrealy running.\n", pid_locked.c_str());
+			return 1;
+		}
+	}
+	WriteFile("/var/run/guisetup_exec.pid", IntToStr(pid));
 	setupMode=true;
 	simulate=false;
 	forceSkipLinkMD5Checks=true;
@@ -30,6 +49,8 @@ int main(int argc, char *argv[]) {
 
 	MainWindow w;
 	w.show();
-	return a.exec();
+	int ret = a.exec();
+	unlink("/var/run/guisetup_exec.pid");
+	return ret;
 }
 

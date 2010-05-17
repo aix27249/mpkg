@@ -6,6 +6,26 @@
 #include <QTranslator>
 int main(int argc, char *argv[]) {
 	
+	if (FileExists("/var/run/guisetup_exec.pid")) {
+		string pid_locked = ReadFile("/var/run/guisetup_exec.pid").c_str();
+		if (isProcessRunning(pid_locked)) {
+			fprintf(stderr, "Another setup process %s is alrealy running.\n", pid_locked.c_str());
+			return 1;
+		}
+	}
+	pid_t pid = getpid();
+	
+	
+	if (FileExists("/var/run/guisetup.pid")) {
+		string pid_locked = ReadFile("/var/run/guisetup.pid").c_str();
+		if (isProcessRunning(pid_locked)) {
+			fprintf(stderr, "Another setup process %s is alrealy running.\n", pid_locked.c_str());
+			return 1;
+		}
+	}
+	WriteFile("/var/run/guisetup.pid", IntToStr(pid));
+
+
 	setlocale(LC_ALL, "");
 	bindtextdomain( "mpkg", "/usr/local/share/locale");
 	textdomain("mpkg");

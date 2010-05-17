@@ -361,6 +361,7 @@ bool SetupThread::processInstall() {
 	if (FileExists("/var/log/mount/cache")) system("ln -s /var/log/mount/cache /var/mpkg/cache/.fcache");
 	if (core->commit()!=0) {
 		delete core;
+		emit reportError(tr("An error occured during package installation. Setup will exit now."));
 		return false;
 	}
 	emit setSummaryText(tr("Finishing installation"));
