@@ -124,6 +124,7 @@ void MainWindow::runInstaller() {
 		return;
 	}
 	else settings->setValue("anonstat", false);
+	unlink("/var/run/guisetup.pid"); // need to unlock before starting next process
 	system("LC_ALL=" + settings->value("language").toString().toStdString() + " nohup guisetup_exec 2>&1 >/var/log/guisetup_exec.log &");
 	qApp->quit();
 }

@@ -3,15 +3,13 @@
 #include <mpkgsupport/mpkgsupport.h>
 #include <QSettings>
 MainWindow::MainWindow(QWidget *parent) : QDialog(parent), ui(new Ui::MainWindowClass) {
-	ui->setupUi(this);
-	connect(ui->okButton, SIGNAL(clicked()), this, SLOT(ok()));
-	connect(ui->cancelButton, SIGNAL(clicked()), qApp, SLOT(quit()));
 	if (FileExists("/var/run/guisetup_exec.pid")) {
 		string pid_locked = ReadFile("/var/run/guisetup_exec.pid").c_str();
 		if (isProcessRunning(pid_locked)) {
 			fprintf(stderr, "Another setup process %s is alrealy running.\n", pid_locked.c_str());
 			QMessageBox::critical(this, tr("Setup is already running"), tr("Setup is already running. If not, remove lock file /var/run/guisetup_exec.pid"));
 			qApp->quit();
+			exit(1);
 		}
 	}
 	if (FileExists("/var/run/guisetup.pid")) {
@@ -20,9 +18,12 @@ MainWindow::MainWindow(QWidget *parent) : QDialog(parent), ui(new Ui::MainWindow
 			fprintf(stderr, "Another setup process %s is alrealy running.\n", pid_locked.c_str());
 			QMessageBox::critical(this, tr("Setup is already running"), tr("Setup is already running. If not, remove lock file /var/run/guisetup.pid"));
 			qApp->quit();
+			exit(1);
 		}
 	}
-
+	ui->setupUi(this);
+	connect(ui->okButton, SIGNAL(clicked()), this, SLOT(ok()));
+	connect(ui->cancelButton, SIGNAL(clicked()), qApp, SLOT(quit()));
 
 }
 
