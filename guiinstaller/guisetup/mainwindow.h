@@ -79,6 +79,7 @@ class MainWindow: public QMainWindow {
 		void saveNetworking();
 		void saveNvidia();
 		void saveAlternatives();
+		void saveConfigAndExit();
 		int hasNvidia;
 		map<int, bool> skipPages;
 		QTranslator *translator;

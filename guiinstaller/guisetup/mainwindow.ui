@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>714</width>
-    <height>580</height>
+    <height>537</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -55,7 +55,7 @@
        <number>0</number>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>14</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -1142,7 +1142,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QLabel" name="setupVariantDescription">
           <property name="text">
-           <string>Setup type description will be here</string>
+           <string/>
           </property>
           <property name="wordWrap">
            <bool>true</bool>
@@ -2515,10 +2515,10 @@ p, li { white-space: pre-wrap; }
                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Tahoma'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Username should contain &lt;span style=&quot; font-weight:600;&quot;&gt;only latin characters&lt;/span&gt; and &lt;span style=&quot; font-weight:600;&quot;&gt;cannot start from number&lt;/span&gt;. &lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Good examples: michael, alex2; &lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Bad examples: 1user, вася.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Droid Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Tahoma';&quot;&gt;Username should be &lt;/span&gt;&lt;span style=&quot; font-family:'Tahoma'; font-weight:600;&quot;&gt;lower-case&lt;/span&gt;&lt;span style=&quot; font-family:'Tahoma';&quot;&gt;, contain &lt;/span&gt;&lt;span style=&quot; font-family:'Tahoma'; font-weight:600;&quot;&gt;only latin characters&lt;/span&gt;&lt;span style=&quot; font-family:'Tahoma';&quot;&gt; and &lt;/span&gt;&lt;span style=&quot; font-family:'Tahoma'; font-weight:600;&quot;&gt;cannot start from number&lt;/span&gt;&lt;span style=&quot; font-family:'Tahoma';&quot;&gt;. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Tahoma';&quot;&gt;Good examples: michael, alex2; &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Tahoma';&quot;&gt;Bad examples: 1user, вася, User.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="wordWrap">
                <bool>true</bool>
@@ -2685,7 +2685,7 @@ p, li { white-space: pre-wrap; }
        </layout>
       </widget>
       <widget class="QWidget" name="confirmPage">
-       <layout class="QVBoxLayout" name="verticalLayout_17">
+       <layout class="QVBoxLayout" name="verticalLayout_10">
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_43">
           <item>
@@ -2811,16 +2811,6 @@ p, li { white-space: pre-wrap; }
          </layout>
         </item>
         <item>
-         <widget class="QCheckBox" name="sendStatCheckBox">
-          <property name="text">
-           <string>Send anonymous statistics (will be sent once at installation time)</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_20">
           <item>
            <spacer name="horizontalSpacer_19">
@@ -2851,6 +2841,43 @@ p, li { white-space: pre-wrap; }
           </item>
           <item>
            <spacer name="horizontalSpacer_20">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_27">
+          <item>
+           <spacer name="horizontalSpacer_36">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="saveConfigButton">
+            <property name="text">
+             <string>Save config and install later</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_37">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -3041,7 +3068,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>utcCheckBox</tabstop>
   <tabstop>confirmationTextBrowser</tabstop>
   <tabstop>confirmInstallCheckBox</tabstop>
-  <tabstop>sendStatCheckBox</tabstop>
   <tabstop>installButton</tabstop>
  </tabstops>
  <resources>

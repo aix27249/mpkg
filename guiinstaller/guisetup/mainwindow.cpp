@@ -53,7 +53,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	guiObject = this;
 	ui->setupUi(this);
 	ui->releaseNotesTextBrowser->hide();
-	ui->sendStatCheckBox->hide();
 	setWindowState(Qt::WindowMaximized);
 	connect(ui->nextButton, SIGNAL(clicked()), this, SLOT(nextButtonClick()));
 	connect(ui->backButton, SIGNAL(clicked()), this, SLOT(backButtonClick()));
@@ -70,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(ui->mountPointEdit, SIGNAL(textEdited(const QString &)), this, SLOT(updateMountItemUI()));
 	connect(ui->releaseNotesButton, SIGNAL(clicked()), this, SLOT(showHideReleaseNotes()));
 	connect(ui->helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+	connect(ui->saveConfigButton, SIGNAL(clicked()), this, SLOT(saveConfigAndExit()));
 	lockUIUpdate = false;
 	connect(ui->timezoneSearchEdit, SIGNAL(textEdited(const QString &)), this, SLOT(timezoneSearch(const QString &)));
 	ui->stackedWidget->setCurrentIndex(0);
@@ -123,11 +123,13 @@ void MainWindow::runInstaller() {
 		QMessageBox::critical(this, tr("Please confirm settings"), tr("You chould confirm that settings are OK. Check the appropriate check box."));
 		return;
 	}
-	if (ui->sendStatCheckBox->isChecked()) {
-		settings->setValue("anonstat", true);
-	}
 	else settings->setValue("anonstat", false);
 	system("LC_ALL=" + settings->value("language").toString().toStdString() + " nohup guisetup_exec 2>&1 >/var/log/guisetup_exec.log &");
+	qApp->quit();
+}
+
+void MainWindow::saveConfigAndExit() {
+	QMessageBox::information(this, tr("Configuration saved"), tr("Setup configuration saved to /root/.config/guiinstaller.conf\nYou can store it and use in next installations."));
 	qApp->quit();
 }
 
@@ -139,7 +141,7 @@ void MainWindow::nextButtonClick() {
 	if (ui->stackedWidget->currentIndex()==ui->stackedWidget->count()-1-shift) ui->nextButton->setEnabled(false);
 	else if (ui->stackedWidget->currentIndex()==0) ui->backButton->setEnabled(true);
 	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->currentIndex()+shift);
-	ui->statusbar->showMessage(QString("Step %1 of %2").arg(ui->stackedWidget->currentIndex()).arg(ui->stackedWidget->count()-1));
+	ui->statusbar->showMessage(tr("Step %1 of %2").arg(ui->stackedWidget->currentIndex()).arg(ui->stackedWidget->count()-1));
 	updatePageData(ui->stackedWidget->currentIndex());
 }
 
@@ -150,7 +152,7 @@ void MainWindow::backButtonClick() {
 	if (ui->stackedWidget->currentIndex()==PAGE_INSTALLTYPE) shift=2;
 	while (!checkLoad(ui->stackedWidget->currentIndex()-shift)) shift--;
 	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->currentIndex()-shift);
-	ui->statusbar->showMessage(QString("Step %1 of %2").arg(ui->stackedWidget->currentIndex()).arg(ui->stackedWidget->count()-1));
+	ui->statusbar->showMessage(tr("Step %1 of %2").arg(ui->stackedWidget->currentIndex()).arg(ui->stackedWidget->count()-1));
 	//updatePageData(ui->stackedWidget->currentIndex());
 
 }
@@ -806,7 +808,7 @@ bool MainWindow::validateUserPasswords() {
 		QMessageBox::information(this, tr("Invalid username"), tr("User root is an administrative account and already exists, please specify another name"));
 		return false;
 	}
-	if (ui->usernameEdit->text().toStdString().find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-")==0) {
+	if (ui->usernameEdit->text().toStdString().find_first_not_of("abcdefghijklmnopqrstuvwxyz1234567890_-")==0) {
 		QMessageBox::information(this, tr("Invalid username"), tr("Username contain invalid characters. Please specify correct username."));
 		return false;
 	}
