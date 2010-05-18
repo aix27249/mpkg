@@ -974,80 +974,119 @@ vector<PACKAGE *> PACKAGE_LIST::getAllAlternatives(const string& corename) {
 	return ret;
 }
 
+// Returns count of strings from base that WAS NOT FOUND in alts
+int getUnusedCount(const vector<string> &base, const vector<string> &alts) {
+	int ret=0;
+	bool found;
+	for (size_t i=0; i<base.size(); ++i) {
+		found = false;
+		for (size_t t=0; !found && t<alts.size(); ++t) {
+			if (base[i]==alts[t]) {
+				found = true;
+			}
+		}
+		if (!found) ret++;
+	}
+	return ret;
+}
+
 void PACKAGE_LIST::switchAlternatives(const vector<string>& alternatives) {
-	//vector<string> alts = getAlternativeList(true);
+	// ----------------------------------VARIABLES SECTION------------------------------------- //
 	vector<PACKAGE *> altPackages;
-	vector<PACKAGE *> cand1, cand2;
+	vector<size_t> meetCount;
+	vector<PACKAGE *> maxMeeters;
 	PACKAGE * selectedPackage;
+	size_t max_meet, min_unused, this_meet, this_unused;
 	vector<string> log;
+
+	// ----------------------------Init log by initial conditions------------------------------ //
+	for (size_t i=0; i<alternatives.size(); ++i) {
+		log.push_back("REQUESTED: " + alternatives[i]);
+	}
+
+	// ----------------------------------------RESET--------------------------------------------//
+
+	// First of all: reset to initial state.
+	// By i, we search for alternated packages. By t, we look for appropriate core packages, and move action to them
 	for (size_t i=0; i<packages.size(); ++i) {
-		if (packages[i].action()!=ST_INSTALL) continue;
-		altPackages = getAllAlternatives(packages[i].get_corename());
-		if (altPackages.size()<2) continue; // Note: there is always at least one (with no alts)
-		cand1.clear();
-		selectedPackage = NULL;
-
-		for (size_t a=0; a<alternatives.size(); ++a) {
-			for (size_t z=0; z<altPackages.size(); ++z) {
-				if (altPackages[z]->checkAlternative(alternatives[a])) cand1.push_back(altPackages[z]);
+		if (packages[i].get_name()==packages[i].get_corename()) continue;
+		if (packages[i].action()!=ST_INSTALL) continue; // Found alt who wants to be installed, looking for core one
+		for (size_t t=0; t<packages.size(); ++t) {
+			if (i==t) continue;
+			if (packages[t].get_corename()==packages[i].get_corename() && packages[t].get_name()==packages[t].get_corename()) {
+				packages[i].set_action(ST_NONE, "switchAlt reset"); // Alt goes away
+				packages[t].set_action(ST_INSTALL, "switchAlt reset"); // Core one goes to queue
 			}
 		}
-		if (cand1.size()==1) selectedPackage=cand1[0];
-		else if (cand1.size()>1) {
+	} // End of reset.
+
+	// --------------------------------PROCESSING--------------------------------------------//
+
+	// Now, for every package who wants to be installed, look for alter ones and choose best from them.
+	// Note that now i and t is opposite than prior case: i is core, t is alt.
+	for (size_t i=0; i<packages.size(); ++i) {
+		if (packages[i].action()!=ST_INSTALL) continue; // Filter no-action packages for i
+		if (packages[i].get_name()!=packages[i].get_corename()) continue; // Filter non-core packages for i
+		// First, filling the altPackages vector
+		altPackages.clear();
+		meetCount.clear();
+		maxMeeters.clear();
+		selectedPackage=NULL;
+		for (size_t t=0; t<packages.size(); ++t) {
+			if (i==t) continue;
+			if (packages[t].get_corename()==packages[i].get_corename()) altPackages.push_back(&packages[t]);
+		}
+		// Now, let's choose the best candidate from altPackages, comparing with alternatives
+		// Priorities:
+		// 1. The more alternatives package meet that's better
+
+		// 1.1 Finding maximum and filling meetCount with exact count for each package
+		max_meet=0;
+		for (size_t t=0; t<altPackages.size(); ++t) {
+			this_meet=0;
+			for (size_t a=0; a<alternatives.size(); ++a) {
+				this_meet+=altPackages[t]->checkAlternative(alternatives[a]);
+			}
+			meetCount.push_back(this_meet);
+			if (this_meet>max_meet) max_meet=this_meet;
+		}
+		// 1.1.1 if no one meets, continue
+		if (max_meet==0) continue;
+		// 1.2 Filling maxMeeters vector with maximum ones
+		for (size_t t=0; t<altPackages.size(); ++t) {
+			if (max_meet==meetCount[t]) maxMeeters.push_back(altPackages[t]);
+		}
+		// 1.3 If we found nothing, there is nothing to select.
+		if (maxMeeters.empty()) continue;
+
+		// 2. From group of maximum-meeted ones (maxMeeters vector), select one who contains minimum of other alt flags (preferably none)
+		// 2.1 First maxMeeter will be start point and first selected candidate. 
+		min_unused=getUnusedCount(maxMeeters[0]->getAlternativeVector(), alternatives);
+		selectedPackage=maxMeeters[0];
+
+		// 2.2 If someone will be better than 0th one, it will replace him, changing min_unused value. When min_unused value reaches zero, break.
+		for (size_t t=1; t<maxMeeters.size(); ++t) {
+			this_unused=getUnusedCount(maxMeeters[t]->getAlternativeVector(), alternatives);
+			if (min_unused>this_unused) {
+				min_unused=this_unused;
+				selectedPackage=maxMeeters[t];
+			}
 			
-
-			// Try to select exact variant, it means with all alternatives used.
-			for (size_t z=0; z<cand1.size(); ++z) {
-				bool has_all_alts = true;
-				for (size_t a=0; has_all_alts && a<alternatives.size(); ++a) {
-					if (!cand1[z]->checkAlternative(alternatives[a])) has_all_alts=false;
-				}
-				if (has_all_alts) {
-					selectedPackage = cand1[z];
-					break;
-				}
-			}
-			// Try to avoid unwanted tags
-			bool found_good_tag;
-			vector<string> tmpVec;
-			for (size_t z=0; !selectedPackage && z<cand1.size(); ++z) { // Here we checking if selectedPackage is already defined
-				tmpVec = cand1[z]->getAlternativeVector();
-				found_good_tag = true;
-				for (size_t p=0; found_good_tag && p<tmpVec.size(); ++p) {
-					found_good_tag = false;
-					for (size_t a=0; !found_good_tag && a<alternatives.size(); ++a) {
-						if (tmpVec[p]==alternatives[a]) found_good_tag = true;
-					}
-				}
-				if (found_good_tag) cand2.push_back(cand1[z]);
-			}
-			if (cand2.size()==1) selectedPackage = cand2[0];
-			if (!selectedPackage) {
-				size_t max=0, max_id=0;
-				
-				size_t sz;
-				vector<PACKAGE*> *cand;
-				if (cand2.empty()) cand = &cand1;
-				else cand = &cand2; // Select from candidates with no parasite tags. They are better, really.
-
-				for (size_t z=0; z<cand->size(); ++z) {
-					sz = cand->at(z)->getAlternativeVector().size();
-					if (sz>max) {
-						max = sz;
-						max_id = z;
-					}
-				}
-				selectedPackage=cand->at(max_id);
-			}
+			if (min_unused==0) break;
 		}
+
+		// 3. Check if we found alternative
 		if (!selectedPackage) continue;
 		
-		for (size_t z=0; z<altPackages.size(); ++z) {
-			if (altPackages[z]!=selectedPackage) altPackages[z]->set_action(ST_NONE, "altswitch");
-			else altPackages[z]->set_action(ST_INSTALL, "new-alt");
-		}
+		// 4. If we found someone, swap actions.
+		packages[i].set_action(ST_NONE, "switchAlt swap");
+		selectedPackage->set_action(ST_INSTALL, "switchAlt swap");
+
+		// Finally, store this swap to log
+		log.push_back("SWITCH: " + packages[i].get_name() + " " + packages[i].get_fullversion() + " to " + selectedPackage->get_name() + " " + selectedPackage->get_fullversion() + ", max_meet=" + IntToStr(max_meet) + ", min_unused=" + IntToStr(min_unused));
 	}
-	//WriteFileStrings("/tmp/switchAlternatives.log", log);
+
+	WriteFileStrings("/var/log/alternatives.log", log);
 	
 }
 
