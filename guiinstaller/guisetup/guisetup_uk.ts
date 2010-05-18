@@ -26,76 +26,76 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="mainwindow.cpp" line="23"/>
+        <location filename="mainwindow.cpp" line="24"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="98"/>
-        <location filename="mainwindow.cpp" line="119"/>
+        <location filename="mainwindow.cpp" line="99"/>
+        <location filename="mainwindow.cpp" line="120"/>
         <source>Really cancel installation?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="99"/>
-        <location filename="mainwindow.cpp" line="119"/>
+        <location filename="mainwindow.cpp" line="100"/>
+        <location filename="mainwindow.cpp" line="120"/>
         <source>Installation is not yet complete. Do you really want to cancel?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="109"/>
+        <location filename="mainwindow.cpp" line="110"/>
         <source>No help available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="109"/>
+        <location filename="mainwindow.cpp" line="110"/>
         <source>Sorry, no help available for this part</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="123"/>
+        <location filename="mainwindow.cpp" line="124"/>
         <source>Please confirm settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="123"/>
+        <location filename="mainwindow.cpp" line="124"/>
         <source>You chould confirm that settings are OK. Check the appropriate check box.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="132"/>
+        <location filename="mainwindow.cpp" line="134"/>
         <source>Configuration saved</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="132"/>
+        <location filename="mainwindow.cpp" line="134"/>
         <source>Setup configuration saved to /root/.config/guiinstaller.conf
 You can store it and use in next installations.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="144"/>
-        <location filename="mainwindow.cpp" line="155"/>
+        <location filename="mainwindow.cpp" line="146"/>
+        <location filename="mainwindow.cpp" line="157"/>
         <source>Step %1 of %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="164"/>
+        <location filename="mainwindow.cpp" line="166"/>
         <source>License not accepted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="164"/>
+        <location filename="mainwindow.cpp" line="166"/>
         <source>Without accepting license, you cannot proceed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="172"/>
+        <location filename="mainwindow.cpp" line="174"/>
         <source>No hard drives detected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="172"/>
+        <location filename="mainwindow.cpp" line="174"/>
         <source>Installer cannot detect any hard drives in your computer. It may be caused by:
  - You really didn&apos;t have any hard drives,
  - Sort of hardware problems (check cables first),
@@ -106,280 +106,297 @@ Installation cannot continue and will exit now.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="176"/>
+        <location filename="mainwindow.cpp" line="178"/>
         <source>No partitions detected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="176"/>
+        <location filename="mainwindow.cpp" line="178"/>
         <source>You have no partitions on your hard drive. Please create it first.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="197"/>
+        <location filename="mainwindow.cpp" line="199"/>
         <source>Timezone not selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="197"/>
+        <location filename="mainwindow.cpp" line="199"/>
         <source>Please select timezone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="364"/>
+        <location filename="mainwindow.cpp" line="366"/>
         <source>, no label</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="365"/>
+        <location filename="mainwindow.cpp" line="367"/>
         <source>, label: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="391"/>
-        <location filename="mainwindow.cpp" line="427"/>
-        <location filename="mainwindow.cpp" line="757"/>
+        <location filename="mainwindow.cpp" line="393"/>
+        <location filename="mainwindow.cpp" line="429"/>
+        <location filename="mainwindow.cpp" line="779"/>
         <source>, format to: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="515"/>
+        <location filename="mainwindow.cpp" line="517"/>
         <source>No bootloader disk selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="515"/>
+        <location filename="mainwindow.cpp" line="517"/>
         <source>You should specify drive or partition where bootloader will be installed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="535"/>
+        <location filename="mainwindow.cpp" line="538"/>
+        <location filename="mainwindow.cpp" line="556"/>
+        <source>Partition mount</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="538"/>
+        <location filename="mainwindow.cpp" line="556"/>
+        <source>Do you want to mount partition with packages?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="547"/>
         <source>Specify ISO image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="535"/>
+        <location filename="mainwindow.cpp" line="547"/>
         <source>ISO image (*.iso)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="542"/>
+        <location filename="mainwindow.cpp" line="560"/>
+        <source>Select partition with packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="564"/>
         <source>Specify directory with packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="547"/>
+        <location filename="mainwindow.cpp" line="569"/>
         <source>Incorrect directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="547"/>
+        <location filename="mainwindow.cpp" line="569"/>
         <source>Specified directory does not contain repository index.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="553"/>
+        <location filename="mainwindow.cpp" line="575"/>
         <source>Specify repository URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="553"/>
+        <location filename="mainwindow.cpp" line="575"/>
         <source>Please, enter repository URL, for example, http://core32.agilialinux.ru/</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="677"/>
+        <location filename="mainwindow.cpp" line="699"/>
         <source>&lt;p&gt;&lt;b&gt;Description:&lt;/b&gt; %1&lt;/p&gt;&lt;p&gt;&lt;b&gt;Packages to install:&lt;/b&gt; %2 (%3)&lt;/p&gt;&lt;p&gt;&lt;b&gt;Disk space required:&lt;/b&gt; %4&lt;/p&gt;&lt;p&gt;Please note that space requirement is estimated very approximately and does not respect partitioning scheme, temporary files and required space for work.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="683"/>
+        <location filename="mainwindow.cpp" line="705"/>
         <source>DVD detection failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="683"/>
+        <location filename="mainwindow.cpp" line="705"/>
         <source>Failed to detect DVD drive. Be sure you inserted installation DVD into this. Retry?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="691"/>
+        <location filename="mainwindow.cpp" line="713"/>
         <source>Repository connection failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="691"/>
+        <location filename="mainwindow.cpp" line="713"/>
         <source>Failed to connect to repository. If you trying to access network repository, check your network settings. Retry?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="762"/>
+        <location filename="mainwindow.cpp" line="784"/>
         <source>&lt;p&gt;&lt;b&gt;Package source:&lt;/b&gt; %1&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Installation type:&lt;/b&gt; %2&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Partitions that will be FORMATTED:&lt;/b&gt;&lt;ul&gt;%3&lt;/ul&gt;&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Partitions that will NOT be formatted but used:&lt;/b&gt;&lt;ul&gt;%4&lt;/ul&gt;&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Boot loader will be installed to:&lt;/b&gt; %5&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="785"/>
-        <location filename="mainwindow.cpp" line="816"/>
+        <location filename="mainwindow.cpp" line="807"/>
+        <location filename="mainwindow.cpp" line="838"/>
         <source>Verification failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="785"/>
-        <location filename="mainwindow.cpp" line="816"/>
+        <location filename="mainwindow.cpp" line="807"/>
+        <location filename="mainwindow.cpp" line="838"/>
         <source>Passwords doesn&apos;t match. Please enter it more carefully.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="791"/>
-        <location filename="mainwindow.cpp" line="822"/>
+        <location filename="mainwindow.cpp" line="813"/>
+        <location filename="mainwindow.cpp" line="844"/>
         <source>Empty password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="791"/>
+        <location filename="mainwindow.cpp" line="813"/>
         <source>Root password cannot be empty, it is very insecure!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="800"/>
+        <location filename="mainwindow.cpp" line="822"/>
         <source>Username not specified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="800"/>
+        <location filename="mainwindow.cpp" line="822"/>
         <source>Please, enter username</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="804"/>
-        <location filename="mainwindow.cpp" line="808"/>
-        <location filename="mainwindow.cpp" line="812"/>
+        <location filename="mainwindow.cpp" line="826"/>
+        <location filename="mainwindow.cpp" line="830"/>
+        <location filename="mainwindow.cpp" line="834"/>
         <source>Invalid username</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="804"/>
+        <location filename="mainwindow.cpp" line="826"/>
         <source>Username cannot start from number. Please specify correct username.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="808"/>
+        <location filename="mainwindow.cpp" line="830"/>
         <source>User root is an administrative account and already exists, please specify another name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="812"/>
+        <location filename="mainwindow.cpp" line="834"/>
         <source>Username contain invalid characters. Please specify correct username.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="822"/>
+        <location filename="mainwindow.cpp" line="844"/>
         <source>You cannot create user with no password. If you still want this, you can change password after installation.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="851"/>
-        <location filename="mainwindow.cpp" line="855"/>
+        <location filename="mainwindow.cpp" line="873"/>
+        <location filename="mainwindow.cpp" line="877"/>
         <source>Invalid mount point</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="851"/>
+        <location filename="mainwindow.cpp" line="873"/>
         <source>Mount point &apos;%1&apos; is invalid: it should be an absolute path. For more information, see help.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="855"/>
+        <location filename="mainwindow.cpp" line="877"/>
         <source>Mount point &apos;%1&apos; contains invalid characters. For more information, see help.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="867"/>
+        <location filename="mainwindow.cpp" line="889"/>
         <source>Unformatted filesystem mount</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="867"/>
+        <location filename="mainwindow.cpp" line="889"/>
         <source>You are attempting to mount an unformatted partition to &apos;%1&apos;. It is impossible, please mark it to format or leave unused.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="884"/>
+        <location filename="mainwindow.cpp" line="907"/>
         <source>No swap partition</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="884"/>
+        <location filename="mainwindow.cpp" line="907"/>
         <source>You didn&apos;t specified swap partition. It is OK for systems with lots of RAM (2Gb or more), but you will be unable to use suspend-to-disk. Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="886"/>
+        <location filename="mainwindow.cpp" line="909"/>
         <source>No root partition</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="886"/>
+        <location filename="mainwindow.cpp" line="909"/>
         <source>You didn&apos;t specified root partition. Without this, system cannot be installed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="891"/>
+        <location filename="mainwindow.cpp" line="914"/>
         <source>Unsupported root filesystem</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="891"/>
+        <location filename="mainwindow.cpp" line="914"/>
         <source>Unfortunately, GRUB boot loader cannot be installed on %1 filesystem.
 You can ignore this warning if you really know what are you going to do. 
 Do you want to make your system bootable without red-eye horror?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="901"/>
+        <location filename="mainwindow.cpp" line="924"/>
         <source>Duplicate mount points found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="901"/>
+        <location filename="mainwindow.cpp" line="924"/>
         <source>Duplicate mount points found: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="913"/>
+        <location filename="mainwindow.cpp" line="936"/>
         <source>Not enough space</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="913"/>
+        <location filename="mainwindow.cpp" line="936"/>
         <source>Size of root filesystem may be not enough for this installation type. You need to have at least %1 of space. Note that this check doesn&apos;t respect complex partitioning schemes such as separate /usr, so you can ignore this warning if you sure.
 
 Do you want to re-check your partitioning scheme?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="923"/>
-        <location filename="mainwindow.cpp" line="928"/>
+        <location filename="mainwindow.cpp" line="946"/>
+        <location filename="mainwindow.cpp" line="951"/>
         <source>Network settings error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="923"/>
+        <location filename="mainwindow.cpp" line="946"/>
         <source>Please specify hostname</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="928"/>
+        <location filename="mainwindow.cpp" line="951"/>
         <source>Please specify network name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="986"/>
+        <location filename="mainwindow.cpp" line="1011"/>
         <source>Show release notes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="990"/>
+        <location filename="mainwindow.cpp" line="1015"/>
         <source>Hide release notes</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1071,6 +1088,62 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="2982"/>
         <source>Next</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MountWidget</name>
+    <message>
+        <location filename="mount.cpp" line="26"/>
+        <source>Failed to mount partition</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mount.cpp" line="26"/>
+        <source>An error occured while mounting partition %1. Try another one.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mount.cpp" line="40"/>
+        <source>no label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mount.cpp" line="41"/>
+        <source>label: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MountWidgetClass</name>
+    <message>
+        <location filename="mount.ui" line="14"/>
+        <source>Mount partitions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mount.ui" line="24"/>
+        <source>/dev/sda1 (40Gb ext4), no label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mount.ui" line="29"/>
+        <source>/dev/sda2 (200Gb jfs), label: HOME</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mount.ui" line="37"/>
+        <source>Selected partition will be mounted to appropriate /var/mpkgmount/dev/ directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mount.ui" line="59"/>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mount.ui" line="66"/>
+        <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

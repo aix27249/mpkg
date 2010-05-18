@@ -79,7 +79,6 @@ class MainWindow: public QMainWindow {
 		void saveNetworking();
 		void saveNvidia();
 		void saveAlternatives();
-		void saveConfigAndExit();
 		int hasNvidia;
 		map<int, bool> skipPages;
 		QTranslator *translator;
@@ -96,6 +95,7 @@ class MainWindow: public QMainWindow {
 		void storePageSettings(int index);
 		void closeEvent(QCloseEvent *event);
 
+		void saveConfigAndExit();
 		void loadLicense();
 		void loadPartitioningDriveList();
 		void loadMountsTree();

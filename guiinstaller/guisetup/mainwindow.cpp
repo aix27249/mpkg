@@ -5,6 +5,7 @@
 #include <QSettings>
 #include <QListWidgetItem>
 #include "help.h"
+#include "mount.h"
 MainWindow *guiObject;
 
 
@@ -533,14 +534,34 @@ void MainWindow::saveBootloaderSettings() {
 
 bool MainWindow::validatePkgSources() {
 	if (ui->pkgSourceISORadioButton->isChecked()) {
-		isopath = QFileDialog::getOpenFileName(this, tr("Specify ISO image"), "/", tr("ISO image (*.iso)"), 0, QFileDialog::DontUseNativeDialog);
+		QString defaultPath = "/media";
+		if (QMessageBox::question(this, tr("Partition mount"), tr("Do you want to mount partition with packages?"), QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
+			MountWidget mountWidget;
+			updatePartitionLists();
+			mountWidget.init(&partitions);
+			mountWidget.setWindowTitle(tr("Select partition with ISO image"));
+			if (mountWidget.exec()) defaultPath = mountWidget.selectedMountPoint;
+			qDebug() << defaultPath << endl;
+		}
+
+		isopath = QFileDialog::getOpenFileName(this, tr("Specify ISO image"), defaultPath, tr("ISO image (*.iso)"), 0, QFileDialog::DontUseNativeDialog);
 		if (isopath.isEmpty() || !FileExists(isopath.toStdString())) {
 			return false;
 		}
 		printf("Got ISO image in %s\n", isopath.toStdString().c_str());
 	}
 	else if (ui->pkgSourceHDDRadioButton->isChecked()) {
-		hddpath = QFileDialog::getExistingDirectory(this, tr("Specify directory with packages"), "/media", QFileDialog::DontUseNativeDialog);
+		QString defaultPath = "/media";
+
+		if (QMessageBox::question(this, tr("Partition mount"), tr("Do you want to mount partition with packages?"), QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
+			MountWidget mountWidget;
+			updatePartitionLists();
+			mountWidget.init(&partitions);
+			mountWidget.setWindowTitle(tr("Select partition with packages"));
+			if (mountWidget.exec()) defaultPath = mountWidget.selectedMountPoint;
+			qDebug() << defaultPath << endl;
+		}
+		hddpath = QFileDialog::getExistingDirectory(this, tr("Specify directory with packages"), defaultPath, QFileDialog::DontUseNativeDialog);
 		if (hddpath.isEmpty() || !FileExists(hddpath.toStdString())) {
 			return false;
 		}
@@ -1027,4 +1048,5 @@ void MainWindow::mountFilterDontUse(bool enabled) {
 	ui->mountDoFormatRadioButton->setEnabled(false);
 	ui->mountNoFormatRadioButton->setChecked(true);
 }
-	
+
+

@@ -33,6 +33,7 @@ SET(guisetup_SRC
 	main.cpp
 	mainwindow.cpp
 	help.cpp
+	mount.cpp
 	thread.cpp
 )
 # headers for MOC
@@ -40,12 +41,14 @@ SET(guisetup_MOC_HDR
 	mainwindow.h
 	thread.h
 	help.h
+	mount.h
 )
 
 # UI
 SET(guisetup_UI
 	mainwindow.ui
 	help.ui
+	mount.ui
 )
 SET(guisetup_QRC
 	mainwindow.qrc

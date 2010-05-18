@@ -622,7 +622,8 @@ bool SetupThread::grub2config() {
 	 
 	 */
 	string bootDevice = settings->value("bootloader").toString().toStdString();
-	emit setDetailsText(tr("Installing GRUB2 to %1").arg(bootDevice.c_str()));
+	emit setSummaryText(tr("Installing GRUB2 to %1").arg(bootDevice.c_str()));
+	emit setDetailsText("");
 	string grubcmd = "chroot /mnt grub-install --no-floppy " + bootDevice;
 	system(grubcmd);
 	// Get the device map
@@ -732,6 +733,7 @@ void SetupThread::enablePlymouth(bool enable) {
 }
 
 void SetupThread::generateFontIndex() {
+	emit setSummaryText(tr("Initializing X11 font database"));
 	emit setDetailsText(tr("Generating font index"));
 	if (FileExists("/mnt/usr/sbin/setup_mkfontdir")) {
 		system("chroot /mnt /usr/sbin/setup_mkfontdir");
@@ -830,6 +832,16 @@ bool SetupThread::postInstallActions() {
 	setDefaultRunlevels();
 	setDefaultXDM();
 
+	// Link /dev/cdrom and /dev/mouse
+	string cdlist = get_tmp_file();
+	system("getcdromlist.sh " + cdlist + " 2>/dev/null >/dev/null");
+	vector<string> cdlist_v = ReadFileStrings(cdlist);
+	unlink(cdlist.c_str());
+	if (!cdlist_v.empty()) {
+		system("chroot /mnt ln -s /dev/" + cdlist_v[0] + " /dev/cdrom");
+	}
+	system("chroot /mnt ln -s /dev/psaux /dev/cdrom"); // Everybody today has this mouse device, so I don't care about COM port users
+
 	umountFilesystems();
 
 	return true;
@@ -910,6 +922,7 @@ void SetupThread::createUsers() {
 }
 
 void SetupThread::umountFilesystems() {
+	emit setSummaryText(tr("Finishing..."));
 	emit setDetailsText(tr("Unmounting filesystems and syncing disks"));
 	system("chroot /mnt umount /proc");
 	system("chroot /mnt umount /sys");
