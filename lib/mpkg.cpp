@@ -781,9 +781,11 @@ bool mpkgDatabase::check_cache(PACKAGE *package, bool clear_wrong, bool) {
 			printf("Skipping MD5 check for %s\n", package->get_name().c_str());
 			return true;
 		}
-		if (!forceSkipLinkMD5Checks)  got_md5 = get_file_md5(SYS_CACHE + "/" + package->get_filename());
+
+		pData.setItemCurrentAction(package->itemID, _("Checking MD5"));
+		got_md5 = get_file_md5(SYS_CACHE + "/" + package->get_filename());
 	       	if (package->get_md5() == got_md5) {
-			printf("MD5 CHECK %s: %sOK%s (%s == %s)\n", package->get_name().c_str(), CL_GREEN, CL_WHITE, package->get_md5().c_str(), got_md5.c_str());
+			//printf("MD5 CHECK %s: %sOK%s (%s == %s)\n", package->get_name().c_str(), CL_GREEN, CL_WHITE, package->get_md5().c_str(), got_md5.c_str());
 			return true;
 		}
 		printf("MD5 CHECK %s: %sFAILED%s (%s != %s)\n", package->get_name().c_str(), CL_RED, CL_WHITE, package->get_md5().c_str(), got_md5.c_str());
@@ -1918,7 +1920,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": complete"), SAYMODE_INLINE_END);
 	package->set_action(ST_NONE, "install_complete");
 	printHtmlProgress();
-	return MPKG_INSTALL_OK;
+	return 0;
 }	//End of install_package
 
 // New optimized exportPackage function.
