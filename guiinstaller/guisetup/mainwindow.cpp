@@ -863,9 +863,10 @@ bool MainWindow::validateMountPoints() {
 			else bootfs = mountOptions[i].newfs;
 		}
 		// Check for filesystem if no formatting is performed
-		if (mountOptions[i].newfs.isEmpty()) continue;
+		if (!mountOptions[i].newfs.isEmpty()) continue;
 		if (mountOptions[i].currentfs.isEmpty() || mountOptions[i].currentfs=="unformatted") {
 			QMessageBox::warning(this, tr("Unformatted filesystem mount"), tr("You are attempting to mount an unformatted partition to '%1'. It is impossible, please mark it to format or leave unused.").arg(mountOptions[i].mountpoint));
+			return false;
 
 		}	
 	}
@@ -960,6 +961,8 @@ bool MainWindow::checkNvidiaLoad() {
 		}
 		if (hasNvidia == -1) hasNvidia = 0;
 	}
+	// For debugging reasons, check for /tmp/nvidia_force file
+	if (FileExists("/tmp/nvidia_force")) hasNvidia = 1;
 	if (!hasNvidia) {
 		return false;
 	}

@@ -36,7 +36,11 @@ class MainWindow: public QMainWindow {
 		void showLog();
 
 
-		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);
+		void errorHandler(ErrorDescription err, const QString& details);
+
+	signals:
+		void sendErrorResponce(MpkgErrorReturn);
+
 	
 };
 #endif // MAINWINDOW_H_

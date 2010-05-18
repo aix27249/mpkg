@@ -4,6 +4,7 @@
 #include <QThread>
 #include <mpkg/libmpkg.h>
 
+#include <mpkg/errorhandler.h>
 struct SysConfig
 {
 	string swapPartition;
@@ -75,6 +76,7 @@ class SetupThread: public QThread {
 
 		QString rootPassword;
 		vector<TagPair> users;
+		MpkgErrorReturn errCode;
 
 	signals:
 		void setSummaryText(const QString &);
@@ -85,7 +87,16 @@ class SetupThread: public QThread {
 		void reportFinish();
 		void minimizeWindow();
 		void maximizeWindow();
+		void showMD5Button(bool);
+		void enableMD5Button(bool);
+		void sendErrorHandler(ErrorDescription, const QString &);
+
 	public slots:
+		void skipMD5();
+
+		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);
+		void receiveErrorResponce(MpkgErrorReturn);
+
 		void setDefaultRunlevels();
 		void setDefaultXDM();
 		void getCustomSetupVariants(const vector<string>& rep_list);

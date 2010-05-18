@@ -4,7 +4,24 @@ void updateProgressData(ItemState a) {
 	progressWidgetPtr->updateData(a);
 }
 
-
+MpkgErrorReturn SetupThread::errorHandler(ErrorDescription err, const string& details) {
+	QString qdetails = QString::fromStdString(details);
+	emit sendErrorHandler(err, qdetails);
+	errCode=MPKG_RETURN_WAIT;
+	while (errCode==MPKG_RETURN_WAIT) {
+		printf("Waiting for errCode\n");
+		sleep(1);
+	}
+	if (errCode!=MPKG_RETURN_ACCEPT && errCode!=MPKG_RETURN_SKIP && errCode!=MPKG_RETURN_RETRY && errCode!=MPKG_RETURN_CONTINUE && errCode!=MPKG_RETURN_IGNORE && errCode!=MPKG_RETURN_OK) {
+		emit reportError(tr("An error occured during package installation. Setup will exit now."));
+	}
+	return errCode;
+}
+void SetupThread::receiveErrorResponce(MpkgErrorReturn ret) {
+	printf("Received errorCode %d\n", ret);
+	errCode = ret;
+	
+}
 void SetupThread::updateData(const ItemState& a) {
 	emit setDetailsText(QString::fromStdString(a.name + ": " + a.currentAction));
 	//if (a.progress>=0 && a.progress<=100) ui->currentProgressBar->setValue(a.progress);
@@ -33,6 +50,11 @@ void SetupThread::getCustomSetupVariants(const vector<string>& rep_list) {
 	}
 }
 
+void SetupThread::skipMD5() {
+	forceSkipLinkMD5Checks=true;
+	forceInInstallMD5Check = false;
+	emit enableMD5Button(false);
+}
 CustomPkgSet SetupThread::getCustomPkgSet(const string& name) {
 	vector<string> data = ReadFileStrings("/tmp/setup_variants/" + name + ".desc");
 	CustomPkgSet ret;
@@ -152,7 +174,7 @@ bool SetupThread::prepareInstallQueue() {
 	for (size_t i=0; i<commitList.size(); ++i) {
 		queryLog.push_back(commitList[i].get_name() + " " + commitList[i].get_fullversion() + " " + boolToStr(commitList[i].action()==ST_INSTALL));
 	}
-	WriteFileStrings("/var/log/comlist1.log", queryLog);
+	WriteFileStrings("/var/log/comlist_before_alterswitch.log", queryLog);
 	queryLog.clear();
 
 	vector<string> alternatives;
@@ -177,7 +199,7 @@ bool SetupThread::prepareInstallQueue() {
 	for (size_t i=0; i<commitList.size(); ++i) {
 		queryLog.push_back(commitList[i].get_name() + " " + commitList[i].get_fullversion()+ " " + boolToStr(commitList[i].action()==ST_INSTALL));
 	}
-	WriteFileStrings("/var/log/comlist2.log", queryLog);
+	WriteFileStrings("/var/log/comlist_after_alterswitch.log", queryLog);
 	queryLog.clear();
 
 	PACKAGE_LIST commitListFinal;
@@ -188,7 +210,7 @@ bool SetupThread::prepareInstallQueue() {
 		}
 
 	}
-	WriteFileStrings("/var/log/setup_query.log", queryLog);
+	WriteFileStrings("/var/log/final_setup_query.log", queryLog);
 	core->clean_queue();
 	core->install(&commitListFinal);
 	core->commit(true);
@@ -361,7 +383,6 @@ bool SetupThread::processInstall() {
 	if (FileExists("/var/log/mount/cache")) system("ln -s /var/log/mount/cache /var/mpkg/cache/.fcache");
 	if (core->commit()!=0) {
 		delete core;
-		emit reportError(tr("An error occured during package installation. Setup will exit now."));
 		return false;
 	}
 	emit setSummaryText(tr("Finishing installation"));

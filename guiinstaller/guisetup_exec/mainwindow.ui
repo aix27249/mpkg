@@ -219,6 +219,13 @@ p, li { white-space: pre-wrap; }
            </spacer>
           </item>
           <item>
+           <widget class="QPushButton" name="skipMD5Button">
+            <property name="text">
+             <string>Skip MD5 check</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="showLogButton">
             <property name="text">
              <string>Show log</string>

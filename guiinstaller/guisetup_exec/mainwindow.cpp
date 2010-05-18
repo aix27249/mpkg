@@ -6,15 +6,14 @@
 #include <QListWidgetItem>
 #include <QTimer>
 //#include <QtSvg/QSvgWidget>
-
-MainWindow *guiObject;
-
+SetupThread *threadPtr;
 
 MpkgErrorReturn qtErrorHandler(ErrorDescription err, const string& details) {
-	return guiObject->errorHandler(err, details);
+	printf("Error handler receiver: %s %s\n", err.text.c_str(), details.c_str());
+	return threadPtr->errorHandler(err, details);
 }
 
-MpkgErrorReturn MainWindow::errorHandler(ErrorDescription err, const string& details) {
+void MainWindow::errorHandler(ErrorDescription err, const QString& details) {
 	QMessageBox box(this);
 	QVector<QPushButton *> buttons;
 	if (err.action.size()>1) {
@@ -24,24 +23,32 @@ MpkgErrorReturn MainWindow::errorHandler(ErrorDescription err, const string& det
 	}
 	box.setWindowTitle(tr("Error"));
 	box.setText(err.text.c_str());
-	box.setInformativeText(details.c_str());
+	box.setInformativeText(details);
 	box.exec();
-	if (err.action.size()==1) return err.action[0].ret;
-	for (int i=0; i<buttons.size(); ++i) {
-		if (box.clickedButton()==buttons[i]) return err.action[i].ret;
+	if (err.action.size()==1) {
+		emit sendErrorResponce(err.action[0].ret);
+		return;
 	}
-	return MPKG_RETURN_ABORT;
+	for (int i=0; i<buttons.size(); ++i) {
+		if (box.clickedButton()==buttons[i]) {
+			emit sendErrorResponce(err.action[i].ret);
+			return;
+		}
+	}
+	emit sendErrorResponce(MPKG_RETURN_ABORT);
 }
 
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindowClass) {
+	threadPtr=&thread;
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
-	guiObject = this;
 	ui->setupUi(this);
 	//setWindowState(Qt::WindowMaximized);
 	show();
 	//changePhoto();
+	qRegisterMetaType<ErrorDescription> ("ErrorDescription");
+	qRegisterMetaType<MpkgErrorReturn> ("MpkgErrorReturn");
 	connect(&thread, SIGNAL(setSummaryText(const QString &)), ui->currentSummaryLabel, SLOT(setText(const QString &)), Qt::QueuedConnection);
 	connect(&thread, SIGNAL(setDetailsText(const QString &)), ui->currentDetailsLabel, SLOT(setText(const QString &)), Qt::QueuedConnection);
 	connect(&thread, SIGNAL(setProgress(int)), ui->progressBar, SLOT(setValue(int)), Qt::QueuedConnection);
@@ -55,6 +62,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(ui->rebootLaterButton, SIGNAL(clicked()), qApp, SLOT(quit()));
 
 	connect(ui->showLogButton, SIGNAL(clicked()), this, SLOT(showLog()));
+	connect(ui->skipMD5Button, SIGNAL(clicked()), &thread, SLOT(skipMD5()));
+	connect(&thread, SIGNAL(showMD5Button(bool)), ui->skipMD5Button, SLOT(setVisible(bool)));
+	connect(&thread, SIGNAL(enableMD5Button(bool)), ui->skipMD5Button, SLOT(setEnabled(bool)));
+	connect(this, SIGNAL(sendErrorResponce(MpkgErrorReturn)), &thread, SLOT(receiveErrorResponce(MpkgErrorReturn)));
+	connect(&thread, SIGNAL(sendErrorHandler(ErrorDescription, const QString &)), this, SLOT(errorHandler(ErrorDescription, const QString &)));
+			
 
 	// GTFO mounted cd :)
 	system("umount /var/log/mount");

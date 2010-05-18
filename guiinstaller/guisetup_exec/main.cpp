@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 	WriteFile("/var/run/guisetup_exec.pid", IntToStr(pid));
 	setupMode=true;
 	simulate=false;
-	forceSkipLinkMD5Checks=true;
+	forceSkipLinkMD5Checks=false;
 	forceInInstallMD5Check = false;
 	// We don't care of database integrity in case of installation failure half-way, so we can use fast mode. It has beed tested enough, and I think it is useful.
 	//  Warp drive active!

@@ -771,23 +771,33 @@ int mpkgDatabase::emerge_to_db(PACKAGE *package)
 }
 
 
-bool mpkgDatabase::check_cache(PACKAGE *package, bool clear_wrong, bool)
-{
+bool mpkgDatabase::check_cache(PACKAGE *package, bool clear_wrong, bool) {
 	string fname = SYS_CACHE + "/" + package->get_filename();
-	if (package->usedSource.find("cdrom://")!=std::string::npos && FileExists(fname)) return true;
+	//if (package->usedSource.find("cdrom://")!=std::string::npos && FileExists(fname)) return true; // WHAT THE FUCK IS THIS??!!
 	string got_md5;
 	bool broken_sym;
 	if (!forceSkipLinkMD5Checks)  got_md5 = get_file_md5(SYS_CACHE + "/" + package->get_filename());
 	if (FileExists(fname, &broken_sym) && !broken_sym) {
-	       	if (forceSkipLinkMD5Checks || package->get_md5() == got_md5)
+		if (forceSkipLinkMD5Checks) {
+			printf("Skipping MD5 check for %s\n", package->get_name().c_str());
 			return true;
-		else {
-			if (!dialogMode && !htmlMode) say(_("Incorrect MD5 for package %s: received %s, but should be %s\n"), package->get_name().c_str(), got_md5.c_str(), package->get_md5().c_str());
-			if (clear_wrong) unlink(fname.c_str());
-			return false;
 		}
+	       	if (package->get_md5() == got_md5) {
+			printf("MD5 CHECK %s: %sOK%s (%s == %s)\n", package->get_name().c_str(), CL_GREEN, CL_WHITE, package->get_md5().c_str(), got_md5.c_str());
+			return true;
+		}
+		printf("MD5 CHECK %s: %sFAILED%s (%s != %s)\n", package->get_name().c_str(), CL_RED, CL_WHITE, package->get_md5().c_str(), got_md5.c_str());
+		if (!dialogMode && !htmlMode) {
+			say(_("Incorrect MD5 for package %s: received %s, but should be %s\n"), package->get_name().c_str(), got_md5.c_str(), package->get_md5().c_str());
+			mpkgErrorHandler.callError(MPKG_DOWNLOAD_ERROR, _("Invalid checksum in downloaded file ") + package->get_filename());
+		}
+		if (clear_wrong) {
+			printf("Clearing bad MD5\n");
+			unlink(fname.c_str());
+		}
+		return false;
 	}
-	else return false;
+	return false;
 }
 
 bool needUpdateXFonts = false;
@@ -1231,7 +1241,7 @@ installProcess:
 			ncInterface.setProgress(0);
 		}
 		if (dialogMode) ncInterface.setProgressMax(install_list.size());
-		for(unsigned int i=0; i<install_list.size(); i++)
+		for(size_t i=0; i<install_list.size(); i++)
 		{
 			actionBus.setActionProgress(ACTIONID_MD5CHECK, i);
 			if (actionBus._abortActions)
@@ -1368,7 +1378,6 @@ installProcess:
 		// Actually installing
 
 		pData.setCurrentAction(_("Installing packages"));
-		int installItemID;
 		uint64_t sz = 0;
 		for(unsigned int i=0; i<install_list.size(); i++)
 		{
@@ -1394,7 +1403,7 @@ installProcess:
 		time_t pkgInstallStartTime=0, pkgInstallEndTime=0, pkgTotalInstallTime=0;
 		int64_t pkgInstallCurrentSize=0;
 		long double pkgInstallSpeed=0;
-
+		MpkgErrorCode install_result;
 		for(unsigned int i=0;i<install_list.size();i++)
 		{
 			pkgInstallStartTime=time(NULL);
@@ -1423,8 +1432,10 @@ installProcess:
 				//csz += atol(install_list[i].get_installed_size().c_str());
 				//ncInterface.setProgress(csz);
 			}
-			if (install_package(install_list.get_package_ptr(i),i,install_list.size())!=0)
+			install_result = (MpkgErrorCode) install_package(install_list.get_package_ptr(i),i,install_list.size());
+			if (install_result!=0)
 			{
+				mpkgErrorHandler.callError(install_result, _("Failed to install package ") + install_list[i].get_name() + " " + install_list[i].get_fullversion());
 				installFailures++;
 				pData.setItemCurrentAction(install_list[i].itemID, _("Installation failed"));
 				pData.setItemState(install_list[i].itemID, ITEMSTATE_FAILED);
@@ -1545,9 +1556,6 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		{
 			msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": mounting CD-ROM"));
 
-/*			//printf("Yes, we are installing package from CD. Ejecting, mounting and checking the volume\n");
-			system("eject " + CDROM_DEVICE);
-			if (setupMode) system("echo EJECTING mpkg:1151 >/dev/tty4");*/
 			// Yeah, we used CD and there are symlink. Let's ask for appropriate disc
 			// First, determine Volume ID
 			string source;
@@ -1568,7 +1576,6 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 					//printf("Yes, we are installing package from CD. Ejecting, mounting and checking the volume\n");
 					if (!noEject) {
 						system("eject " + CDROM_DEVICE + " 2>/dev/null >/dev/null");
-						if (setupMode) system("echo EJECTING mpkg:1178 >/dev/tty4");
 					}
 
 					if (ncInterface.showYesNo(_("Please insert DVD with label ") + cdromVolName + _(" in drive ") + CDROM_DEVICE, "OK", "Cancel"))
@@ -1602,7 +1609,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		else {
 			mError(_("Installation error: file not found"));
 			mError(_("Filename was: ") + SYS_CACHE + package->get_filename());
-			return MPKGERROR_FILEOPERATIONS;
+			return MPKG_INSTALL_EXTRACT_ERROR;
 		}
 	}
 
@@ -1617,20 +1624,20 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		string binary_out;
 		if (emerge_package(SYS_CACHE + package->get_filename(), &binary_out)!=0) {
 			mError("Failed to build. Aborting...");
-			return -45;
+			return MPKG_INSTALL_META_ERROR;
 		}
 		say(_("Package was built. Filename: %s\n"), binary_out.c_str());
 		// Now we have a new binary package with filename stored in variable binary_out. Import him into database and create a link to cache.
 		
 		if (!copyFile(binary_out, SYS_CACHE + getFilename(binary_out))) {
 			mError("Error copying package, aborting...");
-			return -45;
+			return MPKG_INSTALL_META_ERROR;
 		}
 		say(_("Importing to database\n"));
 		LocalPackage binpkg(SYS_CACHE + getFilename(binary_out));
 		if (binpkg.injectFile()!=0) {
 			mError("Error injecting binary package, cannot continue");
-			return -45;
+			return MPKG_INSTALL_META_ERROR;
 		}
 		PACKAGE binary_package = binpkg.data;
 		binary_package.set_action(ST_INSTALL, "new-bin");
@@ -1651,7 +1658,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		string md5 = get_file_md5(SYS_CACHE + package->get_filename());
 		if (package->get_md5() != md5) {
 			mError(_("Error while installing package ") + package->get_name() + _(": MD5 checksum incorrect: got ") + md5 + _(", should be: ") + package->get_md5());
-			return MPKGERROR_DOWNLOADERROR;
+			return MPKG_INSTALL_META_ERROR;
 		}
 	}
 
@@ -1741,7 +1748,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		{
 			currentStatus = _("Error: Unresolved file conflict on package ") + package->get_name();
 			mError(_("Unresolved file conflict on package ") + package->get_name() + _(", it will be skipped!"));
-			return -5;
+			return MPKG_INSTALL_FILE_CONFLICT;
 		}
 	}
 	
@@ -1790,7 +1797,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 
 	string create_root="mkdir -p "+sys_root+" 2>/dev/null";
 	if (!simulate) system(create_root.c_str());
-	sys="(cd "+sys_root+"; tar xf '"+sys_cache + package->get_filename() + "'";
+	sys="(cd "+sys_root+" && tar xf '"+sys_cache + package->get_filename() + "'";
 	//If previous version isn't purged, do not overwrite config files
 	if (_cmdOptions["skip_doc_installation"]=="true") {
 		sys += " --exclude usr/doc";
@@ -1801,9 +1808,8 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	if (_cmdOptions["skip_dev_installation"]=="true") {
 		sys += " --exclude usr/include";
 	}
-	// Next option is dangerous, because I'm not sure what it can cause. But let's try
 	if (_cmdOptions["skip_static_a_installation"]=="true") {
-		sys += " --exclude 'lib/*.a'";
+		sys += " --exclude 'lib/*.a' --exclude 'lib64/*.a'";
 	}
 	if (no_purge)
 	{
@@ -1840,12 +1846,12 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	}
 	package->get_files_ptr()->clear();
 	package_files.clear();
-	if (setupMode) sys+=" > /dev/tty4 2>/dev/tty4 )";
-	else sys+=" >/dev/null 2>>/var/log/mpkg-errors.log )";
+	if (setupMode && dialogMode) sys+=" > /dev/tty4 2>/dev/tty4 )";
+	else if (dialogMode) sys+=" >/dev/null 2>>/var/log/mpkg-errors.log )";
+	else sys+= " )";
 
-	if (!simulate)
-	{
-		if (system(sys.c_str()) == 0 || package->get_name()=="aaa_base")
+	if (!simulate) {
+		if (system(sys.c_str()) == 0 /* || package->get_name()=="aaa_base"*/) // Somebody, TELL ME WHAT THE HELL IS THIS???! WHY SUCH EXCEPTION?!
 		{
 			if (ultraFastMode) {
 				if (FileExists(SYS_ROOT + "/install/doinst.sh") && _cmdOptions["preseve_doinst"]=="true") system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/doinst.sh " + package->get_scriptdir());
@@ -1860,7 +1866,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 			printHtmlProgress();
 			currentStatus = _("Failed to extract!");
 			mError(_("Error while extracting package ") + package->get_name());
-			return -10;
+			return MPKG_INSTALL_EXTRACT_ERROR;
 		}
 	}
 
@@ -1912,7 +1918,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": complete"), SAYMODE_INLINE_END);
 	package->set_action(ST_NONE, "install_complete");
 	printHtmlProgress();
-	return 0;
+	return MPKG_INSTALL_OK;
 }	//End of install_package
 
 // New optimized exportPackage function.
