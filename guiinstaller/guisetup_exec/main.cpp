@@ -32,6 +32,8 @@ int main(int argc, char *argv[]) {
 	//  Warp drive active!
 	_cmdOptions["ramwarp"]="yes";
 	_cmdOptions["warpmode"]="yes";
+	if (FileExists("/tmp/sw1")) _cmdOptions["doinst_scrinst"]="yes";
+	if (FileExists("/tmp/sw2")) _cmdOptions["bashamp"]="yes";
 	noEject=true;
 
 

@@ -1856,7 +1856,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		if (system(sys.c_str()) == 0 /* || package->get_name()=="aaa_base"*/) // Somebody, TELL ME WHAT THE HELL IS THIS???! WHY SUCH EXCEPTION?!
 		{
 			if (ultraFastMode) {
-				if (FileExists(SYS_ROOT + "/install/doinst.sh") && _cmdOptions["preseve_doinst"]=="true") system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/doinst.sh " + package->get_scriptdir());
+				if (_cmdOptions["preseve_doinst"]=="true" && FileExists(SYS_ROOT + "/install/doinst.sh") ) system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/doinst.sh " + package->get_scriptdir());
 				if (FileExists(SYS_ROOT + "/install/postremove.sh")) system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/postremove.sh " + package->get_scriptdir());
 				if (FileExists(SYS_ROOT + "/install/preremove.sh")) system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/preremove.sh " + package->get_scriptdir());
 			}
@@ -1885,8 +1885,9 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		if (FileExists(SYS_ROOT + "/install/doinst.sh"))
 		{
 			//string postinst="cd " + SYS_ROOT + " ; sh "+package->get_scriptdir() + "doinst.sh";
-			string postinst="cd " + SYS_ROOT + " ; sh install/doinst.sh";
-			if (setupMode) postinst += " 2>> /dev/tty4 >/dev/tty4";
+			string postinst;
+			postinst="cd " + SYS_ROOT + " ; bash install/doinst.sh & "; // New fast mode: we don't care much about script run ordering, and parallel run is MUCH faster.
+			if (setupMode && dialogMode) postinst += " 2>> /dev/tty4 >/dev/tty4";
 			else if (dialogMode) postinst += " 2>>/dev/null >/dev/null";
 			if (!simulate) {
 #ifdef DEBUG
