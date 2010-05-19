@@ -993,7 +993,7 @@ void SetupThread::setDefaultRunlevels() {
 	system("chroot /mnt rc-update add sshd default");
 	system("chroot /mnt rc-update add alsasound default");
 	system("chroot /mnt rc-update add acpid default");
-	system("chroot /mnt rc-update add cups default");
+	system("chroot /mnt rc-update add cupsd default");
 
 	
 }
