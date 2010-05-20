@@ -35,7 +35,7 @@ vector<CustomPkgSet> customPkgSetList;
 bool enable_addons = false;
 bool enable_contrib = false;
 bool askForKDE = false;
-string i_menuHead = _("AgiliaLinux ") + (string) DISTRO_VERSION;// + " installation";// + " [mpkg  v." + mpkgVersion + " build " + mpkgBuild + "]";
+string i_menuHead = _("AgiliaLinux ") + (string) string(DISTRO_VERSION);// + " installation";// + " [mpkg  v." + mpkgVersion + " build " + mpkgBuild + "]";
 bool licenseAccepted = false;
 bool unattended = false;
 SysConfig systemConfig;
@@ -206,10 +206,16 @@ bool checkForExt4() {
 
 void setDefaultRunlevel(const string& lvl) {
 	// Can change runlevels 3 and 4 to lvl
+	//
 	string data = ReadFile(systemConfig.rootMountPoint + "/etc/inittab");
 	strReplace(&data, "id:4:initdefault", "id:" + lvl + ":initdefault");
 	strReplace(&data, "id:3:initdefault", "id:" + lvl + ":initdefault");
 	WriteFile(systemConfig.rootMountPoint + "/etc/inittab", data);
+	if (lvl=="4") {
+		if (FileExists("/mnt/etc/rc.d/init.d/kdm")) system("chroot /mnt rc-update add kdm default");
+		else if (FileExists("/mnt/etc/rc.d/init.d/gdm")) system("chroot /mnt rc-update add gdm default");
+		else if (FileExists("/mnt/etc/rc.d/init.d/xdm")) system("chroot /mnt rc-update add xdm default");
+	}
 }
 string getUUID(const string& dev) {
 	string tmp_file = get_tmp_file();
@@ -1092,8 +1098,8 @@ bool setHostname() {
 	return true;
 }
 void enablePlymouth(bool enable) {
-	if (enable) system("chmod +x " + systemConfig.rootMountPoint + "/etc/rc.d/rc.plymouth >/dev/tty4 2>/dev/tty4");
-	else system("chmod -x " + systemConfig.rootMountPoint + "/etc/rc.d/rc.plymouth >/dev/tty4 2>/dev/tty4");
+	if (enable) system("chroot /mnt rc-update add plymouth default");
+	else system("chroot /mnt rc-update del plymouth plymouth");
 }
 
 void askPlymouth() {
@@ -1101,6 +1107,20 @@ void askPlymouth() {
 	if (FileExists(systemConfig.rootMountPoint + "/etc/rc.d/rc.plymouth")) {
 		enablePlymouth(ncInterface.showYesNo(_("AgiliaLinux has EXPERIMENTAL support for graphical boot splash implemented using Plymouth.\nIf your hardware supports KMS (kernel modesetting), you can try to enable it now.\nIt seems to work fine, but it wasn't tested well and may cause problems.\nIn any case, you can change your choice later by changing permissions on /etc/rc.d/rc.plymouth file.\n\nDo you want to enable experimental splash screen?")));
 	}
+}
+
+void setDefaultRunlevels() {
+// We don't know which of them are in system in real, but let's try them all
+	system("chroot /mnt rc-update add sysfs sysinit 2>/dev/tty4 >/dev/tty4");
+	system("chroot /mnt rc-update add udev sysinit 2>/dev/tty4 >/dev/tty4");
+	system("chroot /mnt rc-update add consolefont default 2>/dev/tty4 >/dev/tty4");
+	system("chroot /mnt rc-update add hald default 2>/dev/tty4 >/dev/tty4");
+	system("chroot /mnt rc-update add sysklogd default 2>/dev/tty4 >/dev/tty4");
+	system("chroot /mnt rc-update add dbus default 2>/dev/tty4 >/dev/tty4");
+	system("chroot /mnt rc-update add sshd default 2>/dev/tty4 >/dev/tty4");
+	system("chroot /mnt rc-update add alsasound default 2>/dev/tty4 >/dev/tty4");
+	system("chroot /mnt rc-update add acpid default 2>/dev/tty4 >/dev/tty4");
+	system("chroot /mnt rc-update add cupsd default 2>/dev/tty4 >/dev/tty4");
 }
 
 
@@ -1118,6 +1138,7 @@ int performConfig(bool simple)
 	generateIssue();
 	writeFstab();
 	buildInitrd();
+	setDefaultRunlevels();
 	vector<MenuItem> networkManagers;
 	string selectedNetworkManager;
 	if (FileExists(systemConfig.rootMountPoint + "/usr/sbin/NetworkManager")) {
@@ -1233,10 +1254,12 @@ try_install_boot:
 		
 		if (selectedNetworkManager == "NetworkManager") {
 			system("chmod +x " + systemConfig.rootMountPoint + "/etc/rc.d/rc.networkmanager >/dev/tty4 2>/dev/tty4");
+			system("chroot /mnt rc-update add networkmanager default 2>/dev/tty4 >/dev/tty4");
 			if (!setHostname()) goto selectNetManagerMode;
 		}
 		if (selectedNetworkManager == "wicd") {
 			system("chmod +x " + systemConfig.rootMountPoint + "/etc/rc.d/rc.wicd >/dev/tty4 2>/dev/tty4");
+			system("chroot /mnt rc-update add wicd default 2>/dev/tty4 >/dev/tty4");
 			if (!setHostname()) goto selectNetManagerMode;
 		}
 		if (selectedNetworkManager == "netconfig") {
@@ -2548,9 +2571,9 @@ string selectLanguage() {
 	CursesInterface lselect(false);
 //	lselect._BGF=" ";
 #ifndef X86_64
-	lselect.setTitle("AgiliaLinux 10.4 installer");
+	lselect.setTitle("AgiliaLinux " + string(DISTRO_VERSION) + " installer");
 #else
-	lselect.setTitle("AgiliaLinux64 10.4 installer");
+	lselect.setTitle("AgiliaLinux64 " + string(DISTRO_VERSION) + " installer");
 #endif
 	lselect.setSubtitle("AgiliaLinux installer: language selection");
 	string lng = lselect.showMenu2("Please, select language:\nПожалуйста, выберите язык:\nВибір мови:\n", menuItems);
@@ -2770,8 +2793,8 @@ int main(int argc, char *argv[])
 	textdomain("mpkg");
 	ncInterface.setStrings();
 	ncInterface.cancelStr=_("BACK");
-	if (systemConfig.lang=="ru_RU.UTF-8") i_menuHead = "Установка AgiliaLinux " + (string) DISTRO_VERSION;
-	if (systemConfig.lang=="uk_UA.UTF-8") i_menuHead = "Встановлення AgiliaLinux " + (string) DISTRO_VERSION;
+	if (systemConfig.lang=="ru_RU.UTF-8") i_menuHead = "Установка AgiliaLinux " + (string) string(DISTRO_VERSION);
+	if (systemConfig.lang=="uk_UA.UTF-8") i_menuHead = "Встановлення AgiliaLinux " + (string) string(DISTRO_VERSION);
 	ncInterface.setTitle(i_menuHead);
 
 	if (!isDatabaseLocked()) {
@@ -3084,7 +3107,7 @@ bool liloconfig()
 
 	// Check if /boot is on separate device
 	string liloConfig = \
-"# LILO configuration file (created by AgiliaLinux 10.4 setup)\n\
+"# LILO configuration file (created by AgiliaLinux " + string(DISTRO_VERSION) + " setup)\n\
 # Global LILO options section\n\
 lba32 # Allows to boot from cylinders over 1024\n\
 append = \"" + bootConfig.kernelOptions + "\" # Kernel options\n\
@@ -3248,16 +3271,16 @@ bool grubconfig()
 		}
 	}
 	system("echo GEN_MENU > /dev/tty4"); //DEBUG
-	string grubConfig = "# GRUB configuration, generated by AgiliaLinux 10.4 setup\n\
+	string grubConfig = "# GRUB configuration, generated by AgiliaLinux " + string(DISTRO_VERSION) + " setup\n\
 timeout 30\n\
 color white/green black/light-gray\n\
 # End GRUB global section\n\
 # Linux bootable partition config begins\n\
-title AgiliaLinux 10.4 on " + systemConfig.rootPartition + "\n\
+title AgiliaLinux " + string(DISTRO_VERSION) + " on " + systemConfig.rootPartition + "\n\
 root ("+ mapPart(devMap, grubBootPartition) +")\n\
 kernel " + kernelstring + " root=UUID=" + getUUID(systemConfig.rootPartition) + " ro vga=" + vgaMode+ " " + bootConfig.kernelOptions+"\n" + initrdstring + "\n";
 // Add safe mode:
-	grubConfig += "title AgiliaLinux 10.4 (safe mode) on " + systemConfig.rootPartition + "\n\
+	grubConfig += "title AgiliaLinux " + string(DISTRO_VERSION) + " (safe mode) on " + systemConfig.rootPartition + "\n\
 root ("+ mapPart(devMap, grubBootPartition) +")\n\
 kernel " + kernelstring + " root=" + systemConfig.rootPartition + " ro vga=" + vgaMode+ " " + bootConfig.kernelOptions+" init=/bin/sh\n";
 
@@ -3361,7 +3384,7 @@ bool grub2config()
 			break;
 		}
 	}
-	string grubConfig = "# GRUB2 configuration, generated by AgiliaLinux 10.4 setup\n\
+	string grubConfig = "# GRUB2 configuration, generated by AgiliaLinux " + string(DISTRO_VERSION) + " setup\n\
 set timeout=10\n\
 set default=0\n\
 set root=("+ mapPart(devMap, grubBootPartition, 0) +")\n\
@@ -3378,11 +3401,11 @@ set menu_color_normal=black/black\n\
 set menu_color_highlight=white/dark-gray\n\
 # End GRUB global section\n\
 # Linux bootable partition config begins\n\
-menuentry \"" + string(_("AgiliaLinux 10.4 on ")) + systemConfig.rootPartition + "\" {\n\
+menuentry \"" + string(_("AgiliaLinux ") + string(DISTRO_VERSION) + _(" on ")) + systemConfig.rootPartition + "\" {\n\
 \tset root=(" + mapPart(devMap, grubBootPartition, 0) + ")\n" + gfxPayload + \
 "\tlinux " + kernelstring + " root=UUID=" + getUUID(systemConfig.rootPartition) + " ro " + bootConfig.kernelOptions+"\n\t" + initrdstring + "\n}\n\n";
 // Add safe mode
-	grubConfig += "menuentry \"" + string(_("AgiliaLinux 10.4 (recovery mode) on ")) + systemConfig.rootPartition + "\" {\n" + gfxPayload + \
+	grubConfig += "menuentry \"" + string(_("AgiliaLinux ") + string(DISTRO_VERSION) + _(" (recovery mode) on ")) + systemConfig.rootPartition + "\" {\n" + gfxPayload + \
 "\tlinux ("+ mapPart(devMap, grubBootPartition, 0) +")" + kernelstring + " root=" + systemConfig.rootPartition + " ro " + bootConfig.kernelOptions+" single\n}\n\n";
 	vector<OsRecord> osList = getOsList();
 	if (osList.size()<1) strReplace(&grubConfig, "timeout=10", "timeout=3");
