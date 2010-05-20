@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>714</width>
-    <height>537</height>
+    <height>580</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -141,9 +141,7 @@
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Droid Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 2010.05.21 Snapshot 3 Release Notes&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This is a beta release and isn't intended for any sort of everyday use. It contains bugs, possible - critical and dangerous ones. However, we hope you will find it useful.&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;AgiliaLinux is based on MOPSLinux 7.0 release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This is a development release. For more information, see official site: http://www.agilialinux.ru/&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -1335,7 +1333,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QLabel" name="label_60">
           <property name="text">
-           <string>Installer detected NVIDIA video card in your hardware. If you want accelerated graphics and 3D, select driver appropriate to your card. By default, opensource driver is used, but it has no acceleration at all.</string>
+           <string>Installer detected NVIDIA video card in your hardware. If you want accelerated graphics and 3D, select driver appropriate to your card. By default, opensource driver is used, but it still has lack of 3D functionality.</string>
           </property>
           <property name="wordWrap">
            <bool>true</bool>
@@ -1359,9 +1357,9 @@ p, li { white-space: pre-wrap; }
          </spacer>
         </item>
         <item>
-         <widget class="QRadioButton" name="nvidia190RadioButton">
+         <widget class="QRadioButton" name="nvidiaLatestRadioButton">
           <property name="text">
-           <string>190.xx (GeForce 6 and later)</string>
+           <string>195.xx: GeForce 6 and later cards (including Quadro and ION)</string>
           </property>
           <property name="checked">
            <bool>false</bool>
@@ -1371,21 +1369,21 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QRadioButton" name="nvidia173RadioButton">
           <property name="text">
-           <string>173.xx (GeForce FX)</string>
+           <string>173.xx: GeForce 5 FX, Quadro 5 FX</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QRadioButton" name="nvidia96RadioButton">
           <property name="text">
-           <string>96.xx (GeForce 4 and older)</string>
+           <string>96.xx: GeForce 2 Ti (NOT MX), 3, 4 Ti, 4 MX; Quadro 2 MXR, 2 Go, 4 Go, NVS</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QRadioButton" name="nvidiaNVRadioButton">
           <property name="text">
-           <string>Use open source driver (nv)</string>
+           <string>Use open source driver (nouveau)</string>
           </property>
           <property name="checked">
            <bool>true</bool>
@@ -3032,7 +3030,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>setupVariantsListWidget</tabstop>
   <tabstop>altCleartypeCheckBox</tabstop>
   <tabstop>altBFSCheckBox</tabstop>
-  <tabstop>nvidia190RadioButton</tabstop>
+  <tabstop>nvidiaLatestRadioButton</tabstop>
   <tabstop>nvidia173RadioButton</tabstop>
   <tabstop>nvidia96RadioButton</tabstop>
   <tabstop>nvidiaNVRadioButton</tabstop>

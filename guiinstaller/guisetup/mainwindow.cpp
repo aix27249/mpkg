@@ -993,10 +993,10 @@ bool MainWindow::checkNvidiaLoad() {
 }
 
 void MainWindow::saveNvidia() {
-	if (ui->nvidia190RadioButton->isChecked()) settings->setValue("nvidia-driver", "190");
+	if (ui->nvidiaLatestRadioButton->isChecked()) settings->setValue("nvidia-driver", "latest");
 	else if (ui->nvidia173RadioButton->isChecked()) settings->setValue("nvidia-driver", "173");
 	else if (ui->nvidia96RadioButton->isChecked()) settings->setValue("nvidia-driver", "96");
-	else if (ui->nvidiaNVRadioButton->isChecked()) settings->setValue("nvidia-driver", "nv");
+	else if (ui->nvidiaNVRadioButton->isChecked()) settings->setValue("nvidia-driver", "nouveau");
 }
 
 void MainWindow::saveAlternatives() {

@@ -181,7 +181,7 @@ bool SetupThread::prepareInstallQueue() {
 	if (settings->value("alternatives/bfs").toBool()) alternatives.push_back("bfs");
 	if (settings->value("alternatives/cleartype").toBool()) alternatives.push_back("cleartype");
 	
-	if (settings->value("nvidia-driver")=="190" || settings->value("nvidia-driver")=="173" || settings->value("nvidia-driver")=="96") {
+	if (settings->value("nvidia-driver")=="latest" || settings->value("nvidia-driver")=="173" || settings->value("nvidia-driver")=="96") {
 		for (size_t i=0; i<commitList.size(); ++i) {
 			if (commitList[i].get_name()=="nvidia-driver" || commitList[i].get_name()=="nvidia-kernel") commitList.get_package_ptr(i)->set_action(ST_INSTALL, "nvidia-select");
 		}
@@ -611,6 +611,13 @@ string mapPart(StringMap devMap, string partName, int isGrubLegacy) {
 	return "";
 
 }
+
+vector<OsRecord> SetupThread::getOsList() {
+	vector<OsRecord> ret;
+	// This is a stub: will read from settings what stuff to boot.
+	return ret;
+}
+
 bool SetupThread::grub2config() {
 	/* Data needed:
 	 systemConfig.rootMountPoint
@@ -622,6 +629,9 @@ bool SetupThread::grub2config() {
 	 
 	 */
 	string bootDevice = settings->value("bootloader").toString().toStdString();
+	// If bootDevice=="NONE", skip bootloader installation
+	if (bootDevice=="NONE") return true;
+
 	emit setSummaryText(tr("Installing GRUB2 to %1").arg(bootDevice.c_str()));
 	emit setDetailsText("");
 	string grubcmd = "chroot /mnt grub-install --no-floppy " + bootDevice;
@@ -694,15 +704,15 @@ menuentry \"" + string(_("AgiliaLinux ") + string(DISTRO_VERSION) + _(" on ")) +
 	grubConfig += "menuentry \"" + string(_("AgiliaLinux ") + string(DISTRO_VERSION) + _(" (recovery mode) on ")) + rootPartition + "\" {\n" + gfxPayload + \
 "\tlinux ("+ mapPart(devMap, grubBootPartition, 0) +")" + kernelstring + " root=" + rootPartition + " ro " + settings->value("kernel_options").toString().toStdString()+" single\n}\n\n";
 
-	// Other OS disabled for now, i'm too lazy to implement this right now.
-	/*	vector<OsRecord> osList = getOsList();
+	// Other OS *may* work, but no sure that it will work fine. Let's see.
+	vector<OsRecord> osList = getOsList();
 	if (osList.size()<1) strReplace(&grubConfig, "timeout=10", "timeout=3");
 	grubConfig = grubConfig + "# Other bootable partition config begins\n";
 	for (size_t i=0; i<osList.size(); i++) {
 		if (osList[i].type == "other") {
-			grubConfig = grubConfig + "menuentry \" " + osList[i].label + " on " + osList[i].root+"\" {\n\tset root=("+mapPart(devMap, osList[i].root, 0)+")\n\tchainloader +1\n}\n\n";
+			grubConfig = grubConfig + "menuentry \" " + osList[i].label + _(" on ") + osList[i].root+"\" {\n\tset root=("+mapPart(devMap, osList[i].root, 0)+")\n\tchainloader +1\n}\n\n";
 		}
-	}*/
+	}
 	WriteFile("/mnt/boot/grub/grub.cfg", grubConfig);
 
 	return true;
@@ -822,6 +832,11 @@ bool SetupThread::postInstallActions() {
 				setDefaultRunlevel("4");
 				enablePlymouth(true);
 		}
+	}
+
+	// If nouveau is used, remove blacklist entry from /etc/modprobe.d/nouveau.conf
+	if (settings->value("nvidia-driver")=="nouveau") {
+		unlink("/mnt/etc/modprobe.d/nouveau.conf");
 	}
 
 	generateFontIndex();

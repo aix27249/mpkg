@@ -96,6 +96,7 @@ class SetupThread: public QThread {
 
 		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);
 		void receiveErrorResponce(MpkgErrorReturn);
+		vector<OsRecord> getOsList();
 
 		void setDefaultRunlevels();
 		void setDefaultXDM();
