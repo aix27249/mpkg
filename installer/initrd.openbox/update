@@ -25,4 +25,5 @@ cp -fv ../../mpkg-parted/build/libmpkg-parted.so initrd.new/usr/local/lib$LIBDIR
 cp -fv ../../guiinstaller/guisetup/build/guisetup initrd.new/usr/local/bin/
 cp -fv ../../guiinstaller/guisetup_exec/build/guisetup_exec initrd.new/usr/local/bin/
 cp -fv ../../guiinstaller/langselect/build/guisetup_lang initrd.new/usr/local/bin/
-
+cp -fv ../../guiinstaller/guisetup/*.qm initrd.new/usr/local/share/setup/l10n/
+cp -fv ../../guiinstaller/guisetup_exec/*.qm initrd.new/usr/local/share/setup/l10n/

@@ -5,4 +5,5 @@
 #include "globals.h"
 #include "colors.h"
 #include "constants.h"
+#include "fsystem.h"
 #endif

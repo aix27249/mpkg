@@ -1886,17 +1886,12 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		{
 			//string postinst="cd " + SYS_ROOT + " ; sh "+package->get_scriptdir() + "doinst.sh";
 			string postinst;
-			postinst="cd " + SYS_ROOT + " ; bash install/doinst.sh & "; // New fast mode: we don't care much about script run ordering, and parallel run is MUCH faster.
-			if (setupMode && dialogMode) postinst += " 2>> /dev/tty4 >/dev/tty4";
-			else if (dialogMode) postinst += " 2>>/dev/null >/dev/null";
-			if (!simulate) {
-#ifdef DEBUG
-				int doinst_ret = system(postinst);
-				if (doinst_ret != 0) mError("Package " + package->get_name() + " doinst.sh script returned " + IntToStr(doinst_ret));
-#else
-				system(postinst);
-#endif
-			}
+			string tmpdoinst = "/tmp/mpkgtmp_" + package->get_name() + ".sh";
+			system("cat " + SYS_ROOT + "/install/doinst.sh > " + SYS_ROOT + tmpdoinst);
+			postinst="cd " + SYS_ROOT + " ; bash " + SYS_ROOT + tmpdoinst; // New fast mode: we don't care much about script run ordering, and parallel run is MUCH faster.
+			if (setupMode && dialogMode) postinst += " 2>/dev/tty4 >/dev/tty4";
+			else if (dialogMode) postinst += " 2>/dev/null >/dev/null";
+			system_threaded(postinst);
 		}
 	}
 
