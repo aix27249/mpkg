@@ -27,11 +27,7 @@ ADD_DEFINITIONS(${CXXFLAGS})
 #ADD_DEFINITIONS(-O0 -DDEBUG -g)
 
 ADD_LIBRARY(mpkgsupport SHARED file_routines string_operations globals fsystem)
-#ADD_LIBRARY(mpkgcurses SHARED ncurses_if)
-#TARGET_LINK_LIBRARIES(mpkgcurses ncursesw mpkgsupport)
-#ADD_LIBRARY(mpkg SHARED menu terminal package bus dbstruct HttpDownload errorcodes DownloadManager PackageConfig conditions config constants converter core dataunits debug dependencies libmpkg local_package mpkg mpkgsys repository sql_pool syscommands xmlParser htmlcore tests metaframe)
-#TARGET_LINK_LIBRARIES(mpkg xml2 curl sqlite3 mpkgsupport mpkgcurses)
-
+TARGET_LINK_LIBRARIES(mpkgsupport pthread)
 
 ADD_EXECUTABLE(test test)
 TARGET_LINK_LIBRARIES(test mpkgsupport)
