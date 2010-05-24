@@ -1,18 +1,25 @@
 #include "fsystem.h"
 #include <pthread.h>
-
+#include <iostream>
 PThreadWaiter::PThreadWaiter() {
 }
 
 PThreadWaiter::~PThreadWaiter() {
 	int ret;
 	for (size_t i=0; i<threads.size(); ++i) {
-		printf("Waiting for %d of %d\n", i, threads.size());
+		cout << "Waiting threads to finish: " << i << " of " << threads.size() << endl;
 		pthread_join(threads[i], (void **) &ret);
 	}
 }
 
 void PThreadWaiter::registerThread(pthread_t id) {
+	// Let's limit number of opened threads to 7
+	
+	int ret;
+	while (threads.size()>=7) {
+		pthread_join(threads[0], (void **) &ret);
+		threads.erase(threads.begin());
+	}
 	threads.push_back(id);
 }
 
@@ -27,7 +34,7 @@ void system_threaded(const string& cmd) {
 	pthread_t thread_id;
 	const char *arg = cmd.c_str();
 	if (pthread_create(&thread_id, NULL, system_routine, (void *) arg)) {
-		perror("fsystem execution failed, running generic system instead");
+		//perror("fsystem execution failed, running generic system instead");
 		system(cmd.c_str());
 	}
 	else pthreadWaiter.registerThread(thread_id);
