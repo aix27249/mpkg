@@ -489,7 +489,7 @@ bool SourcePackage::unpackFile()
 	// All seems to be ok?
 	printf("SOURCE_PACKAGE/unpack: input_file='%s'\n", input_file.c_str());
 	createWorkingDirectory();
-	if (system("tar xvf " + input_file + " -C " + pkg_dir)!=0) {
+	if (system("tar xvf " + input_file + " --same-owner -C " + pkg_dir)!=0) {
 		mError("Error while extracting archive");
 		return false;
 	}

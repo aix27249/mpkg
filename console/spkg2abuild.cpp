@@ -67,27 +67,35 @@ int main(int argc, char **argv) {
 				build_keys+="=" + metapkg->data->configure_values[i];
 			}
 		}
-		abuild.push_back("build_system=\"" + metapkg->data->buildsystem + "\"");
-		abuild.push_back("build_keys=\"" + shellEscape(build_keys) + "\"");
+		abuild.push_back("BUILD_SYSTEM=\"" + metapkg->data->buildsystem + "\"");
+		abuild.push_back("BUILD_KEYS=\"" + shellEscape(build_keys) + "\"");
 	}
 
 	// Before-build
 	abuild.push_back("");
 	abuild.push_back("# Before-build script");
 	abuild.push_back("before_build() {");
-	vector<string> before_build_script = MakeStrings(metapkg->sp->readPrebuildScript());
+	string data = metapkg->sp->readPrebuildScript();
+	// Replace var names
+	strReplace(&data, "$PKG", "${pkgdir}");
+	strReplace(&data, "$DATADIR", "${filedir}");
+	vector<string> before_build_script = MakeStrings(data);
 	for (size_t i=0; i<before_build_script.size(); ++i) {
 		abuild.push_back("\t" + before_build_script[i]);
 	}
 	abuild.push_back("}");
 
 	abuild.push_back("");
-
-	vector<string> after_build_script = MakeStrings(metapkg->sp->readPrebuildScript());
+	data = metapkg->sp->readBuildScript();
+	strReplace(&data, "$PKG", "${pkgdir}");
+	strReplace(&data, "$DATADIR", "${filedir}");
+	vector<string> after_build_script = MakeStrings(data);
 	abuild.push_back("# Main build script (used only if build_system=\"script\")");
 	abuild.push_back("build() {");
 	abuild.push_back("\tcd $srcdir/$pkgname-$pkgver"); // Should be replaced with automatic directory finding
 	abuild.push_back("\tburn_patches");
+	vector<string> doinst = MakeStrings(metapkg->sp->readPostinstallScript());
+
 
 	if (metapkg->data->buildsystem=="script") {
 		for (size_t i=0; i<after_build_script.size(); ++i) {
@@ -96,6 +104,7 @@ int main(int argc, char **argv) {
 		abuild.push_back("}");
 		abuild.push_back("");
 		abuild.push_back("after_build() {");
+		if (!doinst.empty()) abuild.push_back("\tcat ${filedir}/doinst.sh > ${pkgdir}/install/doinst.sh || exit 1");
 		abuild.push_back("}");
 
 
@@ -107,14 +116,19 @@ int main(int argc, char **argv) {
 		for (size_t i=0; i<after_build_script.size(); ++i) {
 			abuild.push_back("\t" + after_build_script[i]);
 		}
+
+		if (!doinst.empty()) abuild.push_back("\tcat ${filedir}/doinst.sh > ${pkgdir}/install/doinst.sh || exit 1");
 		abuild.push_back("}");
 	}
 	abuild.push_back("");
+
+	
 
 	// Now let's save that stuff in current directory
 	WriteFileStrings("ABUILD", abuild);
 	// Copy build_data stuff to files
 	system("mkdir -p files");
+
 	system("cp -arfv " + metapkg->sp->pkg_dir + "/build_data/* files/ 2>/dev/null");
 	// Remove unused and already converted stuff
 	unlink("files/build.sh");

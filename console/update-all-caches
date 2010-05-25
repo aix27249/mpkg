@@ -18,9 +18,13 @@ fi
 
 # Update mime database:
 if [ -x /usr/bin/update-mime-database -a -d /usr/share/mime ]; then
-  echo "Updating MIME database:  /usr/bin/update-mime-database /usr/share/mime &"
-  /usr/bin/update-mime-database /usr/share/mime 1> /dev/null 2> /dev/null &
+  echo "Updating MIME database:  /usr/bin/update-mime-database /usr/share/mime"
+  /usr/bin/update-mime-database /usr/share/mime 1> /dev/null 2> /dev/null
 fi
+
+# Update desktop database:
+echo "Updating desktop database: /usr/bin/update-desktop-database"
+/usr/bin/update-desktop-database
 
 # These GTK+/pango files need to be kept up to date for
 # proper input method, pixbuf loaders, and font support.
