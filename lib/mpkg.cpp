@@ -1707,13 +1707,15 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	}
 	if (package->get_files().empty()) lp.fill_filelist(package); // Extracting file list
 	
-	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": looking for X fonts"));
+	if (!needUpdateXFonts) {
+		msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": looking for X fonts"));
 
-	for (size_t i=0; !needUpdateXFonts && i<package->get_files().size(); i++) {
-		if (package->get_files().at(i).get_name().find("usr/share/fonts")!=std::string::npos) needUpdateXFonts = true;
+		for (size_t i=0; !needUpdateXFonts && i<package->get_files().size(); i++) {
+			if (package->get_files().at(i).get_name().find("usr/share/fonts")!=std::string::npos) needUpdateXFonts = true;
+		}
 	}
 
-	currentStatus = statusHeader + _("detecting configuration files");
+	/*currentStatus = statusHeader + _("detecting configuration files");
 	printHtmlProgress();
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": detecting configuration files"));
 	pData.increaseItemProgress(package->itemID);
@@ -1732,7 +1734,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		actionBus._abortComplete=true;
 		actionBus.setActionState(ACTIONID_INSTALL, ITEMSTATE_ABORTED);
 		return MPKGERROR_ABORTED;
-	}
+	}*/
 
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": checking file conflicts"));
 	if (dialogMode) ncInterface.setProgressText(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() +"\n" + index_hole + _("checking file conflicts"));
@@ -1776,7 +1778,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	}
 
 	printHtmlProgress();
-	if (!DO_NOT_RUN_SCRIPTS)
+/*	if (!DO_NOT_RUN_SCRIPTS)
 	{
 		printHtmlProgress();
 		currentStatus = statusHeader + _("executing pre-install scripts");
@@ -1790,7 +1792,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		}
 	}
 
-	printHtmlProgress();
+	printHtmlProgress();*/
 	// Extracting package
 	currentStatus = statusHeader + _("extracting...");
 	if (dialogMode) ncInterface.setProgressText(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + "\n" + index_hole + _("extracting ") + IntToStr(package->get_files().size()) + _(" files"));
