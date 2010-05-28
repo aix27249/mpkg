@@ -214,6 +214,8 @@ void setDefaultRunlevel(const string& lvl) {
 	if (lvl=="4") {
 		if (FileExists("/mnt/etc/rc.d/init.d/kdm")) system("chroot /mnt rc-update add kdm default");
 		else if (FileExists("/mnt/etc/rc.d/init.d/gdm")) system("chroot /mnt rc-update add gdm default");
+		else if (FileExists("/mnt/etc/rc.d/init.d/lxdm")) system("chroot /mnt rc-update add lxdm default");
+		else if (FileExists("/mnt/etc/rc.d/init.d/slim")) system("chroot /mnt rc-update add slim default");
 		else if (FileExists("/mnt/etc/rc.d/init.d/xdm")) system("chroot /mnt rc-update add xdm default");
 	}
 }
@@ -1306,6 +1308,7 @@ try_install_boot:
 		if (FileExists(systemConfig.rootMountPoint + "/usr/bin/kdm") ||
 		    FileExists(systemConfig.rootMountPoint + "/usr/bin/xdm") ||
     		    FileExists(systemConfig.rootMountPoint + "/usr/sbin/gdm") ||
+    		    FileExists(systemConfig.rootMountPoint + "/usr/sbin/lxdm") ||
 		    FileExists(systemConfig.rootMountPoint + "/usr/bin/slim")) {
 			if (ncInterface.showYesNo(_("Enable X11 login by default?"))) {
 				setDefaultRunlevel("4");

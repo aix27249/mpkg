@@ -792,13 +792,31 @@ export LESSCHARSET=UTF-8\n";
 	WriteFile(dir+"lang.csh", lang_sh);
 }
 
+void setConsoleKeymap(string lang) {
+	if (lang.find("ru")==0 || lang.find("uk")==0) {
+		string keymaps = ReadFile("/mnt/etc/conf.d/keymaps");
+		strReplace(&keymaps, "keymap=\"us\"", "keymap=\"ru-winkeys-uni_ct_sh\"");
+		WriteFile("/mnt/etc/conf.d/keymaps", keymaps);
+	}
+
+}
+
 bool SetupThread::postInstallActions() {
 	emit setSummaryText(tr("Install complete, running post-install actions"));
 	emit setDetailsText("");
 
-	if (settings->value("language")=="en_US.UTF-8") generateLangSh("en_US.UTF-8");
-	else if (settings->value("language")=="ru_RU.UTF-8") generateLangSh("ru_RU.UTF-8");
-	else if (settings->value("language")=="uk_UA.UTF-8") generateLangSh("uk_UA.UTF-8");
+	if (settings->value("language")=="en_US.UTF-8") {
+		generateLangSh("en_US.UTF-8");
+		setConsoleKeymap("en");
+	}
+	else if (settings->value("language")=="ru_RU.UTF-8") {
+		generateLangSh("ru_RU.UTF-8");
+		setConsoleKeymap("ru");
+	}
+	else if (settings->value("language")=="uk_UA.UTF-8") {
+		generateLangSh("uk_UA.UTF-8");
+		setConsoleKeymap("uk");
+	}
 
 	// Do installed kernel version check
 	vector<string> dirList = getDirectoryList("/mnt/lib/modules");
@@ -828,6 +846,7 @@ bool SetupThread::postInstallActions() {
 		if (FileExists("/mnt/usr/bin/kdm") ||
 		    FileExists("/mnt/usr/bin/xdm") ||
     		    FileExists("/mnt/usr/sbin/gdm") ||
+    		    FileExists("/mnt/usr/sbin/lxdm") ||
 		    FileExists("/mnt/usr/bin/slim")) {
 				setDefaultRunlevel("4");
 				enablePlymouth(true);
@@ -1016,5 +1035,7 @@ void SetupThread::setDefaultRunlevels() {
 void SetupThread::setDefaultXDM() {
 	if (FileExists("/mnt/etc/rc.d/init.d/kdm")) system("chroot /mnt rc-update add kdm default");
 	else if (FileExists("/mnt/etc/rc.d/init.d/gdm")) system("chroot /mnt rc-update add gdm default");
+	else if (FileExists("/mnt/etc/rc.d/init.d/lxdm")) system("chroot /mnt rc-update add lxdm default");
+	else if (FileExists("/mnt/etc/rc.d/init.d/slim")) system("chroot /mnt rc-update add slim default");
 	else if (FileExists("/mnt/etc/rc.d/init.d/xdm")) system("chroot /mnt rc-update add xdm default");
 }
