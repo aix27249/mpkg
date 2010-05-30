@@ -6,7 +6,7 @@
 #include <sys/mount.h>
 #include <mpkg/colors.h>
 #include <mpkg/menu.h>
-#include "parted_tools.h"
+//#include "parted_tools.h"
 
 struct SysConfig
 {

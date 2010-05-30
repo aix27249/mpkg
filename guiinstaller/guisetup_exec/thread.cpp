@@ -288,15 +288,7 @@ bool SetupThread::fillPartConfigs() {
 		pConfig->format = settings->value("format").toBool();
 		pConfig->fs = settings->value("fs").toString().toStdString();
 		settings->endGroup();
-		partConfigs.push_back(*pConfig);
-
-		if (pConfig->format) {
-			formatPartition(*pConfig);
-		}
-		else if (pConfig->mountpoint == "swap") {
-			makeSwap(*pConfig);
-			activateSwap(*pConfig);
-		}
+		if (!pConfig->mountpoint.empty()) partConfigs.push_back(*pConfig); // Skip subvolume groups from list
 		delete pConfig;
 	}
 	settings->endGroup();

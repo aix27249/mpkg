@@ -4,7 +4,8 @@
 #include <sys/mount.h>
 #include <mpkg/colors.h>
 #include <mpkg/menu.h>
-
+#include <mpkg-parted/mpkg-parted.h>
+#include <mpkg-parted/raidtool.h>
 #include "raidtool.h"
 #include "parted_tools.h"
 int createRaid(string md_dev, string level, int count, vector<string> partitions) {

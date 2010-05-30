@@ -11,12 +11,12 @@ struct RaidArray {
 	vector<string> devices;
 };
 
-int runRaidTool();
-int raidCreateMenu();
+//int runRaidTool();
+//int raidCreateMenu();
 //int raidManageMenu();
-int raidStopMenu();
-int raidMainMenu();
-int raidAssembleMenu();
+//int raidStopMenu();
+//int raidMainMenu();
+//int raidAssembleMenu();
 
 vector<RaidArray> getActiveRaidArrays();
 int createRaid(string md_dev, string level, int count, vector<string> partitions);

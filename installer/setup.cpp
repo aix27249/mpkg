@@ -18,7 +18,10 @@
 //#define ALPHA // Alpha mode installer
 
 #include "setup.h"
-#include "composite_setup.h"
+//#include "composite_setup.h"
+#include <mpkg-parted/mpkg-parted.h>
+#include <mpkg-parted/raidtool.h>
+#include <mpkg-parted/lvmtool.h>
 #include "raidtool.h"
 /*
 #define PKGSET_MINIMAL 1
@@ -254,7 +257,7 @@ int setSwapSpace(string predefined) {
 	// Selects the partition to use as a swap space
 	ncInterface.setSubtitle(_("Swap partition selection"));
 	vector<string> gp;
-	vector<pEntry> swapList = getGoodPartitions(gp);
+	vector<pEntry> swapList = getPartitionList();
 	if (swapList.empty()) {
 		mDebug("no partitions detected");
 		ncInterface.showMsgBox(_("No partitions found on your hard drive. Create it first."));
@@ -346,9 +349,7 @@ int activateSwapSpace()
 int setRootPartition(string predefined, string predefinedFormat, bool simple)
 {
 	// Selects the root partition
-	vector<string> gp;
-	vector<pEntry> pList;
-	pList= getGoodPartitions(gp);
+	vector<pEntry> pList= getPartitionList();
 	ncInterface.setSubtitle(_("Root partition setup"));
 	vector<MenuItem> menuItems;
 	for (size_t i=0; i<pList.size(); i++)
@@ -451,8 +452,7 @@ rootFormatMenu:
 int setOtherPartitionItems()
 {
 	// Initializes partition list.
-	vector<string> gp;
-	vector<pEntry> pList_raw = getGoodPartitions(gp);
+	vector<pEntry> pList_raw = getPartitionList();
 	systemConfig.otherMountFSTypes.clear();
 	systemConfig.otherMounts.clear();
 	systemConfig.otherMountFormat.clear();
@@ -3481,9 +3481,7 @@ vector<OsRecord> getOsList()
 
 string ncGetMountPartition(string header) {
 	// Selects the partition
-	vector<string> gp;
-	vector<pEntry> pList;
-	pList= getGoodPartitions(gp);
+	vector<pEntry> pList = getPartitionList();
 	ncInterface.setSubtitle(header);
 	vector<MenuItem> menuItems;
 	for (size_t i=0; i<pList.size(); i++)
@@ -3509,7 +3507,46 @@ string ncGetMountPartition(string header) {
        return "";
 }
 
+int buildInitrd() {
+	// RAID, LVM, LuKS encrypted volumes, USB drives and so on - all this will be supported now!
+	string rootdev_wait = "0";
 
+	if (ncInterface.showYesNo(_("Do you need a delay to initialize your boot disk?\nIf you're installing system on USB drive, say [YES], otherwise you have a chance to get unbootable system.\n\nIf unsure - say YES, in worst case it just will boot 10 seconds longer."))) rootdev_wait = "10";
+
+	system("chroot /mnt mount -t proc none /proc ");
+	string rootdev;
+	string rootUUID = getUUID(systemConfig.rootPartition);
+	if (rootUUID.empty()) rootUUID=systemConfig.rootPartition;
+	else rootUUID="UUID=" + rootUUID;
+	string use_swap, use_raid, use_lvm;
+	if (!systemConfig.swapPartition.empty()) use_swap = "-h " + systemConfig.swapPartition;
+	if (systemConfig.rootPartition.find("/dev/md")==0) use_raid = " -R ";
+	if (systemConfig.rootPartition.size()>strlen("/dev/") && systemConfig.rootPartition.substr(strlen("/dev/")).find("/")!=std::string::npos) use_lvm = " -L ";
+
+	if (systemConfig.rootPartitionType!="btrfs" && use_lvm.empty()) rootdev = rootUUID;
+	else rootdev = systemConfig.rootPartition; // Mounting by UUID doesn't work with btrfs, I don't know why.
+
+	string additional_modules;
+	bool retry = false;
+	do {
+		retry = false;
+		additional_modules = ncInterface.showInputBox(_("If you need additional modules to boot, specify it here separating by semicolon (':'), otherwise leave this field blank."));
+		if (!additional_modules.empty()) {
+			if (additional_modules.find_first_of(" <>|\n\t'\"`#")!=std::string::npos) {
+				if (ncInterface.showYesNo(_("Incorrect characters in input, retry?"))) retry = true;
+			}
+			else additional_modules = " -m " + additional_modules;
+		}
+	} while (retry);
+
+	if (!additional_modules.empty()) additional_modules = " -m " + additional_modules;
+
+	string kernelversion = systemConfig.kernelversion;
+	ncInterface.showInfoBox(_("Creating initrd..."));
+	system("chroot /mnt mkinitrd -c -r " + rootdev + " -f " + systemConfig.rootPartitionType + " -w " + rootdev_wait + " -k " + kernelversion + " " + " " + use_swap + " " + use_raid + " " + use_lvm + " " + additional_modules + " 2>/dev/tty4 >/dev/tty4");
+	return 0;
+}
+/*
 int buildInitrd() {
 	// RAID, LVM, LuKS encrypted volumes, USB drives and so on - all this will be supported now!
 	//ncInterface.uninit();
@@ -3542,4 +3579,4 @@ int buildInitrd() {
 	
 	return 0;
 }
-
+*/

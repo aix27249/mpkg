@@ -1,5 +1,5 @@
-#ifndef PARTED_TOOLS_H__
-#define PARTED_TOOLS_H__
+#ifndef MPKG_PARTED_H__
+#define MPKG_PARTED_H__
 
 #include <parted/parted.h>
 #include <mpkgsupport/mpkgsupport.h>
@@ -37,5 +37,5 @@ extern bool partitionCacheActual;
 extern vector<string> cdromList;
 
 
-#endif //PARTED_TOOLS_H__
+#endif //MPKG_PARTED_H__
 
