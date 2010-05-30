@@ -472,12 +472,13 @@ void actPackageMenu(mpkg &core) {
        	core.get_available_tags(&groups);
 	vector<MenuItem> groupList, packageMenu;
 	sort(groups.begin(), groups.end());
+	groupList.push_back(MenuItem("ALL", _("All packages")));
 	for (unsigned int i=0; i<groups.size(); i++) {
 		groupList.push_back(MenuItem(groups[i],getTagDescription(groups[i])));
 	}
 
 	int ex_ret=0;
-	groupList.push_back(MenuItem("ALL", _("All packages")));
+	//groupList.push_back(MenuItem("ALL", _("All packages")));
 	groupList.push_back(MenuItem("OK", _("Apply changes and exit")));
 	string menu_select;
 	do {

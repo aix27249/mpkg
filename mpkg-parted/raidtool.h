@@ -22,4 +22,6 @@ vector<RaidArray> getActiveRaidArrays();
 int createRaid(string md_dev, string level, int count, vector<string> partitions);
 int assembleRaid(string md_dev, vector<string> partitions);
 int stopRaidArray(string md_dev);
+
+void initRAID();
 #endif

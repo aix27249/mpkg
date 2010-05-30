@@ -4,6 +4,8 @@
 #include <mpkg/libmpkg.h>
 #include <mpkg/errorhandler.h>
 #include <mpkg-parted/mpkg-parted.h>
+#include <mpkg-parted/raidtool.h>
+#include <mpkg-parted/lvmtool.h>
 #include "thread.h"
 class QListWidgetItem;
 class QTranslator;
@@ -54,6 +56,7 @@ class MainWindow: public QMainWindow {
 		bool validateNetworking();
 		vector<TagPair> drives;
 		vector<pEntry> partitions;
+		vector<LVM_VG> lvm_groups;
 		QString lastPart;
 
 		void updatePartitionLists();

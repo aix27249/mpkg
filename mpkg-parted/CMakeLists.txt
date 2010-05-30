@@ -24,7 +24,7 @@ endif(CMAKE_SIZEOF_VOID_P EQUAL 4)
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DLARGEFILE64_SOURCE -DDL_CLEANUP -Wall -W -DNEW_INSTALL_SYSTEM -DUSE_SYSTEM_SED -DDEP_NORMALIZE -DLINUX_DEFINED)
 ADD_DEFINITIONS(${CXXFLAGS})
 
-ADD_LIBRARY(mpkg-parted SHARED mpkg-parted raidtool)
+ADD_LIBRARY(mpkg-parted SHARED mpkg-parted raidtool lvmtool)
 TARGET_LINK_LIBRARIES(mpkg-parted mpkgsupport parted)
 #ADD_LIBRARY(mpkg SHARED menu terminal package bus dbstruct HttpDownload errorcodes DownloadManager PackageConfig conditions config constants converter core dataunits debug dependencies libmpkg local_package mpkg mpkgsys repository sql_pool syscommands xmlParser htmlcore tests metaframe)
 #TARGET_LINK_LIBRARIES(mpkg xml2 curl sqlite3 mpkgsupport mpkgcurses)

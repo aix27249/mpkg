@@ -326,6 +326,7 @@ string getLABEL(const string& dev) {
 void MainWindow::updatePartitionLists() {
 	drives = getDevList();
 	partitions = getPartitionList();
+	lvm_groups = getLVM_VGList();
 	// Since fslabel in libparted means completely other thing, let's get this from blkid
 	for (size_t i=0; i<partitions.size(); ++i) {
 		partitions[i].fslabel = getLABEL(partitions[i].devname).c_str();
@@ -337,6 +338,9 @@ void MainWindow::loadPartitioningDriveList() {
 	ui->autoPartitionDriveComboBox->clear();
 	for (size_t i=0; i<drives.size(); ++i) {
 		ui->autoPartitionDriveComboBox->addItem(QString("%1 (%2)").arg(QString::fromStdString(drives[i].tag)).arg(QString::fromStdString(drives[i].value)));
+	}
+	for (size_t i=0; i<lvm_groups.size(); ++i) {
+		ui->autoPartitionDriveComboBox->addItem(QString("%1 (%2)").arg(QString::fromStdString(lvm_groups[i].name)).arg(QString::fromStdString(lvm_groups[i].size)));
 	}
 
 }
@@ -357,11 +361,26 @@ void MainWindow::loadMountsTree() {
 	ui->mountPointsTreeWidget->clear();
 	mountOptions.clear();
 	QString fslabel;
+	
+	// First - physical drives
 	for (size_t i=0; i<drives.size(); ++i) {
 		QTreeWidgetItem *coreItem = new QTreeWidgetItem(ui->mountPointsTreeWidget, QStringList(QString("%1 (%2)").arg(QString::fromStdString(drives[i].tag)).arg(QString::fromStdString(drives[i].value))));
 		coreItem->setExpanded(true);
 		for (size_t p=0; p<partitions.size(); ++p) {
 			if (partitions[p].devname.find(drives[i].tag)!=0) continue;
+			fslabel = partitions[p].fslabel.c_str();
+			if (fslabel.isEmpty()) fslabel = tr(", no label");
+			else fslabel=tr(", label: %1").arg(partitions[p].fslabel.c_str());
+			QTreeWidgetItem *partitionItem = new QTreeWidgetItem(coreItem, QStringList(QString("%1%2 (%3, %4)").arg(QString::fromStdString(partitions[p].devname)).arg(fslabel).arg(QString::fromStdString(humanizeSize((int64_t) atol(partitions[p].size.c_str())*(int64_t) 1048576))).arg(QString::fromStdString(partitions[p].fstype))));
+			mountOptions.push_back(MountOptions(partitionItem, QString::fromStdString(partitions[p].devname), (int64_t) atol(partitions[p].size.c_str())*(int64_t) 1048576, QString::fromStdString(humanizeSize((int64_t) atol(partitions[p].size.c_str())*(int64_t) 1048576)),QString::fromStdString(partitions[p].fstype)));
+		}
+	}
+	// Now - LVM
+	for (size_t i=0; i<lvm_groups.size(); ++i) {
+		QTreeWidgetItem *coreItem = new QTreeWidgetItem(ui->mountPointsTreeWidget, QStringList(QString("LVM Volume Group %1 (%2)").arg(QString::fromStdString(lvm_groups[i].name)).arg(QString::fromStdString(lvm_groups[i].size))));
+		coreItem->setExpanded(true);
+		for (size_t p=0; p<partitions.size(); ++p) {
+			if (partitions[p].devname.find("/dev/"+lvm_groups[i].name + "/")!=0) continue;
 			fslabel = partitions[p].fslabel.c_str();
 			if (fslabel.isEmpty()) fslabel = tr(", no label");
 			else fslabel=tr(", label: %1").arg(partitions[p].fslabel.c_str());

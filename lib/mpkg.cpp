@@ -1496,7 +1496,7 @@ installProcess:
 			}
 
 		}
-		else system("/sbin/ldconfig 2> /dev/null &");
+		else system("/sbin/ldconfig 2> /dev/null"); // I prefer to update ldconfig in real time, seems that delayed jobs works bad.
 		if (!setupMode && needUpdateXFonts) {
 			msay(_("Updating font indexes"), SAYMODE_NEWLINE);
 			system("chroot " + SYS_ROOT + " find /usr/share/fonts -type d -exec /usr/bin/mkfontdir {} \\; ");

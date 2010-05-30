@@ -1,5 +1,6 @@
 #include "mpkg-parted.h"
 #include "raidtool.h"
+#include "lvmtool.h"
 #include <fstream>
 // Partition table and devices cache
 vector<TagPair> deviceCache;
@@ -106,8 +107,19 @@ vector<TagPair> getDevList()
 }
 
 vector<pEntry> getPartitionList() {
+	initLVM(); // For a case of WTF
+	initRAID(); // For a case of WTF
 	vector<string> gp;
-	return getGoodPartitions(gp);
+	vector<pEntry> ret = getGoodPartitions(gp, true);
+	vector<pEntry> lvmLV;
+	vector<LVM_VG> lvmVG = getLVM_VGList();
+	for (size_t i=0; i<lvmVG.size(); ++i) {
+		lvmLV = lvmVG[i].getLVList();
+		for (size_t t=0; t<lvmLV.size(); ++t) {
+			ret.push_back(lvmLV[t]);
+		}
+	}
+	return ret;
 }
 vector<pEntry> getGoodPartitions(vector<string> goodFSTypes, bool includeRaidComponents)
 {

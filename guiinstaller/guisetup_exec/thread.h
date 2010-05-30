@@ -73,6 +73,7 @@ class SetupThread: public QThread {
 		string sysconf_lang;
 
 		string rootPartition, swapPartition, rootPartitionType, kernelversion;
+		vector<PartConfig> partConfigs;
 
 		QString rootPassword;
 		vector<TagPair> users;
@@ -102,6 +103,7 @@ class SetupThread: public QThread {
 		void setDefaultXDM();
 		void getCustomSetupVariants(const vector<string>& rep_list);
 		CustomPkgSet getCustomPkgSet(const string& name);
+		bool fillPartConfigs();
 		bool validateConfig();
 		bool setMpkgConfig();
 		bool getRepositoryData();

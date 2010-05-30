@@ -82,6 +82,13 @@ vector<RaidArray> detectRaidArrays() {
 	}
 	return ret;
 }
+// Initializes RAID volumes
+void initRAID() {
+	system("mdadm -E -s > /etc/mdadm.conf");
+	system("mdadm -A -s");
+}
+
+
 vector<RaidArray> getActiveRaidArrays() {
 	vector<RaidArray> ret;
 	string raw = get_tmp_file();

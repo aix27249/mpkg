@@ -237,6 +237,7 @@ bool SetupThread::validateQueue() {
 bool SetupThread::formatPartition(PartConfig pConfig) {
 
 	emit setDetailsText(tr("Formatting /dev/%2").arg(pConfig.partition.c_str()));
+	printf("Formatting /dev/%s\n", pConfig.partition.c_str());
 	string fs_options;
 	if (pConfig.fs=="jfs") fs_options="-q";
 	else if (pConfig.fs=="xfs") fs_options="-f -q";
@@ -260,16 +261,26 @@ bool SetupThread::activateSwap(PartConfig pConfig) {
 	if (system("swapon /dev/" + pConfig.partition)!=0) return false;
 	return true;
 }
-
-bool SetupThread::formatPartitions() {
-	emit setSummaryText(tr("Formatting partitions"));
-	emit setDetailsText("");
-	vector<PartConfig> partConfigs;
+bool SetupThread::fillPartConfigs() {
 	PartConfig *pConfig;
 
 	settings->beginGroup("mount_options");
 	QStringList partitions = settings->childGroups();
+	QStringList subgroups;
+
+	// Searching for deep partitions (LVM, RAID, etc)
 	for (int i=0; i<partitions.size(); ++i) {
+		settings->beginGroup(partitions[i]);
+		subgroups = settings->childGroups();
+		printf("Scanning group %s, size = %d\n", partitions[i].toStdString().c_str(), subgroups.size());
+		for (int s=0; s<subgroups.size(); ++s) {
+			partitions.push_back(partitions[i]+"/"+subgroups[s]);
+		}
+		settings->endGroup();
+	}
+	for (int i=0; i<partitions.size(); ++i) {
+
+		printf("Found config for partition %s\n", partitions[i].toStdString().c_str());
 		settings->beginGroup(partitions[i]);
 		pConfig = new PartConfig;
 		pConfig->partition = partitions[i].toStdString();
@@ -278,6 +289,7 @@ bool SetupThread::formatPartitions() {
 		pConfig->fs = settings->value("fs").toString().toStdString();
 		settings->endGroup();
 		partConfigs.push_back(*pConfig);
+
 		if (pConfig->format) {
 			formatPartition(*pConfig);
 		}
@@ -288,6 +300,22 @@ bool SetupThread::formatPartitions() {
 		delete pConfig;
 	}
 	settings->endGroup();
+	if (partConfigs.empty()) return false;
+	return true;
+}
+bool SetupThread::formatPartitions() {
+	emit setSummaryText(tr("Formatting partitions"));
+	emit setDetailsText("");
+	
+	for (size_t i=0; i<partConfigs.size(); ++i) {
+		if (partConfigs[i].format) {
+			formatPartition(partConfigs[i]);
+		}
+		else if (partConfigs[i].mountpoint == "swap") {
+			makeSwap(partConfigs[i]);
+			activateSwap(partConfigs[i]);
+		}
+	}
 	return true;
 }
 
@@ -295,29 +323,13 @@ bool SetupThread::mountPartitions() {
 	emit setSummaryText(tr("Mounting partitions"));
 	emit setDetailsText("");
 
-	settings->beginGroup("mount_options");
-	QStringList partitions = settings->childGroups();
-
-	vector<PartConfig> partConfigs;
-	PartConfig *pConfig;
-	string rootPartition;
-
-	for (int i=0; i<partitions.size(); ++i) {
-		settings->beginGroup(partitions[i]);
-		pConfig = new PartConfig;
-		pConfig->partition = partitions[i].toStdString();
-		pConfig->mountpoint = settings->value("mountpoint").toString().toStdString();
-		pConfig->format = settings->value("format").toBool();
-		pConfig->fs = settings->value("fs").toString().toStdString();
-		settings->endGroup();
-		partConfigs.push_back(*pConfig);
-		if (pConfig->mountpoint=="/") {
-			rootPartition = "/dev/" + pConfig->partition;
+	for (size_t i=0; i<partConfigs.size(); ++i) {
+		if (partConfigs[i].mountpoint=="/") {
+			rootPartition = "/dev/" + partConfigs[i].partition;
+			rootPartitionType = partConfigs[i].fs;
 		}
-		else if (pConfig->mountpoint == "swap") continue;
-		delete pConfig;
+		else if (partConfigs[i].mountpoint == "swap") swapPartition = "/dev/" + partConfigs[i].partition;
 	}
-	settings->endGroup();
 
 	string mount_cmd;
 	string mkdir_cmd;
@@ -453,29 +465,10 @@ string getUUID(const string& dev) {
 }
 
 void SetupThread::writeFstab() {
-	settings->beginGroup("mount_options");
-	QStringList partitions = settings->childGroups();
 
-	vector<PartConfig> partConfigs;
-	PartConfig *pConfig;
-
-	for (int i=0; i<partitions.size(); ++i) {
-		settings->beginGroup(partitions[i]);
-		pConfig = new PartConfig;
-		pConfig->partition = partitions[i].toStdString();
-		pConfig->mountpoint = settings->value("mountpoint").toString().toStdString();
-		pConfig->format = settings->value("format").toBool();
-		pConfig->fs = settings->value("fs").toString().toStdString();
-		settings->endGroup();
-		partConfigs.push_back(*pConfig);
-		if (pConfig->mountpoint=="/") {
-			rootPartition = "/dev/" + pConfig->partition;
-			rootPartitionType = pConfig->fs;
-		}
-		else if (pConfig->mountpoint == "swap") swapPartition = "/dev/" + pConfig->partition;
-		delete pConfig;
+	for (size_t i=0; i<partConfigs.size(); ++i) {
+		if (partConfigs[i].mountpoint == "swap") swapPartition = "/dev/" + partConfigs[i].partition;
 	}
-	settings->endGroup();
 
 	string data;
 	if (!swapPartition.empty()) {
@@ -530,12 +523,14 @@ void SetupThread::buildInitrd() {
 	string rootUUID = getUUID(rootPartition);
 	if (rootUUID.empty()) rootUUID=rootPartition;
 	else rootUUID="UUID=" + rootUUID;
-        if (rootPartitionType!="btrfs") rootdev = rootUUID;
-	else rootdev = rootPartition; // Mounting by UUID doesn't work with btrfs, I don't know why.
 	string use_swap, use_raid, use_lvm;
 	if (!swapPartition.empty()) use_swap = "-h " + swapPartition;
 	if (rootPartition.find("/dev/md")==0) use_raid = " -R ";
-	if (rootPartition.find("/dev/vg")==0) use_lvm = " -L ";
+	if (rootPartition.size()>strlen("/dev/") && rootPartition.substr(strlen("/dev/")).find("/")!=std::string::npos) use_lvm = " -L ";
+
+	if (rootPartitionType!="btrfs" && use_lvm.empty()) rootdev = rootUUID;
+	else rootdev = rootPartition; // Mounting by UUID doesn't work with btrfs, I don't know why.
+
 	string additional_modules;
 	additional_modules = settings->value("initrd_modules").toString().toStdString();
 	if (!additional_modules.empty()) additional_modules = " -m " + additional_modules;
@@ -651,31 +646,15 @@ bool SetupThread::grub2config() {
 	string fontpath = "/boot/grub/unifont.pf2";
 	string pngpath = "/boot/grub/grub640.png";
 
-	settings->beginGroup("mount_options");
-	QStringList partitions = settings->childGroups();
-
-	vector<PartConfig> partConfigs;
-	PartConfig *pConfig;
-
-	for (int i=0; i<partitions.size(); ++i) {
-		settings->beginGroup(partitions[i]);
-		pConfig = new PartConfig;
-		pConfig->partition = partitions[i].toStdString();
-		pConfig->mountpoint = settings->value("mountpoint").toString().toStdString();
-		pConfig->format = settings->value("format").toBool();
-		pConfig->fs = settings->value("fs").toString().toStdString();
-		settings->endGroup();
-		partConfigs.push_back(*pConfig);
-		if (pConfig->mountpoint=="/boot") {
-			grubBootPartition = "/dev/" + pConfig->partition;
+	for (size_t i=0; i<partConfigs.size(); ++i) {
+		if (partConfigs[i].mountpoint=="/boot") {
+			grubBootPartition = "/dev/" + partConfigs[i].partition;
 			if (initrdstring.find("/boot")!=std::string::npos) initrdstring = "initrd /initrd.gz";
 			if (kernelstring.find("/boot")==0) kernelstring = "/vmlinuz";
 			fontpath = "/grub/unifont.pf2";
 			pngpath = "/grub/grub640.png";
 		}
-		delete pConfig;
 	}
-	settings->endGroup();
 	string rootUUID = getUUID(rootPartition);
 	if (rootUUID.empty()) rootUUID=rootPartition;
 	else rootUUID = "UUID=" + rootUUID;
@@ -903,6 +882,7 @@ void SetupThread::run() {
 
 	emit setProgress(0);
 	system("rm -rf /var/mpkg && mkdir -p /var/mpkg && cp /packages.db /var/mpkg/"); // BE AWARE OF RUNNING THIS ON REAL SYSTEM!!!
+	if (!fillPartConfigs()) return;
 	if (!validateConfig()) return;
 	if (!setMpkgConfig()) return;
 	if (!getRepositoryData()) return;
