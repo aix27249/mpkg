@@ -803,12 +803,12 @@ bool mpkgDatabase::check_cache(PACKAGE *package, bool clear_wrong, bool) {
 }
 
 bool needUpdateXFonts = false;
-bool needUpdateGConfSchemas = false;
+//bool needUpdateGConfSchemas = false;
 
 int mpkgDatabase::commit_actions()
 {
 	needUpdateXFonts = false;
-	needUpdateGConfSchemas = false;
+//	needUpdateGConfSchemas = false;
 	delete_tmp_files();
 	sqlFlush();
 	// Checking for utilities
@@ -1505,10 +1505,10 @@ installProcess:
 			system("chroot " + SYS_ROOT + " find /usr/share/fonts -type d -exec /usr/bin/mkfontscale {} \\; ");
 			system("chroot " + SYS_ROOT + " /usr/bin/fc-cache -f");
 		}
-		if (needUpdateGConfSchemas) {
+		/*if (needUpdateGConfSchemas) {
 			msay(_("Updating GConf database"), SAYMODE_NEWLINE);
 			system("chroot " + SYS_ROOT + " for i in `ls /usr/share/gconf/schemas/*.schemas | sed 's/\\.schemas//g' | sed 's/^.*\\///g'` ; do gconfpkg --install $i ; done ");
-		}
+		}*/
 		// Always update mime database, it takes not much time but prevents lots of troubles
 		msay(_("Updating icon cache and mime database"), SAYMODE_NEWLINE);
 		system("chroot " + SYS_ROOT + " /usr/bin/update-all-caches >/dev/null");
@@ -1720,11 +1720,11 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 			if (package->get_files().at(i).get_name().find("usr/share/fonts")!=std::string::npos) needUpdateXFonts = true;
 		}
 	}
-	if (!needUpdateGConfSchemas) {
+	/*if (!needUpdateGConfSchemas) {
 		for (size_t i=0; !needUpdateGConfSchemas && i<package->get_files().size(); i++) {
 			if (package->get_files().at(i).get_name().find("usr/share/gconf/schemas")!=std::string::npos) needUpdateGConfSchemas = true;
 		}
-	}
+	}*/
 
 
 	/*currentStatus = statusHeader + _("detecting configuration files");

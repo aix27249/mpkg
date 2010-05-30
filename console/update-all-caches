@@ -35,3 +35,6 @@ if [ -x /usr/bin/update-pango-querymodules ]; then
   /usr/bin/update-pango-querymodules --verbose
 fi
 
+# Update GConf registry
+
+for i in `ls /usr/share/gconf/schemas/*.schemas | sed 's/\.schemas//g' | sed 's/^.*\///g'` ; do /usr/sbin/gconfpkg --install $i ; done
