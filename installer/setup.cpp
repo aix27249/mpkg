@@ -2200,9 +2200,9 @@ start:
 
 	rList.clear();
 #ifdef X86_64
-	string default_url="http://core64.mopspackages.ru/";
+	string default_url="http://core64.agilialinux.ru/";
 #else
-	string default_url="http://core32.mopspackages.ru/";
+	string default_url="http://core32.agilialinux.ru/";
 #endif
 	if (predefined.empty()) ret = ncInterface.showInputBox(_("Enter repository URL:"), default_url);
 	else ret = predefined;

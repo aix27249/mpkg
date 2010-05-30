@@ -2,8 +2,8 @@
 #include <mpkgsupport/mpkgsupport.h>
 // Initializes LVM volumes
 void initLVM() {
-	system("vgscan --mknodes --ignorelockingfailure");
-	system("vgchange -ay --ignorelockingfailure");
+	system("vgscan --mknodes --ignorelockingfailure >/dev/null");
+	system("vgchange -ay --ignorelockingfailure >/dev/null");
 }
 
 
