@@ -849,15 +849,19 @@ int mpkgDatabase::commit_actions()
 		ncInterface.setProgress(3);
 	}
 	if (get_packagelist(sqlSearch, &install_list)!=0) return MPKGERROR_SQLQUERYERROR;
-	if (!install_list.IsEmpty()) {
-		if (dialogMode) {
-			ncInterface.setProgressText(_("Sorting list of packages marked to remove"));
-			ncInterface.setProgress(4);
-		}
-		install_list.sortByTags();
+	
+	// Sorting install order: from lowest priority to maximum one 
+	if (dialogMode) {
+		ncInterface.setProgressText(_("Detecting package installation order (this may take a while)..."));
+		ncInterface.setProgress(4);
 	}
-	// Сортировка по репозиториям: чтобы не надо было постоянно менять диски
+
 	install_list.sortByLocations();
+	install_list.sortByTags();
+	install_list.sortByPriorityNew();
+
+	// Don't forget to sort remove priority too: it does not take much time, but may be useful in case of disaster.
+	remove_list.sortByPriorityNew(true);
 	
 	// Checking available space
 	long double rem_size=0;
@@ -869,7 +873,7 @@ int mpkgDatabase::commit_actions()
 		ncInterface.setProgressText(_("Looking if an installation queue contains updates"));
 		ncInterface.setProgress(5);
 	}
-	for (unsigned int i=0; i<remove_list.size(); i++)
+	for (size_t i=0; i<remove_list.size(); i++)
 	{
 		remove_list.get_package_ptr(i)->itemID = pData.addItem(remove_list[i].get_name(), 10);
 		rem_size+=strtod(remove_list[i].get_installed_size().c_str(), NULL);
@@ -887,7 +891,7 @@ int mpkgDatabase::commit_actions()
 		ncInterface.setProgressText(_("Checking disk free space"));
 		ncInterface.setProgress(6);
 	}
-	for (unsigned int i=0; i<install_list.size(); i++)
+	for (size_t i=0; i<install_list.size(); i++)
 	{
 		install_list.get_package_ptr(i)->itemID = pData.addItem(install_list[i].get_name(), atoi(install_list[i].get_compressed_size().c_str()));
 		ins_size += strtod(install_list[i].get_installed_size().c_str(), NULL);
@@ -1383,15 +1387,8 @@ installProcess:
 
 		pData.setCurrentAction(_("Installing packages"));
 		uint64_t sz = 0;
-		for(unsigned int i=0; i<install_list.size(); i++)
-		{
-			/*installItemID=install_list[i].itemID;
-			pData.setItemState(installItemID, ITEMSTATE_WAIT);
-			pData.setItemCurrentAction(installItemID, _("Waiting"));
-			pData.resetIdleTime(installItemID);
-			pData.setItemProgress(installItemID, 0);
-			pData.setItemProgressMaximum(installItemID,8);*/
-			if (dialogMode) sz += atol(install_list[i].get_installed_size().c_str());
+		for(size_t i=0; i<install_list.size(); i++) {
+			sz += (uint64_t) atol(install_list[i].get_installed_size().c_str());
 		}
 		actionBus.setCurrentAction(ACTIONID_INSTALL);
 		pData.resetItems(_("waiting"), 0, 8, ITEMSTATE_WAIT);
@@ -1400,17 +1397,16 @@ installProcess:
 		if (dialogMode) {
 			ncInterface.setSubtitle(_("Installing packages"));
 			ncInterface.setProgressMax(install_list.size());
-			//ncInterface.setProgressMax(sz);
 		}
 		vector<time_t> pkgInstallTime;
 		vector<int64_t> pkgInstallSize;
 		time_t pkgInstallStartTime=0, pkgInstallEndTime=0, pkgTotalInstallTime=0;
 		int64_t pkgInstallCurrentSize=0;
 		long double pkgInstallSpeed=0;
+		time_t ETA_Time = 0;
 		MpkgErrorCode install_result;
-		for(unsigned int i=0;i<install_list.size();i++)
-		{
-			pkgInstallStartTime=time(NULL);
+		for (size_t i=0;i<install_list.size(); ++i) {
+			pkgInstallStartTime=time(NULL); // TIMER 1: mark package installation start
 			
 			actionBus.setActionProgress(ACTIONID_INSTALL, i);
 			if (actionBus._abortActions)
@@ -1420,14 +1416,14 @@ installProcess:
 				actionBus.setActionState(ACTIONID_INSTALL, ITEMSTATE_ABORTED);
 				return MPKGERROR_ABORTED;
 			}
-			pData.setItemCurrentAction(install_list[i].itemID, string("installing [") + humanizeSize(IntToStr(pkgInstallSpeed)) + _("/s, ETA: ") + IntToStr(((ins_size-pkgInstallCurrentSize)/pkgInstallSpeed)/60) + _(" min") + string("]"));
+			pData.setItemCurrentAction(install_list[i].itemID, string("installing [") + humanizeSize(IntToStr(pkgInstallSpeed)) + _("/s, ETA: ") + IntToStr(ETA_Time/60) + _(" min") + string("]"));
 			pData.setItemState(install_list[i].itemID, ITEMSTATE_INPROGRESS);
 			msay(_("Installing package ") + install_list[i].get_name());
 
 			if (dialogMode)
 			{
 				if (pkgInstallTime.size()>1 && pkgInstallSpeed!=0) {
-					ncInterface.setSubtitle(_("Installing packages") + string(" [") + humanizeSize(IntToStr(pkgInstallSpeed)) + _("/s, ETA: ") + IntToStr(((ins_size-pkgInstallCurrentSize)/pkgInstallSpeed)/60) + _(" min") + string("]"));
+					ncInterface.setSubtitle(_("Installing packages") + string(" [") + humanizeSize(IntToStr(pkgInstallSpeed)) + _("/s, ETA: ") + IntToStr(ETA_Time/60) + _(" min") + string("]"));
 				}
 				ncInterface.setProgressText("[" + IntToStr(i+1) + "/" + IntToStr(install_list.size()) + _("] Installing: ") + \
 						install_list[i].get_name() + "-" + \
@@ -1457,19 +1453,17 @@ installProcess:
 				//pData.setItemCurrentAction(install_list[i].itemID, _("Installed"));
 				pData.setItemState(install_list[i].itemID, ITEMSTATE_FINISHED);
 			}
-			pkgInstallEndTime=time(NULL);
-			pkgInstallTime.push_back(pkgInstallEndTime-pkgInstallStartTime);
-			pkgInstallSize.push_back(atoi(install_list[i].get_installed_size().c_str()));
+			pkgInstallEndTime=time(NULL); // TIMER 2: Mark end of package installation
+			pkgInstallTime.push_back(pkgInstallEndTime-pkgInstallStartTime); // Store data
+			pkgInstallSize.push_back(atoi(install_list[i].get_installed_size().c_str())); // Store more data :)
 			
 			// Approximate by total stats time, not so good
-			pkgTotalInstallTime+=(pkgInstallEndTime-pkgInstallStartTime);
-			pkgInstallCurrentSize += atoi(install_list[i].get_installed_size().c_str());
-			// Let's cut off by last 20 packages
-			if (pkgInstallTime.size()>20) {
-				pkgTotalInstallTime-=pkgInstallTime[pkgInstallTime.size()-20];
-				pkgInstallCurrentSize -= pkgInstallSize[pkgInstallSize.size()-20];
-			}
-			if (pkgTotalInstallTime!=0) pkgInstallSpeed=pkgInstallCurrentSize/pkgTotalInstallTime;
+			pkgTotalInstallTime+=(pkgInstallEndTime-pkgInstallStartTime); // Adding summary time
+			pkgInstallCurrentSize += (uint64_t) atol(install_list[i].get_installed_size().c_str()); // Adding completed size;
+		
+			if (pkgTotalInstallTime!=0) pkgInstallSpeed=(long double) pkgInstallCurrentSize/(long double) pkgTotalInstallTime; // Update pkgInstal speed
+			ETA_Time = (time_t) ((long double) (sz-pkgInstallCurrentSize)/pkgInstallSpeed);
+
 
 		}
 		msay(_("Installation complete."), SAYMODE_INLINE_END);
@@ -1505,10 +1499,6 @@ installProcess:
 			system("chroot " + SYS_ROOT + " find /usr/share/fonts -type d -exec /usr/bin/mkfontscale {} \\; ");
 			system("chroot " + SYS_ROOT + " /usr/bin/fc-cache -f");
 		}
-		/*if (needUpdateGConfSchemas) {
-			msay(_("Updating GConf database"), SAYMODE_NEWLINE);
-			system("chroot " + SYS_ROOT + " for i in `ls /usr/share/gconf/schemas/*.schemas | sed 's/\\.schemas//g' | sed 's/^.*\\///g'` ; do gconfpkg --install $i ; done ");
-		}*/
 		// Always update mime database, it takes not much time but prevents lots of troubles
 		msay(_("Updating icon cache and mime database"), SAYMODE_NEWLINE);
 		system("chroot " + SYS_ROOT + " /usr/bin/update-all-caches >/dev/null");
