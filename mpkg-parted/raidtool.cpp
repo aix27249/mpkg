@@ -84,8 +84,8 @@ vector<RaidArray> detectRaidArrays() {
 }
 // Initializes RAID volumes
 void initRAID() {
-	system("mdadm -E -s > /etc/mdadm.conf");
-	system("mdadm -A -s");
+	system("mdadm -E -s > /etc/mdadm.conf 2>/dev/null");
+	system("mdadm -A -s >/dev/null 2>/dev/null");
 }
 
 
