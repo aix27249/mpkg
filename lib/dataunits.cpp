@@ -4,6 +4,43 @@
 	$Id: dataunits.cpp,v 1.82 2007/12/10 03:12:58 i27249 Exp $
 */
 
+// -------------- DEBUGGING CLASS:OBJECT COUNTER ----------------
+#ifdef DEBUG
+#include <stdio.h>
+class _ObjectCounter {
+	public:
+		_ObjectCounter();
+		~_ObjectCounter();
+		void addObject();
+		void deleteObject();
+	private:
+		int maxCount;
+		int currentCount;
+		int addCount, delCount;
+} _objC;
+
+_ObjectCounter::_ObjectCounter() {
+	maxCount = 0;
+	currentCount = 0;
+	addCount = 0;
+	delCount = 0;
+}
+
+_ObjectCounter::~_ObjectCounter() {
+	printf("Total object stats: maxCount=%d, currentCount=%d, addCount=%d, delCount=%d\n", maxCount, currentCount, addCount, delCount);
+}
+
+void _ObjectCounter::addObject() {
+	addCount++;
+	currentCount++;
+	if (maxCount<currentCount) maxCount = currentCount;
+}
+
+void _ObjectCounter::deleteObject() {
+	delCount++;
+	currentCount--;
+}
+#endif // ------------------ END OF DEBUG CODE ----------------------
 
 
 #include "dataunits.h"
@@ -1776,11 +1813,17 @@ int PACKAGE_LIST::getInstalledVersionID(const string& package_name) const {
 
 PACKAGE_LIST::PACKAGE_LIST()
 {
+#ifdef DEBUG
+	_objC.addObject();
+#endif
 	versioningInitialized=false;
 	priorityInitialized=false;
 }
 PACKAGE_LIST::~PACKAGE_LIST()
 {
+#ifdef DEBUG
+	_objC.deleteObject();
+#endif
 }
 
 /*
