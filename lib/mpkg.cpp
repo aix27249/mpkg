@@ -803,6 +803,7 @@ bool mpkgDatabase::check_cache(PACKAGE *package, bool clear_wrong, bool) {
 }
 
 bool needUpdateXFonts = false;
+vector<string> iconCacheUpdates;
 //bool needUpdateGConfSchemas = false;
 
 int mpkgDatabase::commit_actions()
@@ -1499,6 +1500,10 @@ installProcess:
 			system("chroot " + SYS_ROOT + " find /usr/share/fonts -type d -exec /usr/bin/mkfontscale {} \\; ");
 			system("chroot " + SYS_ROOT + " /usr/bin/fc-cache -f");
 		}
+		for (size_t i=0; i<iconCacheUpdates.size(); ++i) {
+			msay(_("Updating icon cache in ") + iconCacheUpdates[i], SAYMODE_NEWLINE);
+			system("chroot " + SYS_ROOT + " /usr/bin/gtk-update-icon-cache -t -f " + iconCacheUpdates[i] + " 1> /dev/null 2> /dev/null");
+		}
 		// Always update mime database, it takes not much time but prevents lots of troubles
 		msay(_("Updating icon cache and mime database"), SAYMODE_NEWLINE);
 		system("chroot " + SYS_ROOT + " /usr/bin/update-all-caches >/dev/null");
@@ -1708,6 +1713,18 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 
 		for (size_t i=0; !needUpdateXFonts && i<package->get_files().size(); i++) {
 			if (package->get_files().at(i).get_name().find("usr/share/fonts")!=std::string::npos) needUpdateXFonts = true;
+		}
+	}
+	// Searching for icon cache updates
+	bool hasIconCache = false;
+	string *iconFilename;
+	for (size_t i=0; i<package->get_files().size(); ++i) {
+		iconFilename = (string *) &package->get_files().at(i).get_name();
+		if (iconFilename->find("usr/share/icons/")!=std::string::npos && iconFilename->size()>strlen("usr/share/icons/") && iconFilename->at(iconFilename->size()-1)=='/') {
+			for (size_t t=0; !hasIconCache && t<iconCacheUpdates.size(); ++t) {
+				if (iconCacheUpdates[t]==*iconFilename) hasIconCache = true;
+			}
+			if (!hasIconCache) iconCacheUpdates.push_back(iconFilename->substr(0, iconFilename->size()-2));
 		}
 	}
 	/*if (!needUpdateGConfSchemas) {
