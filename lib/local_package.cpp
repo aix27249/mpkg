@@ -526,7 +526,6 @@ int LocalPackage::fill_filelist(PACKAGE *package, bool)
 	}
 	unlink(lnfname.c_str());
 	unlink(dt.c_str());
-	printf("Package %s has %d files\n\n", package->get_name().c_str(), package->get_files().size());
 
 	delete_tmp_files();
 	return 0;

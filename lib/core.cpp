@@ -387,7 +387,6 @@ int mpkgDatabase::add_descriptionlist_record(int package_id, DESCRIPTION_LIST *d
 // Adds file list linked to package_id (usually for package adding)
 int mpkgDatabase::add_filelist_record(int package_id, vector<string> *filelist)
 {
-	printf("\nAdding filelist for %d files\n\n", filelist->size());
 	SQLTable *sqlTable = new SQLTable;
 	SQLRecord sqlValues;
 	for (unsigned int i=0;i<filelist->size();i++)
@@ -561,7 +560,6 @@ int mpkgDatabase::add_package_record (PACKAGE *package)
 	
 	// INSERT INTO FILES
 	if (!package->get_files().empty()) add_filelist_record(package_id, package->get_files_ptr());
-	else printf("\nNO FILES\n\n");
 	
 	// INSERT INTO LOCATIONS
 	if (!package->get_locations().empty()) add_locationlist_record(package_id, package->get_locations_ptr());
@@ -1111,26 +1109,6 @@ int mpkgDatabase::set_configexist(int package_id, int status)
 }
 int mpkgDatabase::set_action(int package_id, int status, const string& reason)
 {
-	/*switch(status) {
-		case ST_INSTALL:
-			printf("set_action(): package_id = %d, status=ST_INSTALL\n", package_id);
-			break;
-		case ST_REMOVE:
-			printf("set_action(): package_id = %d, status=ST_REMOVE\n", package_id);
-			break;
-		case ST_PURGE:
-			printf("set_action(): package_id = %d, status=ST_PURGE\n", package_id);
-			break;
-		case ST_UPDATE:
-			printf("set_action(): package_id = %d, status=ST_UPDATE\n", package_id);
-			break;
-		case ST_NONE:
-			printf("set_action(): package_id = %d, status=ST_NONE\n", package_id);
-			break;
-			
-		default:
-			printf("set_action(): package_id = %d, status=%d\n",package_id ,status);
-	}*/
 
        	SQLRecord sqlUpdate;
 	sqlUpdate.addField("package_action", status);
