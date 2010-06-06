@@ -123,33 +123,13 @@ class DEPENDENCY
 	~DEPENDENCY();
 };
 
-class FILES
-{
-    private:
+class FILE_EXTENDED_DATA {
+    public:
 	// INTERNAL DATA //
 	int file_id;
-	string file_name;
-	int file_type;
+	string *filename;
 	string backup_file;
     public:
-	// Comparsion
-	bool equalTo(const FILES& file) const;
-
-	// Data retriveal
-	const int& get_id() const;
-	const string& get_name() const;
-	const int& get_type() const;
-	const string& get_backup_file() const;
-	bool config() const;
-
-	// Data writing
-	void set_id(const int& id);
-	void set_name(const string& name);
-	void set_type(const int& type);
-	void set_backup_file(const string& fname);
-
-	// Empty, clear
-	bool IsEmpty() const;
 	void clear();
 
 	// Backup id's
@@ -157,36 +137,11 @@ class FILES
 	int overwriter_id;
 
 	// Constructor && destructor
-	FILES();
-	~FILES();
+	FILE_EXTENDED_DATA();
+	~FILE_EXTENDED_DATA();
 };
-
-#ifdef ENABLE_INTERNATIONAL
-// Disabled for now - because it causes uncontrolled growing of the database. Maybe will store externally?
-class DESCRIPTION
-{
-	private:
-		int description_id;
-		string description_language;
-		string short_description_text;
-		string description_text;
-	public:
-		DESCRIPTION();
-		~DESCRIPTION();
-		void set_id(int id);
-		void set_language(string* language);
-		void set_text(string* text);
-		void set_shorttext(string* short_text);
-		int get_id();
-		string* get_language();
-		string* get_text();
-		string* get_shorttext();
-		void clear();
-};
-#endif
 
 void _sortLocations(vector<LOCATION>& locations); // Location sorting
-
 
 class PACKAGE
 {
@@ -214,9 +169,10 @@ class PACKAGE
 	int package_type;
 	int package_err_type;
 	// EXTERNAL DATA //
-	vector<FILES> package_files;
-	vector<FILES> config_files;
-	vector<FILES> temp_files;
+	//vector<FILES> package_files;
+	vector<string> package_files;
+	//vector<FILES> config_files;
+	//vector<FILES> temp_files;
 	vector<LOCATION> package_locations;
 	vector<DEPENDENCY> package_dependencies;
 	vector<string> package_tags;
@@ -225,13 +181,6 @@ class PACKAGE
 	vector<DESCRIPTION> package_descriptions;
 #endif
     public:
-	// Операторы сравнивают по названию
-	/*bool operator == (PACKAGE pkg);
-	bool operator != (PACKAGE pkg);
-	bool operator >= (PACKAGE pkg);
-	bool operator <= (PACKAGE pkg);
-	bool operator > (PACKAGE pkg);
-	bool operator < (PACKAGE pkg);*/
 	int build_date;
 	time_t add_date;
 	string getAlternative() const;
@@ -305,11 +254,8 @@ class PACKAGE
 	bool isBeta() const;
 	int get_err_type() const;
 
-	const vector<FILES>& get_config_files() const;
-	vector<FILES>* get_config_files_ptr();
-	const vector<FILES>& get_temp_files() const;
-	const vector<FILES>& get_files() const;
-	vector<FILES>* get_files_ptr();
+	const vector<string>& get_files() const;
+	vector<string>* get_files_ptr();
 	const vector<LOCATION>& get_locations() const;
 	vector<LOCATION>* get_locations_ptr();
 	const vector<DEPENDENCY>& get_dependencies() const;
@@ -350,8 +296,7 @@ class PACKAGE
 	void set_betarelease(const string& betarelease);
 	void set_err_type(const int& err);
 
-	void set_config_files(const vector<FILES>& conf_files);
-	void set_files(const vector<FILES>& files);
+	void set_files(const vector<string>& files);
 	void set_locations(const vector<LOCATION>& locations);
 	void set_dependencies(const vector<DEPENDENCY>& dependencies);
 	void set_tags(const vector<string>& tags);
@@ -360,15 +305,9 @@ class PACKAGE
 	void add_file(const string& file_name);
 	void add_tag(const string& tag);
 
-#ifdef ENABLE_INTERNATIONAL
-	void set_descriptions(const vector<DESCRIPTION>& desclist);
-#endif
-
-
 	// Internal structure methods
 	void sortLocations();
 	void clearVersioning();
-	void sync();
 	
 	// Empty, clear, etc
 	void clear();

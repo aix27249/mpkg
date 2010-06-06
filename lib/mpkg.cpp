@@ -1668,17 +1668,8 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	if (dialogMode) ncInterface.setProgressText(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + "\n" + index_hole + _("extracting metadata"));
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": extracting metadata"));
 
-	bool no_purge=true;
-	vector<FILES> old_config_files;
 
 	int purge_id=0;
-	if (!ultraFastMode) {
-		if (package->action()!=ST_REPAIR) purge_id=get_purge(package->get_name()); // returns package id if this previous package config files are not removed, or 0 if purged.
-		if (purge_id==0)
-		{
-			no_purge=false;
-		}
-	}
 	if (actionBus._abortActions)
 	{
 		sqlFlush();
@@ -1712,14 +1703,14 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": looking for X fonts"));
 
 		for (size_t i=0; !needUpdateXFonts && i<package->get_files().size(); i++) {
-			if (package->get_files().at(i).get_name().find("usr/share/fonts")!=std::string::npos) needUpdateXFonts = true;
+			if (package->get_files().at(i).find("usr/share/fonts")!=std::string::npos) needUpdateXFonts = true;
 		}
 	}
 	// Searching for icon cache updates
 	bool hasIconCache = false;
 	string *iconFilename;
 	for (size_t i=0; i<package->get_files().size(); ++i) {
-		iconFilename = (string *) &package->get_files().at(i).get_name();
+		iconFilename = (string *) &package->get_files().at(i);
 		if (iconFilename->find("usr/share/icons/")!=std::string::npos && iconFilename->size()>strlen("usr/share/icons/") && iconFilename->at(iconFilename->size()-1)=='/') {
 			for (size_t t=0; !hasIconCache && t<iconCacheUpdates.size(); ++t) {
 				if (iconCacheUpdates[t]==*iconFilename) hasIconCache = true;
@@ -1727,33 +1718,6 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 			if (!hasIconCache) iconCacheUpdates.push_back(iconFilename->substr(0, iconFilename->size()-2));
 		}
 	}
-	/*if (!needUpdateGConfSchemas) {
-		for (size_t i=0; !needUpdateGConfSchemas && i<package->get_files().size(); i++) {
-			if (package->get_files().at(i).get_name().find("usr/share/gconf/schemas")!=std::string::npos) needUpdateGConfSchemas = true;
-		}
-	}*/
-
-
-	/*currentStatus = statusHeader + _("detecting configuration files");
-	printHtmlProgress();
-	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": detecting configuration files"));
-	pData.increaseItemProgress(package->itemID);
-	if (actionBus._abortActions)
-	{
-		sqlFlush();
-		actionBus._abortComplete=true;
-		actionBus.setActionState(ACTIONID_INSTALL, ITEMSTATE_ABORTED);
-		return MPKGERROR_ABORTED;
-	}
-
-	if (!ultraFastMode) lp.fill_configfiles(package); // Disabled in ultrafast: not using anywhere now, and doesn't work in real world
-	if (actionBus._abortActions)
-	{
-		sqlFlush();
-		actionBus._abortComplete=true;
-		actionBus.setActionState(ACTIONID_INSTALL, ITEMSTATE_ABORTED);
-		return MPKGERROR_ABORTED;
-	}*/
 
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": checking file conflicts"));
 	if (dialogMode) ncInterface.setProgressText(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() +"\n" + index_hole + _("checking file conflicts"));
@@ -1781,11 +1745,10 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	printHtmlProgress();
 
 // Filtering file list...
-	vector<FILES> package_files;
 
 	if (dialogMode) ncInterface.setProgressText(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() +"\n" + index_hole + _("merging file lists into database"));
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": merging file lists into database"));
-	if (!no_purge) add_filelist_record(package->get_id(), package->get_files_ptr());
+	add_filelist_record(package->get_id(), package->get_files_ptr());
 	string sys;
 	pData.increaseItemProgress(package->itemID);
 	if (actionBus._abortActions)
@@ -1834,41 +1797,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	if (_cmdOptions["skip_static_a_installation"]=="true") {
 		sys += " --exclude 'lib/*.a' --exclude 'lib64/*.a'";
 	}
-	if (no_purge)
-	{
-		get_filelist(purge_id, &old_config_files, true);
-		for (unsigned int i=0; i<package->get_config_files().size(); i++)
-		{
-			// Writing new config files, skipping old
-			for (unsigned int k=0; k < old_config_files.size(); k++)
-			{
-				if (package->get_config_files().at(i).get_name()==old_config_files[k].get_name())
-				{
-					sys+=" --exclude '"+package->get_config_files().at(i).get_name()+"'"; 
-					// FIXME: exclude works NOT as needed in some cases.
-					// For example, if we want to exclude /install, the /bin/install will be excluded too
-				}
-			}
-		}
-		for (unsigned int i=0; i<package->get_files().size(); i++)
-		{
-			for (unsigned int k=0; k <= old_config_files.size(); k++)
-			{
-				if (k==old_config_files.size()) 
-				{
-					package_files.push_back(package->get_files().at(i));
-					break;
-				}
-				if (package->get_files().at(i).get_name()==old_config_files[k].get_name())
-				{
-					break;
-				}
-			}
-		}
-		add_filelist_record(package->get_id(), &package_files);
-	}
 	package->get_files_ptr()->clear();
-	package_files.clear();
 	if (setupMode && dialogMode) sys+=" > /dev/tty4 2>/dev/tty4 )";
 	else if (dialogMode) sys+=" >/dev/null 2>>/var/log/mpkg-errors.log )";
 	else sys+= " )";
@@ -1957,8 +1886,8 @@ void mpkgDatabase::exportPackage(const string& output_dir, PACKAGE& p) {
 		"\nFILE LIST:\n";
 	
 	if (p.get_files().size()==0) get_filelist(p.get_id(), p.get_files_ptr());
-	for (unsigned int f=0; f<p.get_files().size(); f++) {
-		filestr << p.get_files().at(f).get_name() << "\n";
+	for (size_t f=0; f<p.get_files().size(); f++) {
+		filestr << p.get_files().at(f) << "\n";
 	}
 	filestr << "\n";
 	filestr.close();
@@ -2008,7 +1937,6 @@ int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsi
 	if (package->action()==ST_PURGE) action_str = _("Purging");
 	if (mConfig.getValue("always_special_update")=="yes") needSpecialUpdate = true; // Transitional purposes
 	get_filelist(package->get_id(), package->get_files_ptr());
-	package->sync();
 	pData.setItemProgressMaximum(package->itemID, package->get_files().size()+8);
 
 	pData.setItemCurrentAction(package->itemID, action_str);
@@ -2053,29 +1981,28 @@ int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsi
 		// Checking backups
 		msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str + _(": checking for backups"));
 
-		vector<FILES> backups;
-		get_backup_records(*package, &backups);
-		//printf("backups size: %d\n", backups.size());
+		vector<FILE_EXTENDED_DATA> backups;
+		vector<string> backups_filenames;
+		get_backup_records(*package, &backups_filenames, &backups);
 
 
 
 		// Purge is now implemented here; checking all
 		currentStatus = statusHeader + _("building file list");
-		vector<FILES> *remove_files = package->get_files_ptr(); // Note: no need to delete remove_files, because it will be deleted together with package object
-		vector<FILES> *new_files = package->updatingBy->get_files_ptr();
+		vector<string> *remove_files = package->get_files_ptr(); // Note: no need to delete remove_files, because it will be deleted together with package object
+		vector<string> *new_files = package->updatingBy->get_files_ptr();
 
 		printHtmlProgress();
 		currentStatus = statusHeader + _("removing files...");
 		bool removeThis;
 		int unlink_ret;
-		for (unsigned int i=0; i<remove_files->size(); i++)
-		{
+		for (size_t i=0; i<remove_files->size(); ++i) {
 			if (i==0 || i==remove_files->size() || i%10==0) msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str + _(": removing files [") + IntToStr(i) + "/"+IntToStr(remove_files->size())+"]");
-			fname=sys_root + remove_files->at(i).get_name();
-			for (unsigned int t=0; t<backups.size(); ++t) {
-				if (remove_files->at(i).get_name()==backups[t].get_name()) {
-					fname = (string) SYS_BACKUP+"/"+backups[t].get_backup_file();
-					delete_conflict_record(backups[t].overwriter_id, backups[t].get_backup_file());
+			fname=sys_root + remove_files->at(i);
+			for (size_t t=0; t<backups.size(); ++t) {
+				if (remove_files->at(i)==*backups[t].filename) {
+					fname = (string) SYS_BACKUP+"/"+backups[t].backup_file;
+					delete_conflict_record(backups[t].overwriter_id, backups[t].backup_file);
 					break;
 				}
 			}
@@ -2089,22 +2016,20 @@ int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsi
 			removeThis = false;
 			
 			if (package->action()!=ST_UPDATE) {
-					if (package->action()==ST_PURGE || remove_files->at(i).get_type()==FTYPE_PLAIN) removeThis = true;
+				removeThis = true;
 			}
 			else {
-				if (remove_files->at(i).get_type()==FTYPE_PLAIN) { // Don't touch config files at all
-					removeThis=true;
-					if (needSpecialUpdate) {
-						for (unsigned int t=0; removeThis && t<new_files->size(); ++t) {
-							if (new_files->at(t).get_name()==remove_files->at(i).get_name()) {
-								removeThis=false;
-								break;
-							}
+				removeThis=true;
+				if (needSpecialUpdate) {
+					for (size_t t=0; removeThis && t<new_files->size(); ++t) {
+						if (new_files->at(t)==remove_files->at(i)) {
+							removeThis=false;
+							break;
 						}
 					}
 				}
 			}
-			if (checkEssentialFile(remove_files->at(i).get_name())) removeThis=false; 
+			if (checkEssentialFile(remove_files->at(i))) removeThis=false; 
 			// Actually removing files
 			if (removeThis && fname[fname.length()-1]!='/')
 			{
@@ -2132,7 +2057,7 @@ int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsi
 		
 		for (unsigned int i=0; i<remove_files->size(); i++)
 		{
-			fname=sys_root + remove_files->at(i).get_name();
+			fname=sys_root + remove_files->at(i);
 			for (unsigned int d=0; d<fname.length(); d++)
 			{
 				edir+=fname[d];
@@ -2178,29 +2103,29 @@ int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsi
 		msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str+_(": restoring backups"));
 
 		printHtmlProgress();
-		vector<FILES>restore;
-		get_conflict_records(package->get_id(), &restore);
+		
+		// Creating restore lists. Note that both objects are linked inside.
+		vector<string> restore_fnames;
+		vector<FILE_EXTENDED_DATA> restore;
+
+		get_conflict_records(package->get_id(), &restore_fnames, &restore);
 		int ret;
-		if (!restore.empty())
-		{
+		if (!restore.empty()) {
 			string cmd;
 			string tmpName;
-			for (unsigned int i=0; i<restore.size(); i++)
-			{
-				if (restore[i].get_name().find_last_of("/")!=std::string::npos)
-				{
+			for (size_t i=0; i<restore.size(); ++i) {
+				if (restore[i].filename->find_last_of("/")!=std::string::npos)	{
 					cmd = "mkdir -p ";
-					cmd += SYS_ROOT + restore[i].get_name().substr(0, restore[i].get_name().find_last_of("/")) + " 2>/dev/null >/dev/null";
+					cmd += SYS_ROOT + restore[i].filename->substr(0, restore[i].filename->find_last_of("/")) + " 2>/dev/null >/dev/null";
 					if (!simulate) system(cmd.c_str());
 				}
 				cmd = "mv ";
-			        cmd += SYS_BACKUP+restore[i].get_backup_file() + " ";
-				tmpName = restore[i].get_backup_file().substr(SYS_BACKUP.length());
+			        cmd += SYS_BACKUP+restore[i].backup_file + " ";
+				tmpName = restore[i].backup_file.substr(SYS_BACKUP.length());
 				tmpName = tmpName.substr(tmpName.find("/"));
 			        cmd += SYS_ROOT + tmpName.substr(0,tmpName.find_last_of("/"))+"/ 2>/dev/null >/dev/null";
 				if (!simulate) ret = system(cmd);
-				//if (ret) mError("restoring " + tmpName + " failed"); //NOTE!!!
-				delete_conflict_record(package->get_id(), restore[i].get_backup_file());
+				delete_conflict_record(package->get_id(), restore[i].backup_file);
 			}
 		}
 
@@ -2313,25 +2238,9 @@ int mpkgDatabase::cleanFileList(int package_id)
 {
 	SQLRecord sqlSearch;
 	sqlSearch.addField("packages_package_id", package_id);
-	bool cexist = get_configexist(package_id);
-	if (cexist)
-	{
-		//printf("leaving configs intact\n");
-		sqlSearch.addField("file_type", FTYPE_PLAIN);
-	}
 	int ret = db.sql_delete("files", sqlSearch);
 	if (ret!=0) return ret;
-	if (cexist)
-	{
-		//printf("checking if it has any configs\n");
-		vector<FILES> flist;
-		get_filelist(package_id, &flist);
-		if (flist.size()==0) 
-		{
-			//printf("it has no configs...\n");
-			set_configexist(package_id,0);
-		}
-	}
+	set_configexist(package_id,0);
 	return ret;
 }
 

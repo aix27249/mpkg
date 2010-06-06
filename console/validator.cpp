@@ -82,8 +82,8 @@ int checkPackage(string filename) {
 	sqlFields.addField("packages_package_id");
 	sqlFields.addField("file_name");
 	for (unsigned int i=0;i<p->get_files().size(); ++i) {
-		if (p->get_files().at(i).get_name().at(p->get_files().at(i).get_name().length()-1)!='/') {
-			sqlSearch.addField("file_name", p->get_files().at(i).get_name());
+		if (p->get_files().at(i).at(p->get_files().at(i).length()-1)!='/') {
+			sqlSearch.addField("file_name", p->get_files().at(i));
 		}
 	}
 

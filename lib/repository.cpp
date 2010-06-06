@@ -497,23 +497,23 @@ int ProcessPackage(const char *filename, const struct stat *file_status, int fil
 				vector<string> md5sums;
 				int ftype;
 				for (size_t i=0; i<lp.data.get_files().size(); ++i) {
-					ftype = get_file_type_stat(tmpdir + "/" + lp.data.get_files().at(i).get_name());
+					ftype = get_file_type_stat(tmpdir + "/" + lp.data.get_files().at(i));
 					if (ftype==FTYPE_PLAIN || ftype==FTYPE_SYMLINK) {
-						md5sums.push_back(get_file_md5(tmpdir + "/" + lp.data.get_files().at(i).get_name()));
+						md5sums.push_back(get_file_md5(tmpdir + "/" + lp.data.get_files().at(i)));
 					}
 					else {
 						if (ftype==FTYPE_DIR) md5sums.push_back("DIR");
 						else md5sums.push_back("SPECIAL");
 					}
 					
-					fileList.push_back(lp.data.get_files().at(i).get_name() + " " + md5sums[md5sums.size()-1] + " " + IntToStr(ftype));
+					fileList.push_back(lp.data.get_files().at(i) + " " + md5sums[md5sums.size()-1] + " " + IntToStr(ftype));
 				}
 				system("chmod -R 777 " + tmpdir);
 				system("rm -rf " + tmpdir);
 			}
 			else {
 				for (size_t i=0; i<lp.data.get_files().size(); ++i) {
-					fileList.push_back(lp.data.get_files().at(i).get_name());
+					fileList.push_back(lp.data.get_files().at(i));
 				}
 			}
 			WriteFileStrings(relative_path_shift + "/.mpkg_filelists/" + subpath + "/" + getFilename(filename) + ".filelist", fileList);

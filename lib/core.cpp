@@ -100,8 +100,8 @@ int mpkgDatabase::check_file_conflicts_new(const PACKAGE& package)
 	sqlFields.addField("file_name");
 	if (package.get_files().size()==0) return 0; // If a package has no files, it cannot conflict =)
 	for (unsigned int i=0;i<package.get_files().size(); ++i) {
-		if (package.get_files().at(i).get_name().at(package.get_files().at(i).get_name().length()-1)!='/') {
-			sqlSearch.addField("file_name", package.get_files().at(i).get_name());
+		if (package.get_files().at(i).at(package.get_files().at(i).length()-1)!='/') {
+			sqlSearch.addField("file_name", package.get_files().at(i));
 		}
 	}
 	db.get_sql_vtable(sqlTable, sqlFields, "files", sqlSearch);
@@ -131,7 +131,7 @@ int mpkgDatabase::check_file_conflicts_new(const PACKAGE& package)
 bool mpkgDatabase::checkEssentialFile(const string& filename) {
 	fillEssentialFiles();
 	for (unsigned int i=0; i<essentialFiles.size(); ++i) {
-		if (essentialFiles[i].get_name()==filename) return true;
+		if (essentialFiles[i]==filename) return true;
 	}
 	return false;
 	
@@ -215,7 +215,7 @@ int mpkgDatabase::delete_conflict_record(int conflicted_id, const string& file_n
 	return db.sql_delete("conflicts", sqlFill);
 }
 
-void mpkgDatabase::get_conflict_records(int conflicted_id, vector<FILES> *ret)
+void mpkgDatabase::get_conflict_records(int conflicted_id, vector<string> *filenames, vector<FILE_EXTENDED_DATA> *ret)
 {
 	SQLRecord sqlSearch;
 	sqlSearch.addField("conflicted_package_id", conflicted_id);
@@ -227,19 +227,20 @@ void mpkgDatabase::get_conflict_records(int conflicted_id, vector<FILES> *ret)
 	db.get_sql_vtable(fTable, sqlFields, "conflicts", sqlSearch);
 	ret->clear();
 	ret->resize(fTable.getRecordCount());
+	filenames->clear();
+	filenames->resize(fTable.getRecordCount());
 
-	int fConflict_file_name = fTable.getFieldIndex("conflict_file_name");
-	int fBackup_file = fTable.getFieldIndex("backup_file");
-	for (unsigned int i=0; i<fTable.getRecordCount(); i++)
-	{
-		ret->at(i).set_name(fTable.getValue(i, fConflict_file_name));
-		ret->at(i).set_backup_file(fTable.getValue(i, fBackup_file));
+	size_t fConflict_file_name = fTable.getFieldIndex("conflict_file_name");
+	size_t fBackup_file = fTable.getFieldIndex("backup_file");
+	for (size_t i=0; i<fTable.getRecordCount(); ++i) {
+		filenames->at(i)=fTable.getValue(i, fConflict_file_name);
+		ret->at(i).filename=&filenames->at(i);
+		ret->at(i).backup_file=fTable.getValue(i, fBackup_file);
 		ret->at(i).owner_id = -1;
-		//ret->at(i).owner_id = atoi(fTable.getValue(i, fOverwritten_id).c_str());
 		ret->at(i).overwriter_id = conflicted_id;
 	}
 }
-void mpkgDatabase::get_backup_records(const PACKAGE& package, vector<FILES> *ret)
+void mpkgDatabase::get_backup_records(const PACKAGE& package, vector<string> *filenames, vector<FILE_EXTENDED_DATA> *ret)
 {
 	SQLRecord sqlSearch;
 	sqlSearch.setEqMode(EQ_CUSTOMLIKE);
@@ -253,15 +254,17 @@ void mpkgDatabase::get_backup_records(const PACKAGE& package, vector<FILES> *ret
 	db.get_sql_vtable(fTable, sqlFields, "conflicts", sqlSearch);
 	ret->clear();
 	ret->resize(fTable.getRecordCount());
+	filenames->clear();
+	filenames->resize(fTable.getRecordCount());
 
-	int fConflict_file_name = fTable.getFieldIndex("conflict_file_name");
-	int fBackup_file = fTable.getFieldIndex("backup_file");
-	int fOverwriter_id = fTable.getFieldIndex("conflicted_package_id");
-	for (unsigned int i=0; i<fTable.getRecordCount(); i++)
-	{
-		//printf("Found backup: %s\n", fTable.getValue(i, fBackup_file).c_str());
-		ret->at(i).set_name(fTable.getValue(i, fConflict_file_name));
-		ret->at(i).set_backup_file(fTable.getValue(i, fBackup_file));
+
+	size_t fConflict_file_name = fTable.getFieldIndex("conflict_file_name");
+	size_t fBackup_file = fTable.getFieldIndex("backup_file");
+	size_t fOverwriter_id = fTable.getFieldIndex("conflicted_package_id");
+	for (size_t i=0; i<fTable.getRecordCount(); ++i) {
+		filenames->at(i)=fTable.getValue(i, fConflict_file_name);
+		ret->at(i).filename=&filenames->at(i);
+		ret->at(i).backup_file=fTable.getValue(i, fBackup_file);
 		ret->at(i).owner_id = package.get_id();
 		ret->at(i).overwriter_id = atoi(fTable.getValue(i, fOverwriter_id).c_str());
 	}
@@ -382,16 +385,17 @@ int mpkgDatabase::add_descriptionlist_record(int package_id, DESCRIPTION_LIST *d
 }
 #endif
 // Adds file list linked to package_id (usually for package adding)
-int mpkgDatabase::add_filelist_record(int package_id, vector<FILES> *filelist)
+int mpkgDatabase::add_filelist_record(int package_id, vector<string> *filelist)
 {
+	printf("\nAdding filelist for %d files\n\n", filelist->size());
 	SQLTable *sqlTable = new SQLTable;
 	SQLRecord sqlValues;
 	for (unsigned int i=0;i<filelist->size();i++)
 	{
 		sqlValues.clear();
-		sqlValues.addField("file_name", filelist->at(i).get_name());
+		sqlValues.addField("file_name", filelist->at(i));
 		sqlValues.addField("packages_package_id", package_id);
-		sqlValues.addField("file_type", filelist->at(i).get_type());
+		sqlValues.addField("file_type", 0);
 		sqlTable->addRecord(sqlValues);
 	}
 	if (!sqlTable->empty())
@@ -557,6 +561,7 @@ int mpkgDatabase::add_package_record (PACKAGE *package)
 	
 	// INSERT INTO FILES
 	if (!package->get_files().empty()) add_filelist_record(package_id, package->get_files_ptr());
+	else printf("\nNO FILES\n\n");
 	
 	// INSERT INTO LOCATIONS
 	if (!package->get_locations().empty()) add_locationlist_record(package_id, package->get_locations_ptr());
@@ -751,35 +756,20 @@ int mpkgDatabase::get_descriptionlist(int package_id, DESCRIPTION_LIST *desclist
 }
 #endif
 
-int mpkgDatabase::get_filelist(const int& package_id, vector<FILES> *filelist, bool config_only)
+int mpkgDatabase::get_filelist(const int& package_id, vector<string> *filelist)
 {
 	SQLTable *sqlTable = new SQLTable;
 	SQLRecord sqlFields;
 	sqlFields.addField("file_name");
-	sqlFields.addField("file_type");
 	SQLRecord sqlSearch;
 	sqlSearch.addField("packages_package_id", package_id);
 
 	db.get_sql_vtable(*sqlTable, sqlFields, "files", sqlSearch);
 	filelist->clear();
 	filelist->resize(sqlTable->getRecordCount());
-	unsigned int fFile_name = sqlTable->getFieldIndex("file_name");
-	unsigned int fFile_type = sqlTable->getFieldIndex("file_type");
-	for (unsigned int row=0;row<sqlTable->getRecordCount();row++)
-	{
-		if (!config_only)
-		{
-			filelist->at(row).set_name(sqlTable->getValue(row, fFile_name));
-			filelist->at(row).set_type(atoi(sqlTable->getValue(row, fFile_type).c_str()));
-		}
-		else
-		{
-			if (sqlTable->getValue(row, fFile_type)==IntToStr(FTYPE_CONFIG))
-			{
-				filelist->at(row).set_name(sqlTable->getValue(row, fFile_name));
-				filelist->at(row).set_type(atoi(sqlTable->getValue(row, fFile_type).c_str()));
-			}
-		}
+	size_t fFile_name = sqlTable->getFieldIndex("file_name");
+	for (size_t row=0; row<sqlTable->getRecordCount(); ++row) {
+		filelist->at(row)=sqlTable->getValue(row, fFile_name);
 	}
 	delete sqlTable;
 	return 0;
@@ -795,34 +785,22 @@ void mpkgDatabase::get_full_filelist(PACKAGE_LIST *pkgList)
 	SQLRecord sqlSearch;
 	SQLRecord sqlFields;
 	sqlFields.addField("file_name");
-	sqlFields.addField("file_type");
 	sqlFields.addField("packages_package_id");
 	db.get_sql_vtable(*sqlTable, sqlFields, "files", sqlSearch);
-	FILES tmp;
 	int package_id;
-	unsigned int counter=0;
-	unsigned int fPackages_package_id=sqlTable->getFieldIndex("packages_package_id");
-	unsigned int fFile_name=sqlTable->getFieldIndex("file_name");
-	unsigned int fFile_type=sqlTable->getFieldIndex("file_type");
-	for (unsigned int i=0; i<sqlTable->size(); i++)
-	{
+	size_t counter=0;
+	size_t fPackages_package_id=sqlTable->getFieldIndex("packages_package_id");
+	size_t fFile_name=sqlTable->getFieldIndex("file_name");
+	for (size_t i=0; i<sqlTable->size(); ++i) {
 		package_id=atoi(sqlTable->getValue(i, fPackages_package_id).c_str());
-		for (unsigned int t=0; t<pkgList->size(); t++)
-		{
+		for (size_t t=0; t<pkgList->size(); ++t) {
 			counter++;
-			if (pkgList->get_package_ptr(t)->get_id()==package_id)
-			{
-				tmp.set_name(sqlTable->getValue(i, fFile_name));
-				tmp.set_type(atoi(sqlTable->getValue(i, fFile_type).c_str()));
-				pkgList->get_package_ptr(t)->get_files_ptr()->push_back(tmp);
+			if (pkgList->get_package_ptr(t)->get_id()==package_id) {
+				pkgList->get_package_ptr(t)->get_files_ptr()->push_back(sqlTable->getValue(i, fFile_name));
 			}
 		}
 	}
 	delete sqlTable;
-	for (unsigned int i=0; i<pkgList->size(); i++)
-	{
-		pkgList->get_package_ptr(i)->sync();
-	}
 }
 
 

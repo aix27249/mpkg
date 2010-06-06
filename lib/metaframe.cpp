@@ -96,7 +96,6 @@ MetaPackage::MetaPackage(const string& _f) {
 			if (p.parseOk) {
 				canParse = true;
 				xml2package(p.getXMLNode(), data);
-				data->sync();
 			}
 		}
 		if (data->get_description().empty() && data->get_short_description().empty() && FileExists(_f+"/install/slack-desc")) {
@@ -199,15 +198,6 @@ bool MetaPackage::saveToXML(const string& xmlFilename) {
 		node.getChildNode("tags").addChild("tag").addText(data->get_tags()[i].c_str());
 	}
 
-	if (!data->get_config_files().empty()) node.addChild("configfiles");
-	for (unsigned int i=0; i<data->get_config_files().size(); ++i) {
-		node.getChildNode("configfiles").addChild("conffile").addText(data->get_config_files()[i].get_name().c_str());
-	}
-
-	if (!data->get_temp_files().empty()) node.addChild("tempfiles");
-	for (unsigned int i=0; i<data->get_temp_files().size(); ++i) {
-		node.getChildNode("tempfiles").addChild("tempfile").addText(data->get_temp_files()[i].get_name().c_str());
-	}
 
 	return node.writeToFile(xmlFilename.c_str())==eXMLErrorNone;
 }
@@ -258,7 +248,6 @@ MetaSrcPackage::MetaSrcPackage(string _f) {
 			if (p.parseOk) {
 				canParse = true;
 				xml2spkg(p.getXMLNode(), data);
-				data->pkg.sync();
 			}
 		}
 		if (data->pkg.get_description().empty() && data->pkg.get_short_description().empty() && FileExists(_f+"/install/slack-desc")) {
@@ -291,7 +280,6 @@ MetaSrcPackage::MetaSrcPackage(string _f) {
 		PackageConfig p(sp->getDataFilename());
 		if (p.parseOk) {
 			xml2spkg(p.getXMLNode(), data);
-			data->pkg.sync();
 		}
 	}
 	pkgFilename = _f;
@@ -364,15 +352,6 @@ bool MetaSrcPackage::saveToXML(const string& xmlFilename) {
 		node.getChildNode("tags").addChild("tag").addText(data->pkg.get_tags()[i].c_str());
 	}
 
-	if (!data->pkg.get_config_files().empty()) node.addChild("configfiles");
-	for (unsigned int i=0; i<data->pkg.get_config_files().size(); ++i) {
-		node.getChildNode("configfiles").addChild("conffile").addText(data->pkg.get_config_files()[i].get_name().c_str());
-	}
-
-	if (!data->pkg.get_temp_files().empty()) node.addChild("tempfiles");
-	for (unsigned int i=0; i<data->pkg.get_temp_files().size(); ++i) {
-		node.getChildNode("tempfiles").addChild("tempfile").addText(data->pkg.get_temp_files()[i].get_name().c_str());
-	}
 
 	// Mbuild-related
 		node.addChild("mbuild");

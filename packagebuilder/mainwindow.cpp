@@ -798,7 +798,6 @@ void Form::loadFile(QString filename)
 	// Loading main package data
 	PACKAGE pkg;
 	xml2package(p->getXMLNode(), &pkg);
-	pkg.sync();
 
 	// Filling data 
 	ui.NameEdit->setText(pkg.get_name().c_str());
@@ -834,16 +833,7 @@ void Form::loadFile(QString filename)
 		ui.TagListWidget->addItem(tag_tmp.c_str());
 		tag_tmp.clear();
 	}
-	for (unsigned int i=0; i<pkg.get_config_files().size(); i++)
-	{
-		QListWidgetItem *__item = new QListWidgetItem(ui.configFilesListWidget);
-		__item->setText(pkg.get_config_files().at(i).get_name().c_str());
-	}
-	for (unsigned int i=0; i<pkg.get_temp_files().size(); i++)
-	{
-		QListWidgetItem *__item = new QListWidgetItem(ui.tempFilesListWidget);
-		__item->setText(pkg.get_temp_files().at(i).get_name().c_str());
-	}
+	
 	reloadPackageDirListing();
 	reloadFilesystemDirListing();
 }
@@ -891,7 +881,6 @@ void Form::importMetaFromFile()
 	}
 	PACKAGE pkg;
 	xml2package(p.getXMLNode(), &pkg);
-	pkg.sync();
 
 	// Filling data
 	ui.NameEdit->setText(pkg.get_name().c_str());
@@ -927,16 +916,6 @@ void Form::importMetaFromFile()
 		tag_tmp=pkg.get_tags().at(i);
 		ui.TagListWidget->addItem(tag_tmp.c_str());
 		tag_tmp.clear();
-	}
-	for (unsigned int i=0; i<pkg.get_config_files().size(); i++)
-	{
-		QListWidgetItem *__item = new QListWidgetItem(ui.configFilesListWidget);
-		__item->setText(pkg.get_config_files().at(i).get_name().c_str());
-	}
-	for (unsigned int i=0; i<pkg.get_temp_files().size(); i++)
-	{
-		QListWidgetItem *__item = new QListWidgetItem(ui.tempFilesListWidget);
-		__item->setText(pkg.get_temp_files().at(i).get_name().c_str());
 	}
 
 }

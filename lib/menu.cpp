@@ -829,25 +829,8 @@ void show_package_info(mpkg *core, string name, string version, string build, bo
 				{
 					say(_("\tPackage contains no files\n"));
 				}
-				else for (unsigned int t=0; t<pkg->get_files().size(); t++)
-				{
-					say ("\t    %s", pkg->get_files().at(t).get_name().c_str());
-					if (verbose) 
-					{
-						if (pkg->get_files().at(t).get_type()==FTYPE_CONFIG)
-						{
-							say (_(" (config file)\n"));
-						}
-						else 
-						{
-							if (pkg->get_files().at(t).get_type()==FTYPE_SYMLINK)
-							{
-								say(_(" (symlink)\n"));
-							}
-							else say (_(" (plain file)\n"));
-						}
-					}
-					else say ("\n");
+				else for (size_t t=0; t<pkg->get_files().size(); ++t) {
+					say ("\t    %s\n", pkg->get_files().at(t).c_str());
 				}
 			}
 			else say (_("\tPackage is not installed\n"));

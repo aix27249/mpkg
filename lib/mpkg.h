@@ -25,7 +25,7 @@ class mpkgDatabase
 #ifdef ENABLE_INTERNATIONAL
 		int get_descriptionlist(const int& package_id, vector<DESCRIPTION> *desclist, string language="");
 #endif
-		int get_filelist (const int& package_id, vector<FILES> *filelist, bool config_only=false);
+		int get_filelist (const int& package_id, vector<string> *filelist);
 		void get_full_filelist(PACKAGE_LIST *pkgList);
 		int get_dependencylist(int package_id, vector<DEPENDENCY> *deplist);
 		void get_full_dependencylist(PACKAGE_LIST *pkgList);
@@ -59,17 +59,17 @@ class mpkgDatabase
 		int add_conflict_record(int conflicted_id, int overwritten_id, const string& file_name);
 		bool add_conflict_records(int conflicted_id, vector<int> overwritten_ids, vector<string *> file_names, PACKAGE_LIST& pkgList);
 		int delete_conflict_record(int conflicted_id, const string& file_name);
-		void get_conflict_records(int conflicted_id, vector<FILES> *ret); // Returns list of files overwritten by conflicted_id
-		void get_backup_records(const PACKAGE& package, vector<FILES> *ret); // Returns a list of files for package which has been overwritten
+		void get_conflict_records(int conflicted_id, vector<string> *filenames, vector<FILE_EXTENDED_DATA> *ret); // Returns list of files overwritten by conflicted_id
+		void get_backup_records(const PACKAGE& package, vector<string> *filenames, vector<FILE_EXTENDED_DATA> *ret); // Returns a list of files for package which has been overwritten
 		bool checkEssentialFile(const string& f);
 		void fillEssentialFiles(bool force_update=false);
 
-		vector<FILES> essentialFiles;
+		vector<string> essentialFiles;
 
 
 
 		// Action functions
-		int add_filelist_record(int package_id, vector<FILES> *filelist);
+		int add_filelist_record(int package_id, vector<string> *filelist);
 #ifdef ENABLE_INTERNATIONAL
 		int add_descriptionlist_record(int package_id, vector<DESCRIPTION> *desclist);
 #endif

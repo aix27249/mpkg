@@ -585,10 +585,10 @@ bool mpkg::checkPackageIntegrity(PACKAGE *package)
 	bool broken_sym = false;
 	for (unsigned int i=0; i<package->get_files().size(); i++)
 	{
-		if (package->get_files().at(i).get_name().rfind(".new")==package->get_files().at(i).get_name().length()-strlen(".new")) continue; // Skip config files
-		if (package->get_files().at(i).get_name().find("dev/")==0) continue; // Skip /dev section - all of this files are managed by udev
-		if (package_name.find("glibc")==0 && package->get_files().at(i).get_name().find("lib/incoming/")!=std::string::npos) continue;
-		if (!FileExists(SYS_ROOT + package->get_files().at(i).get_name(), &broken_sym)) {
+		if (package->get_files().at(i).rfind(".new")==package->get_files().at(i).length()-strlen(".new")) continue; // Skip config files
+		if (package->get_files().at(i).find("dev/")==0) continue; // Skip /dev section - all of this files are managed by udev
+		if (package_name.find("glibc")==0 && package->get_files().at(i).find("lib/incoming/")!=std::string::npos) continue;
+		if (!FileExists(SYS_ROOT + package->get_files().at(i), &broken_sym)) {
 			if (integrity_ok) { 
 				if (!broken_sym || checkIntegrity_includeSymlinks) {
 					mError(_("Package ") + (string) CL_YELLOW + package->get_name() + (string) CL_WHITE + _(" has broken files or symlinks:"));
@@ -597,9 +597,9 @@ bool mpkg::checkPackageIntegrity(PACKAGE *package)
 			}
 			if (!integrity_ok) {
 				if (!broken_sym) 
-					say(_("%s%s%s: /%s (file doesn't exist)\n"), CL_YELLOW, package->get_name().c_str(),CL_WHITE, package->get_files().at(i).get_name().c_str());
+					say(_("%s%s%s: /%s (file doesn't exist)\n"), CL_YELLOW, package->get_name().c_str(),CL_WHITE, package->get_files().at(i).c_str());
 				else
-					if (checkIntegrity_includeSymlinks) say(_("%s%s%s: /%s (broken symlink)\n"), CL_YELLOW, package->get_name().c_str(),CL_WHITE, package->get_files().at(i).get_name().c_str());
+					if (checkIntegrity_includeSymlinks) say(_("%s%s%s: /%s (broken symlink)\n"), CL_YELLOW, package->get_name().c_str(),CL_WHITE, package->get_files().at(i).c_str());
 			}
 		}
 	}
@@ -701,18 +701,6 @@ void dumpPackage(PACKAGE *p, PackageConfig *pc, string filename)
 	node.getChildNode("maintainer").addChild("email");
 	node.getChildNode("maintainer").getChildNode("email").addText(p->get_packager_email().c_str());
 	
-	node.addChild("configfiles");
-	for (unsigned int i=0; i<p->get_config_files().size(); i++)
-	{
-		node.getChildNode("configfiles").addChild("conffile");
-		node.getChildNode("configfiles").getChildNode("conffile",i).addText(p->get_config_files().at(i).get_name().c_str());
-	}
-	node.addChild("tempfiles");
-	for (unsigned int i=0; i<p->get_temp_files().size(); i++)
-	{
-		node.getChildNode("tempfiles").addChild("tempfile");
-		node.getChildNode("tempfiles").getChildNode("tempfile",i).addText(p->get_config_files().at(i).get_name().c_str());
-	}
 	node.addChild("mbuild");
 	if (!pc->getBuildUrl().empty())
 	{
@@ -862,7 +850,6 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 			if (p.parseOk) {
 				canParse = true;
 				xml2package(p.getXMLNode(), data);
-				data->sync();
 			}
 		}
 		if (!canParse) {
@@ -870,17 +857,15 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 			return;
 		}
 		// Now we should collect filelist and import it into data->get_files_ptr()
-		FILES file_tmp;
 		// Retrieving regular files
 		string fname=get_tmp_file();
 		string tar_cmd="( cd " + aaa + " && find | grep -v '/install' | sed -e s/^.//g > " + fname + " 2>/dev/null )";
 		system(tar_cmd);
 		vector<string>file_names=ReadFileStrings(fname);
 		unlink(fname.c_str());
-		for (unsigned int i=0; i<file_names.size(); ++i) {
+		for (size_t i=0; i<file_names.size(); ++i) {
 			if (!file_names[i].empty()) {
-				file_tmp.set_name(file_names[i].substr(1));
-				data->get_files_ptr()->push_back(file_tmp);
+				data->get_files_ptr()->push_back(file_names[i].substr(1));
 			}
 		}
 		tmp_dir = aaa;
@@ -922,27 +907,27 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 		excludeThis=false;
 		for (size_t z=0; z<exclusionList.size(); ++z) {
 			if (exclusionList[z].find_last_of("*")!=exclusionList[z].size()-1) {
-				if (exclusionList[z]==data->get_files().at(i).get_name()) {
+				if (exclusionList[z]==data->get_files().at(i)) {
 					excludeThis=true;
 					break;
 				}
 			}
 			else {
-				if (data->get_files().at(i).get_name().find(exclusionList[z].substr(0, exclusionList[z].size()-2))==0) {
+				if (data->get_files().at(i).find(exclusionList[z].substr(0, exclusionList[z].size()-2))==0) {
 					excludeThis=true;
 					break;
 				}
 			}
 		}
 		if (excludeThis) continue;
-		ext = getExtension(data->get_files().at(i).get_name());
+		ext = getExtension(data->get_files().at(i));
 		if (ext=="py" || ext=="pyc" || ext=="pl" || ext=="pm" || ext=="rb") {
-			filecheck.push_back(data->get_files().at(i).get_name()); // scripts are filled in filecheck vector
+			filecheck.push_back(data->get_files().at(i)); // scripts are filled in filecheck vector
 			continue;
 		}
 		//stat(data->get_files().at(i).get_name().c_str(), &so_stat);
 		//if (!S_ISREG(so_stat.st_mode)) continue;
-		lddcheck.push_back(data->get_files().at(i).get_name()); // Other files what are regular are filled to lddcheck vector
+		lddcheck.push_back(data->get_files().at(i)); // Other files what are regular are filled to lddcheck vector
 	}
 
 	string tmp_ldd_list = get_tmp_file(); // File for ldd scan input
@@ -1138,7 +1123,7 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 		}
 		if (goodPkg) minimalPkgList.add(*goodPkg);
 		else {
-		       	printf("No good package found for item [%d] %s\n", i, tmp.c_str());
+		       	cout << _("FATAL: No good package found for item [") << i << "] " << tmp << _(", it means that you have some libs that are not packaged.\n") << endl;
 			abort();
 		}
 		if (verbose) printf("%s found in %s package\n", results.getValue(i, fFile_name).c_str(), goodPkg->get_name().c_str());

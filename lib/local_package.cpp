@@ -123,29 +123,6 @@ int xml2package(xmlNodePtr pkgNode, PACKAGE *data)
 	data->set_compressed_size(p.getCompressedSize());
 	data->set_installed_size(p.getInstalledSize());
 	
-	FILES file_tmp;
-	/*vec_tmp_names=p.getFilelist();
-	for (unsigned int i=0;i<vec_tmp_names.size();i++)
-	{
-		file_tmp.set_name(&vec_tmp_names[i]);
-		data->get_files()->push_back(file_tmp);
-	}*/
-	
-	vec_tmp_names = p.getConfigFilelist();
-	for (unsigned int i=0;i<vec_tmp_names.size();i++)
-	{
-		file_tmp.set_name(vec_tmp_names[i]);
-		file_tmp.set_type(FTYPE_CONFIG);
-		data->get_files_ptr()->push_back(file_tmp);
-	}
-	
-	vec_tmp_names = p.getTempFilelist();
-	for (unsigned int i=0; i<vec_tmp_names.size(); i++)
-	{
-		file_tmp.set_name(vec_tmp_names[i]);
-		file_tmp.set_type(FTYPE_TEMP);
-		data->get_files_ptr()->push_back(file_tmp);
-	}
 	data->set_repository_tags(p.getRepositoryTags());
 	data->package_distro_version = p.getValue((const char *) "//package/distro_version");
 	//xmlFreeDoc(doc);
@@ -503,7 +480,6 @@ int LocalPackage::get_xml()
 		//mDebug("[get_xml] xml docuemtn != NULL");
 	}
 	xml2package(p.getXMLNode(), &data);
-	data.sync();
 	//mDebug("get_xml end");
 	delete_tmp_files();
 	_parseOk=true;
@@ -514,7 +490,6 @@ int LocalPackage::fill_filelist(PACKAGE *package, bool)
 {
 	if (!package) package=&data;
 	//mDebug("fill_filelist start");
-	FILES file_tmp;
 	// Retrieving regular files
 	// For setup mode, we can try to enable cached filelists
 	vector<string> file_names;
@@ -528,16 +503,8 @@ int LocalPackage::fill_filelist(PACKAGE *package, bool)
 	// Parsing file list
 	file_names=ReadFileStrings(fname);
 	unlink(fname.c_str());
-	
-	//mDebug("Injecting file list");
-	for (unsigned int i=2; i<file_names.size(); i++)
-	{
-		if (!file_names[i].empty())
-		{
-			file_tmp.set_name(file_names[i]);
-			package->get_files_ptr()->push_back(file_tmp);
-		}
-	}
+	file_names.erase(file_names.begin(), file_names.begin()+2);
+	package->set_files(file_names);
 	// Retrieving symlinks (from doinst.sh)
 	string lnfname=get_tmp_file();
 	string sed_cmd = "sed -n 's,^( *cd \\([^ ;][^ ;]*\\) *; *rm -rf \\([^ )][^ )]*\\) *) *$,\\1/\\2,p' < ";
@@ -553,17 +520,13 @@ int LocalPackage::fill_filelist(PACKAGE *package, bool)
 	if (FileExists(dt)) {
 		system(sed_cmd);
 		vector<string>link_names=ReadFileStrings(lnfname);
-		for (unsigned int i=0; i<link_names.size();i++)
-		{
-			if (!link_names[i].empty())
-			{	file_tmp.set_name(link_names[i]);
-				package->get_files_ptr()->push_back(file_tmp);
-			}
+		for (size_t i=0; i<link_names.size(); ++i) {
+			if (!link_names[i].empty()) package->get_files_ptr()->push_back(link_names[i]);
 		}
 	}
 	unlink(lnfname.c_str());
 	unlink(dt.c_str());
-
+	printf("Package %s has %d files\n\n", package->get_name().c_str(), package->get_files().size());
 
 	delete_tmp_files();
 	return 0;
@@ -778,50 +741,6 @@ int LocalPackage::set_additional_data()
 	return 0;
 }
 
-int LocalPackage::fill_configfiles(PACKAGE *package)
-{
-	string tmp_xml=get_tmp_file();
-//	string sys="tar xf "+filename+" install/data.xml --to-stdout > "+tmp_xml+" 2>/dev/null";
-	if (extractFromTgz(filename, "install/data.xml", tmp_xml)!=0)
-	{
-		unlink(tmp_xml.c_str());
-		delete_tmp_files();
-		return 0;
-	}
-	
-	// Checking for XML presence. NOTE: this procedure DOES NOT check validity of this XML!
-	if (!FileNotEmpty(tmp_xml))
-	{
-		unlink(tmp_xml.c_str());
-		delete_tmp_files();
-		return -1;
-	}
-
-	PackageConfig p(tmp_xml);
-	if (!p.parseOk) 
-	{
-		unlink(tmp_xml.c_str());
-		delete_tmp_files();
-		return -100;
-	}
-	vector<string> vec_tmp_names=p.getConfigFilelist();
-	FILES configfile_tmp;
-	for (unsigned int i=0; i<vec_tmp_names.size(); i++)
-	{
-	//	printf("conf file: %s\n", vec_tmp_names[i].c_str());
-		configfile_tmp.set_name(vec_tmp_names[i]);
-		configfile_tmp.set_type(FTYPE_CONFIG);
-		package->get_config_files_ptr()->push_back(configfile_tmp);
-	}
-	vec_tmp_names.clear();
-	package->sync();
-	//printf("total: %d config files\n",package->get_config_files()->size());
-	//mDebug("fill_configfiles end");
-	unlink(tmp_xml.c_str());
-	delete_tmp_files();
-	return 0;
-
-}
 int LocalPackage::injectFile()
 {
 	if (!dialogMode && verbose) say(string(_("Injecting file") + filename + "\n").c_str());

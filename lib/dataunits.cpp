@@ -263,8 +263,8 @@ DEPENDENCY::DEPENDENCY() {
 DEPENDENCY::~DEPENDENCY(){
 }
 
-
-// FILES class
+/*
+// FILE_EXTENDED_DATA class
 
 // Comparsion
 bool FILES::equalTo(const FILES& file) const {
@@ -316,24 +316,22 @@ void FILES::set_backup_file(const string& fname) {
 bool FILES::IsEmpty() const {
 	return file_name.empty();
 }
-
-void FILES::clear() {
+*/
+void FILE_EXTENDED_DATA::clear() {
 	file_id=0;
-	file_type=0;
-	file_name.clear();
+	filename = NULL;
 	backup_file.clear();
 }
 
 // Constructor & destructor
-FILES::FILES()
-{
+FILE_EXTENDED_DATA::FILE_EXTENDED_DATA() {
+	filename = NULL;
 	file_id=0;
-	file_type=FTYPE_PLAIN;
 }
 
-FILES::~FILES()
-{
+FILE_EXTENDED_DATA::~FILE_EXTENDED_DATA() {
 }
+
 void _sortLocations(vector<LOCATION>& locations)
 {
 	// Sorting order:
@@ -728,9 +726,7 @@ void PACKAGE::add_dependency(const string& package_name, const string& dep_condi
 }
 
 void PACKAGE::add_file(const string& file_name) {
-	FILES file;
-	file.set_name(file_name);
-	package_files.push_back(file);
+	package_files.push_back(file_name);
 }
 
 void PACKAGE::add_tag(const string& tag) {
@@ -832,22 +828,11 @@ int PACKAGE::set_descriptions(vector<DESCRIPTION>* desclist)
 }
 #endif
 
-vector<FILES>* PACKAGE::get_files_ptr() {
+vector<string>* PACKAGE::get_files_ptr() {
 	return &package_files;
 }
-const vector<FILES>& PACKAGE::get_files() const {
+const vector<string>& PACKAGE::get_files() const {
 	return package_files;
-}
-
-const vector<FILES>& PACKAGE::get_config_files() const {
-	return config_files;
-}
-
-vector<FILES>* PACKAGE::get_config_files_ptr() {
-	return &config_files;
-}
-const vector<FILES>& PACKAGE::get_temp_files() const {
-	return temp_files;
 }
 
 vector<DEPENDENCY>* PACKAGE::get_dependencies_ptr() {
@@ -876,61 +861,8 @@ const string PACKAGE::get_scriptdir() const {
 	return SCRIPTS_DIR + package_filename + "_" + package_md5 + "/";
 }
 
-void PACKAGE::set_files(const vector<FILES>& files) {
+void PACKAGE::set_files(const vector<string>& files) {
 	package_files=files;
-}
-
-void PACKAGE::set_config_files(const vector<FILES>& conf_files) {
-	config_files=conf_files;
-}
-
-void PACKAGE::sync()
-{
-	for (unsigned int i=0; i< config_files.size(); i++)
-	{
-		for (unsigned int t=0; t<package_files.size(); t++)
-		{
-			if (config_files[i].get_name()=='/' + package_files[t].get_name())
-			{
-				package_files[t].set_type(FTYPE_CONFIG);
-				break;
-			}
-		}
-	}
-
-	if (config_files.empty())
-	{
-		for (unsigned int i=0; i < package_files.size(); i++)
-		{
-			if (package_files[i].get_type()==FTYPE_CONFIG)
-			{
-				config_files.push_back(package_files[i]);
-			}
-		}
-	}
-	for (unsigned int i=0; i< temp_files.size(); i++)
-	{
-		for (unsigned int t=0; t<package_files.size(); t++)
-		{
-			if (temp_files[i].get_name()=='/' + package_files[t].get_name())
-			{
-				package_files[t].set_type(FTYPE_TEMP);
-				break;
-			}
-		}
-	}
-
-	if (temp_files.empty())
-	{
-		for (unsigned int i=0; i < package_files.size(); i++)
-		{
-			if (package_files[i].get_type()==FTYPE_TEMP)
-			{
-				temp_files.push_back(package_files[i]);
-			}
-		}
-	}
-
 }
 
 void PACKAGE::set_dependencies(const vector<DEPENDENCY>& dependencies) {
