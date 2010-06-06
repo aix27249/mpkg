@@ -30,38 +30,30 @@ int getProcessPid(const string& name) {
 }
 string TempFileController::create() {
 	string tmp_fname;
-	//char *t=tmpnam(NULL);
 	char t[]="/tmp/mpkg-XXXXXX";
 	int fd;
-//	mpkgErrorReturn errRet;
-//create_tmp:
 	fd=mkstemp(t);
 	if ( t == NULL  ) {
 		perror(_("Failed to create temp file"));
 		abort();
 	}
-	/*{
-		errRet = waitResponce(MPKG_SUBSYS_TMPFILE_CREATE_ERROR);
-		if (errRet == MPKG_RETURN_RETRY)
-			goto create_tmp;
-		if (errRet == MPKG_RETURN_ABORT)
-			return NULL;
-	}*/
-
 	tmp_fname=t;
 	tFiles.push_back(tmp_fname);
 	close(fd);
-	//mDebug("Created temp file " + tmp_fname);
 	return tmp_fname;
 
 }
 void TempFileController::clear_all() {
-	for (unsigned int i=0; i<tFiles.size(); ++i) {
-		unlink(tFiles[i].c_str());
-		unlink(string(tFiles[i]+".gz").c_str());
-		system("rm -rf " + tFiles[i]);
+	for (size_t i=0; i<tFiles.size(); ++i) {
+		if (access(fFiles[i].c_str(), F_OK)) unlink(tFiles[i].c_str()); // If plain file
+		else if (access(string(tFiles[i]+".gz").c_str())) unlink(string(tFiles[i]+".gz").c_str()); // Sometimes we use gz extension
+		if (access(fFiles[i].c_str(), F_OK)) system("rm -rf " + tFiles[i]); // And sometimes it is a directory
 	}
 	tFiles.clear(); // Clean-up list - for future use
+}
+
+void TempFileController::add(const string& external_tmp) {
+	tFiles.push_back(external_tmp);
 }
 TempFileController tempFileController;
 extern int errno;
@@ -219,6 +211,9 @@ int get_file_type_stat(string filename) {
 
 string get_tmp_file() {
 	return tempFileController.create();
+}
+void add_tmp_file(const string& ext_file) {
+	tempFileController.add(ext_file);
 }
 string get_tmp_dir() {
 	string ret = get_tmp_file();

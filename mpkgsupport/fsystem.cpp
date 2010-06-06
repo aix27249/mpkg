@@ -16,7 +16,7 @@ void PThreadWaiter::registerThread(pthread_t id) {
 	// Let's limit number of opened threads to 7
 	
 	int ret;
-	while (threads.size()>=7) {
+	while (threads.size()>=4) { // 4 will be enough for most systems
 		pthread_join(threads[0], (void **) &ret);
 		threads.erase(threads.begin());
 	}

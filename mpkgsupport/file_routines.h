@@ -33,6 +33,7 @@ long double get_disk_freespace(const string& point="/");
 long double getFileSize(const string& filename);
 string get_file_md5(const string& filename);
 string get_tmp_file();
+void add_tmp_file(const string&);
 string get_tmp_dir();
 void delete_tmp_files();
 bool FileExists(const string& filename, bool *broken_symlink=NULL);
@@ -61,6 +62,7 @@ class TempFileController {
 		~TempFileController();
 		string create();
 		void clear_all();
+		void add(const string&);
 		//string clear(string name);
 	private:
 		vector<string> tFiles;
