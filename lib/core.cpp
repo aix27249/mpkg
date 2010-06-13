@@ -317,7 +317,7 @@ int mpkgDatabase::backupFiles(vector <string *> fileNames, vector<int> overwritt
 		
 		// Если мы имеем дело с обычным пакетом, то можно работать.
 		backupDir = SYS_BACKUP + p->get_name() + "_" + p->get_md5() + "/" + getDirectory(*fileNamesNew[f]);
-		if (!isDirectory(backupDir)) system("mkdir -p " + backupDir + " 2>/dev/null >/dev/null");
+		if (!isDirectory(backupDir)) system("mkdir -p '" + backupDir + "' 2>/dev/null >/dev/null");
 	       	if (isDirectory(backupDir)) {
 			src = SYS_ROOT + *fileNamesNew[f];
 			dest = SYS_BACKUP + "/" + p->get_name() + "_" + p->get_md5() + "/" + *fileNamesNew[f];

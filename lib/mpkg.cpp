@@ -1781,7 +1781,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": extracting ") + IntToStr(package->get_files().size()) + _(" files"));
 	pData.increaseItemProgress(package->itemID);
 
-	string create_root="mkdir -p "+sys_root+" 2>/dev/null";
+	string create_root="mkdir -p '"+sys_root+"' 2>/dev/null";
 	if (!simulate) system(create_root.c_str());
 	sys="(cd "+sys_root+" && tar xf '"+sys_cache + package->get_filename() + "'";
 	//If previous version isn't purged, do not overwrite config files
@@ -1872,7 +1872,6 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 
 // New optimized exportPackage function.
 void mpkgDatabase::exportPackage(const string& output_dir, PACKAGE& p) {
-	//system("mkdir -p " + output_dir);
 	ofstream filestr;
 	filestr.open(string(output_dir+"/"+p.get_name()+"-"+p.get_version()+"-"+p.get_arch()+"-"+p.get_build()).c_str());
 	if (!filestr.is_open()) {
