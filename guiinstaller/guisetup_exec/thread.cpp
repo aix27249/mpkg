@@ -287,6 +287,7 @@ bool SetupThread::fillPartConfigs() {
 		pConfig->mountpoint = settings->value("mountpoint").toString().toStdString();
 		pConfig->format = settings->value("format").toBool();
 		pConfig->fs = settings->value("fs").toString().toStdString();
+		pConfig->mount_options = settings->value("options").toString().toStdString();
 		settings->endGroup();
 		if (!pConfig->mountpoint.empty()) partConfigs.push_back(*pConfig); // Skip subvolume groups from list
 		delete pConfig;
@@ -319,15 +320,18 @@ bool SetupThread::mountPartitions() {
 		if (partConfigs[i].mountpoint=="/") {
 			rootPartition = "/dev/" + partConfigs[i].partition;
 			rootPartitionType = partConfigs[i].fs;
+			rootPartitionMountOptions=partConfigs[i].mount_options;
 		}
 		else if (partConfigs[i].mountpoint == "swap") swapPartition = "/dev/" + partConfigs[i].partition;
 	}
 
 	string mount_cmd;
 	string mkdir_cmd;
+	string mount_options;
 
 	mkdir_cmd = "mkdir -p /mnt";
-	mount_cmd = "mount " + rootPartition + " /mnt";
+	if (!rootPartitionMountOptions.empty()) mount_options = "-o " + rootPartitionMountOptions;
+	mount_cmd = "mount " + mount_options + " " + rootPartition + " /mnt";
 	if (system(mkdir_cmd) !=0 || system(mount_cmd)!=0) return false;
 
 	// Sorting mount points
@@ -352,9 +356,15 @@ bool SetupThread::mountPartitions() {
 	
 	for (size_t i=0; i<mountOrder.size(); i++) {
 		if (partConfigs[mountOrder[i]].mountpoint=="/") continue;
+		if (partConfigs[mountOrder[i]].mount_options.empty()) mount_options.clear();
+		else mount_options = "-o " + partConfigs[mountOrder[i]].mount_options;
 		mkdir_cmd = "mkdir -p /mnt" + partConfigs[mountOrder[i]].mountpoint;
-		if (partConfigs[mountOrder[i]].fs=="ntfs")  mount_cmd = "ntfs-3g -o force /dev/" + partConfigs[mountOrder[i]].partition + " /mnt" + partConfigs[mountOrder[i]].mountpoint;
-		else mount_cmd = "mount /dev/" + partConfigs[mountOrder[i]].partition + " /mnt" + partConfigs[mountOrder[i]].mountpoint;
+		if (partConfigs[mountOrder[i]].fs=="ntfs")  {
+			if (mount_options.empty()) mount_options="-o force";
+			else mount_options+=",force";
+			mount_cmd = "ntfs-3g " + mount_options + " /dev/" + partConfigs[mountOrder[i]].partition + " /mnt" + partConfigs[mountOrder[i]].mountpoint;
+		}
+		else mount_cmd = "mount " + mount_options + " /dev/" + partConfigs[mountOrder[i]].partition + " /mnt" + partConfigs[mountOrder[i]].mountpoint;
 		if (partConfigs[mountOrder[i]].fs=="jfs") mount_cmd = "fsck /dev/" + partConfigs[mountOrder[i]].partition + "  && " + mount_cmd;
 
 		if (system(mkdir_cmd)!=0 || system(mount_cmd)!=0) {
@@ -474,7 +484,7 @@ void SetupThread::writeFstab() {
 	if (rootUUID.empty()) rootUUID = rootPartition;
 	else rootUUID = "UUID=" + rootUUID;
 
-	data+= "# " + rootPartition + "\n" + rootUUID + "\t/\t" + rootPartitionType + "\tdefaults\t1 1\n";
+	data+= "# " + rootPartition + "\n" + rootUUID + "\t/\t" + rootPartitionType + "\t" + rootPartitionMountOptions + "\t1 1\n";
 	
 	string options="defaults";
 	string fstype="auto";
@@ -485,14 +495,17 @@ void SetupThread::writeFstab() {
 	{
 		if (partConfigs[i].mountpoint == "/" || partConfigs[i].mountpoint == "swap") continue;
 		options = "defaults";
+		if (!partConfigs[i].mount_options.empty()) options=partConfigs[i].mount_options;
 		fstype = partConfigs[i].fs;
 		if (fstype=="hfs+") fstype = "hfsplus";
 		if (partConfigs[i].fs.find("fat")!=std::string::npos) {
 			options="rw,codepage=866,iocharset=utf8,umask=000,showexec,quiet";
+			if (!partConfigs[i].mount_options.empty()) options+="," + partConfigs[i].mount_options;
 			fstype="vfat";
 		}
 		if (partConfigs[i].fs.find("ntfs")!=std::string::npos) {
 			options="locale=ru_RU.utf8,umask=000";
+			if (!partConfigs[i].mount_options.empty()) options+="," + partConfigs[i].mount_options;
 			fstype="ntfs-3g";
 		}
 		fsUUID = getUUID("/dev/" + partConfigs[i].partition);

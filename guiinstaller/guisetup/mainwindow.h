@@ -34,6 +34,7 @@ class MountOptions {
 		QString currentfs;
 		bool format;
 		QString newfs;
+		QString mount_options;
 };
 
 class MainWindow: public QMainWindow {

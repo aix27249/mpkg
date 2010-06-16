@@ -446,6 +446,7 @@ void MainWindow::updateMountsGUI(QTreeWidgetItem *nextItem, QTreeWidgetItem *pre
 		formatdata.clear();
 		if (!prevMountPtr->mountpoint.isEmpty()) newdata = ": " + prevMountPtr->mountpoint;
 		if (prevMountPtr->format) formatdata = tr(", format to: %1").arg(prevMountPtr->newfs);
+		if (!prevMountPtr->mount_options.isEmpty()) formatdata += tr(", options: %1").arg(prevMountPtr->mount_options);
 
 		prevItem->setText(0, QString("%1 (%2, %3)%4%5").arg(prevMountPtr->partition).arg(prevMountPtr->size).arg(prevMountPtr->currentfs).arg(newdata).arg(formatdata));
 	}
@@ -459,6 +460,7 @@ void MainWindow::updateMountsGUI(QTreeWidgetItem *nextItem, QTreeWidgetItem *pre
 			ui->mountCustomRadioButton->setChecked(true);
 			ui->mountPointEdit->setText(nextMountPtr->mountpoint);
 		}
+		ui->mountOptionsLineEdit->setText(nextMountPtr->mount_options);
 
 
 		int itemID;
@@ -496,6 +498,7 @@ void MainWindow::processMountEdit(QTreeWidgetItem *item) {
 	else if (ui->mountSwapRadioButton->isChecked()) mountPtr->mountpoint = "swap";
 	else if (ui->mountDontUseRadioButton->isChecked()) mountPtr->mountpoint.clear();
 	else if (ui->mountCustomRadioButton->isChecked()) mountPtr->mountpoint=ui->mountPointEdit->text();
+	mountPtr->mount_options=ui->mountOptionsLineEdit->text();
 
 	if (ui->mountNoFormatRadioButton->isChecked()) {
 		mountPtr->format=false;
@@ -516,6 +519,7 @@ void MainWindow::saveMountSettings() {
 		settings->beginGroup(mountOptions[i].partition.toStdString().substr(5).c_str());
 		settings->setValue("mountpoint", mountOptions[i].mountpoint);
 		settings->setValue("format", mountOptions[i].format);
+		settings->setValue("options", mountOptions[i].mount_options);
 		if (mountOptions[i].format) settings->setValue("fs", mountOptions[i].newfs);
 		else settings->setValue("fs", mountOptions[i].currentfs);
 		settings->endGroup();
@@ -529,6 +533,7 @@ void MainWindow::loadBootloaderTree() {
 	for (size_t i=0; i<drives.size(); ++i) {
 		ui->bootLoaderComboBox->addItem(QString("%1 (%2)").arg(QString::fromStdString(drives[i].tag)).arg(QString::fromStdString(drives[i].value)));
 	}
+	ui->bootLoaderComboBox->addItem(tr("No bootloader"));
 }
 
 bool MainWindow::validateBootloaderSettings() {
@@ -543,11 +548,13 @@ void MainWindow::saveBootloaderSettings() {
 	QString fbmode = ui->fbResolutionComboBox->currentText();
 	if (fbmode=="KMS" || fbmode == "Kernel modesetting") fbmode = "text";
 	if (fbmode!="text") fbmode += "x" + ui->fbColorComboBox->currentText();
-	settings->setValue("bootloader", drives[ui->bootLoaderComboBox->currentIndex()].tag.c_str());
+	if (ui->bootLoaderComboBox->currentIndex()==ui->bootLoaderComboBox->count()-1) settings->setValue("bootloader", "NONE");
+	else settings->setValue("bootloader", drives[ui->bootLoaderComboBox->currentIndex()].tag.c_str());
 	settings->setValue("fbmode", fbmode);
 	settings->setValue("initrd_delay", ui->initrdDelayCheckBox->isChecked());
 	settings->setValue("kernel_options", ui->kernelOptionsLineEdit->text());
 	settings->setValue("initrd_modules", ui->initrdModulesLineEdit->text());
+	settings->setValue("tmpfs_tmp", ui->useTmpfsCheckBox->isChecked());
 	
 }
 

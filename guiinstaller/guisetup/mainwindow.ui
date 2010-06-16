@@ -55,7 +55,7 @@
        <number>0</number>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>10</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -140,7 +140,7 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Droid Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 2010.05.31 Snapshot 4 Release Notes&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 2010.06.XZ Snapshot 5 Release Notes&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This is a development release. For more information, see official site: http://www.agilialinux.ru/&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
@@ -1886,6 +1886,16 @@ p, li { white-space: pre-wrap; }
               </layout>
              </item>
              <item>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Extra mount options (USE CAREFULLY - READ HELP!)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="mountOptionsLineEdit"/>
+             </item>
+             <item>
               <spacer name="verticalSpacer_14">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -2195,6 +2205,13 @@ p, li { white-space: pre-wrap; }
               <widget class="QLineEdit" name="initrdModulesLineEdit"/>
              </item>
             </layout>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="useTmpfsCheckBox">
+             <property name="text">
+              <string>Use tmpfs for /tmp volume</string>
+             </property>
+            </widget>
            </item>
            <item>
             <spacer name="verticalSpacer_12">

@@ -5,7 +5,7 @@
 #include <mpkg/libmpkg.h>
 
 #include <mpkg/errorhandler.h>
-struct SysConfig
+/*struct SysConfig
 {
 	string swapPartition;
 	string rootPartition;
@@ -39,7 +39,7 @@ struct BootConfig
 	unsigned int videoModeNumber;
 	string rootFs;
 	string loaderType;
-};
+};*/
 struct OsRecord
 {
 	string label;
@@ -54,7 +54,7 @@ struct CustomPkgSet {
 };
 
 struct PartConfig {
-	string partition, mountpoint, fs;
+	string partition, mountpoint, fs, mount_options;
 	bool format;
 };
 
@@ -72,7 +72,7 @@ class SetupThread: public QThread {
 		bool activateSwap(PartConfig pConfig);
 		string sysconf_lang;
 
-		string rootPartition, swapPartition, rootPartitionType, kernelversion;
+		string rootPartition, swapPartition, rootPartitionType, rootPartitionMountOptions, kernelversion;
 		vector<PartConfig> partConfigs;
 
 		QString rootPassword;
