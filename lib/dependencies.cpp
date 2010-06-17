@@ -107,6 +107,12 @@ void DependencyTracker::createPackageCache()
 	cacheCreated=true;
 }
 
+// This function is used to create a virtual package cache. It requires to do analytics work on fake database without making deal with real one.
+void DependencyTracker::setFakePackageCache(const PACKAGE_LIST &fakePkgCache) {
+	packageCache = fakePkgCache;
+	cacheCreated = true;
+
+}
 void DependencyTracker::fillInstalledPackages()
 {
 	if (!cacheCreated) createPackageCache();

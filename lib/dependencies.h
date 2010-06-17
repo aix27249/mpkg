@@ -65,6 +65,8 @@ class DependencyTracker
 		void muxStreams(const PACKAGE_LIST& installStream, const PACKAGE_LIST& removeStream);
 		bool checkBrokenDeps(PACKAGE *pkg, PACKAGE_LIST searchList);
 
+		void setFakePackageCache(const PACKAGE_LIST &);
+
 		DependencyTracker(mpkgDatabase *mpkgDB);
 		~DependencyTracker();
 
