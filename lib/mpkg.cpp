@@ -1501,7 +1501,7 @@ installProcess:
 			system("chroot " + SYS_ROOT + " /usr/bin/fc-cache -f");
 		}
 		for (size_t i=0; i<iconCacheUpdates.size(); ++i) {
-			msay(_("Updating icon cache in ") + iconCacheUpdates[i], SAYMODE_NEWLINE);
+			printf(_("Updating icon cache in %s\n"),  iconCacheUpdates[i].c_str());
 			system("chroot " + SYS_ROOT + " /usr/bin/gtk-update-icon-cache -t -f " + iconCacheUpdates[i] + " 1> /dev/null 2> /dev/null");
 		}
 		// Always update mime database, it takes not much time but prevents lots of troubles
@@ -1715,7 +1715,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 			for (size_t t=0; !hasIconCache && t<iconCacheUpdates.size(); ++t) {
 				if (iconCacheUpdates[t]==*iconFilename) hasIconCache = true;
 			}
-			if (!hasIconCache) iconCacheUpdates.push_back(iconFilename->substr(0, iconFilename->size()-2));
+			if (!hasIconCache) iconCacheUpdates.push_back(iconFilename->substr(0, iconFilename->size()-1));
 		}
 	}
 
@@ -2033,7 +2033,7 @@ int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsi
 			if (removeThis && fname[fname.length()-1]!='/')
 			{
 				if (!simulate && !dontRemove) {
-					if (verbose && !dialogMode) say("[%d] %s %s: ", i, _("Removing file"), fname.c_str());
+					if (verbose && !dialogMode) say("[%d] %s %s: ", (unsigned int) i, _("Removing file"), fname.c_str());
 					unlink_ret = unlink(fname.c_str());
 					if (verbose && !dialogMode) {
 						if (unlink_ret==0) say("%sOK%s\n", CL_GREEN, CL_WHITE);
