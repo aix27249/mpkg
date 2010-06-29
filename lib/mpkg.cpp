@@ -2,6 +2,8 @@
  * 	$Id: mpkg.cpp,v 1.132 2007/12/11 05:38:29 i27249 Exp $
  * 	MPKG packaging system
  * ********************************************************************/
+// #define INSTALL_DEBUG // Enable this if you need to debug it fast
+
 #include "mpkg.h"
 #include "syscommands.h"
 #include "DownloadManager.h"
@@ -1500,8 +1502,9 @@ installProcess:
 			system("chroot " + SYS_ROOT + " find /usr/share/fonts -type d -exec /usr/bin/mkfontscale {} \\; ");
 			system("chroot " + SYS_ROOT + " /usr/bin/fc-cache -f");
 		}
+		printf("Total icon paths to update: %d\n", iconCacheUpdates.size());
 		for (size_t i=0; i<iconCacheUpdates.size(); ++i) {
-			printf(_("Updating icon cache in %s\n"),  iconCacheUpdates[i].c_str());
+			printf(_("[%d/%d] Updating icon cache in %s\n"), i+1, iconCacheUpdates.size(), iconCacheUpdates[i].c_str());
 			system("chroot " + SYS_ROOT + " /usr/bin/gtk-update-icon-cache -t -f " + iconCacheUpdates[i] + " 1> /dev/null 2> /dev/null");
 		}
 		// Always update mime database, it takes not much time but prevents lots of troubles
@@ -1517,12 +1520,13 @@ installProcess:
 int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, unsigned int packagesTotal)
 {
 	bool ultraFastMode = true;
+#ifndef INSTALL_DEBUG
 	if (setupMode) {
 		system("echo Installing package " + package->get_name() + "-" + package->get_fullversion() + " >> /dev/tty4");
 	}
 	system("echo Installing package " + package->get_name() + "-" + package->get_fullversion() + " >> /var/log/mpkg-installation.log");
+#endif
 	
-	printHtmlProgress();
 	// Check if package already has been installed
 	if (package->action()==ST_NONE) return 0;
 	string sys_cache=SYS_CACHE;
@@ -1544,6 +1548,11 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": checking package source"));
 
 	// Если ставим с CD/DVD, попытаемся молча смонтировать диск.
+	// UPD: а зачем на этом этапе это делать, если диск либо уже вставлен, либо уже не вставлен? о_О
+	
+	
+	/***************** BEGINNING OF WEIRD CODE *******************************
+	
 	if (package->usedSource.find("cdrom://")!=std::string::npos) {
 		if (!FileExists(sys_cache + package->get_filename(), &broken_sym) || broken_sym) {
 			system("mount " + CDROM_DEVICE + " " + CDROM_MOUNTPOINT + " 2>/dev/null >/dev/null");
@@ -1614,7 +1623,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 			mError(_("Filename was: ") + SYS_CACHE + package->get_filename());
 			return MPKG_INSTALL_EXTRACT_ERROR;
 		}
-	}
+	}*/
 
 	// NEW (04.10.2007): Check if package is source, and build if needed. Also, import to database the output binary package and prepare to install it.
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() +_( ": checking package type"));
@@ -1697,7 +1706,9 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		actionBus.setActionState(ACTIONID_INSTALL, ITEMSTATE_ABORTED);
 		return MPKGERROR_ABORTED;
 	}
+#ifndef INSTALL_DEBUG
 	if (package->get_files().empty()) lp.fill_filelist(package); // Extracting file list
+#endif
 	
 	if (!needUpdateXFonts) {
 		msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": looking for X fonts"));
@@ -1712,10 +1723,11 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	for (size_t i=0; i<package->get_files().size(); ++i) {
 		iconFilename = (string *) &package->get_files().at(i);
 		if (iconFilename->find("usr/share/icons/")!=std::string::npos && iconFilename->size()>strlen("usr/share/icons/") && iconFilename->at(iconFilename->size()-1)=='/') {
+			hasIconCache=false;
 			for (size_t t=0; !hasIconCache && t<iconCacheUpdates.size(); ++t) {
 				if (iconCacheUpdates[t]==*iconFilename) hasIconCache = true;
 			}
-			if (!hasIconCache) iconCacheUpdates.push_back(iconFilename->substr(0, iconFilename->size()-1));
+			if (!hasIconCache) iconCacheUpdates.push_back(*iconFilename);
 		}
 	}
 
@@ -1729,6 +1741,9 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		pData.increaseItemProgress(package->itemID);
 
 	}
+#ifdef INSTALL_DEBUG
+	force_skip_conflictcheck=true;
+#endif
 	if (!force_skip_conflictcheck)
 	{
 		if (fileConflictChecking == CHECKFILES_PREINSTALL && check_file_conflicts_new(*package)!=0)
@@ -1748,7 +1763,10 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 
 	if (dialogMode) ncInterface.setProgressText(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() +"\n" + index_hole + _("merging file lists into database"));
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": merging file lists into database"));
+#ifndef INSTALL_DEBUG
 	add_filelist_record(package->get_id(), package->get_files_ptr());
+#endif
+	
 	string sys;
 	pData.increaseItemProgress(package->itemID);
 	if (actionBus._abortActions)
@@ -1781,8 +1799,10 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": extracting ") + IntToStr(package->get_files().size()) + _(" files"));
 	pData.increaseItemProgress(package->itemID);
 
-	string create_root="mkdir -p '"+sys_root+"' 2>/dev/null";
-	if (!simulate) system(create_root.c_str());
+	// UPD: I don't think that creating root here is useful thing
+	/*string create_root="mkdir -p '"+sys_root+"' 2>/dev/null";
+	if (!simulate) system(create_root.c_str());*/
+
 	sys="(cd "+sys_root+" && tar xf '"+sys_cache + package->get_filename() + "'";
 	//If previous version isn't purged, do not overwrite config files
 	if (_cmdOptions["skip_doc_installation"]=="true") {
@@ -1803,10 +1823,14 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	else sys+= " )";
 
 	if (!simulate) {
+#ifdef INSTALL_DEBUG
+		if (true)
+#else
 		if (system(sys.c_str()) == 0 /* || package->get_name()=="aaa_base"*/) // Somebody, TELL ME WHAT THE HELL IS THIS???! WHY SUCH EXCEPTION?!
+#endif
 		{
 			if (ultraFastMode) {
-				if (_cmdOptions["preseve_doinst"]=="true" && FileExists(SYS_ROOT + "/install/doinst.sh") ) system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/doinst.sh " + package->get_scriptdir());
+				//if (_cmdOptions["preseve_doinst"]=="true" && FileExists(SYS_ROOT + "/install/doinst.sh") ) system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/doinst.sh " + package->get_scriptdir()); // Please note that this stuff will not work in real world.
 				if (FileExists(SYS_ROOT + "/install/postremove.sh")) system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/postremove.sh " + package->get_scriptdir());
 				if (FileExists(SYS_ROOT + "/install/preremove.sh")) system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/preremove.sh " + package->get_scriptdir());
 			}
@@ -1824,7 +1848,9 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 
 	pData.increaseItemProgress(package->itemID);
 
-
+/*#ifdef INSTALL_DEBUG
+	DO_NOT_RUN_SCRIPTS = true;
+#endif*/
 	
 	// Creating and running POST-INSTALL script
 	if (!DO_NOT_RUN_SCRIPTS)
@@ -1846,27 +1872,28 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		}
 	}
 
-	system("rm -rf " + SYS_ROOT+"/install"); // Cleanup. Be aware of placing anything important to this directory
-	printHtmlProgress();
 	if (dialogMode) ncInterface.setProgressText(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + "\n" + index_hole + _("finishing installation"));
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": finishing installation"));
+#ifndef INSTALL_DEBUG
+	// UPD: we don't care about whole dir, we care only about doinst.sh one
+	//system("rm -rf " + SYS_ROOT+"/install"); // Cleanup. Be aware of placing anything important to this directory
+	unlink(string(SYS_ROOT+"/doinst.sh").c_str());
+
 	set_installed(package->get_id(), ST_INSTALLED);
 	set_configexist(package->get_id(), ST_CONFIGEXIST);
 	set_action(package->get_id(), ST_NONE, package->package_action_reason);
+#endif
 	if (purge_id!=0){
 		set_configexist(purge_id, ST_CONFIGNOTEXIST); // Clear old purge status
 		cleanFileList(purge_id);
 	}
-	printHtmlProgress();
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": updating database"));
 	if (_cmdOptions["warpmode"]!="yes") sqlFlush();
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": exporting legacy data"));
-	printHtmlProgress();
 	if (!setupMode) exportPackage(SYS_ROOT+"/"+legacyPkgDir, *package);
 	pData.increaseItemProgress(package->itemID);
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": complete"), SAYMODE_INLINE_END);
 	package->set_action(ST_NONE, "install_complete");
-	printHtmlProgress();
 	return 0;
 }	//End of install_package
 

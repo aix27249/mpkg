@@ -493,39 +493,51 @@ int LocalPackage::fill_filelist(PACKAGE *package, bool)
 	// Retrieving regular files
 	// For setup mode, we can try to enable cached filelists
 	vector<string> file_names;
-	string fname=get_tmp_file();
+	string fname;
+	bool fname_temp = false;
 	if (setupMode && FileExists(getAbsolutePath(getDirectory(filename))+"/.fcache/" + getFilename(filename) + "/flist")) {
-		system("cat " + getAbsolutePath(getDirectory(filename))+"/.fcache/" + getFilename(filename) + "/flist > " + fname);
+		fname = getAbsolutePath(getDirectory(filename))+"/.fcache/" + getFilename(filename) + "/flist";
 	}
 	else {
+		fname = get_tmp_file();
+		fname_temp = true;
 		system("tar tf "+filename+" --exclude install " +" > "+fname + " 2>/dev/null");
 	}
 	// Parsing file list
 	file_names=ReadFileStrings(fname);
-	unlink(fname.c_str());
-	file_names.erase(file_names.begin(), file_names.begin()+2);
+	if (fname_temp) unlink(fname.c_str());
+	if (file_names.size()>2) file_names.erase(file_names.begin(), file_names.begin()+2);
+	else {
+		mWarning("Empty file list in package " + package->get_name());
+		file_names.clear();
+	}
 	package->set_files(file_names);
-	// Retrieving symlinks (from doinst.sh)
-	string lnfname=get_tmp_file();
-	string sed_cmd = "sed -n 's,^( *cd \\([^ ;][^ ;]*\\) *; *rm -rf \\([^ )][^ )]*\\) *) *$,\\1/\\2,p' < ";
-	string dt = get_tmp_file();
+	// Retrieving symlinks (from doinst.sh).
+	string dt;
+	bool dt_temp=false;
 	// Extracting file to the temp dir
 	if (setupMode && FileExists(getAbsolutePath(getDirectory(filename))+"/.fcache/" + getFilename(filename) + "/doinst.sh")) {
-		system("cat " + getAbsolutePath(getDirectory(filename))+"/.fcache/" + getFilename(filename) + "/doinst.sh > " + dt);
+		dt = getAbsolutePath(getDirectory(filename))+"/.fcache/" + getFilename(filename) + "/doinst.sh";
 	}
-	else extractFromTgz(filename, "install/doinst.sh", dt);
+	else {
+		dt = get_tmp_file();
+		extractFromTgz(filename, "install/doinst.sh", dt);
+		dt_temp = true;
+	}
 
-	sed_cmd += dt + " > " + lnfname;
 	
 	if (FileExists(dt)) {
+		string lnfname=get_tmp_file();
+		string sed_cmd = "sed -n 's,^( *cd \\([^ ;][^ ;]*\\) *; *rm -rf \\([^ )][^ )]*\\) *) *$,\\1/\\2,p' < ";
+		sed_cmd += dt + " > " + lnfname;
 		system(sed_cmd);
 		vector<string>link_names=ReadFileStrings(lnfname);
 		for (size_t i=0; i<link_names.size(); ++i) {
 			if (!link_names[i].empty()) package->get_files_ptr()->push_back(link_names[i]);
 		}
+		if (dt_temp) unlink(dt.c_str());
+		unlink(lnfname.c_str());
 	}
-	unlink(lnfname.c_str());
-	unlink(dt.c_str());
 
 	delete_tmp_files();
 	return 0;

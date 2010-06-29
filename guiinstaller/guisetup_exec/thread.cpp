@@ -769,6 +769,7 @@ export LC_TELEPHONE=$L\n\
 export LC_MEASUREMENT=$L\n\
 export LC_IDENTIFICATION=$L\n\
 export LESSCHARSET=UTF-8\n";
+	if (!FileExists(dir)) system("mkdir " + dir);
 	strReplace(&lang_sh, "$L", lang);
 	WriteFile(dir+"lang.sh", lang_sh);
 	strReplace(&lang_sh, "export", "setenv");
@@ -780,6 +781,7 @@ void setConsoleKeymap(string lang) {
 	if (lang.find("ru")==0 || lang.find("uk")==0) {
 		string keymaps = ReadFile("/mnt/etc/conf.d/keymaps");
 		strReplace(&keymaps, "keymap=\"us\"", "keymap=\"ru-winkeys-uni_ct_sh\"");
+		if (!FileExists("/mnt/etc/conf.d")) system("mkdir /mnt/etc/conf.d");
 		WriteFile("/mnt/etc/conf.d/keymaps", keymaps);
 	}
 
