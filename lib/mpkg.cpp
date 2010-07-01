@@ -861,10 +861,10 @@ int mpkgDatabase::commit_actions()
 
 	install_list.sortByLocations();
 	install_list.sortByTags();
-	install_list.sortByPriorityNew();
+	// install_list.sortByPriorityNew(); // Buggy, can't use yet
 
 	// Don't forget to sort remove priority too: it does not take much time, but may be useful in case of disaster.
-	remove_list.sortByPriorityNew(true);
+	// remove_list.sortByPriorityNew(true); // Buggy
 	
 	// Checking available space
 	long double rem_size=0;
@@ -1502,9 +1502,9 @@ installProcess:
 			system("chroot " + SYS_ROOT + " find /usr/share/fonts -type d -exec /usr/bin/mkfontscale {} \\; ");
 			system("chroot " + SYS_ROOT + " /usr/bin/fc-cache -f");
 		}
-		printf("Total icon paths to update: %d\n", iconCacheUpdates.size());
+		printf("Total icon paths to update: %d\n", (int) iconCacheUpdates.size());
 		for (size_t i=0; i<iconCacheUpdates.size(); ++i) {
-			printf(_("[%d/%d] Updating icon cache in %s\n"), i+1, iconCacheUpdates.size(), iconCacheUpdates[i].c_str());
+			printf(_("[%d/%d] Updating icon cache in %s\n"), (int) i+1, (int) iconCacheUpdates.size(), iconCacheUpdates[i].c_str());
 			system("chroot " + SYS_ROOT + " /usr/bin/gtk-update-icon-cache -t -f " + iconCacheUpdates[i] + " 1> /dev/null 2> /dev/null");
 		}
 		// Always update mime database, it takes not much time but prevents lots of troubles
@@ -1544,7 +1544,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	currentStatus = statusHeader + _("initialization");
 	
 	// Checking if it is a symlink. If it is broken, and package installs from CD, ask to insert and mount
-	bool broken_sym=false;
+	//bool broken_sym=false;
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": checking package source"));
 
 	// Если ставим с CD/DVD, попытаемся молча смонтировать диск.
@@ -1830,7 +1830,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 #endif
 		{
 			if (ultraFastMode) {
-				//if (_cmdOptions["preseve_doinst"]=="true" && FileExists(SYS_ROOT + "/install/doinst.sh") ) system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/doinst.sh " + package->get_scriptdir()); // Please note that this stuff will not work in real world.
+				if (_cmdOptions["preseve_doinst"]=="true" && FileExists(SYS_ROOT + "/install/doinst.sh") ) system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/doinst.sh " + package->get_scriptdir()); // Please note that this stuff will not work in real world.
 				if (FileExists(SYS_ROOT + "/install/postremove.sh")) system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/postremove.sh " + package->get_scriptdir());
 				if (FileExists(SYS_ROOT + "/install/preremove.sh")) system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/preremove.sh " + package->get_scriptdir());
 			}
@@ -1863,12 +1863,18 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 			//string postinst="cd " + SYS_ROOT + " ; sh "+package->get_scriptdir() + "doinst.sh";
 			string postinst;
 			string tmpdoinst = "/tmp/mpkgtmp_" + package->get_name() + ".sh";
-			add_tmp_file(tmpdoinst);
+			add_tmp_file(SYS_ROOT + tmpdoinst);
 			system("cat " + SYS_ROOT + "/install/doinst.sh > " + SYS_ROOT + tmpdoinst);
-			postinst="cd " + SYS_ROOT + " ; bash " + SYS_ROOT + tmpdoinst; // New fast mode: we don't care much about script run ordering, and parallel run is MUCH faster.
+			postinst="cd " + SYS_ROOT + " && bash " + SYS_ROOT + tmpdoinst; // New fast mode: we don't care much about script run ordering, and parallel run is MUCH faster.
 			if (setupMode && dialogMode) postinst += " 2>/dev/tty4 >/dev/tty4";
-			else if (dialogMode) postinst += " 2>/dev/null >/dev/null";
+			else if (dialogMode) postinst += " 2>/dev/null > /dev/null";
+			//cout << "Running: '" << postinst << endl;
+			if (!FileExists(SYS_ROOT + tmpdoinst)) {
+				mError("File " + SYS_ROOT + tmpdoinst + " does not exist!");
+				abort();
+			}
 			system_threaded(postinst);
+			//system(postinst);
 		}
 	}
 
@@ -1876,8 +1882,8 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": finishing installation"));
 #ifndef INSTALL_DEBUG
 	// UPD: we don't care about whole dir, we care only about doinst.sh one
-	//system("rm -rf " + SYS_ROOT+"/install"); // Cleanup. Be aware of placing anything important to this directory
-	unlink(string(SYS_ROOT+"/doinst.sh").c_str());
+	system("rm -rf " + SYS_ROOT+"/install"); // Cleanup. Be aware of placing anything important to this directory
+	//unlink(string(SYS_ROOT+"/doinst.sh").c_str());
 
 	set_installed(package->get_id(), ST_INSTALLED);
 	set_configexist(package->get_id(), ST_CONFIGEXIST);

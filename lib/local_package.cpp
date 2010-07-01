@@ -519,14 +519,15 @@ int LocalPackage::fill_filelist(PACKAGE *package, bool)
 	if (setupMode && FileExists(getAbsolutePath(getDirectory(filename))+"/.fcache/" + getFilename(filename) + "/doinst.sh")) {
 		dt = getAbsolutePath(getDirectory(filename))+"/.fcache/" + getFilename(filename) + "/doinst.sh";
 	}
-	else {
+	else /*if (!setupMode || !FileExists(getAbsolutePath(getDirectory(filename))+"/.fcache/" + getFilename(filename) + "/flist"))*/ // Assuming that doinst.sh isn't present if flist is cached
+       	{ 		
 		dt = get_tmp_file();
 		extractFromTgz(filename, "install/doinst.sh", dt);
 		dt_temp = true;
 	}
 
 	
-	if (FileExists(dt)) {
+	if (!dt.empty() && FileExists(dt)) {
 		string lnfname=get_tmp_file();
 		string sed_cmd = "sed -n 's,^( *cd \\([^ ;][^ ;]*\\) *; *rm -rf \\([^ )][^ )]*\\) *) *$,\\1/\\2,p' < ";
 		sed_cmd += dt + " > " + lnfname;

@@ -142,6 +142,9 @@ bool isDirectory(const string& dir_name)
 
 int system(const string& cmd)
 {
+/*	vector<string> log = ReadFileStrings("/tmp/mpkg_system.log");
+	log.push_back(cmd);
+	WriteFileStrings("/tmp/mpkg_system.log", log);*/
 	int ret = system(cmd.c_str());
 	return ret;
 }

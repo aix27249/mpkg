@@ -483,8 +483,9 @@ void SetupThread::writeFstab() {
 	string rootUUID = getUUID(rootPartition);
 	if (rootUUID.empty()) rootUUID = rootPartition;
 	else rootUUID = "UUID=" + rootUUID;
-
-	data+= "# " + rootPartition + "\n" + rootUUID + "\t/\t" + rootPartitionType + "\t" + rootPartitionMountOptions + "\t1 1\n";
+	string f_rootPartitionMountOptions = cutSpaces(rootPartitionMountOptions);
+	if (f_rootPartitionMountOptions.empty()) f_rootPartitionMountOptions = "defaults";
+	data+= "# " + rootPartition + "\n" + rootUUID + "\t/\t" + rootPartitionType + "\t" + f_rootPartitionMountOptions + "\t1 1\n";
 	
 	string options="defaults";
 	string fstype="auto";
@@ -494,6 +495,7 @@ void SetupThread::writeFstab() {
 	for (size_t i=0; i<partConfigs.size(); i++)
 	{
 		if (partConfigs[i].mountpoint == "/" || partConfigs[i].mountpoint == "swap") continue;
+		partConfigs[i].mount_options=cutSpaces(partConfigs[i].mount_options);
 		options = "defaults";
 		if (!partConfigs[i].mount_options.empty()) options=partConfigs[i].mount_options;
 		fstype = partConfigs[i].fs;

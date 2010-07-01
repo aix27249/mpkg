@@ -31,8 +31,9 @@ void *system_routine(void *arg) {
 	pthread_exit((void *) ret);
 }
 void system_threaded(const string& cmd) {
+	pthreadWaiter.cmd_history.push_back(cmd);
 	pthread_t thread_id;
-	const char *arg = cmd.c_str();
+	const char *arg = pthreadWaiter.cmd_history[pthreadWaiter.cmd_history.size()-1].c_str();
 	if (pthread_create(&thread_id, NULL, system_routine, (void *) arg)) {
 		//perror("fsystem execution failed, running generic system instead");
 		system(cmd.c_str());

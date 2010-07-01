@@ -10,6 +10,7 @@ class PThreadWaiter {
 		~PThreadWaiter();
 		vector<pthread_t> threads;
 		void registerThread(pthread_t id);
+		vector<string> cmd_history;
 };
 
 #endif
