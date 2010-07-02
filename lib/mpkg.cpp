@@ -861,10 +861,10 @@ int mpkgDatabase::commit_actions()
 
 	install_list.sortByLocations();
 	install_list.sortByTags();
-	// install_list.sortByPriorityNew(); // Buggy, can't use yet
+	if (mConfig.getValue("old_sort").empty()) install_list.sortByPriorityNew(); // Buggy?
 
 	// Don't forget to sort remove priority too: it does not take much time, but may be useful in case of disaster.
-	// remove_list.sortByPriorityNew(true); // Buggy
+	if (mConfig.getValue("old_sort").empty()) remove_list.sortByPriorityNew(true); // Buggy?
 	
 	// Checking available space
 	long double rem_size=0;
@@ -1864,15 +1864,11 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 			string postinst;
 			string tmpdoinst = "/tmp/mpkgtmp_" + package->get_name() + ".sh";
 			add_tmp_file(SYS_ROOT + tmpdoinst);
-			system("cat " + SYS_ROOT + "/install/doinst.sh > " + SYS_ROOT + tmpdoinst);
+			system("mv " + SYS_ROOT + "/install/doinst.sh " + SYS_ROOT + tmpdoinst);
 			postinst="cd " + SYS_ROOT + " && bash " + SYS_ROOT + tmpdoinst; // New fast mode: we don't care much about script run ordering, and parallel run is MUCH faster.
 			if (setupMode && dialogMode) postinst += " 2>/dev/tty4 >/dev/tty4";
 			else if (dialogMode) postinst += " 2>/dev/null > /dev/null";
 			//cout << "Running: '" << postinst << endl;
-			if (!FileExists(SYS_ROOT + tmpdoinst)) {
-				mError("File " + SYS_ROOT + tmpdoinst + " does not exist!");
-				abort();
-			}
 			system_threaded(postinst);
 			//system(postinst);
 		}
@@ -1882,8 +1878,8 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": finishing installation"));
 #ifndef INSTALL_DEBUG
 	// UPD: we don't care about whole dir, we care only about doinst.sh one
-	system("rm -rf " + SYS_ROOT+"/install"); // Cleanup. Be aware of placing anything important to this directory
-	//unlink(string(SYS_ROOT+"/doinst.sh").c_str());
+	//system("rm -rf " + SYS_ROOT+"/install"); // Cleanup. Be aware of placing anything important to this directory
+	unlink(string(SYS_ROOT+"/doinst.sh").c_str()); // It does not exists, but in case of move errors...
 
 	set_installed(package->get_id(), ST_INSTALLED);
 	set_configexist(package->get_id(), ST_CONFIGEXIST);

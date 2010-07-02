@@ -519,8 +519,7 @@ int LocalPackage::fill_filelist(PACKAGE *package, bool)
 	if (setupMode && FileExists(getAbsolutePath(getDirectory(filename))+"/.fcache/" + getFilename(filename) + "/doinst.sh")) {
 		dt = getAbsolutePath(getDirectory(filename))+"/.fcache/" + getFilename(filename) + "/doinst.sh";
 	}
-	else /*if (!setupMode || !FileExists(getAbsolutePath(getDirectory(filename))+"/.fcache/" + getFilename(filename) + "/flist"))*/ // Assuming that doinst.sh isn't present if flist is cached
-       	{ 		
+	else if (!setupMode || !FileExists(getAbsolutePath(getDirectory(filename))+"/.fcache/" + getFilename(filename) + "/flist")) { // Assuming that doinst.sh isn't present if flist is cached
 		dt = get_tmp_file();
 		extractFromTgz(filename, "install/doinst.sh", dt);
 		dt_temp = true;
