@@ -2092,6 +2092,7 @@ int PACKAGE_LIST::getPackageNumberByName(const string& name) const {
 	mDebug("No such package " + name);
 	return -1;
 }
+
 void PACKAGE_LIST::buildDependencyOrder()
 {
 	int pkgSize = this->size();

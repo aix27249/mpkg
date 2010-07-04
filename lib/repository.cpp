@@ -16,6 +16,27 @@ bool validateRepStr(const string& r) {
 	else return false;
 }
 
+bool checkAcceptedArch(const PACKAGE *pkg) {
+	vector<string> acceptedArch;
+	// Filling default set
+	acceptedArch.push_back("noarch");
+	acceptedArch.push_back("fw");
+#ifdef X86_64
+	acceptedArch.push_back("x86_64");
+#else
+	acceptedArch.push_back("i686");
+	acceptedArch.push_back("i486");
+	acceptedArch.push_back("x86");
+	acceptedArch.push_back("i386");
+	acceptedArch.push_back("i586");
+#endif
+	for (size_t i=0; i<acceptedArch.size(); ++i) {
+		if (pkg->get_arch()==acceptedArch[i]) return true;
+	}
+	return false;
+
+}
+
 //XMLNode _root; 
 xmlNodePtr _rootNode;
 xmlDocPtr __doc;
@@ -877,7 +898,8 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 				for (unsigned int i=0; i<pkg->deltaSources.size(); ++i) {
 					pkg->deltaSources[i].dup_url = server_url + pkg->deltaSources[i].dup_url;
 				}
-				packages->add(*pkg);
+				// NEW: filter repository by architecture
+				if (checkAcceptedArch(pkg)) packages->add(*pkg);
 			}
 			msay((string) CL_5 + _("Index update:") + (string) CL_WHITE +" ["+server_url+"]: " + (string) CL_GREEN + _("done") + (string) CL_WHITE + _(" (total ") + IntToStr(xNodeSet->nodeNr) + _(" packages)"), SAYMODE_INLINE_END);
 			//if (_cmdOptions["index_cache"]!="yes") {
