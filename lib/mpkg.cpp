@@ -1510,6 +1510,10 @@ installProcess:
 		// Always update mime database, it takes not much time but prevents lots of troubles
 		msay(_("Updating icon cache and mime database"), SAYMODE_NEWLINE);
 		system("chroot " + SYS_ROOT + " /usr/bin/update-all-caches >/dev/null");
+		
+		// Cleanup
+		system("rm -rf " + SYS_ROOT + "/install");
+
 
 		msay(_("Syncing disks..."), SAYMODE_NEWLINE);
 		system("sync &");
