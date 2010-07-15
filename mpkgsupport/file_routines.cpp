@@ -47,7 +47,7 @@ void TempFileController::clear_all() {
 	for (size_t i=0; i<tFiles.size(); ++i) {
 		if (access(tFiles[i].c_str(), F_OK)) unlink(tFiles[i].c_str()); // If plain file
 		else if (access(string(tFiles[i]+".gz").c_str(), F_OK)) unlink(string(tFiles[i]+".gz").c_str()); // Sometimes we use gz extension
-		if (access(tFiles[i].c_str(), F_OK)) system("rm -rf " + tFiles[i]); // And sometimes it is a directory
+		system("rm -rf " + tFiles[i]); // And sometimes it is a directory
 	}
 	tFiles.clear(); // Clean-up list - for future use
 }
