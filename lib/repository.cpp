@@ -9,6 +9,7 @@
 #include <libxml/xpath.h>
 #include <libxml/debugXML.h>
 #include "terminal.h"
+#include "xml2pkglist.h"
 Repository::Repository(){}
 Repository::~Repository(){}
 bool validateRepStr(const string& r) {
@@ -776,10 +777,6 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 //	int pkg_count;
 	int ret=0;
 	currentStatus = "["+server_url+_("] Importing data...");
-	if (htmlMode) {
-		//newHtmlPage();
-		printHtml("импорт данных...\n", true);
-	}
 
 	if (actionBus._abortActions)
 	{
@@ -794,6 +791,7 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 	//xmlNodePtr indexRootNode;
 	string xmlData;
 	size_t xmlStart;
+	PACKAGE_LIST tempPkgList;
 	switch(type)
 	{
 		case TYPE_MPKG:
@@ -806,102 +804,29 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 			xmlData.clear();
 			if (indexDoc == NULL) {
 				xmlFreeDoc(indexDoc);
-				//mError("ппц...");
 				return -1;
 			}
-			//else mDebug("indexDoc read successfully");
 			
 			indexRootNode = xmlDocGetRootElement(indexDoc);
 			if (indexRootNode == NULL) {
 				mError(_("Failed to get index"));
 				xmlFreeDoc(indexDoc);
+				return -1;
 			}
-			//else mDebug("indexRootNode read successfully");
 			
 			if (xmlStrcmp(indexRootNode->name, (const xmlChar *) "repository") ) {
 				mError(_("Invalid index file"));
 				xmlFreeDoc(indexDoc);
+				return -1;
 			}
-			//else mDebug("Found valid repository index");
-			
-			xmlXPathContextPtr xContext;
-			xmlXPathObjectPtr xResult;
-			
-			xContext = xmlXPathNewContext(indexDoc);
-			if (xContext == NULL) {
-				mError("ппц");
-			}
-			
-			xResult = xmlXPathEvalExpression((const xmlChar *)"/repository/package", xContext);
-			if (xResult == NULL) {
-				mError("XPath expression error");
-			}
-			
-			if (xmlXPathNodeSetIsEmpty(xResult->nodesetval)) {
-				xmlXPathFreeObject(xResult);
-				return 0;
-			}
-			
-			xmlNodeSetPtr xNodeSet;
-			int xi;
-			
-			actionBus.setActionProgress(ACTIONID_DBUPDATE, 0);
-			
-			xNodeSet = xResult->nodesetval;
-			__xmlCache = xResult->nodesetval;
-			xmlXPathFreeContext(xContext);
-			actionBus.setActionProgressMaximum(ACTIONID_DBUPDATE, xNodeSet->nodeNr);
-			int msay_param;
-			if (dialogMode) {
-				
-				ncInterface.setSubtitle(_("Updating repository data"));
-				ncInterface.setProgressMax(xNodeSet->nodeNr);
-			}
-			for (xi = 0; xi < xNodeSet->nodeNr; ++xi) {
-				if (xi==0) msay_param = SAYMODE_INLINE_START;
-				if (xi>=0 && xi< xNodeSet->nodeNr-1) msay_param = SAYMODE_INLINE;
+			xml2pkglist(indexDoc, tempPkgList, server_url);
 
-				if (xi%10==0 || xi==xNodeSet->nodeNr-1) {
-					msay((string) CL_5 + _("Index update:") + (string) CL_WHITE +" ["+server_url + _("] Importing received data: ") + IntToStr(xi+1) + "/" + IntToStr(xNodeSet->nodeNr));
-				
-					if (dialogMode) {
-						ncInterface.setProgressText(_("Index update: Importing received data: ") + IntToStr(xi+1) + "/" + IntToStr(xNodeSet->nodeNr));
-						ncInterface.setProgress(xi+1);
-					}
-				}
-
-				actionBus.setActionProgress(ACTIONID_DBUPDATE, xi);
-				//mDebug("Processing " + IntToStr(xi) + " node");
-				if (actionBus._abortActions) {
-					actionBus._abortComplete = true;
-					actionBus.setActionState(ACTIONID_DBUPDATE, ITEMSTATE_ABORTED);
-					
-					return MPKGERROR_ABORTED;
-				}
-				
-				actionBus.setActionProgress(ACTIONID_DBUPDATE, xi);
-				pkg->clear();
-				//mDebug("Calling xml2Package");
-				if (xml2package(xNodeSet->nodeTab[xi], pkg)<0) {
-					mError("Failed to parse");
-					abort();
-				}
-				xmlClearAllNodesNamedBy("bdelta", xNodeSet->nodeTab[xi]);
-				//else mDebug("xml2package OK");
-				// Adding location data
-				// Check for vector validity
-				if (pkg->get_locations().empty()) {
-					fprintf(stderr, "\n\n\nNo locations of package %s\n\n\n\n", pkg->get_name().c_str());
-					continue;
-				}//else fprintf(stderr, "\n\n%s: %s OK\n", pkg->get_name().c_str(), pkg->get_locations_ptr()->at(0).get_full_url().c_str());
-				pkg->get_locations_ptr()->at(0).set_server_url(server_url);
-				for (unsigned int i=0; i<pkg->deltaSources.size(); ++i) {
-					pkg->deltaSources[i].dup_url = server_url + pkg->deltaSources[i].dup_url;
-				}
+			for (size_t i=0; i<tempPkgList.size(); ++i) {
 				// NEW: filter repository by architecture
-				if (checkAcceptedArch(pkg)) packages->add(*pkg);
+				if (checkAcceptedArch(tempPkgList.get_package_ptr(i))) packages->add(tempPkgList[i]);
 			}
-			msay((string) CL_5 + _("Index update:") + (string) CL_WHITE +" ["+server_url+"]: " + (string) CL_GREEN + _("done") + (string) CL_WHITE + _(" (total ") + IntToStr(xNodeSet->nodeNr) + _(" packages)"), SAYMODE_INLINE_END);
+			
+			msay((string) CL_5 + _("Index update:") + (string) CL_WHITE +" ["+server_url+"]: " + (string) CL_GREEN + _("done") + (string) CL_WHITE + _(" (total ") + IntToStr(packages->size()) + _(" packages)"), SAYMODE_INLINE_END);
 			//if (_cmdOptions["index_cache"]!="yes") {
 				xmlCleanupMemory();
 				xmlCleanupParser();

@@ -29,7 +29,7 @@ ADD_DEFINITIONS(${CXXFLAGS})
 #ADD_LIBRARY(mpkgsupport SHARED file_routines string_operations terminal)
 #ADD_LIBRARY(mpkgcurses SHARED ncurses_if)
 #TARGET_LINK_LIBRARIES(mpkgcurses ncursesw mpkgsupport)
-ADD_LIBRARY(mpkg SHARED menu terminal package bus dbstruct HttpDownload errorcodes DownloadManager PackageConfig conditions config converter core dataunits debug dependencies libmpkg local_package mpkg mpkgsys repository sql_pool syscommands xmlParser htmlcore tests metaframe errorhandler)
+ADD_LIBRARY(mpkg SHARED menu terminal package bus dbstruct HttpDownload errorcodes DownloadManager PackageConfig conditions config converter core dataunits debug dependencies libmpkg local_package mpkg mpkgsys repository sql_pool syscommands xmlParser htmlcore tests metaframe errorhandler xml2pkglist)
 TARGET_LINK_LIBRARIES(mpkg xml2 curl sqlite3 nwidgets)
 
 ADD_EXECUTABLE(test test)
