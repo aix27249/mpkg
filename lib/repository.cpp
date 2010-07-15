@@ -826,7 +826,7 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 				if (checkAcceptedArch(tempPkgList.get_package_ptr(i))) packages->add(tempPkgList[i]);
 			}
 			
-			msay((string) CL_5 + _("Index update:") + (string) CL_WHITE +" ["+server_url+"]: " + (string) CL_GREEN + _("done") + (string) CL_WHITE + _(" (total ") + IntToStr(packages->size()) + _(" packages)"), SAYMODE_INLINE_END);
+			msay((string) CL_5 + _("Index update:") + (string) CL_WHITE +" ["+server_url+"]: " + (string) CL_GREEN + _("done") + (string) CL_WHITE + _(" (total: ") + IntToStr(tempPkgList.size()) + _(" packages, accepted: ") + IntToStr(packages->size()) + ")", SAYMODE_INLINE_END);
 			//if (_cmdOptions["index_cache"]!="yes") {
 				xmlCleanupMemory();
 				xmlCleanupParser();
