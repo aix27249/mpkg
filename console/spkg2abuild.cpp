@@ -17,9 +17,9 @@ int main(int argc, char **argv) {
 	abuild.push_back("");
 	// Adding basic metadata
 	abuild.push_back("# Package metadata");
-	abuild.push_back("pkgname=\"" + metapkg->data->pkg.get_name()+"\"");
-	abuild.push_back("pkgver=\"" + metapkg->data->pkg.get_version()+"\"");
-	abuild.push_back("pkgbuild=\"" + metapkg->data->pkg.get_build()+"\"");
+	abuild.push_back("pkgname=" + metapkg->data->pkg.get_name());
+	abuild.push_back("pkgver=" + metapkg->data->pkg.get_version());
+	abuild.push_back("pkgbuild=" + metapkg->data->pkg.get_build());
 	string arch = metapkg->data->pkg.get_arch();
 	if (arch!="noarch" && arch!="fw") arch="auto";
 	abuild.push_back("arch=\"" + arch +"\"");
@@ -27,13 +27,15 @@ int main(int argc, char **argv) {
 	// Description
 	abuild.push_back("");
 	abuild.push_back("# Package description");
-	abuild.push_back("shortdesc=('" + shellEscape(metapkg->data->pkg.get_short_description()) + "')");
-	abuild.push_back("longdesc=('" + shellEscape(metapkg->data->pkg.get_description()) + "')");
+	abuild.push_back("shortdesc=(\"" + shellEscape(metapkg->data->pkg.get_short_description()) + "\")");
+	abuild.push_back("longdesc=(\"" + shellEscape(metapkg->data->pkg.get_description()) + "\")");
 
 	// Source URL
 	abuild.push_back("");
 	abuild.push_back("# Source URL");
-	abuild.push_back("source=('" + shellEscape(metapkg->data->url) + "')");
+	string url = shellEscape(metapkg->data->url);
+	strReplace(&url, metapkg->data->pkg.get_version(), "${pkgver}");
+	abuild.push_back("source=(\"" + url + "\")");
 
 	// Tags
 	abuild.push_back("");
@@ -67,6 +69,7 @@ int main(int argc, char **argv) {
 				build_keys+="=" + metapkg->data->configure_values[i];
 			}
 		}
+		strReplace(&build_keys, "$LIBSUFFIX", "${LIBDIRSUFFIX}");
 		abuild.push_back("BUILD_SYSTEM=\"" + metapkg->data->buildsystem + "\"");
 		abuild.push_back("BUILD_KEYS=\"" + shellEscape(build_keys) + "\"");
 	}
@@ -75,6 +78,7 @@ int main(int argc, char **argv) {
 	abuild.push_back("");
 	abuild.push_back("# Before-build script");
 	abuild.push_back("before_build() {");
+	abuild.push_back("\techo \"\"");
 	string data = metapkg->sp->readPrebuildScript();
 	// Replace var names
 	strReplace(&data, "$PKG", "${pkgdir}");
@@ -90,34 +94,30 @@ int main(int argc, char **argv) {
 	strReplace(&data, "$PKG", "${pkgdir}");
 	strReplace(&data, "$DATADIR", "${filedir}");
 	vector<string> after_build_script = MakeStrings(data);
-	abuild.push_back("# Main build script (used only if build_system=\"script\")");
-	abuild.push_back("build() {");
-	abuild.push_back("\tcd $srcdir/$pkgname-$pkgver"); // Should be replaced with automatic directory finding
-	abuild.push_back("\tburn_patches");
 	vector<string> doinst = MakeStrings(metapkg->sp->readPostinstallScript());
-
-
 	if (metapkg->data->buildsystem=="script") {
+		abuild.push_back("# Main build script (used only if build_system=\"script\")");
+		abuild.push_back("build() {");
+		abuild.push_back("\tcd $srcdir/$pkgname-$pkgver"); // Should be replaced with automatic directory finding
+		abuild.push_back("\tburn_patches");
 		for (size_t i=0; i<after_build_script.size(); ++i) {
 			abuild.push_back("\t" + after_build_script[i]);
 		}
 		abuild.push_back("}");
 		abuild.push_back("");
 		abuild.push_back("after_build() {");
-		if (!doinst.empty()) abuild.push_back("\tcat ${filedir}/doinst.sh > ${pkgdir}/install/doinst.sh || exit 1");
+		abuild.push_back("\techo \"\"");
 		abuild.push_back("}");
 
 
 	}
 	else {
-		abuild.push_back("}");
 		abuild.push_back("");
 		abuild.push_back("after_build() {");
+		abuild.push_back("\techo \"\"");
 		for (size_t i=0; i<after_build_script.size(); ++i) {
 			abuild.push_back("\t" + after_build_script[i]);
 		}
-
-		if (!doinst.empty()) abuild.push_back("\tcat ${filedir}/doinst.sh > ${pkgdir}/install/doinst.sh || exit 1");
 		abuild.push_back("}");
 	}
 	abuild.push_back("");
