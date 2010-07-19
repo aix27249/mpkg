@@ -13,11 +13,15 @@ void parseMaintainer(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 DEPENDENCY parseDependency(xmlDocPtr doc, xmlNodePtr cur) {
 	DEPENDENCY dep;
 	cur = cur->xmlChildrenNode;
+	const char *key;
 	while (cur != NULL) {
-		if (!xmlStrcmp(cur->name, (const xmlChar *) "name")) dep.set_package_name((const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1));
-		if (!xmlStrcmp(cur->name, (const xmlChar *) "condition")) dep.set_condition(IntToStr(condition2int((const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1))));
-		if (!xmlStrcmp(cur->name, (const xmlChar *) "version")) dep.set_package_version((const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1));
-		if (!xmlStrcmp(cur->name, (const xmlChar *) "build_only")) dep.setBuildOnly((const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1));
+		key = (const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
+		if (key) {
+			if (!xmlStrcmp(cur->name, (const xmlChar *) "name")) dep.set_package_name(key);
+			if (!xmlStrcmp(cur->name, (const xmlChar *) "condition")) dep.set_condition(IntToStr(condition2int(key)));
+			if (!xmlStrcmp(cur->name, (const xmlChar *) "version")) dep.set_package_version(key);
+			if (!xmlStrcmp(cur->name, (const xmlChar *) "build_only")) dep.setBuildOnly(key);
+		}
 		cur = cur->next;
 	}
 	return dep;
@@ -26,7 +30,7 @@ DEPENDENCY parseDependency(xmlDocPtr doc, xmlNodePtr cur) {
 void parseDependencies(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 	cur = cur->xmlChildrenNode;
 	while (cur != NULL) {
-		if (!xmlStrcmp(cur->name, (const xmlChar *) "dependency")) pkg.get_dependencies_ptr()->push_back(parseDependency(doc, cur));;
+		if (!xmlStrcmp(cur->name, (const xmlChar *) "dep")) pkg.get_dependencies_ptr()->push_back(parseDependency(doc, cur));
 		cur = cur->next;
 	}
 
