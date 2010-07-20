@@ -110,7 +110,7 @@ class mpkgDatabase
 		int remove_package(PACKAGE *package, unsigned int packageNum=0, unsigned int packagesTotal=0); // PHYSICALLY remove package (delete files, execute remove scripts)
 		int uninstall(vector<string>* pkgnames); // Wrapper, uninstalls all packages with given names.
 		int updateRepositoryData(PACKAGE_LIST *newPackages);
-		int syncronize_data(PACKAGE_LIST *pkgList);
+		int syncronize_data(PACKAGE_LIST *pkgList, vector<bool> needUpdateRepositoryTags, vector<bool> needUpdateDistroVersion);
 		PACKAGE get_installed_package(const string& pkg_name); // Returns installed package
 
 		SQLProxy *getSqlDb();

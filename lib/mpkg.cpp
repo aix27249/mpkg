@@ -2369,7 +2369,14 @@ int mpkgDatabase::update_package_data(int package_id, PACKAGE *package)
 	return 0;
 }
 
-
+bool compareLocations(const vector<LOCATION>& location1, const vector<LOCATION>& location2) {
+	if (location1.size()!=location2.size()) return false;
+	// Note: **NOT** ignoring order
+	for (size_t i=0; i<location1.size(); ++i) {
+		if (!location1[i].equalTo(location2[i])) return false;
+	}
+	return true;
+}
 
 
 int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
@@ -2394,7 +2401,7 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 	// Стираем locations и servers
 	db.clear_table("locations");
 	db.clear_table("deltas");
-	if (forceFullDBUpdate) db.clear_table("dependencies");
+	//if (forceFullDBUpdate) db.clear_table("dependencies");  // Teh WTF!
 	
 
 	// Забираем текущий список пакетов
@@ -2405,25 +2412,39 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 	//say("Merging data\n");
 	// Ищем соответствия // TODO: надо б тут что-нить прооптимизировать
 	int pkgNumber;
-	unsigned int new_pkgs=0;
-	for(unsigned int i=0; i<newPackages->size(); i++)
+	size_t new_pkgs=0;
+	vector<bool> needUpdateRepositoryTags;
+	vector<bool> needUpdateDistroVersion;
+	for(size_t i=0; i<newPackages->size(); i++)
 	{
 		pkgNumber = pkgList->getPackageNumberByMD5(newPackages->at(i).get_md5());
 		
 		if (pkgNumber!=-1)	// Если соответствие найдено...
 		{
 			pkgList->get_package_ptr(pkgNumber)->set_locations(newPackages->at(i).get_locations());	// Записываем locations
-			pkgList->get_package_ptr(pkgNumber)->deltaSources=newPackages->at(i).deltaSources;
-			pkgList->get_package_ptr(pkgNumber)->set_repository_tags(newPackages->at(i).get_repository_tags());
-			pkgList->get_package_ptr(pkgNumber)->package_distro_version = newPackages->at(i).package_distro_version;
-			if (forceFullDBUpdate) {
-				pkgList->get_package_ptr(pkgNumber)->set_dependencies(newPackages->at(i).get_dependencies());
+			pkgList->get_package_ptr(pkgNumber)->deltaSources=newPackages->at(i).deltaSources; // TEMP DISABLED
+			
+			if (pkgList->get_package_ptr(pkgNumber)->get_repository_tags()!=newPackages->at(i).get_repository_tags()) {
+				pkgList->get_package_ptr(pkgNumber)->set_repository_tags(newPackages->at(i).get_repository_tags());
+				needUpdateRepositoryTags.push_back(true);
 			}
+			else needUpdateRepositoryTags.push_back(false);
+			
+			if (pkgList->get_package_ptr(pkgNumber)->package_distro_version==newPackages->at(i).package_distro_version) {
+				pkgList->get_package_ptr(pkgNumber)->package_distro_version = newPackages->at(i).package_distro_version;
+				needUpdateDistroVersion.push_back(true);
+			}
+			else needUpdateDistroVersion.push_back(false);
+			
+			//pkgList->get_package_ptr(pkgNumber)->set_dependencies(newPackages->at(i).get_dependencies());
+			//db.sql_exec("DELETE FROM dependencies WHERE packages_package_id='" + IntToStr(pkgList->get_package_ptr(pkgNumber)->get_id()) + "';");
 		}
 		else			// Если соответствие НЕ найдено...
 		{
 			newPackages->get_package_ptr(i)->newPackage=true;
 			pkgList->add(newPackages->at(i));
+			needUpdateRepositoryTags.push_back(true);
+			needUpdateDistroVersion.push_back(true);
 			new_pkgs++;
 		}
 	}
@@ -2432,12 +2453,11 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 	// Вызываем синхронизацию данных.
 	// Вообще говоря, ее можно было бы делать прямо здесь, но пусть таки будет универсальность.
 	delete newPackages;//->clear();
-	syncronize_data(pkgList);
-
-	if (!dialogMode && new_pkgs>0) say(_("New packages in repositories: %d\n"), new_pkgs);
+	syncronize_data(pkgList, needUpdateRepositoryTags, needUpdateDistroVersion);
+	if (!dialogMode && new_pkgs>0) say(_("New packages in repositories: %d\n"), (unsigned int) new_pkgs);
 	return 0;
 }
-int mpkgDatabase::syncronize_data(PACKAGE_LIST *pkgList)
+int mpkgDatabase::syncronize_data(PACKAGE_LIST *pkgList, vector<bool> needUpdateRepositoryTags, vector<bool> needUpdateDistroVersion)
 {
 	// Идея:
 	// Добавить в базу пакеты, у которых флаг newPackage
@@ -2448,7 +2468,9 @@ int mpkgDatabase::syncronize_data(PACKAGE_LIST *pkgList)
 	// 	Если пакет имеет влаг newPackage, то сразу добавляем его в базу функцией add_package_record()
 	//	Если флага нету, то сразу добавляем ему locations функцией add_locationlist_record()
 	// 
-	for(unsigned int i=0; i<pkgList->size(); i++)
+	
+	SQLRecord *sqlUpdate = NULL;
+	for(size_t i=0; i<pkgList->size(); i++)
 	{
 		if (pkgList->at(i).newPackage) {
 			add_package_record(pkgList->get_package_ptr(i));
@@ -2456,13 +2478,14 @@ int mpkgDatabase::syncronize_data(PACKAGE_LIST *pkgList)
 		else {
 			add_locationlist_record(pkgList->at(i).get_id(), pkgList->get_package_ptr(i)->get_locations_ptr());
 			if (!pkgList->at(i).deltaSources.empty()) add_delta_record(pkgList->at(i).get_id(), pkgList->at(i).deltaSources);
-			SQLRecord sqlUpdate;
-			sqlUpdate.addField("package_repository_tags", pkgList->at(i).get_repository_tags());
-			sqlUpdate.addField("package_distro_version", pkgList->at(i).package_distro_version);
-			update_package_record(pkgList->at(i).get_id(), sqlUpdate);
-			if (forceFullDBUpdate) {
-				add_dependencylist_record(pkgList->at(i).get_id(), pkgList->get_package_ptr(i)->get_dependencies_ptr());
+			if (needUpdateDistroVersion[i] || needUpdateRepositoryTags[i]) {
+				sqlUpdate = new SQLRecord;
+				if (needUpdateRepositoryTags[i]) sqlUpdate->addField("package_repository_tags", pkgList->at(i).get_repository_tags());
+				if (needUpdateDistroVersion[i]) sqlUpdate->addField("package_distro_version", pkgList->at(i).package_distro_version);
+				update_package_record(pkgList->at(i).get_id(), *sqlUpdate);
+				delete sqlUpdate;
 			}
+			//add_dependencylist_record(pkgList->at(i).get_id(), pkgList->get_package_ptr(i)->get_dependencies_ptr());
 		}
 	}
 	delete pkgList;
