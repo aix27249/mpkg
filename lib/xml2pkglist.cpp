@@ -4,8 +4,8 @@
 void parseMaintainer(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 	cur = cur->xmlChildrenNode;
 	while (cur != NULL) {
-		if (!xmlStrcmp(cur->name, (const xmlChar *) "name")) pkg.set_packager((const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1));
-		else if (!xmlStrcmp(cur->name, (const xmlChar *) "email")) pkg.set_packager_email((const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1));
+		if (!xmlStrcmp(cur->name, (const xmlChar *) "name")) pkg.set_packager(cutSpaces((const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1)));
+		else if (!xmlStrcmp(cur->name, (const xmlChar *) "email")) pkg.set_packager_email(cutSpaces((const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1)));
 		cur = cur->next;
 	}
 }
@@ -17,10 +17,13 @@ DEPENDENCY parseDependency(xmlDocPtr doc, xmlNodePtr cur) {
 	while (cur != NULL) {
 		key = (const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
 		if (key) {
-			if (!xmlStrcmp(cur->name, (const xmlChar *) "name")) dep.set_package_name(key);
-			if (!xmlStrcmp(cur->name, (const xmlChar *) "condition")) dep.set_condition(IntToStr(condition2int(key)));
-			if (!xmlStrcmp(cur->name, (const xmlChar *) "version")) dep.set_package_version(key);
-			if (!xmlStrcmp(cur->name, (const xmlChar *) "build_only")) dep.setBuildOnly(key);
+			if (!xmlStrcmp(cur->name, (const xmlChar *) "name")) dep.set_package_name(cutSpaces(key));
+			if (!xmlStrcmp(cur->name, (const xmlChar *) "condition")) dep.set_condition(IntToStr(condition2int(cutSpaces(key))));
+			if (!xmlStrcmp(cur->name, (const xmlChar *) "version")) dep.set_package_version(cutSpaces(key));
+			if (!xmlStrcmp(cur->name, (const xmlChar *) "build_only")) {
+				if (cutSpaces(key)=="true") dep.setBuildOnly(true);
+				else dep.setBuildOnly(false);
+			}
 		}
 		cur = cur->next;
 	}
@@ -38,7 +41,7 @@ void parseDependencies(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 void parseTags(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 	cur = cur->xmlChildrenNode;
 	while (cur != NULL) {
-		if (!xmlStrcmp(cur->name, (const xmlChar *) "tag")) pkg.get_tags_ptr()->push_back((const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1));
+		if (!xmlStrcmp(cur->name, (const xmlChar *) "tag")) pkg.get_tags_ptr()->push_back(cutSpaces((const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1)));
 		cur = cur->next;
 	}
 
@@ -54,11 +57,11 @@ void parseBDelta(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 		orig_filename.clear();
 		orig_md5.clear();
 		key = (const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
-		if (!xmlStrcmp(cur->name, (const xmlChar *) "dup")) delta_url = key;
-		else if (!xmlStrcmp(cur->name, (const xmlChar *) "dup_md5")) delta_md5 = key;
-		else if (!xmlStrcmp(cur->name, (const xmlChar *) "orig_md5")) orig_md5 = key;
-		else if (!xmlStrcmp(cur->name, (const xmlChar *) "orig")) orig_filename = key;
-		else if (!xmlStrcmp(cur->name, (const xmlChar *) "dup_size")) delta_size = key;
+		if (!xmlStrcmp(cur->name, (const xmlChar *) "dup")) delta_url = cutSpaces(key);
+		else if (!xmlStrcmp(cur->name, (const xmlChar *) "dup_md5")) delta_md5 = cutSpaces(key);
+		else if (!xmlStrcmp(cur->name, (const xmlChar *) "orig_md5")) orig_md5 = cutSpaces(key);
+		else if (!xmlStrcmp(cur->name, (const xmlChar *) "orig")) orig_filename = cutSpaces(key);
+		else if (!xmlStrcmp(cur->name, (const xmlChar *) "dup_size")) delta_size = cutSpaces(key);
 		cur = cur->next;
 	}
 	pkg.deltaSources.push_back(DeltaSource(delta_url, delta_md5, orig_filename, orig_md5, delta_size));
@@ -72,32 +75,32 @@ void parseXmlTag(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 	// Some tags will be skipped
 	const char *key = (const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
 	if (!key) return;
-	if (!xmlStrcmp(cur->name, (const xmlChar *) "name")) pkg.set_name(key);
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "version")) pkg.set_version(key);
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "arch")) pkg.set_arch(key);
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "build")) pkg.set_build(key);
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "compressed_size")) pkg.set_compressed_size(key);
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "installed_size")) pkg.set_installed_size(key);
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "short_description")) pkg.set_short_description(key);
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "description")) pkg.set_description(key);
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "changelog")) pkg.set_changelog(key);
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "md5")) pkg.set_md5(key);
+	if (!xmlStrcmp(cur->name, (const xmlChar *) "name")) pkg.set_name(cutSpaces(key));
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "version")) pkg.set_version(cutSpaces(key));
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "arch")) pkg.set_arch(cutSpaces(key));
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "build")) pkg.set_build(cutSpaces(key));
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "compressed_size")) pkg.set_compressed_size(cutSpaces(key));
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "installed_size")) pkg.set_installed_size(cutSpaces(key));
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "short_description")) pkg.set_short_description(cutSpaces(key));
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "description")) pkg.set_description(cutSpaces(key));
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "changelog")) pkg.set_changelog(cutSpaces(key));
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "md5")) pkg.set_md5(cutSpaces(key));
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "maintainer")) parseMaintainer(doc, cur, pkg);
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "location")) {
 		if (pkg.get_locations().empty()) pkg.get_locations_ptr()->resize(1); // Fail-safe check. Better if it is already filled in with server_url
-		pkg.get_locations_ptr()->at(0).set_path(key);
+		pkg.get_locations_ptr()->at(0).set_path(cutSpaces(key));
 	}
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "filename")) pkg.set_filename(key);
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "filename")) pkg.set_filename(cutSpaces(key));
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "dependencies")) parseDependencies(doc, cur, pkg);
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "tags")) parseTags(doc, cur, pkg);
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "repository_tags")) pkg.set_repository_tags(key);
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "distro_version")) pkg.package_distro_version=key;
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "provides")) pkg.set_provides(key);
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "conflicts")) pkg.set_conflicts(key);
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "repository_tags")) pkg.set_repository_tags(cutSpaces(key));
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "distro_version")) pkg.package_distro_version=cutSpaces(key);
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "provides")) pkg.set_provides(cutSpaces(key));
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "conflicts")) pkg.set_conflicts(cutSpaces(key));
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "need_special_update")) {
 		if (strcmp(key, "yes")==0) pkg.needSpecialUpdate = true;
 	}
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "betarelease")) pkg.set_betarelease(key);
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "betarelease")) pkg.set_betarelease(cutSpaces(key));
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "type")) {
 		if (strcmp(key, "source")==0) pkg.set_type(PKGTYPE_SOURCE);
 		else pkg.set_type(PKGTYPE_BINARY);
