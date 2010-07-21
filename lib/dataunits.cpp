@@ -1152,9 +1152,23 @@ void PACKAGE_LIST::sortByPriorityNew(const bool& reverse_order) {
 	vector< vector <PACKAGE *> > matrix;
 	unsigned int packages_calculated=0, prev_packages_calculated=0;
 	bool skip=false;
+	// Step 0. Заполнение минус-первого кольца :) Спецпакеты, которые всегда идут первыми в определенном порядке
+	int pkg_tmp_id;
+	pkg_tmp_id = getPackageNumberByName("aaa_base");
+	if (pkg_tmp_id>=0) currentRing.push_back(&packages[pkg_tmp_id]);
+	pkg_tmp_id = getPackageNumberByName("aaa_elflibs");
+	if (pkg_tmp_id>=0) currentRing.push_back(&packages[pkg_tmp_id]);
+	pkg_tmp_id = getPackageNumberByName("etc");
+	if (pkg_tmp_id>=0) currentRing.push_back(&packages[pkg_tmp_id]);
+	pkg_tmp_id = getPackageNumberByName("e2fsprogs");
+	if (pkg_tmp_id>=0) currentRing.push_back(&packages[pkg_tmp_id]);
+	matrix.push_back(currentRing);
+	packages_calculated = currentRing.size();
+	currentRing.clear();
+	
 	// Step 1. Заполнение нулевого кольца: пакеты без зависимостей
 	for (unsigned int i=0; i<packages.size(); i++) {
-		if (packages[i].get_dependencies().size()==0) {
+		if (packages[i].get_dependencies().size()==0 && packages[i].get_name()!="aaa_base" && packages[i].get_name()!="aaa_elflibs" && packages[i].get_name()!="etc" && packages[i].get_name()!="e2fsprogs") {
 			currentRing.push_back(&packages[i]);
 			packages_calculated++;
 		}
