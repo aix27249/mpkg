@@ -1152,23 +1152,26 @@ void PACKAGE_LIST::sortByPriorityNew(const bool& reverse_order) {
 	vector< vector <PACKAGE *> > matrix;
 	unsigned int packages_calculated=0, prev_packages_calculated=0;
 	bool skip=false;
-	// Step 0. Заполнение минус-первого кольца :) Спецпакеты, которые всегда идут первыми в определенном порядке
-	int pkg_tmp_id;
-	pkg_tmp_id = getPackageNumberByName("aaa_base");
-	if (pkg_tmp_id>=0) currentRing.push_back(&packages[pkg_tmp_id]);
-	pkg_tmp_id = getPackageNumberByName("aaa_elflibs");
-	if (pkg_tmp_id>=0) currentRing.push_back(&packages[pkg_tmp_id]);
-	pkg_tmp_id = getPackageNumberByName("etc");
-	if (pkg_tmp_id>=0) currentRing.push_back(&packages[pkg_tmp_id]);
-	pkg_tmp_id = getPackageNumberByName("e2fsprogs");
-	if (pkg_tmp_id>=0) currentRing.push_back(&packages[pkg_tmp_id]);
+	// Step 0. Заполнение минус-первого кольца. Пакеты группы base *пока что* должны идти строго по алфавиту.
+	vector<string> base_pkgnames;
+	for (size_t i=0; i<packages.size(); ++i) {
+		if (packages[i].isTaggedBy("base")) base_pkgnames.push_back(packages[i].get_name());
+	}
+	sort(base_pkgnames.begin(), base_pkgnames.end());
+	int temp_pkgnumber;
+	for (size_t i=0; i<base_pkgnames.size(); ++i) {
+		temp_pkgnumber = getPackageNumberByName(base_pkgnames[i]);
+		if (temp_pkgnumber==-1) continue;
+		currentRing.push_back(&packages[temp_pkgnumber]);
+	}
+
 	matrix.push_back(currentRing);
 	packages_calculated = currentRing.size();
 	currentRing.clear();
 	
 	// Step 1. Заполнение нулевого кольца: пакеты без зависимостей
 	for (unsigned int i=0; i<packages.size(); i++) {
-		if (packages[i].get_dependencies().size()==0 && packages[i].get_name()!="aaa_base" && packages[i].get_name()!="aaa_elflibs" && packages[i].get_name()!="etc" && packages[i].get_name()!="e2fsprogs") {
+		if (packages[i].get_dependencies().size()==0 && !packages[i].isTaggedBy("base")) {
 			currentRing.push_back(&packages[i]);
 			packages_calculated++;
 		}

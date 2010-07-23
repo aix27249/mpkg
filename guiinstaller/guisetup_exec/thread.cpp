@@ -877,13 +877,11 @@ void SetupThread::run() {
 	setupMode = true;
 	settings = new QSettings("guiinstaller");
 	rootPassword = settings->value("rootpasswd").toString();
-	settings->setValue("rootpasswd", "");
 	settings->beginGroup("users");
 
 	QStringList usernames = settings->childKeys();
 	for (int i=0; i<usernames.size(); ++i) {
 		users.push_back(TagPair(usernames[i].toStdString(), settings->value(usernames[i]).toString().toStdString()));
-		settings->setValue(usernames[i], "");
 	}
 	settings->endGroup();
 	settings->sync();
@@ -924,11 +922,12 @@ bool setPasswd(string username, string passwd) {
 }
 
 bool addUser(string username) {
+	printf("Adding user %s\n", username.c_str());
 	//string extgroup="audio,cdrom,disk,floppy,lp,scanner,video,wheel"; // Old default groups
 	string extgroup="audio,cdrom,floppy,video,netdev,plugdev,power"; // New default groups, which conforms current guidelines
 	system("chroot /mnt /usr/sbin/useradd -d /home/" + username + " -m -g users -G " + extgroup + " -s /bin/bash " + username);
 	system("chroot /mnt chown -R " + username+":users /home/"+username);
-	system("chmod 711 /mnt/home/" + username);
+	system("chmod 700 /mnt/home/" + username);
 	return true;
 }
 
