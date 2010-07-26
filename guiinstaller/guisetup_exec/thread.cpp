@@ -406,6 +406,32 @@ bool SetupThread::processInstall() {
 	delete core;
 	return true;
 }
+void SetupThread::xorgSetLangConf() {
+	string lang = "us";
+	sysconf_lang = "en_US.UTF-8";
+	if (settings->value("language").toString()=="ru_RU.UTF-8") {
+	       lang +=",ru(winkeys)";
+	       sysconf_lang = "ru_RU.UTF-8";
+	}
+	if (settings->value("language").toString()=="uk_UA.UTF-8") {
+	       	lang +=",ua(winkeys)";
+		sysconf_lang = "uk_UA.UTF-8";
+	}
+
+	string keymap = "# Keyboard settings\n\
+Section \"InputClass\"\n\
+\tIdentifier \"KeymapSettings\"\n\
+\tMatchIsKeyboard \"on\"\n\
+\tOption      \"AutoRepeat\"  \"250 30\"\n\
+\tOption      \"XkbRules\"    \"xorg\"\n\
+\tOption      \"XkbModel\"    \"pc105\"\n\
+\tOption      \"XkbLayout\"   \"" + lang + "\"\n\
+\tOption      \"XkbOptions\"  \"grp:ctrl_shift_toggle,grp_led:scroll\"\n\
+EndSection\n";
+
+	WriteFile(SYS_ROOT + "/etc/X11/xorg.conf.d/10-keymap.conf", keymap);
+
+}
 void SetupThread::xorgSetLangHALEx() {
 	string lang, varstr;
 	vector<MenuItem> langmenu;
@@ -822,7 +848,8 @@ bool SetupThread::postInstallActions() {
 	setRootPassword();
 	createUsers();
 
-	xorgSetLangHALEx();
+	//xorgSetLangHALEx();
+	xorgSetLangConf();
 	generateIssue();
 	writeFstab();
 	system("chroot /mnt depmod -a " + kernelversion);
@@ -875,6 +902,12 @@ void SetupThread::run() {
 	pData.registerEventHandler(&updateProgressData);
 	string errors;
 	setupMode = true;
+	mpkg *core = new mpkg(true);
+	system("cp /etc/mpkg.xml /etc/mpkg.xml.backup.system");
+	core->set_sysroot("/mnt");
+	delete core;
+	system("cp /var/mpkg/packages.db /var/mpkg-packages.db.backup");
+
 	settings = new QSettings("guiinstaller");
 	rootPassword = settings->value("rootpasswd").toString();
 	settings->beginGroup("users");

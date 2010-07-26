@@ -117,6 +117,7 @@ class SetupThread: public QThread {
 		void updateData(const ItemState& a);
 
 		void xorgSetLangHALEx();
+		void xorgSetLangConf();
 		void generateIssue();
 		void writeFstab();
 		void buildInitrd();
