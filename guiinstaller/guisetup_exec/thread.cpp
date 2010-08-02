@@ -329,9 +329,9 @@ bool SetupThread::mountPartitions() {
 	string mkdir_cmd;
 	string mount_options;
 
-	mkdir_cmd = "mkdir -p /mnt";
+	mkdir_cmd = "mkdir -p /tmp/new_sysroot";
 	if (!rootPartitionMountOptions.empty()) mount_options = "-o " + rootPartitionMountOptions;
-	mount_cmd = "mount " + mount_options + " " + rootPartition + " /mnt";
+	mount_cmd = "mount " + mount_options + " " + rootPartition + " /tmp/new_sysroot";
 	if (system(mkdir_cmd) !=0 || system(mount_cmd)!=0) return false;
 
 	// Sorting mount points
@@ -358,13 +358,13 @@ bool SetupThread::mountPartitions() {
 		if (partConfigs[mountOrder[i]].mountpoint=="/") continue;
 		if (partConfigs[mountOrder[i]].mount_options.empty()) mount_options.clear();
 		else mount_options = "-o " + partConfigs[mountOrder[i]].mount_options;
-		mkdir_cmd = "mkdir -p /mnt" + partConfigs[mountOrder[i]].mountpoint;
+		mkdir_cmd = "mkdir -p /tmp/new_sysroot" + partConfigs[mountOrder[i]].mountpoint;
 		if (partConfigs[mountOrder[i]].fs=="ntfs")  {
 			if (mount_options.empty()) mount_options="-o force";
 			else mount_options+=",force";
-			mount_cmd = "ntfs-3g " + mount_options + " /dev/" + partConfigs[mountOrder[i]].partition + " /mnt" + partConfigs[mountOrder[i]].mountpoint;
+			mount_cmd = "ntfs-3g " + mount_options + " /dev/" + partConfigs[mountOrder[i]].partition + " /tmp/new_sysroot" + partConfigs[mountOrder[i]].mountpoint;
 		}
-		else mount_cmd = "mount " + mount_options + " /dev/" + partConfigs[mountOrder[i]].partition + " /mnt" + partConfigs[mountOrder[i]].mountpoint;
+		else mount_cmd = "mount " + mount_options + " /dev/" + partConfigs[mountOrder[i]].partition + " /tmp/new_sysroot" + partConfigs[mountOrder[i]].mountpoint;
 		if (partConfigs[mountOrder[i]].fs=="jfs") mount_cmd = "fsck /dev/" + partConfigs[mountOrder[i]].partition + "  && " + mount_cmd;
 
 		if (system(mkdir_cmd)!=0 || system(mount_cmd)!=0) {
@@ -379,13 +379,8 @@ bool SetupThread::mountPartitions() {
 bool SetupThread::moveDatabase() {
 	emit setSummaryText(tr("Moving database"));
 	emit setDetailsText("");
-	if (system("rm -rf /mnt/var/mpkg ; mkdir -p /mnt/var/log ; cp -R /var/mpkg /mnt/var/ && rm -rf /var/mpkg && ln -s /mnt/var/mpkg /var/mpkg")!=0) {
-		emit reportError(tr("An error occured while moving database to hard drive"));
-		return false;
-	}
-	if (_cmdOptions["ramwarp"]=="yes") {
-		system("mkdir -p /mnt/.installer && mount -t tmpfs none /mnt/.installer && mv /mnt/var/mpkg/packages.db /mnt/.installer/packages.db && ln -s /mnt/.installer/packages.db /mnt/var/mpkg/packages.db");
-	}
+	system("mkdir -p /tmp/new_sysroot/var/mpkg");
+	system("mkdir -p /tmp/new_sysroot/var/log");
 	return true;
 
 }
@@ -401,7 +396,7 @@ bool SetupThread::processInstall() {
 	}
 	emit setSummaryText(tr("Finishing installation"));
 	emit setDetailsText(tr("Exporting pkgtools-compatible database"));
-	core->exportBase("/mnt/var/log/packages");
+	core->exportBase("/tmp/new_sysroot/var/log/packages");
 
 	delete core;
 	return true;
@@ -463,15 +458,15 @@ void SetupThread::xorgSetLangHALEx() {
   <merge key=\"input.xkb.layout\" type=\"string\">" + lang + "</merge>\n" + variant + \
 "  <merge key=\"input.xkb.options\" type=\"string\">terminate:ctrl_alt_bksp,grp:ctrl_shift_toggle,grp_led:scroll</merge>\n\
 </match>\n";
-	system("mkdir -p /mnt/etc/hal/fdi/policy ");
-	WriteFile("/mnt/etc/hal/fdi/policy/10-x11-input.fdi", fdi);
+	system("mkdir -p /tmp/new_sysroot/etc/hal/fdi/policy ");
+	WriteFile("/tmp/new_sysroot/etc/hal/fdi/policy/10-x11-input.fdi", fdi);
 }
 
 void SetupThread::generateIssue() {
-	if (!FileExists("/mnt/etc/issue_" + sysconf_lang)) {
+	if (!FileExists("/tmp/new_sysroot/etc/issue_" + sysconf_lang)) {
 		return;
 	}
-	system("( cd /mnt/etc ; rm issue ; ln -s issue_" + sysconf_lang + " issue )");
+	system("( cd /tmp/new_sysroot/etc ; rm issue ; ln -s issue_" + sysconf_lang + " issue )");
 }
 
 string getUUID(const string& dev) {
@@ -544,14 +539,14 @@ void SetupThread::writeFstab() {
 	data += "\n# Required for X shared memory\nnone\t/dev/shm\ttmpfs\tdefaults\t0 0\n";
 	if (settings->value("tmpfs_tmp").toBool()) data += "\n# /tmp as tmpfs\nnone\t/tmp\ttmpfs\tdefaults\t0 0\n";
 	
-	WriteFile("/mnt/etc/fstab", data);
+	WriteFile("/tmp/new_sysroot/etc/fstab", data);
 }
 void SetupThread::buildInitrd() {
 	// RAID, LVM, LuKS encrypted volumes, USB drives and so on - all this will be supported now!
 	string rootdev_wait = "0";
 	if (settings->value("initrd_delay").toBool()) rootdev_wait = "10";
 
-	system("chroot /mnt mount -t proc none /proc ");
+	system("chroot /tmp/new_sysroot mount -t proc none /proc ");
 	string rootdev;
 	string rootUUID = getUUID(rootPartition);
 	if (rootUUID.empty()) rootUUID=rootPartition;
@@ -570,7 +565,7 @@ void SetupThread::buildInitrd() {
 
 	emit setSummaryText(tr("Creating initrd"));
 	emit setDetailsText("");
-	system("chroot /mnt mkinitrd -c -r " + rootdev + " -f " + rootPartitionType + " -w " + rootdev_wait + " -k " + kernelversion + " " + " " + use_swap + " " + use_raid + " " + use_lvm + " " + additional_modules);
+	system("chroot /tmp/new_sysroot mkinitrd -c -r " + rootdev + " -f " + rootPartitionType + " -w " + rootdev_wait + " -k " + kernelversion + " " + " " + use_swap + " " + use_raid + " " + use_lvm + " " + additional_modules);
 }
 
 StringMap getDeviceMap(string mapFile) {
@@ -662,10 +657,10 @@ bool SetupThread::grub2config() {
 
 	emit setSummaryText(tr("Installing GRUB2 to %1").arg(bootDevice.c_str()));
 	emit setDetailsText("");
-	string grubcmd = "chroot /mnt grub-install --no-floppy " + bootDevice;
+	string grubcmd = "chroot /tmp/new_sysroot grub-install --no-floppy " + bootDevice;
 	system(grubcmd);
 	// Get the device map
-	StringMap devMap = getDeviceMap("/mnt/boot/grub/device.map");
+	StringMap devMap = getDeviceMap("/tmp/new_sysroot/boot/grub/device.map");
 	remapHdd(devMap, bootDevice);
 
 	string gfxPayload = settings->value("fbmode").toString().toStdString();
@@ -725,7 +720,7 @@ menuentry \"" + string(_("AgiliaLinux ") + string(DISTRO_VERSION) + _(" on ")) +
 			grubConfig = grubConfig + "menuentry \" " + osList[i].label + _(" on ") + osList[i].root+"\" {\n\tset root=("+mapPart(devMap, osList[i].root, 0)+")\n\tchainloader +1\n}\n\n";
 		}
 	}
-	WriteFile("/mnt/boot/grub/grub.cfg", grubConfig);
+	WriteFile("/tmp/new_sysroot/boot/grub/grub.cfg", grubConfig);
 
 	return true;
 }
@@ -734,41 +729,41 @@ bool SetupThread::setHostname() {
 	if (hostname.empty()) return false;
 	string netname = settings->value("netname").toString().toStdString();
 	if (netname.empty()) netname = "example.net";
-	WriteFile("/mnt/etc/HOSTNAME", hostname + "." + netname + "\n");
-	string hosts = ReadFile("/mnt/etc/hosts");
+	WriteFile("/tmp/new_sysroot/etc/HOSTNAME", hostname + "." + netname + "\n");
+	string hosts = ReadFile("/tmp/new_sysroot/etc/hosts");
 	strReplace(&hosts, "darkstar", hostname);
 	strReplace(&hosts, "example.net", netname);
-	WriteFile("/mnt/etc/hosts", hosts);
+	WriteFile("/tmp/new_sysroot/etc/hosts", hosts);
 
 	return true;
 }
 void SetupThread::setDefaultRunlevel(const string& lvl) {
 	// Can change runlevels 3 and 4 to lvl
-	string data = ReadFile("/mnt/etc/inittab");
+	string data = ReadFile("/tmp/new_sysroot/etc/inittab");
 	strReplace(&data, "id:4:initdefault", "id:" + lvl + ":initdefault");
 	strReplace(&data, "id:3:initdefault", "id:" + lvl + ":initdefault");
-	WriteFile("/mnt/etc/inittab", data);
+	WriteFile("/tmp/new_sysroot/etc/inittab", data);
 }
 void SetupThread::enablePlymouth(bool enable) {
-	if (enable) system("chroot /mnt rc-update add plymouth default");
-	else system("chroot /mnt rc-update del plymouth plymouth");
+	if (enable) system("chroot /tmp/new_sysroot rc-update add plymouth default");
+	else system("chroot /tmp/new_sysroot rc-update del plymouth plymouth");
 }
 
 void SetupThread::generateFontIndex() {
 	emit setSummaryText(tr("Initializing X11 font database"));
 	emit setDetailsText(tr("Generating font index"));
-	if (FileExists("/mnt/usr/sbin/setup_mkfontdir")) {
-		system("chroot /mnt /usr/sbin/setup_mkfontdir");
+	if (FileExists("/tmp/new_sysroot/usr/sbin/setup_mkfontdir")) {
+		system("chroot /tmp/new_sysroot /usr/sbin/setup_mkfontdir");
 	}
 	emit setDetailsText(tr("Generating font cache"));
-	if (FileExists("/mnt/usr/sbin/setup_fontconfig")) {
-		system("chroot /mnt /usr/sbin/setup_fontconfig");
+	if (FileExists("/tmp/new_sysroot/usr/sbin/setup_fontconfig")) {
+		system("chroot /tmp/new_sysroot /usr/sbin/setup_fontconfig");
 	}
 }
 
 void setWM(string xinitrc) {
-	if (!FileExists("/mnt/etc/X11/xinit")) return;
-	system("( cd /mnt/etc/X11/xinit ; rm -f xinitrc ; ln -sf xinitrc." + xinitrc + " xinitrc )");
+	if (!FileExists("/tmp/new_sysroot/etc/X11/xinit")) return;
+	system("( cd /tmp/new_sysroot/etc/X11/xinit ; rm -f xinitrc ; ln -sf xinitrc." + xinitrc + " xinitrc )");
 }
 
 void SetupThread::setXwmConfig() {
@@ -781,7 +776,7 @@ void SetupThread::setXwmConfig() {
 	else if (wm=="GNOME") setWM("gnome");
 }
 
-void generateLangSh(string lang, string dir="/mnt/etc/profile.d/") {
+void generateLangSh(string lang, string dir="/tmp/new_sysroot/etc/profile.d/") {
 	string lang_sh="#!/bin/sh\n\
 export LANG=$L\n\
 export LC_CTYPE=$L\n\
@@ -807,10 +802,10 @@ export LESSCHARSET=UTF-8\n";
 
 void setConsoleKeymap(string lang) {
 	if (lang.find("ru")==0 || lang.find("uk")==0) {
-		string keymaps = ReadFile("/mnt/etc/conf.d/keymaps");
+		string keymaps = ReadFile("/tmp/new_sysroot/etc/conf.d/keymaps");
 		strReplace(&keymaps, "keymap=\"us\"", "keymap=\"ru-winkeys-uni_ct_sh\"");
-		if (!FileExists("/mnt/etc/conf.d")) system("mkdir /mnt/etc/conf.d");
-		WriteFile("/mnt/etc/conf.d/keymaps", keymaps);
+		if (!FileExists("/tmp/new_sysroot/etc/conf.d")) system("mkdir /tmp/new_sysroot/etc/conf.d");
+		WriteFile("/tmp/new_sysroot/etc/conf.d/keymaps", keymaps);
 	}
 
 }
@@ -833,15 +828,12 @@ bool SetupThread::postInstallActions() {
 	}
 
 	// Do installed kernel version check
-	vector<string> dirList = getDirectoryList("/mnt/lib/modules");
+	vector<string> dirList = getDirectoryList("/tmp/new_sysroot/lib/modules");
 	for (size_t i=0; i<dirList.size(); ++i) {
 		if (dirList[i]!="." && dirList[i]!="..") {
 			kernelversion = dirList[i];
 			break;
 		}
-	}
-	if (_cmdOptions["ramwarp"]=="yes") {
-		system("rm /mnt/var/mpkg/packages.db ; mv /mnt/.installer/packages.db /mnt/var/mpkg/packages.db ; umount /mnt/.installer ; rmdir /mnt/.installer");
 	}
 
 	// Post-install configuration
@@ -852,17 +844,17 @@ bool SetupThread::postInstallActions() {
 	xorgSetLangConf();
 	generateIssue();
 	writeFstab();
-	system("chroot /mnt depmod -a " + kernelversion);
+	system("chroot /tmp/new_sysroot depmod -a " + kernelversion);
 	buildInitrd();
 	grub2config();
 	setupNetwork();
 	setTimezone();
-	if (FileExists("/mnt/usr/bin/X")) {
-		if (FileExists("/mnt/usr/bin/kdm") ||
-		    FileExists("/mnt/usr/bin/xdm") ||
-    		    FileExists("/mnt/usr/sbin/gdm") ||
-    		    FileExists("/mnt/usr/sbin/lxdm") ||
-		    FileExists("/mnt/usr/bin/slim")) {
+	if (FileExists("/tmp/new_sysroot/usr/bin/X")) {
+		if (FileExists("/tmp/new_sysroot/usr/bin/kdm") ||
+		    FileExists("/tmp/new_sysroot/usr/bin/xdm") ||
+    		    FileExists("/tmp/new_sysroot/usr/sbin/gdm") ||
+    		    FileExists("/tmp/new_sysroot/usr/sbin/lxdm") ||
+		    FileExists("/tmp/new_sysroot/usr/bin/slim")) {
 				setDefaultRunlevel("4");
 				enablePlymouth(true);
 		}
@@ -870,7 +862,7 @@ bool SetupThread::postInstallActions() {
 
 	// If nouveau is used, remove blacklist entry from /etc/modprobe.d/nouveau.conf
 	if (settings->value("nvidia-driver")=="nouveau") {
-		unlink("/mnt/etc/modprobe.d/nouveau.conf");
+		unlink("/tmp/new_sysroot/etc/modprobe.d/nouveau.conf");
 	}
 
 	generateFontIndex();
@@ -887,9 +879,9 @@ bool SetupThread::postInstallActions() {
 	vector<string> cdlist_v = ReadFileStrings(cdlist);
 	unlink(cdlist.c_str());
 	if (!cdlist_v.empty()) {
-		system("chroot /mnt ln -s /dev/" + cdlist_v[0] + " /dev/cdrom");
+		system("chroot /tmp/new_sysroot ln -s /dev/" + cdlist_v[0] + " /dev/cdrom");
 	}
-	system("chroot /mnt ln -s /dev/psaux /dev/cdrom"); // Everybody today has this mouse device, so I don't care about COM port users
+	system("chroot /tmp/new_sysroot ln -s /dev/psaux /dev/cdrom"); // Everybody today has this mouse device, so I don't care about COM port users
 
 	umountFilesystems();
 
@@ -902,11 +894,6 @@ void SetupThread::run() {
 	pData.registerEventHandler(&updateProgressData);
 	string errors;
 	setupMode = true;
-	mpkg *core = new mpkg(true);
-	system("cp /etc/mpkg.xml /etc/mpkg.xml.backup.system");
-	core->set_sysroot("/mnt");
-	delete core;
-	system("cp /var/mpkg/packages.db /var/mpkg-packages.db.backup");
 
 	settings = new QSettings("guiinstaller");
 	rootPassword = settings->value("rootpasswd").toString();
@@ -921,7 +908,6 @@ void SetupThread::run() {
 
 
 	emit setProgress(0);
-	system("rm -rf /var/mpkg && mkdir -p /var/mpkg && cp /packages.db /var/mpkg/"); // BE AWARE OF RUNNING THIS ON REAL SYSTEM!!!
 	if (!fillPartConfigs()) return;
 	if (!validateConfig()) return;
 	if (!setMpkgConfig()) return;
@@ -938,18 +924,18 @@ void SetupThread::run() {
 }
 
 bool setPasswd(string username, string passwd) {
-	string tmp_file = "/mnt/tmp/wtf";
+	string tmp_file = "/tmp/new_sysroot/tmp/wtf";
 	string data = passwd + "\n" + passwd + "\n";
 	WriteFile(tmp_file, data);
 	string passwd_cmd = "#!/bin/sh\ncat /tmp/wtf | passwd " + username+" \n";
-	WriteFile("/mnt/tmp/run_passwd", passwd_cmd);
-	int ret = system("chroot /mnt sh /tmp/run_passwd");
+	WriteFile("/tmp/new_sysroot/tmp/run_passwd", passwd_cmd);
+	int ret = system("chroot /tmp/new_sysroot sh /tmp/run_passwd");
 	for (size_t i=0; i<data.size(); i++) {
 		data[i]=' ';
 	}
 	WriteFile(tmp_file, data);
 	unlink(tmp_file.c_str());
-	unlink("/mnt/tmp/run_passwd");
+	unlink("/tmp/new_sysroot/tmp/run_passwd");
 	if (ret == 0) return true;
 	return false;
 }
@@ -958,9 +944,9 @@ bool addUser(string username) {
 	printf("Adding user %s\n", username.c_str());
 	//string extgroup="audio,cdrom,disk,floppy,lp,scanner,video,wheel"; // Old default groups
 	string extgroup="audio,cdrom,floppy,video,netdev,plugdev,power"; // New default groups, which conforms current guidelines
-	system("chroot /mnt /usr/sbin/useradd -d /home/" + username + " -m -g users -G " + extgroup + " -s /bin/bash " + username);
-	system("chroot /mnt chown -R " + username+":users /home/"+username);
-	system("chmod 700 /mnt/home/" + username);
+	system("chroot /tmp/new_sysroot /usr/sbin/useradd -d /home/" + username + " -m -g users -G " + extgroup + " -s /bin/bash " + username);
+	system("chroot /tmp/new_sysroot chown -R " + username+":users /home/"+username);
+	system("chmod 700 /tmp/new_sysroot/home/" + username);
 	return true;
 }
 
@@ -979,27 +965,27 @@ void SetupThread::createUsers() {
 void SetupThread::umountFilesystems() {
 	emit setSummaryText(tr("Finishing..."));
 	emit setDetailsText(tr("Unmounting filesystems and syncing disks"));
-	system("chroot /mnt umount /proc");
-	system("chroot /mnt umount /sys");
-	system("chroot /mnt umount -a");
+	system("chroot /tmp/new_sysroot umount /proc");
+	system("chroot /tmp/new_sysroot umount /sys");
+	system("chroot /tmp/new_sysroot umount -a");
 	system("sync");
 
 }
 
 void SetupThread::setTimezone() {
 	if (settings->value("time_utc").toBool()) {
-		WriteFile("/mnt/etc/hardwareclock", "# Tells how the hardware clock time is stored\n#\nUTC\n");
-		WriteFile("/mnt/etc/conf.d/hwclock", "# Set clock to \"UTC\" if your hardware clock stores time in GMT, or \"local\" if your clock stores local time.\n\nclock=\"UTC\"\n#If you want to sync hardware clock with your system clock at shutdown, set clock_synctohc to YES.\nclock_synctohc=\"YES\"\n\n# You can specify special arguments to hwclock during bootup\nclock_args=\"\"\n");
+		WriteFile("/tmp/new_sysroot/etc/hardwareclock", "# Tells how the hardware clock time is stored\n#\nUTC\n");
+		WriteFile("/tmp/new_sysroot/etc/conf.d/hwclock", "# Set clock to \"UTC\" if your hardware clock stores time in GMT, or \"local\" if your clock stores local time.\n\nclock=\"UTC\"\n#If you want to sync hardware clock with your system clock at shutdown, set clock_synctohc to YES.\nclock_synctohc=\"YES\"\n\n# You can specify special arguments to hwclock during bootup\nclock_args=\"\"\n");
 	}
 	else {
-		WriteFile("/mnt/etc/hardwareclock", "# Tells how the hardware clock time is stored\n#\nlocaltime\n");
-		WriteFile("/mnt/etc/conf.d/hwclock", "# Set clock to \"UTC\" if your hardware clock stores time in GMT, or \"local\" if your clock stores local time.\n\nclock=\"local\"\n#If you want to sync hardware clock with your system clock at shutdown, set clock_synctohc to YES.\nclock_synctohc=\"YES\"\n\n# You can specify special arguments to hwclock during bootup\nclock_args=\"\"\n");
+		WriteFile("/tmp/new_sysroot/etc/hardwareclock", "# Tells how the hardware clock time is stored\n#\nlocaltime\n");
+		WriteFile("/tmp/new_sysroot/etc/conf.d/hwclock", "# Set clock to \"UTC\" if your hardware clock stores time in GMT, or \"local\" if your clock stores local time.\n\nclock=\"local\"\n#If you want to sync hardware clock with your system clock at shutdown, set clock_synctohc to YES.\nclock_synctohc=\"YES\"\n\n# You can specify special arguments to hwclock during bootup\nclock_args=\"\"\n");
 	}
 
 	if (!settings->value("timezone").toString().isEmpty()) {
-		system("( cd /mnt/etc ; ln -sf /usr/share/zoneinfo/" + settings->value("timezone").toString().toStdString() + " localtime-copied-from )");
-		unlink("/mnt/etc/localtime");
-		system("chroot /mnt cp etc/localtime-copied-from etc/localtime");
+		system("( cd /tmp/new_sysroot/etc ; ln -sf /usr/share/zoneinfo/" + settings->value("timezone").toString().toStdString() + " localtime-copied-from )");
+		unlink("/tmp/new_sysroot/etc/localtime");
+		system("chroot /tmp/new_sysroot cp etc/localtime-copied-from etc/localtime");
 	}
 }
 
@@ -1007,56 +993,44 @@ void SetupThread::setupNetwork() {
 	setHostname();
 	if (settings->value("netman").toString()=="wicd") {
 		system("chmod +x /etc/rc.d/rc.wicd");	
-		system("chroot /mnt rc-update add wicd default");
+		system("chroot /tmp/new_sysroot rc-update add wicd default");
 	}
 	else if (settings->value("netman").toString()=="networkmanager") {
 		system("chmod +x /etc/rc.d/rc.networkmanager");	
-		system("chroot /mnt rc-update add networkmanager default");
+		system("chroot /tmp/new_sysroot rc-update add networkmanager default");
 	}
 
 }
 
 void SetupThread::copyMPKGConfig() {
-	mpkg *core = new mpkg(true);
-	system("cp /etc/mpkg.xml /etc/mpkg.xml.backup");
-	core->set_sysroot("/");
-	
-	vector<string> repList;
 #ifdef X86_64
-	repList.push_back("http://core64.agilialinux.org/");
-	repList.push_back("http://userland64.agilialinux.org/");
+	system("cp /usr/local/share/setup/mpkg-x86_64.xml /tmp/new_sysroot/etc/mpkg.xml");
 #else
-	repList.push_back("http://core32.agilialinux.org/");
-	repList.push_back("http://userland32.agilialinux.org/");
+	system("cp /usr/local/share/setup/mpkg-x86.xml /tmp/new_sysroot/etc/mpkg.xml");
 #endif
-
-	vector<string> disabled_rep_list = core->get_repositorylist();
-	mpkgconfig::set_repositorylist(repList, disabled_rep_list);
-	system("cp /etc/mpkg.xml /mnt/etc/");
-	system("cp /etc/mpkg.xml.backup /etc/mpkg.xml");
-	delete core;
+	system("mv /tmp/packages.db /tmp/new_sysroot/var/mpkg/packages.db");
 }
 
 void SetupThread::setDefaultRunlevels() {
 // We don't know which of them are in system in real, but let's try them all
-	system("chroot /mnt rc-update add sysfs sysinit");
-	system("chroot /mnt rc-update add udev sysinit");
-	system("chroot /mnt rc-update add consolefont default");
-	system("chroot /mnt rc-update add hald default");
-	system("chroot /mnt rc-update add sysklogd default");
-	system("chroot /mnt rc-update add dbus default");
-	system("chroot /mnt rc-update add sshd default");
-	system("chroot /mnt rc-update add alsasound default");
-	system("chroot /mnt rc-update add acpid default");
-	system("chroot /mnt rc-update add cupsd default");
+	system("chroot /tmp/new_sysroot rc-update add sysfs sysinit");
+	system("chroot /tmp/new_sysroot rc-update add udev sysinit");
+	system("chroot /tmp/new_sysroot rc-update add consolefont default");
+	system("chroot /tmp/new_sysroot rc-update add hald default");
+	system("chroot /tmp/new_sysroot rc-update add sysklogd default");
+	system("chroot /tmp/new_sysroot rc-update add dbus default");
+	system("chroot /tmp/new_sysroot rc-update add sshd default");
+	system("chroot /tmp/new_sysroot rc-update add alsasound default");
+	system("chroot /tmp/new_sysroot rc-update add acpid default");
+	system("chroot /tmp/new_sysroot rc-update add cupsd default");
 
 	
 }
 
 void SetupThread::setDefaultXDM() {
-	if (FileExists("/mnt/etc/rc.d/init.d/kdm")) system("chroot /mnt rc-update add kdm default");
-	else if (FileExists("/mnt/etc/rc.d/init.d/gdm")) system("chroot /mnt rc-update add gdm default");
-	else if (FileExists("/mnt/etc/rc.d/init.d/lxdm")) system("chroot /mnt rc-update add lxdm default");
-	else if (FileExists("/mnt/etc/rc.d/init.d/slim")) system("chroot /mnt rc-update add slim default");
-	else if (FileExists("/mnt/etc/rc.d/init.d/xdm")) system("chroot /mnt rc-update add xdm default");
+	if (FileExists("/tmp/new_sysroot/etc/rc.d/init.d/kdm")) system("chroot /tmp/new_sysroot rc-update add kdm default");
+	else if (FileExists("/tmp/new_sysroot/etc/rc.d/init.d/gdm")) system("chroot /tmp/new_sysroot rc-update add gdm default");
+	else if (FileExists("/tmp/new_sysroot/etc/rc.d/init.d/lxdm")) system("chroot /tmp/new_sysroot rc-update add lxdm default");
+	else if (FileExists("/tmp/new_sysroot/etc/rc.d/init.d/slim")) system("chroot /tmp/new_sysroot rc-update add slim default");
+	else if (FileExists("/tmp/new_sysroot/etc/rc.d/init.d/xdm")) system("chroot /tmp/new_sysroot rc-update add xdm default");
 }

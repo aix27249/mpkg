@@ -41,6 +41,11 @@ int main(int argc, char *argv[]) {
 	bindtextdomain( "mpkg", "/usr/local/share/locale");
 	textdomain("mpkg");
 	
+	CONFIG_FILE="/usr/local/share/setup/mpkg-setup.xml";
+	mConfig.configName=CONFIG_FILE;
+	unlink("/tmp/packages.db");
+	system("cp /usr/local/share/setup/packages.db /tmp/packages.db");
+
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 	QApplication a(argc, argv);
