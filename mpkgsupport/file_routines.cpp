@@ -464,45 +464,12 @@ int extractFromTar(string filename, string file_to_extract, string output)
 {
 	return extractFromTgz(filename, file_to_extract, output, "tar");
 }
-// Deprecated: use extractFromTgz instead
-/*int extractFromTbz2(string filename, string file_to_extract, string output)
-{
-	string cmd = "tar jxf "+filename+" "+ file_to_extract + " --to-stdout > " + output + " 2>/dev/null";
-	return system(cmd.c_str());
-}*/
 
-// Old WriteFile: ugly and very slow
-/*
-int WriteFile(string filename, string data)
-{
-	mpkgErrorReturn errRet;
-write_file:
-	FILE* output=fopen(filename.c_str(),"w");
-	if (output)
-	{
-		for (unsigned int i=0;i<data.length();i++)
-		{
-			fputc(data[i],output);
-		}
-		fclose(output);
-		return 0;
-	}
-	else
-	{
-		mError("Unable to write file " + filename);
-		errRet = waitResponce(MPKG_SUBSYS_FILE_WRITE_ERROR);
-		if (errRet == MPKG_RETURN_RETRY)
-			goto write_file;
-
-		abort();
-		return -1;
-	}
-}
-*/
 int WriteFile(const string& filename, const string& data) {
 	ofstream filestr;
 	filestr.open(filename.c_str());
 	if (!filestr.is_open()) {
+		fprintf(stderr, "Failed to write file %s", filename.c_str());
 		abort();
 	}
 	filestr << data;

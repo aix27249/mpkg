@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
 	forceInInstallMD5Check = false;
 	// We don't care of database integrity in case of installation failure half-way, so we can use fast mode. It has beed tested enough, and I think it is useful.
 	//  Warp drive active!
-	_cmdOptions["ramwarp"]="yes";
+	_cmdOptions["ramwarp"]="no";
 	_cmdOptions["warpmode"]="yes";
 	if (FileExists("/tmp/sw1")) _cmdOptions["doinst_scrinst"]="yes";
 	if (FileExists("/tmp/sw2")) _cmdOptions["bashamp"]="yes";

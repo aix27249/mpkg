@@ -1474,7 +1474,7 @@ installProcess:
 	}
 	if (removeFailures!=0 && installFailures!=0) return MPKGERROR_COMMITERROR;
 	actionBus.clear();
-	sqlFlush();
+	sqlFlush(); // Teh fuckin' trouble place
 	
 	// NEW 25.08.08: cleanup db for local packages
 	msay(_("Clearing unreachable packages"), SAYMODE_NEWLINE);
@@ -1835,8 +1835,8 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		{
 			if (ultraFastMode) {
 				if (_cmdOptions["preseve_doinst"]=="true" && FileExists(SYS_ROOT + "/install/doinst.sh") ) system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/doinst.sh " + package->get_scriptdir()); // Please note that this stuff will not work in real world.
-				if (FileExists(SYS_ROOT + "/install/postremove.sh")) system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/postremove.sh " + package->get_scriptdir());
-				if (FileExists(SYS_ROOT + "/install/preremove.sh")) system("mkdir -p " + package->get_scriptdir() + " && cp " + SYS_ROOT+"/install/preremove.sh " + package->get_scriptdir());
+				if (FileExists(SYS_ROOT + "/install/postremove.sh")) system("mkdir -p " + package->get_scriptdir() + " && mv " + SYS_ROOT+"/install/postremove.sh " + package->get_scriptdir());
+				if (FileExists(SYS_ROOT + "/install/preremove.sh")) system("mkdir -p " + package->get_scriptdir() + " && mv " + SYS_ROOT+"/install/preremove.sh " + package->get_scriptdir());
 			}
 			printHtmlProgress();
 			currentStatus = statusHeader + _("executing post-install scripts...");
@@ -1883,7 +1883,9 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 #ifndef INSTALL_DEBUG
 	// UPD: we don't care about whole dir, we care only about doinst.sh one
 	//system("rm -rf " + SYS_ROOT+"/install"); // Cleanup. Be aware of placing anything important to this directory
-	unlink(string(SYS_ROOT+"/doinst.sh").c_str()); // It does not exists, but in case of move errors...
+//	unlink(string(SYS_ROOT+"/doinst.sh").c_str()); // It does not exists, but in case of move errors...
+//	unlink(string(SYS_ROOT+"/preremove.sh").c_str()); // *NOW* 
+//	unlink(string(SYS_ROOT+"/postremove.sh").c_str()); // It does not exists, but in case of move errors...
 
 	set_installed(package->get_id(), ST_INSTALLED);
 	set_configexist(package->get_id(), ST_CONFIGEXIST);

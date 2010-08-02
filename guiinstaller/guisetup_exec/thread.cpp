@@ -227,6 +227,7 @@ bool SetupThread::validateQueue() {
 	SQLRecord sqlSearch;
 	sqlSearch.addField("package_action", ST_INSTALL);
 	core->get_packagelist(sqlSearch, &queue);
+	delete core;
 	if (queue.IsEmpty()) {
 		emit reportError(tr("Commit failed: probably dependency errors"));
 		return false;
@@ -379,7 +380,7 @@ bool SetupThread::mountPartitions() {
 bool SetupThread::moveDatabase() {
 	emit setSummaryText(tr("Moving database"));
 	emit setDetailsText("");
-	system("mkdir -p /tmp/new_sysroot/var/mpkg");
+	system("mkdir -p /tmp/new_sysroot/var/mpkg/cache");
 	system("mkdir -p /tmp/new_sysroot/var/log");
 	return true;
 
@@ -389,11 +390,14 @@ bool SetupThread::processInstall() {
 	emit setSummaryText(tr("Installing packages"));
 	emit setDetailsText(tr("Preparing to installation"));
 	core = new mpkg;
-	if (FileExists("/var/log/mount/cache")) system("ln -s /var/log/mount/cache /var/mpkg/cache/.fcache");
+	if (FileExists("/var/log/mount/cache")) system("ln -s /var/log/mount/cache /tmp/new_sysroot/var/mpkg/cache/.fcache");
+	printf("Committing\n");
 	if (core->commit()!=0) {
 		delete core;
+		printf("Commit failed");
 		return false;
 	}
+	printf("\n\n\nCommit OK, moving to export\n\n\n\n");
 	emit setSummaryText(tr("Finishing installation"));
 	emit setDetailsText(tr("Exporting pkgtools-compatible database"));
 	core->exportBase("/tmp/new_sysroot/var/log/packages");
@@ -424,7 +428,8 @@ Section \"InputClass\"\n\
 \tOption      \"XkbOptions\"  \"grp:ctrl_shift_toggle,grp_led:scroll\"\n\
 EndSection\n";
 
-	WriteFile(SYS_ROOT + "/etc/X11/xorg.conf.d/10-keymap.conf", keymap);
+	system("mkdir -p /tmp/new_sysroot/etc/X11/xorg.conf.d");
+	WriteFile("/tmp/new_sysroot/etc/X11/xorg.conf.d/10-keymap.conf", keymap);
 
 }
 void SetupThread::xorgSetLangHALEx() {
@@ -706,7 +711,7 @@ set menu_color_highlight=white/dark-gray\n\
 # Linux bootable partition config begins\n\
 menuentry \"" + string(_("AgiliaLinux ") + string(DISTRO_VERSION) + _(" on ")) + rootPartition + "\" {\n\
 \tset root=(" + mapPart(devMap, grubBootPartition, 0) + ")\n" + gfxPayload + \
-"\tlinux " + kernelstring + " root=" + rootUUID + " ro " + settings->value("kernel_options").toString().toStdString()+"\n\t" + initrdstring + "\n}\n\n";
+"\tlinux " + kernelstring + " root=" + rootUUID + " ro quiet " + settings->value("kernel_options").toString().toStdString()+"\n\t" + initrdstring + "\n}\n\n";
 // Add safe mode
 	grubConfig += "menuentry \"" + string(_("AgiliaLinux ") + string(DISTRO_VERSION) + _(" (recovery mode) on ")) + rootPartition + "\" {\n" + gfxPayload + \
 "\tlinux ("+ mapPart(devMap, grubBootPartition, 0) +")" + kernelstring + " root=" + rootPartition + " ro " + settings->value("kernel_options").toString().toStdString()+" single\n}\n\n";
@@ -890,6 +895,7 @@ bool SetupThread::postInstallActions() {
 
 
 void SetupThread::run() {
+	verbose=true;
 	progressWidgetPtr = this;
 	pData.registerEventHandler(&updateProgressData);
 	string errors;
