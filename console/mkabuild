@@ -1,0 +1,5 @@
+#!/bin/sh
+PKG=$1
+VER=$2
+PKGNAME=$PKG PKGVER=$VER PKGARCH=auto PKGBUILD=1 mkpkg_generator.sh
+
