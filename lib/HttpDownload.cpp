@@ -449,6 +449,21 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 
     				for ( unsigned int j = 0; j < item->url_list.size(); j++ ) {
 					mDebug("Downloading " + item->url_list.at(j));
+
+					int64_t size=0;
+					if (enableDownloadResume) {
+						struct stat fStat;
+						if (stat(item->file.c_str(), &fStat)==0) {
+							if (S_ISREG(fStat.st_mode)) size = fStat.st_size;
+							else unlink(item->file.c_str());
+						}
+						prData->setItemProgress(item->itemID, (double) size);
+					}
+					else { // Unlinking destination file before any sort of downloading
+						prData->setItemProgress(item->itemID, 0);
+						unlink(item->file.c_str());
+					}
+
 					/*if (prData->size()>0) {
 						prData->setItemCurrentAction(item->itemID, "Creating symlink");
 						prData->setItemState(item->itemID,ITEMSTATE_INPROGRESS);
@@ -485,87 +500,90 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 							prData->setItemCurrentAction(item->itemID, _("Downloading"));
 							prData->setItemState(item->itemID,ITEMSTATE_INPROGRESS);
 						}
-
-						long long size=0;
-						if (enableDownloadResume) {
-							struct stat fStat;
-							if (stat(item->file.c_str(), &fStat)==0) {
-								if (S_ISREG(fStat.st_mode)) size = fStat.st_size;
-								else unlink(item->file.c_str());
-							}
-							prData->setItemProgress(item->itemID, (double) size);
+						string dl_tool = mConfig.getValue("download_tool");
+						if (dl_tool=="wget") {
+							string opts;
+							if (enableDownloadResume) opts = " -c ";
+							int get_result = system("wget \'" + item->url_list.at(j) + "\' -O \'" + item->file + "\' " + opts + " --no-check-certificate");
+							if (get_result) result = CURLE_READ_ERROR;
+							else result = CURLE_OK;
 						}
-						else {
-							prData->setItemProgress(item->itemID, 0);
-							unlink(item->file.c_str());
+						else if (dl_tool=="aria2" || dl_tool=="aria2c") {
+							string opts;
+							if (enableDownloadResume) opts = " -c ";
+							int get_result = system("aria2c \'" + item->url_list.at(j) + "\' -d \'" + getDirectory(item->file) + "\' -o \'" + getFilename(item->file) + "\' " + opts + " --check-certificate=false");
+							if (get_result) result = CURLE_READ_ERROR;
+							else result = CURLE_OK;
 						}
-						resumePos = 0;
-						out = fopen (item->file.c_str(), "ab");
-						if ( out == NULL ) {
-							mError("Error downloading " + item->file + ": open target file failed");
-							item->status = DL_STATUS_FILE_ERROR;
-							is_have_error = true;
-						}
-						else {
-							mDebug("Trying to download via CURL");
-							fseek(out,0,SEEK_END);
-							if (enableDownloadResume) {
-								if (size!=0) {
-									if (!dialogMode && !htmlMode) say(_("Resuming download from %Li\n"), size);
-									curl_easy_setopt(ch, CURLOPT_RESUME_FROM, size);
-									resumePos = (double) size;
-								}
-							}
-							curl_easy_setopt(ch, CURLOPT_WRITEDATA, out);
-    							curl_easy_setopt(ch, CURLOPT_NOPROGRESS, false);
- 	   						curl_easy_setopt(ch, CURLOPT_PROGRESSDATA, NULL);
-    							curl_easy_setopt(ch, CURLOPT_PROGRESSFUNCTION, downloadCallback);
-							if (connTimeout>0) {
-								curl_easy_setopt(ch, CURLOPT_CONNECTTIMEOUT, connTimeout);
-								curl_easy_setopt(ch, CURLOPT_FTP_RESPONSE_TIMEOUT, connTimeout);
-							}
-    							curl_easy_setopt(ch, CURLOPT_URL, item->url_list.at(j).c_str());
-	    						downloadUrl_string = item->url_list.at(j);
-							if (dialogMode) ncInterface.setSubtitle(_("Downloading files from ") + getHostFromUrl(downloadUrl_string));
-
-							if (item->url_list.at(j).find("packages.xml.gz")==std::string::npos && 
-								item->url_list.at(j).find("PACKAGES.TXT")==std::string::npos &&
-								item->url_list.at(j).find("Packages.gz")==std::string::npos) 
-							{
-								repositoryIndexDL=false;
-								printHtmlProgress();
-								if (!dialogMode) currentDownloadingString = _("Download: [")+IntToStr(i+1) + "/" + IntToStr(list.size())+"] [" + \
-										   getHostFromUrl(downloadUrl_string)+"] ";
-								else currentDownloadingString =  "["+IntToStr(i+1) + "/" + IntToStr(list.size())+"] ";
-							
-								currentDownloadingString += getFilename(downloadUrl_string);
+						else { // Default is libcurl
+							resumePos = 0;
+							out = fopen (item->file.c_str(), "ab");
+							if ( out == NULL ) {
+								mError("Error downloading " + item->file + ": open target file failed");
+								item->status = DL_STATUS_FILE_ERROR;
+								is_have_error = true;
 							}
 							else {
-								repositoryIndexDL = true;
-								currentDownloadingString= _("Retrieving index: [")+IntToStr(i+1) + "/" + IntToStr(list.size())+"] " + downloadUrl_string;
-							}
-							msay(currentDownloadingString, SAYMODE_INLINE_START);
-
-							max_set = false;
-							result = curl_easy_perform(ch);
-							if (!currentDownloadingString.empty()) { 
+								mDebug("Trying to download via CURL");
+								fseek(out,0,SEEK_END);
+								if (enableDownloadResume) {
+									if (size!=0) {
+										if (!dialogMode && !htmlMode) say(_("Resuming download from %Li\n"), size);
+										curl_easy_setopt(ch, CURLOPT_RESUME_FROM, size);
+										resumePos = (double) size;
+									}
+								}
+								curl_easy_setopt(ch, CURLOPT_WRITEDATA, out);
+								curl_easy_setopt(ch, CURLOPT_NOPROGRESS, false);
+								curl_easy_setopt(ch, CURLOPT_PROGRESSDATA, NULL);
+								curl_easy_setopt(ch, CURLOPT_PROGRESSFUNCTION, downloadCallback);
+								if (connTimeout>0) {
+									curl_easy_setopt(ch, CURLOPT_CONNECTTIMEOUT, connTimeout);
+									curl_easy_setopt(ch, CURLOPT_FTP_RESPONSE_TIMEOUT, connTimeout);
+								}
+								curl_easy_setopt(ch, CURLOPT_URL, item->url_list.at(j).c_str());
+								downloadUrl_string = item->url_list.at(j);
+								if (dialogMode) ncInterface.setSubtitle(_("Downloading files from ") + getHostFromUrl(downloadUrl_string));
+	
 								if (item->url_list.at(j).find("packages.xml.gz")==std::string::npos && 
 									item->url_list.at(j).find("PACKAGES.TXT")==std::string::npos &&
-							       		item->url_list.at(j).find("Packages.gz")==std::string::npos) 
+									item->url_list.at(j).find("Packages.gz")==std::string::npos) 
 								{
-									repositoryIndexDL = false;
-									msay(currentDownloadingString + ": " +(string) CL_GREEN + _("done") + (string) CL_WHITE, SAYMODE_INLINE_END);
+									repositoryIndexDL=false;
 									printHtmlProgress();
+									if (!dialogMode) currentDownloadingString = _("Download: [")+IntToStr(i+1) + "/" + IntToStr(list.size())+"] [" + \
+								     			getHostFromUrl(downloadUrl_string)+"] ";
+									else currentDownloadingString =  "["+IntToStr(i+1) + "/" + IntToStr(list.size())+"] ";
+								
+									currentDownloadingString += getFilename(downloadUrl_string);
 								}
 								else {
-									clearRow();
 									repositoryIndexDL = true;
+									currentDownloadingString= _("Retrieving index: [")+IntToStr(i+1) + "/" + IntToStr(list.size())+"] " + downloadUrl_string;
 								}
-								currentDownloadingString.clear();
-							
-							}
-    							fclose(out);
-						}
+								msay(currentDownloadingString, SAYMODE_INLINE_START);
+	
+								max_set = false;
+								result = curl_easy_perform(ch);
+								if (!currentDownloadingString.empty()) { 
+									if (item->url_list.at(j).find("packages.xml.gz")==std::string::npos && 
+										item->url_list.at(j).find("PACKAGES.TXT")==std::string::npos &&
+										item->url_list.at(j).find("Packages.gz")==std::string::npos) 
+									{
+										repositoryIndexDL = false;
+										msay(currentDownloadingString + ": " +(string) CL_GREEN + _("done") + (string) CL_WHITE, SAYMODE_INLINE_END);
+										printHtmlProgress();
+									}
+									else {
+										clearRow();
+										repositoryIndexDL = true;
+									}
+									currentDownloadingString.clear();
+								
+								}
+								fclose(out);
+							} // End of CURL_DOWNLOAD
+						} // End of libcurl
 					}
 	    				if ( result == CURLE_OK  ) {
 						if (ppActionBus->_abortActions) {
