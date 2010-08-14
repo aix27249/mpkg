@@ -20,6 +20,21 @@ using namespace std;
 #define SRV_FILE 1
 #define SRV_NETWORK 2
 #define SRV_CDROM 3
+class ConfigAttribute {
+	public: ConfigAttribute();
+		~ConfigAttribute();
+		string name, value;
+};
+class ConfigFile {
+	public: ConfigFile();
+		~ConfigFile();
+		string name;
+		vector<ConfigAttribute> attr;
+		bool hasAttribute(const string &attr_name, string value="");
+		void addAttribute(const string &attr_name, const string& value);
+};
+
+
 class DeltaSource {
 	public:
 		DeltaSource(const string& _url, const string& _md5, const string& _orig_filename, const string& _orig_md5, const string& _size);
@@ -181,6 +196,7 @@ class PACKAGE
 	vector<DESCRIPTION> package_descriptions;
 #endif
     public:
+	vector<ConfigFile> config_files;
 	int build_date;
 	time_t add_date;
 	string getAlternative() const;

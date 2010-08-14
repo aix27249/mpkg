@@ -30,7 +30,7 @@ vector<PACKAGE *> buildDependencyOrderNew(const PACKAGE_LIST &packages) {
 			order.push_back((PACKAGE *) &packages[i]);
 		}
 	}
-	fprintf (stderr, "Zero-ring: %d packages\n", order.size());
+	fprintf (stderr, "Zero-ring: %d packages\n", (int) order.size());
 	// Lurking thru package list
 	size_t last_order_size;
 	bool already_in_order;
@@ -46,7 +46,7 @@ vector<PACKAGE *> buildDependencyOrderNew(const PACKAGE_LIST &packages) {
 			if (canBeResolvedBy(packages[i], order)) order.push_back((PACKAGE *) &packages[i]);
 		}
 		if (order.size()==last_order_size) {
-			fprintf(stderr, "Leaved %d unresolved packages\n", packages.size()-order.size());
+			fprintf(stderr, "Leaved %d unresolved packages\n", (int) (packages.size() - order.size()));
 			break;
 		}
 	}

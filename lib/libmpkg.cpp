@@ -8,7 +8,6 @@
 #include <iostream>
 
 string getErrorDescription(int errCode) { // FIXME: LOCALIZATION!!!
-#warning getErrorDescription needs localization!
 	switch(errCode) {
 		case MPKGERROR_OK:
 			return "OK";
@@ -1178,7 +1177,7 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 	data->set_dependencies(deps);
 	printf("\nDEPENDENCIES FOUND:\n");
 	for (size_t i=0; i<deps.size(); ++i) {
-		printf("[%d] %s\n", i+1, deps[i].getDepInfo().c_str());
+		printf("[%d] %s\n", (int) i+1, deps[i].getDepInfo().c_str());
 	}
 	//printf("Saving data\n");
 	PackageConfig pk(tmp_dir+"/install/data.xml");

@@ -26,10 +26,69 @@ int print_usage() {
 	fprintf(stderr, _("-P   --clearprovides             clear provides value\n"));
 	fprintf(stderr, _("-k   --conflicts                 set conflicts value\n"));
 	fprintf(stderr, _("-K   --clearconflicts            clear conflicts value\n"));
-
 	fprintf(stderr, _("-s   --keep-symlinks             keep symlinks in archive instead of moving it to doinst.sh\n"));
+	fprintf(stderr, _("-f   --config-files=FILENAME     specify filename with list of configuration files and it's options. Replaces existing ones\n"));
+	fprintf(stderr, _("-F   --clear-config-files        clears list of configuration files\n"));
+
 	return 1;
 }
+void importConfigFiles(const vector<string> data, vector<ConfigFile> & ret) {
+	// First: find delimiters
+	// Second: split
+	printf("Importing config files...\n");
+	string filename;
+	ConfigFile *cfile;
+	string tmp, tmp_attr;
+	size_t pos;
+	for (size_t i=0; i<data.size(); ++i) {
+		if (cutSpaces(data[i]).empty()) continue;
+		cfile = new ConfigFile;
+		pos = string::npos;
+		for (size_t t=1; pos==string::npos && t<data[i].size(); ++t) {
+			// Finding end of filename. Assuming first letter is not space.
+			if (data[i][t]==' ' && data[i][t-1]!='\\') pos = t;
+		}
+		if (pos!=string::npos) {
+			cfile->name = cutSpaces(data[i].substr(0, pos));
+			tmp = cutSpaces(data[i].substr(pos));
+		}
+		else {
+			cfile->name = cutSpaces(data[i]);
+			tmp="";
+		}
+		// Cleaning leading slashes
+		if (!cfile->name.empty() && cfile->name[0]=='/') {
+			if (cfile->name.find_first_not_of("/")==std::string::npos) {
+				printf("Bad config %s, skipping\n", cfile->name.c_str());
+				delete cfile;
+				continue;
+			}
+			cfile->name = cfile->name.substr(cfile->name.find_first_not_of("/"));
+		}
+		printf("Config file added: %s\n", cfile->name.c_str());
+		while (!tmp.empty()) {
+			pos = tmp.find_first_of(" ");
+			if (pos!=string::npos) {
+				tmp_attr = tmp.substr(0, pos);
+				if (pos<tmp.size()-1) tmp = cutSpaces(tmp.substr(pos));
+				else tmp.clear();
+			}
+			else {
+				tmp_attr = tmp;
+				tmp.clear();
+			}
+			
+			pos = tmp_attr.find_first_of("=");
+			if (pos!=string::npos && pos<tmp_attr.size()-1) cfile->addAttribute(tmp_attr.substr(0, pos), tmp_attr.substr(pos+1));
+			else cfile->addAttribute(tmp_attr, "");
+		}
+		ret.push_back(*cfile);
+		delete cfile;
+		
+	}
+	printf("Config files import complete\n");
+}
+
 DEPENDENCY parseDependency(const string& dep) {
 	DEPENDENCY ret;
 	string tmp = cutSpaces(dep);
@@ -78,7 +137,7 @@ int main(int argc, char **argv) {
 	string n, v, a, b;
 	extern char* optarg;
 	int ich;
-	const char* short_opt = "nN:v:a:b:Bm:e:t:T:d:D:sl:c:XZp:Pk:K";
+	const char* short_opt = "nN:v:a:b:Bm:e:t:T:d:D:sl:c:XZp:Pk:KFf:";
 	const struct option long_options[] =  {
 		{ "help",		0, NULL,	'h'},
 		{ "name",		1, NULL,	'n'},
@@ -102,11 +161,13 @@ int main(int argc, char **argv) {
 		{ "provides",		1, NULL,	'p'},
 		{ "conflicts",		1, NULL,	'k'},
 		{ "clearconflicts",	0, NULL,	'K'},
-		{ "clearprovides",	1, NULL,	'P'},
+		{ "clearprovides",	0, NULL,	'P'},
+		{ "config-files",	1, NULL,	'f'},
+		{ "clear-config-files", 0, NULL,	'F'},
 		{ NULL, 		0, NULL, 	0}
 	};
 
-	vector<string> newtags, removetags, newdeps, removedeps;
+	vector<string> newtags, removetags, newdeps, removedeps, config_files;
 	do {
 		ich = getopt_long(argc, argv, short_opt, long_options, NULL);
 		switch (ich) {
@@ -193,6 +254,18 @@ int main(int argc, char **argv) {
 					_cmdOptions["keep_symlinks"]="true";
 					MAKEPKG_CMD = "/sbin/makepkg -l n -c n";
 					break;
+			case 'f':
+					if (!FileExists(string(optarg))) {
+						mWarning("File with configuration file list not found, check your command line.");
+						break;
+					}
+					config_files = ReadFileStrings(optarg);
+					importConfigFiles(config_files, data->config_files);
+					break;
+			case 'F':
+					data->config_files.clear();
+					break;
+
 			case -1:
 					break;
 			default:

@@ -67,7 +67,28 @@ void parseBDelta(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 	pkg.deltaSources.push_back(DeltaSource(delta_url, delta_md5, orig_filename, orig_md5, delta_size));
 }
 
+void parseConfigFiles(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
+	ConfigFile *cfile;
+	cur = cur->xmlChildrenNode;
+	const char *key;
+	xmlAttrPtr attr;
+	while(cur != NULL) {
+		key = (const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
+		if (!xmlStrcmp(cur->name, (const xmlChar *) "conf_file")) {
+			cfile = new ConfigFile;
+			cfile->name = cutSpaces(key);
+			attr = cur->properties;
+			while (attr != NULL) {
+				cfile->addAttribute((const char *) attr->name, (const char *) attr->children->name);
+				attr = attr->next;
+			}
+			pkg.config_files.push_back(*cfile);
+			delete cfile;
+		}
+		cur = cur->next;
+	}
 
+}
 
 void parseXmlTag(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 	// Complex tags: tag, dependencies, maintainer etc, are parsed using helper functions.
@@ -106,6 +127,7 @@ void parseXmlTag(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 		else pkg.set_type(PKGTYPE_BINARY);
 	}
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "bdelta")) parseBDelta(doc, cur, pkg);
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "config_files")) parseConfigFiles(doc, cur, pkg);
 }
 
 void parsePackage(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {

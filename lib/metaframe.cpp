@@ -77,6 +77,8 @@ void parseSlackDesc(const string& slackDescFile, string *shortdesc, string *long
 	*shortdesc = short_description;
 	*longdesc = description;
 }
+
+
 MetaPackage::MetaPackage(const string& _f) {
 	lp = NULL;
 	data = NULL;
@@ -196,6 +198,13 @@ bool MetaPackage::saveToXML(const string& xmlFilename) {
 	if (!data->get_tags().empty()) node.addChild("tags");
 	for (unsigned int i=0; i<data->get_tags().size(); ++i) {
 		node.getChildNode("tags").addChild("tag").addText(data->get_tags()[i].c_str());
+	}
+	if (!data->config_files.empty()) node.addChild("config_files");
+	for (size_t i=0; i<data->config_files.size(); ++i) {
+		node.getChildNode("config_files").addChild("conf_file").addText(data->config_files[i].name.c_str());
+		for (size_t p=0; p<data->config_files[i].attr.size(); ++p) {
+			node.getChildNode("config_files").getChildNode("conf_file", i).addAttribute(data->config_files[i].attr[p].name.c_str(), data->config_files[i].attr[p].value.c_str());
+		}
 	}
 
 

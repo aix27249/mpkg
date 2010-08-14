@@ -2171,3 +2171,30 @@ SPKG::SPKG() {
 
 SPKG::~SPKG() {
 }
+
+ConfigFile::ConfigFile() {
+}
+
+ConfigFile::~ConfigFile() {
+}
+
+bool ConfigFile::hasAttribute(const string& attr_name, string value) {
+	for (size_t i=0; i<attr.size(); ++i) {
+		if (attr[i].name!=attr_name) continue;
+		if (!value.empty() && attr[i].value!=value) continue;
+		return true;
+	}
+	return false;
+}
+void ConfigFile::addAttribute(const string& attr_name, const string& value) {
+	ConfigAttribute a;
+	a.name = attr_name;
+	a.value = value;
+	attr.push_back(a);
+}
+ConfigAttribute::ConfigAttribute() {
+}
+
+ConfigAttribute::~ConfigAttribute() {
+}
+
