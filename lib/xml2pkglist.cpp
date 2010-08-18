@@ -174,3 +174,12 @@ int xml2pkglist(xmlDocPtr doc, PACKAGE_LIST &pkgList, const string& server_url) 
 
 	return package_count;
 }
+
+int xml2pkg(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
+	if (!xmlStrcmp(cur->name, (const xmlChar *) "package")) {
+		parsePackage(doc, cur, pkg);
+		return 0;
+	}
+	else return 1;
+
+}

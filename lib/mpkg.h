@@ -75,6 +75,7 @@ class mpkgDatabase
 #endif
 		int add_locationlist_record(int package_id, vector<LOCATION> *locationlist);
 		int add_delta_record(const int package_id, const vector<DeltaSource>& deltaSources);
+		int add_configfiles_record(const int package_id, const vector<ConfigFile>& config_files);
 		int add_dependencylist_record(int package_id, vector<DEPENDENCY> *deplist);
 		int add_taglist_record(int package_id, vector<string> *taglist);
 		int add_tag_link(int package_id, int tag_id);

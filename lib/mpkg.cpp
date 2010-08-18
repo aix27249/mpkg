@@ -15,6 +15,14 @@
 #include <fstream>
 #include <stdint.h>
 #include "errorhandler.h"
+
+// Two functions to install/remove configuration files
+void pkgConfigInstall(const PACKAGE &pkg) {
+}
+
+void pkgConfigRemove(const PACKAGE &pkg) {
+}
+
 long double guessDeltaSize(const PACKAGE& p, const string workingDir) {
 	if (p.deltaSources.empty()) return 0;
 	if (_cmdOptions["enable_delta"]!="true") return 0;

@@ -6,9 +6,13 @@ $Id: local_package.cpp,v 1.77 2007/11/21 14:39:26 i27249 Exp $
 
 #include "local_package.h"
 #include "mpkg.h"
-//#include "oldstyle.h"
+#include "xml2pkglist.h"
  
-int xml2package(xmlNodePtr pkgNode, PACKAGE *data)
+int xml2package(xmlDocPtr doc, xmlNodePtr cur, PACKAGE *data) {
+	return xml2pkg(doc, cur, *data);
+}
+
+int xml2packageOld(xmlNodePtr pkgNode, PACKAGE *data)
 {
 
 	//mDebug("reading package node");
@@ -55,11 +59,9 @@ int xml2package(xmlNodePtr pkgNode, PACKAGE *data)
 
 	string pkg_type = p.getPackageType();
 	if (pkg_type == "source") {
-		//printf("xml2package: source\n");
 		data->set_type(PKGTYPE_SOURCE);
 	}
 	else {
-		//printf("xml2package: binary ('%s')\n", pkg_type.c_str());
 		data->set_type(PKGTYPE_BINARY);
 	}
 
@@ -174,7 +176,7 @@ int xml2spkg(xmlNodePtr pkgNode, SPKG *data)
 	data->env_options = p.getBuildConfigureEnvOptions();
 	data->nostrip = p.getValue((const char *) GET_PKG_MBUILD_NOSTRIP)=="true";
 
-	xml2package(p.getXMLNode(), &data->pkg);
+	xml2package(p.getXMLDoc(), p.getXMLNode(), &data->pkg);
 	return 0;
 }
 
@@ -479,7 +481,7 @@ int LocalPackage::get_xml()
 	} else {
 		//mDebug("[get_xml] xml docuemtn != NULL");
 	}
-	xml2package(p.getXMLNode(), &data);
+	xml2package(p.getXMLDoc(), p.getXMLNode(), &data);
 	//mDebug("get_xml end");
 	delete_tmp_files();
 	_parseOk=true;

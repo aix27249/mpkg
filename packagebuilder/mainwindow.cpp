@@ -797,7 +797,7 @@ void Form::loadFile(QString filename)
 	
 	// Loading main package data
 	PACKAGE pkg;
-	xml2package(p->getXMLNode(), &pkg);
+	xml2package(p->getXMLDoc(), p->getXMLNode(), &pkg);
 
 	// Filling data 
 	ui.NameEdit->setText(pkg.get_name().c_str());
@@ -880,7 +880,7 @@ void Form::importMetaFromFile()
 		return;
 	}
 	PACKAGE pkg;
-	xml2package(p.getXMLNode(), &pkg);
+	xml2package(p.getXMLDoc(), p.getXMLNode(), &pkg);
 
 	// Filling data
 	ui.NameEdit->setText(pkg.get_name().c_str());

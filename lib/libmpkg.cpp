@@ -848,7 +848,7 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 			PackageConfig p(tgz_filename + "/install/data.xml");
 			if (p.parseOk) {
 				canParse = true;
-				xml2package(p.getXMLNode(), data);
+				xml2package(p.getXMLDoc(), p.getXMLNode(), data);
 			}
 		}
 		if (!canParse) {
@@ -1214,7 +1214,7 @@ void generateDeps(string tgz_filename, bool updateOnly, bool clear)
 	system("tar xf " + tgz_filename + " -C " + tmpdir);
 	PackageConfig *p = new PackageConfig(tmpdir+"/install/data.xml");
 	PACKAGE pkg;
-	if (p->parseOk) xml2package(p->getXMLNode(), &pkg);
+	if (p->parseOk) xml2package(p->getXMLDoc(), p->getXMLNode(), &pkg);
 	else {
 		mError(_("Cannot parse data.xml in package. Only MPKG packages are supported, convert it first."));
 		delete p;

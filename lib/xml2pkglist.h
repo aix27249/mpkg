@@ -6,5 +6,7 @@
 
 // Receives XML doc, root node, link to package list and server url
 int xml2pkglist(xmlDocPtr doc, PACKAGE_LIST &pkgList, const string& server_url);
+// Same thing for single package. Creates doc on the fly
+int xml2pkg(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg);
 
 #endif

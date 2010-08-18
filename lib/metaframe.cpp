@@ -97,7 +97,7 @@ MetaPackage::MetaPackage(const string& _f) {
 			PackageConfig p(_f + "/install/data.xml");
 			if (p.parseOk) {
 				canParse = true;
-				xml2package(p.getXMLNode(), data);
+				xml2package(p.getXMLDoc(), p.getXMLNode(), data);
 			}
 		}
 		if (data->get_description().empty() && data->get_short_description().empty() && FileExists(_f+"/install/slack-desc")) {

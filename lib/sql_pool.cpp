@@ -13,7 +13,7 @@
 #include "errorhandler.h"
 int b_t = 0;
 int c_t = 0;
-const string MPKGTableVersion="1.8";
+const string MPKGTableVersion="1.9";
 bool SQLiteDB::CheckDatabaseIntegrity()
 {
 	if (\
@@ -202,19 +202,29 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 			//say(_("Added field package_build_date to table packages\n"));
 		}
 
-		/*
-		if (sql_exec("select overwritten_package_id from conflicts limit 1;")!=0)
+		hideErrors = true;
+		if (sql_exec("select package_id from config_files limit 1;")!=0)
 		{
+			hideErrors = false;
 			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
 
-			sql_exec("alter table conflicts add overwritten_package_id INTEGER NOT NULL;");
-			say(_("Added field overwritten_package_id to table backups\n"));
-			// Also, we need to detect the existing situation, and fill in missing data.
-			
-		}*/
+			sql_exec("CREATE TABLE config_files (id INTEGER AUTO_INCREMENT PRIMARY KEY UNIQUE,  package_id INTEGER, filename TEXT);");
+		}
+		hideErrors = true;
+		if (sql_exec("select id from config_options limit 1;")!=0)
+		{
+			hideErrors = false;
+			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
+				return false;
+			}
+
+			sql_exec("CREATE TABLE config_options (id INTEGER AUTO_INCREMENT PRIMARY KEY UNIQUE, config_files_id INTEGER, name TEXT, value TEXT);");
+		}
+
 		hideErrors = false;
 		return true;
 	}
@@ -342,7 +352,7 @@ int SQLiteDB::sql_exec_c (const char *sql_query)
 		if (query_return!=SQLITE_OK) {
 			if (!dialogMode) {
 				fprintf(stderr, "Waiting database to unlock\n");
-				if (wait_counter>2) fprintf(stderr, "\rWaiting database to unlock: %d\n", wait_counter);
+				if (wait_counter>2) fprintf(stderr, "\rWaiting database to unlock: %d\n", (int) wait_counter);
 			}
 			
 			if (wait_counter<5) sleep(wait_counter+1);

@@ -16,7 +16,7 @@ $Id: local_package.h,v 1.23 2007/11/02 20:19:45 i27249 Exp $
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 void setXmlDeltaSources(const vector<DeltaSource>& deltasources, xmlNodePtr _packageXMLNode);
-int xml2package(xmlNodePtr pkgnode, PACKAGE *data);
+int xml2package(xmlDocPtr doc, xmlNodePtr cur, PACKAGE *data);
 int xml2spkg(xmlNodePtr pkgnode, SPKG *data);
 bool splitSlackwareFilename(string filename, string *name, string *version, string *arch, string *build);
 // Package type: mpkg

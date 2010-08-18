@@ -430,7 +430,9 @@ int mpkgDatabase::add_locationlist_record(int package_id, vector<LOCATION> *loca
 	delete sqlLocations;
 	return ret;
 }
-
+int mpkgDatabase::add_configfiles_record(const int package_id, const vector<ConfigFile>& config_files) {
+	return 0;
+}
 int mpkgDatabase::add_delta_record(const int package_id, const vector<DeltaSource>& deltaSources) // returns 0 if ok, anything else if failed.
 {
 	SQLTable *sqlDeltas = new SQLTable;
@@ -572,6 +574,9 @@ int mpkgDatabase::add_package_record (PACKAGE *package)
 
 	// INSERT INTO DELTAS
 	if (!package->deltaSources.empty()) add_delta_record(package_id, package->deltaSources);
+
+	// INSERT INTO CONFIG_FILES AND CONFIG_OPTIONS
+	if (!package->config_files.empty()) add_configfiles_record(package_id, package->config_files);
 	
 #ifdef ENABLE_INTERNATIONAL
 	// INSERT INTO DESCRIPTIONS
