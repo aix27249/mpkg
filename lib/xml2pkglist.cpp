@@ -24,6 +24,7 @@ DEPENDENCY parseDependency(xmlDocPtr doc, xmlNodePtr cur) {
 				if (cutSpaces(key)=="true") dep.setBuildOnly(true);
 				else dep.setBuildOnly(false);
 			}
+			dep.set_type("DEPENDENCY");
 		}
 		cur = cur->next;
 	}
@@ -36,7 +37,6 @@ void parseDependencies(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 		if (!xmlStrcmp(cur->name, (const xmlChar *) "dep")) pkg.get_dependencies_ptr()->push_back(parseDependency(doc, cur));
 		cur = cur->next;
 	}
-
 }
 void parseTags(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 	cur = cur->xmlChildrenNode;
