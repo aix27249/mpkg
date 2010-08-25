@@ -2178,7 +2178,7 @@ ConfigFile::ConfigFile() {
 ConfigFile::~ConfigFile() {
 }
 
-bool ConfigFile::hasAttribute(const string& attr_name, string value) {
+bool ConfigFile::hasAttribute(const string& attr_name, string value) const {
 	for (size_t i=0; i<attr.size(); ++i) {
 		if (attr[i].name!=attr_name) continue;
 		if (!value.empty() && attr[i].value!=value) continue;

@@ -725,6 +725,7 @@ int mpkgDatabase::get_packagelist (const SQLRecord& sqlSearch, PACKAGE_LIST *pac
 	{
 		get_full_taglist(packagelist);
 		get_full_dependencylist(packagelist);
+		get_full_config_files_list(packagelist);
 	}
 	get_full_locationlist(packagelist);
 	get_full_deltalist(packagelist);
@@ -817,7 +818,43 @@ void mpkgDatabase::get_full_filelist(PACKAGE_LIST *pkgList)
 	delete sqlTable;
 }
 
+void mpkgDatabase::get_full_config_files_list(PACKAGE_LIST *pkgList) {
+	SQLTable *configs = new SQLTable;
+	SQLTable *c_options = new SQLTable;
+	SQLRecord fields;
+	SQLRecord search;
+	db.get_sql_vtable(*configs, fields, "config_files", search);
+	
+	int fConfig_id = configs->getFieldIndex("id");
+	int fPackage_id = configs->getFieldIndex("package_id");
+	int fFilename = configs->getFieldIndex("filename");
 
+	db.get_sql_vtable(*c_options, fields, "config_options", search);
+
+	int fAttrConfig_id = c_options->getFieldIndex("config_files_id");
+	int fAttrName = c_options->getFieldIndex("name");
+	int fAttrValue = c_options->getFieldIndex("value");
+	int config_id, package_id;
+	ConfigFile *cfile = NULL;
+	for (size_t i=0; i<configs->size(); ++i) {
+		config_id = atoi(configs->getValue(i, fConfig_id).c_str());
+		package_id = atoi(configs->getValue(i, fPackage_id).c_str());
+		for (size_t p=0; p<pkgList->size(); ++p) {
+			if (package_id!=pkgList->at(p).get_id()) continue;
+			cfile = new ConfigFile;
+			cfile->name = configs->getValue(i, fFilename);
+			for (size_t a=0; a<c_options->size(); ++a) {
+				if (config_id!=atoi(c_options->getValue(a, fAttrConfig_id).c_str())) continue;
+				cfile->addAttribute(c_options->getValue(a, fAttrName), c_options->getValue(a, fAttrValue));
+			}
+			pkgList->get_package_ptr(p)->config_files.push_back(*cfile);
+			delete cfile;
+		}
+	}
+	delete configs;
+	delete c_options;
+
+}
 
 
 void mpkgDatabase::get_full_dependencylist(PACKAGE_LIST *pkgList) //TODO: incomplete

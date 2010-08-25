@@ -17,10 +17,82 @@
 #include "errorhandler.h"
 
 // Two functions to install/remove configuration files
-void pkgConfigInstall(const PACKAGE &pkg) {
+void pkgConfigInstall(const PACKAGE &package) {
+	printf("\n\n\nPKG %s: total %d config files\n\n\n\n", package.get_name().c_str(), (int) package.config_files.size());
+	if (package.config_files.empty()) return;
+       	
+	bool sysconf_exists, orig_exists;
+	string sysconf_name, orig_name, old_name;
+	for (size_t i=0; i<package.config_files.size(); ++i) {
+		sysconf_name = SYS_ROOT + "/" + package.config_files[i].name;
+		orig_name = SYS_ROOT+"/var/mpkg/configs/" + package.get_corename() + "/" + package.config_files[i].name;
+		old_name = SYS_ROOT+"/var/mpkg/configs/" + package.get_corename() + "/" + package.config_files[i].name + ".old";
+
+		if (verbose) printf("Install: checking config file %s\n", sysconf_name.c_str());
+ 
+		// Проверяется, есть ли уже такой конфиг в системе:
+		sysconf_exists = FileExists(sysconf_name);
+ 
+		// Проверяется, есть ли копия предыдущего оригинального конфига в var/mpkg/configs/$pkgname/$conf_path/$conf_file
+		orig_exists = FileExists(orig_name);
+ 
+		// Если системный конфиг существует, а так же существует оригинальный конфиг, и они совпадают - то старый системный конфиг перезаписывается новым:
+		if ((sysconf_exists && ((orig_exists && get_file_md5(sysconf_name) == get_file_md5(orig_name)) || get_file_md5(sysconf_name)==get_file_md5(sysconf_name+".new")))|| !orig_exists) {
+			system("mv " + sysconf_name + ".new " + sysconf_name);
+			printf("\nUnmodified config: moving %s.new to %s\n", sysconf_name.c_str(), sysconf_name.c_str());
+		}
+ 
+		// Если системный конфиг существует, а так же существует оригинальный конфиг, но они НЕ совпадают, или же оригинального конфига нет - то:
+		if ((sysconf_exists && orig_exists && get_file_md5(sysconf_name) != get_file_md5(orig_name)) || !orig_exists) {
+
+			system("mkdir -p " + getDirectory(orig_name));
+			// Если конфиг имеет флаг force_new, то старый системный конфиг копируется в var/mpkg/configs/$pkgname/$conf_path/$conf_file.old, а на его место записывается новый конфиг:
+			if (package.config_files[i].hasAttribute("force_new", "true")) {
+
+				printf("\nConfig has force_new flag: moving %s.new to %s and creating backup\n", sysconf_name.c_str(), sysconf_name.c_str());
+				system("cp " + sysconf_name + " " + old_name);
+				system("mv " + sysconf_name + ".new " + sysconf_name);
+			}
+ 
+			// После всего этого, в /var/mpkg/configs/$pkgname/$conf_path/$conf_file кладется копия оригинального конфига из пакета
+			if (FileExists(sysconf_name + ".new")) {
+				system("cp " + sysconf_name + ".new " + orig_name);
+				printf("\nNEED ATTENTION: modified config detected: copying %s.new to %s, CHECK FOR CHANGES!\n", sysconf_name.c_str(), orig_name.c_str());
+			}
+			else {
+				system("cp " + sysconf_name + " " + orig_name);
+			}
+		}
+	}
 }
 
-void pkgConfigRemove(const PACKAGE &pkg) {
+void pkgConfigRemove(const PACKAGE &package) {
+	// Check only one thing: if original file is the same as current one, we can remove it freely.
+	if (package.config_files.empty()) return;
+       	
+	bool sysconf_exists, orig_exists;
+	string sysconf_name, orig_name, old_name;
+	for (size_t i=0; i<package.config_files.size(); ++i) {
+		sysconf_name = SYS_ROOT + "/" + package.config_files[i].name;
+		orig_name = SYS_ROOT+"/var/mpkg/configs/" + package.get_corename() + "/" + package.config_files[i].name;
+		old_name = SYS_ROOT+"/var/mpkg/configs/" + package.get_corename() + "/" + package.config_files[i].name + ".old";
+ 
+		// Проверяется, есть ли уже такой конфиг в системе:
+		sysconf_exists = FileExists(sysconf_name);
+ 
+		// Проверяется, есть ли копия предыдущего оригинального конфига в var/mpkg/configs/$pkgname/$conf_path/$conf_file
+		orig_exists = FileExists(orig_name);
+
+		if (sysconf_exists && orig_exists && get_file_md5(sysconf_name)==get_file_md5(orig_name)) {
+			if (verbose) printf("Removing unmodified config file %s\n", sysconf_name.c_str());
+			unlink(sysconf_name.c_str());
+			unlink(orig_name.c_str());
+		}
+		else if (sysconf_exists) printf("Leaving modified config file %s in place\n", sysconf_name.c_str());
+		else printf("Config file %s was wanished: perhaps it was removed by someone else.\n", sysconf_name.c_str());
+	}
+
+	
 }
 
 long double guessDeltaSize(const PACKAGE& p, const string workingDir) {
@@ -1863,7 +1935,10 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 /*#ifdef INSTALL_DEBUG
 	DO_NOT_RUN_SCRIPTS = true;
 #endif*/
-	
+
+	// Managing config files
+	pkgConfigInstall(*package);	
+
 	// Creating and running POST-INSTALL script
 	if (!DO_NOT_RUN_SCRIPTS)
 	{
@@ -2170,6 +2245,9 @@ int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsi
 				delete_conflict_record(package->get_id(), restore[i].backup_file);
 			}
 		}
+		
+		// Calling remove for package configs
+		pkgConfigRemove(*package);
 
 		msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str + _(": finishing"));
 		pData.increaseItemProgress(package->itemID);

@@ -27,6 +27,7 @@ class mpkgDatabase
 #endif
 		int get_filelist (const int& package_id, vector<string> *filelist);
 		void get_full_filelist(PACKAGE_LIST *pkgList);
+		void get_full_config_files_list(PACKAGE_LIST *pkgList);
 		int get_dependencylist(int package_id, vector<DEPENDENCY> *deplist);
 		void get_full_dependencylist(PACKAGE_LIST *pkgList);
 		void get_available_tags(vector<string>* output);

@@ -30,7 +30,7 @@ class ConfigFile {
 		~ConfigFile();
 		string name;
 		vector<ConfigAttribute> attr;
-		bool hasAttribute(const string &attr_name, string value="");
+		bool hasAttribute(const string &attr_name, string value="") const;
 		void addAttribute(const string &attr_name, const string& value);
 };
 

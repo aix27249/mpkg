@@ -631,6 +631,19 @@ const vector<string> SQLiteDB::getFieldNames(const string& table_name) const {
 		fieldNames.push_back("delta_orig_md5");
 		fieldNames.push_back("delta_size");
 	}
+	if (table_name=="config_files") {
+		fieldNames.push_back("id");
+		fieldNames.push_back("package_id");
+		fieldNames.push_back("filename");
+	}
+
+	if (table_name=="config_options") {
+		fieldNames.push_back("id");
+		fieldNames.push_back("config_files_id");
+		fieldNames.push_back("name");
+		fieldNames.push_back("value");
+	}
+
 
 #ifdef ENABLE_INTERNATIONAL
 	if (table_name=="descriptions") {
