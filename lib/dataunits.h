@@ -184,10 +184,7 @@ class PACKAGE
 	int package_type;
 	int package_err_type;
 	// EXTERNAL DATA //
-	//vector<FILES> package_files;
 	vector<string> package_files;
-	//vector<FILES> config_files;
-	//vector<FILES> temp_files;
 	vector<LOCATION> package_locations;
 	vector<DEPENDENCY> package_dependencies;
 	vector<string> package_tags;

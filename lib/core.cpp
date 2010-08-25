@@ -359,6 +359,7 @@ int mpkgDatabase::clean_package_filelist (PACKAGE *package)
 	sqlSearch.addField("packages_package_id", package->get_id());
 	return db.sql_delete("files", sqlSearch);
 }
+
 #ifdef ENABLE_INTERNATIONAL
 int mpkgDatabase::add_descriptionlist_record(int package_id, DESCRIPTION_LIST *desclist)
 {
@@ -431,6 +432,16 @@ int mpkgDatabase::add_locationlist_record(int package_id, vector<LOCATION> *loca
 	return ret;
 }
 int mpkgDatabase::add_configfiles_record(const int package_id, const vector<ConfigFile>& config_files) {
+	int64_t config_id;
+	for (size_t i=0; i<config_files.size(); ++i) {
+		db.sql_exec("INSERT INTO config_files VALUES (NULL, " + IntToStr(package_id) + ", '" + config_files[i].name + "');");
+		config_id = db.last_insert_id();
+		for (size_t a=0; a<config_files[i].attr.size(); ++a) {
+			db.sql_exec("INSERT INTO config_options VALUES(NULL, " + IntToStr(config_id) + ", '" + config_files[i].attr[a].name + "', '" + config_files[i].attr[a].value + "');");
+		}
+	}
+
+
 	return 0;
 }
 int mpkgDatabase::add_delta_record(const int package_id, const vector<DeltaSource>& deltaSources) // returns 0 if ok, anything else if failed.

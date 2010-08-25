@@ -47,6 +47,8 @@ class SQLiteDB
 		int sql_insert(const string& table_name, const SQLTable& values);
 		int sql_update(const string& table_name, const SQLRecord& fields, const SQLRecord& search);
 		int sql_delete(const string& table_name, const SQLRecord& search);
+
+		int64_t last_insert_id();
 		
 		SQLiteDB(string filename=DB_FILENAME, bool skip_integrity_check = false);
 		~SQLiteDB();
@@ -73,6 +75,7 @@ class SQLProxy
 		int sqlCommit();
 		int sqlBegin();
 		int sqlFlush();
+		int64_t last_insert_id();
 
 
 		SQLProxy();

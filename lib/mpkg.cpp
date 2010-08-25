@@ -2282,6 +2282,11 @@ int mpkgDatabase::cleanFileList(int package_id)
 	sqlSearch.addField("packages_package_id", package_id);
 	int ret = db.sql_delete("files", sqlSearch);
 	if (ret!=0) return ret;
+	string pkg_id = IntToStr(package_id);
+	if (pkg_id.empty()) return -1;
+	db.sql_exec("DELETE FROM config_options WHERE config_files_id IN (SELECT id FROM config_files WHERE package_id=" + pkg_id + ");");
+	db.sql_exec("DELETE FROM config_files WHERE package_id=" + pkg_id + ";");
+
 	set_configexist(package_id,0);
 	return ret;
 }

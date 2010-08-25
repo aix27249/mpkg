@@ -211,7 +211,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 				return false;
 			}
 
-			sql_exec("CREATE TABLE config_files (id INTEGER AUTO_INCREMENT PRIMARY KEY UNIQUE,  package_id INTEGER, filename TEXT);");
+			sql_exec("CREATE TABLE config_files (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,  package_id INTEGER, filename TEXT);");
 		}
 		hideErrors = true;
 		if (sql_exec("select id from config_options limit 1;")!=0)
@@ -222,7 +222,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 				return false;
 			}
 
-			sql_exec("CREATE TABLE config_options (id INTEGER AUTO_INCREMENT PRIMARY KEY UNIQUE, config_files_id INTEGER, name TEXT, value TEXT);");
+			sql_exec("CREATE TABLE config_options (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, config_files_id INTEGER, name TEXT, value TEXT);");
 		}
 
 		hideErrors = false;
@@ -338,6 +338,10 @@ int SQLiteDB::init()
 	return ret;
 
 }
+int64_t SQLiteDB::last_insert_id() {
+	return sqlite3_last_insert_rowid(db);
+}
+
 int SQLiteDB::sql_exec (const string &sql_query) {
 	return sql_exec_c(sql_query.c_str());
 }
@@ -931,6 +935,13 @@ int SQLProxy::sql_exec(const string& query) {
 	if (sqliteDB==NULL) sqliteDB = new SQLiteDB;
 	internalDataChanged=true;
 	return sqliteDB->sql_exec(query);
+
+}
+
+int64_t SQLProxy::last_insert_id() {
+	if (sqliteDB==NULL) sqliteDB = new SQLiteDB;
+	internalDataChanged=true;
+	return sqliteDB->last_insert_id();
 
 }
 SQLProxy::SQLProxy()
