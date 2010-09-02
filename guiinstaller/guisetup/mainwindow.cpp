@@ -689,15 +689,41 @@ void MainWindow::getCustomSetupVariants(const vector<string>& rep_list) {
 	system("mkdir -p /tmp/setup_variants");
 	string path;
 	customPkgSetList.clear();
+
+	DownloadsList downloadQueue;
+	DownloadItem tmpDownloadItem;
+	vector<string> itemLocations;
+	tmpDownloadItem.priority = 0;
+	tmpDownloadItem.status = DL_STATUS_WAIT;
+	string itemname;
+
 	for (size_t z=0; z<rep_list.size(); ++z) {
+		downloadQueue.clear();
 		path = rep_list[z];
 		CommonGetFile(path + "/setup_variants.list", tmpfile);
 		vector<string> list = ReadFileStrings(tmpfile);
-		printf("Received %d setup variants\n", list.size());
+		printf("Received %d setup variants\n", (int) list.size());
 		vector<CustomPkgSet> ret;
 		for (size_t i=0; i<list.size(); ++i) {
-			CommonGetFile(path + "/setup_variants/" + list[i] + ".desc", "/tmp/setup_variants/" + list[i] + ".desc");
-			CommonGetFile(path + "/setup_variants/" + list[i] + ".list", "/tmp/setup_variants/" + list[i] + ".list");
+			itemLocations.clear();
+			tmpDownloadItem.name=list[i];
+			tmpDownloadItem.file="/tmp/setup_variants/" + list[i] + ".desc";
+			itemLocations.push_back(path + "/setup_variants/" + list[i] + ".desc");
+			tmpDownloadItem.url_list = itemLocations;
+			downloadQueue.push_back(tmpDownloadItem);
+
+			itemLocations.clear();
+			tmpDownloadItem.name=list[i];
+			tmpDownloadItem.file="/tmp/setup_variants/" + list[i] + ".list";
+			itemLocations.push_back(path + "/setup_variants/" + list[i] + ".list");
+			tmpDownloadItem.url_list = itemLocations;
+			downloadQueue.push_back(tmpDownloadItem);
+		}
+		CommonGetFileEx(downloadQueue, &itemname);
+
+		printf("Starting importing package lists\n");
+		for (size_t i=0; i<list.size(); ++i) {
+			printf("Processing %d of %d\n", (int) i+1, (int) list.size());
 			customPkgSetList.push_back(getCustomPkgSet(list[i]));
 		}
 	}
@@ -751,9 +777,9 @@ void MainWindow::receiveLoadSetupVariants(bool success) {
 
 	mpkg *core = new mpkg(false);
 	vector<string> rList = core->get_repositorylist();
-	printf("Got %d repositories\n", rList.size());
+	printf("Got %d repositories\n", (int) rList.size());
 	for (size_t i=0; i<rList.size(); ++i) {
-		printf("Repo %d: %s\n", i, rList[i].c_str());
+		printf("Repo %d: %s\n", (int) i, rList[i].c_str());
 	}
 	getCustomSetupVariants(rList);
 	system("umount /var/log/mount");
