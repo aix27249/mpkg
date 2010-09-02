@@ -352,7 +352,6 @@ DownloadResults HttpDownload::getFile(std::string url, std::string file, std::st
 #define PPACTIONCHECKABORT if (ppActionBus->_abortActions) { ppActionBus->_abortComplete=true; return DOWNLOAD_OK; }
 
 DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname, std::string cdromDevice, std::string cdromMountPoint,  ActionBus *aaBus, ProgressData *prData) {
-	printf("DL: processing items get\n");
 	_cmdOptions["cdrom_permanent_fail"]="";
 	//ncInterface.showMsgBox("GETFILE: " + IntToStr(list.size()));
 	if (cdromDevice.empty()) cdromDevice = CDROM_DEVICE;
@@ -637,7 +636,6 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 		curl_easy_cleanup(ch);
 #endif
 
-		printf("DL: processing COMPLETE.\n\n");
 		return DOWNLOAD_OK;
 	}
 	else {
