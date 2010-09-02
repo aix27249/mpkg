@@ -18,7 +18,6 @@
 
 // Two functions to install/remove configuration files
 void pkgConfigInstall(const PACKAGE &package) {
-	printf("\n\n\nPKG %s: total %d config files\n\n\n\n", package.get_name().c_str(), (int) package.config_files.size());
 	if (package.config_files.empty()) return;
        	
 	bool sysconf_exists, orig_exists;
@@ -1284,27 +1283,9 @@ download_process:
 			if (CommonGetFileEx(downloadQueue, &currentItem) == DOWNLOAD_ERROR)
 			{
 				//printf("Error in commonGetFileEx\n");
-				mError(_("Download failed"));
+				mError(_("Failed to download one or more files, process stopped"));
 				if (!actionBus._abortActions) {
-					MpkgErrorReturn errRet = mpkgErrorHandler.callError(MPKG_DOWNLOAD_ERROR);
-					switch(errRet) {
-						case MPKG_RETURN_IGNORE:
-							say(_("Download errors ignored, continue installing\n"));
-							goto installProcess;
-							break;
-				
-						case MPKG_RETURN_RETRY:
-							say(_("retrying...\n"));
-							do_download = true; // Немного подозрительный момент, следует потестировать корректность работы
-							break;
-						case MPKG_RETURN_ABORT:
-							say(_("aborting...\n"));
-							return MPKGERROR_ABORTED;
-							break;
-						default:
-							mError(_("Unknown value, don't know what to do, aborting"));
-							return MPKGERROR_ABORTED;
-					}
+					return MPKGERROR_ABORTED;
 				}
 					
 			}

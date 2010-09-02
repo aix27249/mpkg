@@ -13,6 +13,7 @@
 #include "terminal.h"
 #include "htmlcore.h"
 #include "errorhandler.h"
+#include <cstdio>
 #define DOWNLOAD_TIMEOUT 10 // 10 seconds, and failing
 int downloadTimeout=0;
 double prevDlValue;
@@ -462,6 +463,7 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 					else { // Unlinking destination file before any sort of downloading
 						prData->setItemProgress(item->itemID, 0);
 						unlink(item->file.c_str());
+						unlink(string(item->file+".part").c_str());
 					}
 
 					/*if (prData->size()>0) {
@@ -517,7 +519,7 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 						}
 						else { // Default is libcurl
 							resumePos = 0;
-							out = fopen (item->file.c_str(), "ab");
+							out = fopen (string(item->file + ".part").c_str(), "ab"); // NOTE: downloading to .part first!
 							if ( out == NULL ) {
 								mError("Error downloading " + item->file + ": open target file failed");
 								item->status = DL_STATUS_FILE_ERROR;
@@ -528,7 +530,7 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 								fseek(out,0,SEEK_END);
 								if (enableDownloadResume) {
 									if (size!=0) {
-										if (!dialogMode && !htmlMode) say(_("Resuming download from %Li\n"), size);
+										if (!dialogMode && !htmlMode) say(_("Resuming download from %Li\n"), (long long int) size);
 										curl_easy_setopt(ch, CURLOPT_RESUME_FROM, size);
 										resumePos = (double) size;
 									}
@@ -582,7 +584,12 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 								
 								}
 								fclose(out);
-							} // End of CURL_DOWNLOAD
+								if (result == CURLE_OK) {
+									unlink(item->file.c_str());
+									std::rename(string(item->file + ".part").c_str(), item->file.c_str()); // NOTE: renaming .part to file.
+
+								}
+								} // End of CURL_DOWNLOAD
 						} // End of libcurl
 					}
 	    				if ( result == CURLE_OK  ) {

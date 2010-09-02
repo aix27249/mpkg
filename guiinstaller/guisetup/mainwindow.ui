@@ -55,7 +55,7 @@
        <number>0</number>
       </property>
       <property name="currentIndex">
-       <number>10</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -1247,6 +1247,9 @@ p, li { white-space: pre-wrap; }
         </item>
         <item>
          <widget class="QCheckBox" name="altBFSCheckBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>BFS kernel</string>
           </property>
@@ -1359,7 +1362,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QRadioButton" name="nvidiaLatestRadioButton">
           <property name="text">
-           <string>195.xx: GeForce 6 and later cards (including Quadro and ION)</string>
+           <string>256.xx: GeForce 6 and later cards (including Quadro and ION)</string>
           </property>
           <property name="checked">
            <bool>false</bool>
