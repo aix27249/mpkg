@@ -1298,7 +1298,7 @@ download_process:
 			mpkgSys::clean_queue(this);
 			return 0;
 		}
-installProcess:
+// installProcess:
 	
 		actionBus.setCurrentAction(ACTIONID_MD5CHECK);
 		pData.resetItems(_("waiting"), 0, 1, ITEMSTATE_WAIT);
@@ -1785,14 +1785,18 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	// Searching for icon cache updates
 	bool hasIconCache = false;
 	string *iconFilename;
+	string iconDir;
 	for (size_t i=0; i<package->get_files().size(); ++i) {
 		iconFilename = (string *) &package->get_files().at(i);
 		if (iconFilename->find("usr/share/icons/")!=std::string::npos && iconFilename->size()>strlen("usr/share/icons/") && iconFilename->at(iconFilename->size()-1)=='/') {
 			hasIconCache=false;
+			iconDir = iconFilename->substr(strlen("usr/share/icons/"));
+			if (iconDir.find_first_of("/")!=std::string::npos) iconDir = iconDir.substr(0, iconDir.find_first_of("/"));
+			iconDir = "usr/share/icons/" + iconDir;
 			for (size_t t=0; !hasIconCache && t<iconCacheUpdates.size(); ++t) {
-				if (iconCacheUpdates[t]==*iconFilename) hasIconCache = true;
+				if (iconCacheUpdates[t]==iconDir) hasIconCache = true;
 			}
-			if (!hasIconCache) iconCacheUpdates.push_back(*iconFilename);
+			if (!hasIconCache) iconCacheUpdates.push_back(iconDir);
 		}
 	}
 
