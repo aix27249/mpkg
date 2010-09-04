@@ -885,12 +885,11 @@ bool mpkgDatabase::check_cache(PACKAGE *package, bool clear_wrong, bool) {
 
 bool needUpdateXFonts = false;
 vector<string> iconCacheUpdates;
-//bool needUpdateGConfSchemas = false;
+vector<string> gconfSchemas, gconfSchemasUninstall;
 
 int mpkgDatabase::commit_actions()
 {
 	needUpdateXFonts = false;
-//	needUpdateGConfSchemas = false;
 	delete_tmp_files();
 	sqlFlush();
 	// Checking for utilities
@@ -1195,7 +1194,6 @@ int mpkgDatabase::commit_actions()
 		DownloadsList downloadQueue;
 		DownloadItem tmpDownloadItem;
 		vector<string> itemLocations;
-		//double totalDownloadSize=0;
 		pData.resetItems(_("waiting"), 0, 1, ITEMSTATE_WAIT);
 		pData.setCurrentAction(_("Checking cache"));
 		bool skip=false;
@@ -1222,12 +1220,6 @@ int mpkgDatabase::commit_actions()
 				skip=true;
 			}
 
-			/*pData.setItemState(install_list[i].itemID, ITEMSTATE_INPROGRESS);
-			pData.setItemCurrentAction(install_list[i].itemID, _("Checking package cache"));
-			pData.setItemProgressMaximum(install_list[i].itemID, 1);
-			pData.setItemProgress(install_list[i].itemID, 0);*/
-	
-		
 			// Clear broken symlinks
 			//clean_cache_symlinks();
 			msay(_("Checking cache and building download queue: ") + install_list[i].get_name());
@@ -1237,8 +1229,6 @@ int mpkgDatabase::commit_actions()
 				needFullDownload[i]=!tryGetDelta(install_list.get_package_ptr(i));
 			}
 			if (needFullDownload[i]) {
-				//if (!skip) pData.setItemCurrentAction(install_list[i].itemID, _("not cached"));
-				//else pData.setItemCurrentAction(install_list[i].itemID, _("check skipped"));
 
 				itemLocations.clear();
 				
@@ -1260,7 +1250,6 @@ int mpkgDatabase::commit_actions()
 				tmpDownloadItem.url_list = itemLocations;
 				downloadQueue.push_back(tmpDownloadItem);
 			}
-			//else pData.setItemCurrentAction(install_list[i].itemID, _("cached"));
 	
 			if (!setupMode) {
 				pData.increaseItemProgress(install_list[i].itemID);
@@ -1278,11 +1267,9 @@ download_process:
 		while(do_download)
 		{
 			do_download = false;
-			//pData.downloadAction=true;
 
 			if (CommonGetFileEx(downloadQueue, &currentItem) == DOWNLOAD_ERROR)
 			{
-				//printf("Error in commonGetFileEx\n");
 				mError(_("Failed to download one or more files, process stopped"));
 				if (!actionBus._abortActions) {
 					return MPKGERROR_ABORTED;
@@ -1303,7 +1290,6 @@ download_process:
 		actionBus.setCurrentAction(ACTIONID_MD5CHECK);
 		pData.resetItems(_("waiting"), 0, 1, ITEMSTATE_WAIT);
 	
-		//bool hasErrors=false;
 		skip=false;
 		
 		msay(_("Checking files (comparing MD5):"));
@@ -1331,18 +1317,10 @@ download_process:
 				ncInterface.setProgress((unsigned int) round(((double)(i)/(double) ((double) (install_list.size())/(double) (100)))));
 
 			}
-			//else say(_("Checking MD5 for %s\n"), install_list[i].get_filename().c_str());
 			msay(_("Checking md5 of downloaded files: ") + install_list[i].get_name());
-	
-			/*pData.setItemState(install_list[i].itemID, ITEMSTATE_INPROGRESS);
-			pData.setItemCurrentAction(install_list[i].itemID, _("Checking md5"));
-			pData.setItemProgressMaximum(install_list[i].itemID, 1);
-			pData.setItemProgress(install_list[i].itemID, 0);*/
 	
 			if (!check_cache(install_list.get_package_ptr(i), false, false))
 			{
-				//pData.setItemCurrentAction(install_list[i].itemID, _("md5 incorrect"));
-				//if (!setupMode) pData.increaseItemProgress(install_list[i].itemID);
 				pData.setItemState(install_list[i].itemID, ITEMSTATE_FAILED);
 	
 				MpkgErrorReturn errRet = mpkgErrorHandler.callError(MPKG_DOWNLOAD_ERROR, _("Invalid checksum in downloaded file"));
@@ -1366,12 +1344,7 @@ download_process:
 						break;
 				}
 			}
-			else
-			{
-				//pData.setItemCurrentAction(install_list[i].itemID, "MD5 OK");
-				if (!setupMode) pData.increaseItemProgress(install_list[i].itemID);
-				//pData.setItemState(install_list[i].itemID, ITEMSTATE_FINISHED);
-			}
+			else if (!setupMode) pData.increaseItemProgress(install_list[i].itemID);
 		}
 		if (dialogMode) {
 			ncInterface.setProgress(0);
@@ -1393,8 +1366,6 @@ download_process:
 		{
 			removeItemID=remove_list[i].itemID;
 			pData.setItemState(removeItemID, ITEMSTATE_WAIT);
-			/*pData.setItemCurrentAction(removeItemID, _("Waiting"));
-			pData.resetIdleTime(removeItemID);*/
 			pData.setItemProgress(removeItemID, 0);
 			pData.setItemProgressMaximum(removeItemID,8);
 		}
@@ -1541,7 +1512,7 @@ download_process:
 	msay(_("Clearing unreachable packages"), SAYMODE_NEWLINE);
 	clear_unreachable_packages();
 	
-	if (install_list.size()>0) 
+	if (install_list.size()>0 || remove_list.size()>0) 
 	{
 		msay(_("Executing ldconfig"), SAYMODE_NEWLINE);
 		if (FileExists("/usr/sbin/prelink") && mConfig.getValue("enable_prelink")=="yes") {
@@ -1568,6 +1539,18 @@ download_process:
 			printf(_("[%d/%d] Updating icon cache in %s\n"), (int) i+1, (int) iconCacheUpdates.size(), iconCacheUpdates[i].c_str());
 			system("chroot " + SYS_ROOT + " /usr/bin/gtk-update-icon-cache -t -f " + iconCacheUpdates[i] + " 1> /dev/null 2> /dev/null");
 		}
+		printf("Total GConf schemas to remove: %d\n", (int) gconfSchemasUninstall.size());
+		for (size_t i=0; i<gconfSchemasUninstall.size(); ++i) {
+			printf(_("[%d/%d] Removing GConf schema %s\n"), (int) i+1, (int) gconfSchemasUninstall.size(), gconfSchemasUninstall[i].c_str());
+			system("chroot " + SYS_ROOT + " /usr/sbin/gconfpkg --uninstall " + gconfSchemasUninstall[i] + " 1> /dev/null 2> /dev/null");
+		}
+	
+		printf("Total GConf schemas to install: %d\n", (int) gconfSchemas.size());
+		for (size_t i=0; i<gconfSchemas.size(); ++i) {
+			printf(_("[%d/%d] Installing GConf schema %s\n"), (int) i+1, (int) gconfSchemas.size(), gconfSchemas[i].c_str());
+			system("chroot " + SYS_ROOT + " /usr/sbin/gconfpkg --install " + gconfSchemas[i] + " 1> /dev/null 2> /dev/null");
+		}
+
 		// Always update mime database, it takes not much time but prevents lots of troubles
 		msay(_("Updating icon cache and mime database"), SAYMODE_NEWLINE);
 		system("chroot " + SYS_ROOT + " /usr/bin/update-all-caches >/dev/null");
@@ -1797,6 +1780,23 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 				if (iconCacheUpdates[t]==iconDir) hasIconCache = true;
 			}
 			if (!hasIconCache) iconCacheUpdates.push_back(iconDir);
+		}
+	}
+
+	// Searching for gconf schemas
+	bool hasGConfSchema = false;
+	string *gconfFilename;
+	string gconfSchemaName;
+	for (size_t i=0; i<package->get_files().size(); ++i) {
+		gconfFilename = (string *) &package->get_files().at(i);
+		if (gconfFilename->find("usr/share/gconf/schemas/")!=std::string::npos && gconfFilename->size()>strlen("usr/share/gconf/schemas/") && getExtension(*gconfFilename)=="schemas") {
+			hasGConfSchema=false;
+			gconfSchemaName = gconfFilename->substr(strlen("usr/share/gconf/schemas/"));
+			gconfSchemaName = gconfSchemaName.substr(0, gconfSchemaName.size()-strlen(".schemas"));
+			for (size_t t=0; !hasGConfSchema && t<gconfSchemas.size(); ++t) {
+				if (gconfSchemas[t]==gconfSchemaName) hasGConfSchema = true;
+			}
+			if (!hasGConfSchema) gconfSchemas.push_back(gconfSchemaName);
 		}
 	}
 
@@ -2093,6 +2093,49 @@ int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsi
 		currentStatus = statusHeader + _("building file list");
 		vector<string> *remove_files = package->get_files_ptr(); // Note: no need to delete remove_files, because it will be deleted together with package object
 		vector<string> *new_files = package->updatingBy->get_files_ptr();
+
+		// Check for special procedures
+		if (!needUpdateXFonts) {
+			msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": looking for X fonts"));
+
+			for (size_t i=0; !needUpdateXFonts && i<package->get_files().size(); i++) {
+				if (package->get_files().at(i).find("usr/share/fonts")!=std::string::npos) needUpdateXFonts = true;
+			}
+		}
+		// Searching for icon cache updates
+		bool hasIconCache = false;
+		string *iconFilename;
+		string iconDir;
+		for (size_t i=0; i<package->get_files().size(); ++i) {
+			iconFilename = (string *) &package->get_files().at(i);
+			if (iconFilename->find("usr/share/icons/")!=std::string::npos && iconFilename->size()>strlen("usr/share/icons/") && iconFilename->at(iconFilename->size()-1)=='/') {
+				hasIconCache=false;
+				iconDir = iconFilename->substr(strlen("usr/share/icons/"));
+				if (iconDir.find_first_of("/")!=std::string::npos) iconDir = iconDir.substr(0, iconDir.find_first_of("/"));
+				iconDir = "usr/share/icons/" + iconDir;
+				for (size_t t=0; !hasIconCache && t<iconCacheUpdates.size(); ++t) {
+					if (iconCacheUpdates[t]==iconDir) hasIconCache = true;
+				}
+				if (!hasIconCache) iconCacheUpdates.push_back(iconDir);
+			}
+		}
+
+		// Searching for gconf schemas
+		bool hasGConfSchema = false;
+		string *gconfFilename;
+		string gconfSchemaName;
+		for (size_t i=0; i<package->get_files().size(); ++i) {
+			gconfFilename = (string *) &package->get_files().at(i);
+			if (gconfFilename->find("usr/share/gconf/schemas/")!=std::string::npos && gconfFilename->size()>strlen("usr/share/gconf/schemas/") && getExtension(*gconfFilename)=="schemas") {
+				hasGConfSchema=false;
+				gconfSchemaName = gconfFilename->substr(strlen("usr/share/gconf/schemas/"));
+				gconfSchemaName = gconfSchemaName.substr(0, gconfSchemaName.size()-strlen(".schemas"));
+				for (size_t t=0; !hasGConfSchema && t<gconfSchemasUninstall.size(); ++t) {
+					if (gconfSchemasUninstall[t]==gconfSchemaName) hasGConfSchema = true;
+				}
+				if (!hasGConfSchema) gconfSchemasUninstall.push_back(gconfSchemaName);
+			}
+		}
 
 		printHtmlProgress();
 		currentStatus = statusHeader + _("removing files...");

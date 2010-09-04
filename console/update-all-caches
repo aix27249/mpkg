@@ -1,18 +1,5 @@
 #!/bin/sh
 
-# Update any existing icon cache files:
-#echo "Looking for icon themes"
-#  for theme_dir in /usr/share/icons/* ; do
-#      echo "Updating icon-theme.cache in ${theme_dir}..."
-#      /usr/bin/gtk-update-icon-cache -t -f ${theme_dir} 1> /dev/null 2> /dev/null
-#  done
-#  # This would be a large file and probably shouldn't be there.
-#  if [ -r /usr/share/icons/icon-theme.cache ]; then
-#    echo "Deleting icon-theme.cache in /usr/share/icons..."
-#    #/usr/bin/gtk-update-icon-cache -t -f /usr/share/icons 1> /dev/null 2> /dev/null &
-#    rm -f /usr/share/icons/icon-theme.cache
-#  fi
-
 # Update mime database:
 if [ -x /usr/bin/update-mime-database -a -d /usr/share/mime ]; then
   echo "Updating MIME database:  /usr/bin/update-mime-database /usr/share/mime"
@@ -35,6 +22,5 @@ if [ -x /usr/bin/update-pango-querymodules ]; then
   /usr/bin/update-pango-querymodules --verbose
 fi
 
-# Update GConf registry
-
-for i in `ls /usr/share/gconf/schemas/*.schemas | sed 's/\.schemas//g' | sed 's/^.*\///g'` ; do /usr/sbin/gconfpkg --install $i ; done
+# Update GConf registry (moved to mpkg core)
+#for i in `ls /usr/share/gconf/schemas/*.schemas | sed 's/\.schemas//g' | sed 's/^.*\///g'` ; do /usr/sbin/gconfpkg --install $i ; done
