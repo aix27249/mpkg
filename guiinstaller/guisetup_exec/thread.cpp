@@ -361,27 +361,41 @@ bool SetupThread::mountPartitions() {
 	if (system(mkdir_cmd) !=0 || system(mount_cmd)!=0) return false;
 
 	// Sorting mount points
+	
+	// Mount order: setting priority 0 to all partitions.
 	vector<int> mountOrder, mountPriority;
-	for (size_t i=0; i<partConfigs.size(); i++) mountPriority.push_back(0);
+	for (size_t i=0; i<partConfigs.size(); i++) {
+		mountPriority.push_back(0);
+	}
+
+	int max_priority=-1;
+	// Increase priority if some partition should be inside other
 	for (size_t i=0; i<partConfigs.size(); i++) {
 		for (size_t t=0; t<partConfigs.size(); t++) {
-			if (partConfigs[i].mountpoint.find(partConfigs[t].mountpoint)==0) mountPriority[i]++;
-			if (partConfigs[i].mountpoint[0]!='/') mountPriority[i]=-1; // Dunno how it can be, but hz...
+			if (partConfigs[i].mountpoint.find(partConfigs[t].mountpoint)==0) {
+				mountPriority[i]++;
+				if (mountPriority[i]>max_priority) max_priority=mountPriority[i];
+			}
+			if (partConfigs[i].mountpoint[0]!='/') mountPriority[i]=-1; // In case of incorrectly specified mount point or swap one
 		}
 	}
-	for (size_t i=0; i<mountPriority.size(); i++) {
+	// Building mount order, according to mount priority
+	for (int i=0; i<=max_priority; i++) {
 		for (size_t t=0; t<mountPriority.size(); t++) {
-			if (mountPriority[t]==(int) i) mountOrder.push_back(t);
+			if (mountPriority[t]==i) mountOrder.push_back(t);
 		}
 	}
 	if (mountPriority.size()!=partConfigs.size()) {
-		return false;
+		printf("Mount priority: size mismatch: %d vs %d\nTHIS IS A CRITICAL BUG, ABORTING\n", (int) mountPriority.size(), (int) partConfigs.size());
+		abort();
 	}
 
-	// Mounting others...
-	
+	// Mounting partitions, skipping root one
+
 	for (size_t i=0; i<mountOrder.size(); i++) {
+		printf("Checking to mount: %s\n", partConfigs[mountOrder[i]].mountpoint.c_str());
 		if (partConfigs[mountOrder[i]].mountpoint=="/") continue;
+		if (partConfigs[mountOrder[i]].mountpoint=="swap") continue;
 		if (partConfigs[mountOrder[i]].mount_options.empty()) mount_options.clear();
 		else mount_options = "-o " + partConfigs[mountOrder[i]].mount_options;
 		mkdir_cmd = "mkdir -p /tmp/new_sysroot" + partConfigs[mountOrder[i]].mountpoint;
@@ -393,6 +407,7 @@ bool SetupThread::mountPartitions() {
 		else mount_cmd = "mount " + mount_options + " /dev/" + partConfigs[mountOrder[i]].partition + " /tmp/new_sysroot" + partConfigs[mountOrder[i]].mountpoint;
 		if (partConfigs[mountOrder[i]].fs=="jfs") mount_cmd = "fsck /dev/" + partConfigs[mountOrder[i]].partition + "  && " + mount_cmd;
 
+		printf("Mounting partition: %s\n", mount_cmd.c_str());
 		if (system(mkdir_cmd)!=0 || system(mount_cmd)!=0) {
 			emit reportError(tr("Failed to mount partition %1").arg(partConfigs[mountOrder[i]].partition.c_str()));
 			return false;
