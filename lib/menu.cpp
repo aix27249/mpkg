@@ -731,7 +731,7 @@ void show_package_info(mpkg *core, string name, string version, string build, bo
 	}
 	else say(_("%sDelta patches:%s %s\n"), CL_GREEN, CL_WHITE, _("none"));
 	if (!pkg->abuild_url.empty()) {
-		say(_("%sABUILD:%s %s"), CL_GREEN, CL_WHITE, pkg->abuild_url.c_str());
+		say(_("%sABUILD:%s %s\n"), CL_GREEN, CL_WHITE, pkg->abuild_url.c_str());
 	}
 	else say(_("%sABUILD:%s %s\n"), CL_GREEN, CL_WHITE, _("none"));
 

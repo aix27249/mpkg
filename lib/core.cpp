@@ -847,7 +847,6 @@ void mpkgDatabase::get_full_abuildlist(PACKAGE_LIST *pkgList) {
 		package_id = atoi(abuilds->getValue(i, fPackage_id).c_str());
 		for (size_t p=0; p<pkgList->size(); ++p) {
 			if (package_id!=pkgList->at(p).get_id()) continue;
-			printf("%s\n", abuilds->getValue(i, fURL).c_str());
 			pkgList->get_package_ptr(p)->abuild_url = abuilds->getValue(i, fURL);
 		}
 	}
