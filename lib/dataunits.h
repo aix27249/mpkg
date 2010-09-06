@@ -193,6 +193,7 @@ class PACKAGE
 	vector<DESCRIPTION> package_descriptions;
 #endif
     public:
+	string abuild_url;
 	vector<ConfigFile> config_files;
 	int build_date;
 	time_t add_date;

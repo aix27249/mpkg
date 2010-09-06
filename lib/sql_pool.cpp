@@ -13,7 +13,7 @@
 #include "errorhandler.h"
 int b_t = 0;
 int c_t = 0;
-const string MPKGTableVersion="1.9";
+const string MPKGTableVersion="1.10";
 bool SQLiteDB::CheckDatabaseIntegrity()
 {
 	if (\
@@ -224,6 +224,19 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 
 			sql_exec("CREATE TABLE config_options (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, config_files_id INTEGER, name TEXT, value TEXT);");
 		}
+
+		hideErrors = true;
+		if (sql_exec("select package_id from abuilds limit 1;")!=0)
+		{
+			hideErrors = false;
+			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
+				return false;
+			}
+
+			sql_exec("CREATE TABLE abuilds (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, package_id INTEGER, url TEXT);");
+		}
+
 
 		hideErrors = false;
 		return true;
@@ -644,6 +657,12 @@ const vector<string> SQLiteDB::getFieldNames(const string& table_name) const {
 		fieldNames.push_back("value");
 	}
 
+	if (table_name=="abuilds") {
+		fieldNames.push_back("id");
+		fieldNames.push_back("package_id");
+		fieldNames.push_back("url");
+	}
+
 
 #ifdef ENABLE_INTERNATIONAL
 	if (table_name=="descriptions") {
@@ -965,6 +984,14 @@ SQLProxy::SQLProxy()
 SQLProxy::~SQLProxy()
 {
 	if (sqliteDB!=NULL) delete sqliteDB;
+}
+
+// Closes DB connection. Can be useful in install.
+void SQLProxy::closeDBConnection() {
+	if (sqliteDB!=NULL) {
+		delete sqliteDB;
+		sqliteDB=NULL;
+	}
 }
 
 // DB Locking

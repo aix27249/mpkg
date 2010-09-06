@@ -628,6 +628,7 @@ void show_package_info(mpkg *core, string name, string version, string build, bo
 		string url;
 		string depData;
 		string deltaInfo;
+		string hasABUILD;
 	//	for (unsigned int i=0; i<pkgList.size(); ++i) {
 	//		pkg = pkgList.get_package_ptr(i);
 			mstring taglist;
@@ -649,6 +650,11 @@ void show_package_info(mpkg *core, string name, string version, string build, bo
 			for (unsigned int t=0; t<pkg->get_dependencies().size(); t++) {
 				// Sorry for hardcoding search.php here, it will be replaced by cmdline and/or config option later.
 				depData += pkg->get_dependencies().at(t).getDepInfo()+"\n";
+			}
+
+			hasABUILD.clear();
+			if (!pkg->abuild_url.empty()) {
+				hasABUILD = "\nABUILD: " + pkg->abuild_url;
 			}
 
 			data = _("Name: ") + pkg->get_name() \
@@ -673,6 +679,7 @@ void show_package_info(mpkg *core, string name, string version, string build, bo
 				+ (string) _("\nLocations: \n") + locationsInfo \
 				+ (string) _("\nDeltas: \n") + deltaInfo \
 				+ (string) _("\nDependencies: \n") + depData \
+				+ hasABUILD \
 				+ hasUpdate;
 				;
 
@@ -681,167 +688,101 @@ void show_package_info(mpkg *core, string name, string version, string build, bo
 		ncInterface.showMsgBox(data);
 		return;
 	}
-	if (htmlMode) {
-		for (unsigned int i=0; i<pkgList.size(); ++i) {
-			pkg = pkgList.get_package_ptr(i);
-
-			mstring taglist;
-			for (unsigned int t=0; t< pkg->get_tags().size(); ++t) {
-				taglist+=pkg->get_tags().at(t)+"<br>";
-			}
-			string extendedInfo = "<b>Имя: </b>" + pkg->get_name() \
-				+ (string) "<br><b>Версия: </b>" + pkg->get_version() \
-			       	+ (string) "<br><b>Beta release: </b>" + pkg->get_betarelease() \
-			       	+ (string) "<br><b>Архитектура: </b>"+pkg->get_arch() \
-			       	+ (string) "<br><b>Сборка: </b>"+pkg->get_build() \
-				+ (string) "<br><b>Ветка репозитория: </b>" + pkg->get_repository_tags() \
-			       	+ (string) "<br><b>Размер пакета: </b>" + humanizeSize(pkg->get_compressed_size()) \
-			       	+ (string) "<br><b>Размер после установки: </b>" + humanizeSize(pkg->get_installed_size()) \
-			       	+ (string) "<br><b>Имя файла: </b>" + pkg->get_filename() \
-			       	+ (string) "<br><b>Контрольная сумма MD5: </b>"+pkg->get_md5() \
-			       	+ (string) "<br><b>Мейнтейнер: </b>"+pkg->get_packager() \
-			       	+ (string) " <a href=\"mailto:" + pkg->get_packager_email() + "\">(" + pkg->get_packager_email() + (string)")</a>" \
-			       	+ (string) "<br><br><h3>Теги:</h3>" \
-			       	+ taglist.s_str();
-
-			// Dependencies data
-			string depData;
-			for (unsigned int t=0; t<pkg->get_dependencies().size(); ++t) {
-				// Sorry for hardcoding search.php here, it will be replaced by cmdline and/or config option later.
-				depData += "<a href=\"search.php?name=" + pkg->get_dependencies().at(t).get_package_name() + "\">" + pkg->get_dependencies().at(t).getDepInfo()+"</a><br>";
-			}
-			string deltaInfo;
-			for (unsigned int t=0; t<pkg->deltaSources.size(); t++) {
-				deltaInfo += "<a href=\"" + pkg->deltaSources[t].dup_url + "\">" + pkg->deltaSources[t].dup_url + " (" + humanizeSize(pkg->deltaSources[t].dup_size) + ")</a><br>\n";
-			}
-
-			string locationsInfo;
-			string url;
-			for (unsigned int t=0; t<pkg->get_locations().size(); ++t) {
-				url = pkg->get_locations().at(t).get_full_url() + pkg->get_filename();
-				if (url.find("/./")) url = url.substr(0, url.find("/./")) + url.substr(url.find("/./")+2);
-				locationsInfo += "<a href=\"" + url + "\">" + url + "</a><br>\n";
-			}
-			string detailedDescription;
-			string dscTmp = pkg->get_description();
-			for (unsigned int t=0; t<dscTmp.size(); t++) {
-				if (dscTmp[t]=='\n' || dscTmp[t]=='\r') detailedDescription += "<br>";
-				else detailedDescription += dscTmp[t];
-			}
-			string reportLinks = "<a href=\"reportupdate.php?id=" + IntToStr(pkg->get_id()) + "&name=" + pkg->get_name() + "&maintainer=" + pkg->get_packager() + "\">Сообщить о новой версии</a><br>";
-			reportLinks +=  "<a href=\"reportbug.php?id=" + IntToStr(pkg->get_id()) + "&name=" + pkg->get_name() + "&ver=" + pkg->get_version() + "&arch=" + pkg->get_arch() + "&build=" + pkg->get_build() + "&maintainer=" + pkg->get_packager() + "\">Сообщить об ошибке в пакете</a><br>";
-			string htmlData = "<html><title>Информация о пакете: " + pkg->get_name() +"-"+ pkg->get_fullversion() + \
-					   "</title><body>" +(string) "<h1>" + pkg->get_name() + " " + pkg->get_fullversion() + \
-					   "</h1>Добавлен в репозиторий: " + getTimeString(pkg->add_date) + \
-					   "<h3>Краткое описание:</h3>" + pkg->get_short_description() + \
-					   "<h3>Полное описание:</h3>" + detailedDescription + \
-					   "<h3>Информация о пакете:</h3>" + extendedInfo + \
-					   "<br><h3>Скачать:</h3>" + locationsInfo + \
-					   "<br><h3>Дельта-обновления:</h3>" + deltaInfo + \
-					   "<br><h3>Зависимости:</h3>"+depData + \
-					   "<br><h3>Сообщения мейнтейнеру:</h3>" + reportLinks + \
-					   "\n";
-			printf("%s\n", htmlData.c_str());
-		}
-		return;
-	}
 	string vstatus;
-//	for (unsigned int i=0; i<pkgList.size(); i++)
-//	{
-		vstatus.clear();
-		if (pkg->available()) vstatus = _("Available");
-		if (pkg->installed()) {
-			if (!vstatus.empty()) vstatus += ", ";
-			vstatus += _("Installed");
-		}
-		if (vstatus.empty()) vstatus = _("Doesn't exist");
-		vstatus = pkg->get_vstatus(true) + " (" + vstatus + ")";
+	vstatus.clear();
+	if (pkg->available()) vstatus = _("Available");
+	if (pkg->installed()) {
+		if (!vstatus.empty()) vstatus += ", ";
+		vstatus += _("Installed");
+	}
+	if (vstatus.empty()) vstatus = _("Doesn't exist");
+	vstatus = pkg->get_vstatus(true) + " (" + vstatus + ")";
 
-		say(_("%sID:%s %d\n"), CL_GREEN, CL_WHITE, pkg->get_id());
-		say(_("%sName:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_name().c_str());
-		say(_("%sVersion:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_version().c_str());
-		say(_("%sArch:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_arch().c_str());
-		say(_("%sBuild:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_build().c_str());
-		say(_("%sProvides:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_provides().c_str());
-		say(_("%sConflicts:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_conflicts().c_str());
-		say(_("%sBranch:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_repository_tags().c_str());
-		say(_("%sPackage size:%s %s\n"), CL_GREEN, CL_WHITE, humanizeSize(atoi(pkg->get_compressed_size().c_str())).c_str());
-		say(_("%sInstalled size:%s %s\n"), CL_GREEN, CL_WHITE, humanizeSize(atoi(pkg->get_installed_size().c_str())).c_str());
-		say(_("%sMaintainer:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_packager().c_str());
-		say(_("%sMaintainer e-mail:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_packager_email().c_str());
-		say(_("%sStatus:%s %s\n"), CL_GREEN, CL_WHITE, vstatus.c_str());
-
-		say(_("%sMD5:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_md5().c_str());
-		say(_("%sFilename:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_filename().c_str());
-		say(_("%sShort description:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_short_description().c_str());
+	say(_("%sID:%s %d\n"), CL_GREEN, CL_WHITE, pkg->get_id());
+	say(_("%sName:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_name().c_str());
+	say(_("%sVersion:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_version().c_str());
+	say(_("%sArch:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_arch().c_str());
+	say(_("%sBuild:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_build().c_str());
+	say(_("%sProvides:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_provides().c_str());
+	say(_("%sConflicts:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_conflicts().c_str());
+	say(_("%sBranch:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_repository_tags().c_str());
+	say(_("%sPackage size:%s %s\n"), CL_GREEN, CL_WHITE, humanizeSize(atoi(pkg->get_compressed_size().c_str())).c_str());
+	say(_("%sInstalled size:%s %s\n"), CL_GREEN, CL_WHITE, humanizeSize(atoi(pkg->get_installed_size().c_str())).c_str());
+	say(_("%sMaintainer:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_packager().c_str());
+	say(_("%sMaintainer e-mail:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_packager_email().c_str());
+	say(_("%sStatus:%s %s\n"), CL_GREEN, CL_WHITE, vstatus.c_str());
+	say(_("%sMD5:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_md5().c_str());
+	say(_("%sFilename:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_filename().c_str());
+	say(_("%sShort description:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_short_description().c_str());
 		
-		if (pkg->available()) {
-			say(_("%sLocations:%s\n"), CL_GREEN, CL_WHITE);
-			for (unsigned int t=0; t<pkg->get_locations().size(); t++)
-			{
-				say("\t\t    %s\n", pkg->get_locations().at(t).get_full_url().c_str());
-			}
+	if (pkg->available()) {
+		say(_("%sLocations:%s\n"), CL_GREEN, CL_WHITE);
+		for (unsigned int t=0; t<pkg->get_locations().size(); t++)
+		{
+			say("\t\t    %s\n", pkg->get_locations().at(t).get_full_url().c_str());
 		}
-		else say(_("%sLocations:%s %s\n"), CL_GREEN, CL_WHITE, _("none"));
-		if (!pkg->deltaSources.empty()) {
-			say(_("%sDelta patches:%s\n"), CL_GREEN, CL_WHITE);
-			for (unsigned int t=0; t<pkg->deltaSources.size(); ++t) {
-				say("\t\t    %s (%s)\n", pkg->deltaSources[t].dup_url.c_str(), humanizeSize(pkg->deltaSources[t].dup_size).c_str());
-			}
+	}
+	else say(_("%sLocations:%s %s\n"), CL_GREEN, CL_WHITE, _("none"));
+	if (!pkg->deltaSources.empty()) {
+		say(_("%sDelta patches:%s\n"), CL_GREEN, CL_WHITE);
+		for (unsigned int t=0; t<pkg->deltaSources.size(); ++t) {
+			say("\t\t    %s (%s)\n", pkg->deltaSources[t].dup_url.c_str(), humanizeSize(pkg->deltaSources[t].dup_size).c_str());
 		}
-		else say(_("%sDelta patches:%s %s\n"), CL_GREEN, CL_WHITE, _("none"));
+	}
+	else say(_("%sDelta patches:%s %s\n"), CL_GREEN, CL_WHITE, _("none"));
+	if (!pkg->abuild_url.empty()) {
+		say(_("%sABUILD:%s %s"), CL_GREEN, CL_WHITE, pkg->abuild_url.c_str());
+	}
+	else say(_("%sABUILD:%s %s\n"), CL_GREEN, CL_WHITE, _("none"));
+
 		
-		say(_("%sTags:%s "), CL_GREEN, CL_WHITE);
-		if (pkg->get_tags().empty())
+	say(_("%sTags:%s "), CL_GREEN, CL_WHITE);
+	if (pkg->get_tags().empty())
+	{
+		say(_("none\n"));
+	}
+	else
+	{
+		for (unsigned int t=0; t<pkg->get_tags().size(); t++)
 		{
-			say(_("none\n"));
+			say ("%s", pkg->get_tags().at(t).c_str());
+			if (t<pkg->get_tags().size()-1) say(", ");
+			else say("\n");
 		}
-		else
+	}
+	if (!pkg->get_dependencies().empty())
+	{
+		say(_("%sDepends on:%s "), CL_GREEN, CL_WHITE);
+		for (unsigned int t=0; t<pkg->get_dependencies().size(); t++)
 		{
-			for (unsigned int t=0; t<pkg->get_tags().size(); t++)
+			say("%s", pkg->get_dependencies().at(t).getDepInfo().c_str());
+			if (t<pkg->get_dependencies().size()-1) say(", ");
+		}
+		say("\n");
+	}
+
+	say(_("%sChangelog:%s          \n%s\n"), CL_GREEN, CL_WHITE, pkg->get_changelog().c_str());
+	say(_("%sDescription:%s        \n%s\n"), CL_GREEN, CL_WHITE, pkg->get_description().c_str());
+
+	if (showFilelist)
+	{
+		say(_("%sFilelist:%s\n"), CL_GREEN, CL_WHITE);
+		if (pkg->installed())
+		{
+			core->db->get_filelist(pkg->get_id(), pkg->get_files_ptr());
+			if (pkg->get_files().size()==0)
 			{
-				say ("%s", pkg->get_tags().at(t).c_str());
-				if (t<pkg->get_tags().size()-1) say(", ");
-				else say("\n");
+				say(_("\tPackage contains no files\n"));
+			}
+			else for (size_t t=0; t<pkg->get_files().size(); ++t) {
+				say ("\t    %s\n", pkg->get_files().at(t).c_str());
 			}
 		}
-		if (!pkg->get_dependencies().empty())
-		{
-			say(_("%sDepends on:%s "), CL_GREEN, CL_WHITE);
-			for (unsigned int t=0; t<pkg->get_dependencies().size(); t++)
-			{
-				say("%s", pkg->get_dependencies().at(t).getDepInfo().c_str());
-				if (t<pkg->get_dependencies().size()-1) say(", ");
-			}
-			say("\n");
-		}
-
-		say(_("%sChangelog:%s          \n%s\n"), CL_GREEN, CL_WHITE, pkg->get_changelog().c_str());
-		say(_("%sDescription:%s        \n%s\n"), CL_GREEN, CL_WHITE, pkg->get_description().c_str());
-
-		if (showFilelist)
-		{
-			say(_("%sFilelist:%s\n"), CL_GREEN, CL_WHITE);
-			if (pkg->installed())
-			{
-				core->db->get_filelist(pkg->get_id(), pkg->get_files_ptr());
-				if (pkg->get_files().size()==0)
-				{
-					say(_("\tPackage contains no files\n"));
-				}
-				else for (size_t t=0; t<pkg->get_files().size(); ++t) {
-					say ("\t    %s\n", pkg->get_files().at(t).c_str());
-				}
-			}
-			else say (_("\tPackage is not installed\n"));
-		}
-
-//	say("=============================================================================\n\n");
-//	}
-
-
-
+		else say (_("\tPackage is not installed\n"));
+	}
 }
+
+
 void searchByFile(mpkg *core, string filename, bool strict)
 {
 	ncInterface.setSubtitle(_("Searching for file ") + filename);

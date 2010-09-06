@@ -2522,6 +2522,7 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 	// Стираем locations и servers
 	db.clear_table("locations");
 	db.clear_table("deltas");
+	db.clear_table("abuilds");
 	//if (forceFullDBUpdate) db.clear_table("dependencies");  // Teh WTF!
 	
 
@@ -2544,6 +2545,7 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 		{
 			pkgList->get_package_ptr(pkgNumber)->set_locations(newPackages->at(i).get_locations());	// Записываем locations
 			pkgList->get_package_ptr(pkgNumber)->deltaSources=newPackages->at(i).deltaSources; // TEMP DISABLED
+			pkgList->get_package_ptr(pkgNumber)->abuild_url=newPackages->at(i).abuild_url; // One ABUILD record will be enough.
 			
 			if (pkgList->get_package_ptr(pkgNumber)->get_repository_tags()!=newPackages->at(i).get_repository_tags()) {
 				pkgList->get_package_ptr(pkgNumber)->set_repository_tags(newPackages->at(i).get_repository_tags());
@@ -2599,6 +2601,7 @@ int mpkgDatabase::syncronize_data(PACKAGE_LIST *pkgList, vector<bool> needUpdate
 		else {
 			add_locationlist_record(pkgList->at(i).get_id(), pkgList->get_package_ptr(i)->get_locations_ptr());
 			if (!pkgList->at(i).deltaSources.empty()) add_delta_record(pkgList->at(i).get_id(), pkgList->at(i).deltaSources);
+			if (!pkgList->at(i).abuild_url.empty()) add_abuild_record(pkgList->at(i).get_id(), pkgList->at(i).abuild_url);
 			if (needUpdateDistroVersion[i] || needUpdateRepositoryTags[i]) {
 				sqlUpdate = new SQLRecord;
 				if (needUpdateRepositoryTags[i]) sqlUpdate->addField("package_repository_tags", pkgList->at(i).get_repository_tags());

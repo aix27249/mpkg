@@ -410,7 +410,12 @@ int mpkgDatabase::add_filelist_record(int package_id, vector<string> *filelist)
 		return 0;
 	}
 }
-
+int mpkgDatabase::add_abuild_record(int package_id, const string& abuild_url) {
+	string a_url = abuild_url;
+	PrepareSql(a_url);
+	db.sql_exec("INSERT INTO abuilds VALUES(NULL," + IntToStr(package_id) + ",'" + a_url + "');");
+	return 0;
+}
 // Adds location list linked to package_id
 int mpkgDatabase::add_locationlist_record(int package_id, vector<LOCATION> *locationlist) // returns 0 if ok, anything else if failed.
 {
@@ -433,11 +438,16 @@ int mpkgDatabase::add_locationlist_record(int package_id, vector<LOCATION> *loca
 }
 int mpkgDatabase::add_configfiles_record(const int package_id, const vector<ConfigFile>& config_files) {
 	int64_t config_id;
+	string name, val;
 	for (size_t i=0; i<config_files.size(); ++i) {
 		db.sql_exec("INSERT INTO config_files VALUES (NULL, " + IntToStr(package_id) + ", '" + config_files[i].name + "');");
 		config_id = db.last_insert_id();
 		for (size_t a=0; a<config_files[i].attr.size(); ++a) {
-			db.sql_exec("INSERT INTO config_options VALUES(NULL, " + IntToStr(config_id) + ", '" + config_files[i].attr[a].name + "', '" + config_files[i].attr[a].value + "');");
+			name = config_files[i].attr[a].name;
+			PrepareSql(name);
+			val = config_files[i].attr[a].value;
+			PrepareSql(val);
+			db.sql_exec("INSERT INTO config_options VALUES(NULL, " + IntToStr(config_id) + ", '" + name + "', '" + val + "');");
 		}
 	}
 
@@ -588,6 +598,10 @@ int mpkgDatabase::add_package_record (PACKAGE *package)
 
 	// INSERT INTO CONFIG_FILES AND CONFIG_OPTIONS
 	if (!package->config_files.empty()) add_configfiles_record(package_id, package->config_files);
+
+	// INSERT INTO ABUILDS
+	if (!package->abuild_url.empty()) add_abuild_record(package_id, package->abuild_url);
+
 	
 #ifdef ENABLE_INTERNATIONAL
 	// INSERT INTO DESCRIPTIONS
@@ -726,6 +740,7 @@ int mpkgDatabase::get_packagelist (const SQLRecord& sqlSearch, PACKAGE_LIST *pac
 		get_full_taglist(packagelist);
 		get_full_dependencylist(packagelist);
 		get_full_config_files_list(packagelist);
+		get_full_abuildlist(packagelist);
 	}
 	get_full_locationlist(packagelist);
 	get_full_deltalist(packagelist);
@@ -818,6 +833,25 @@ void mpkgDatabase::get_full_filelist(PACKAGE_LIST *pkgList)
 	delete sqlTable;
 }
 
+void mpkgDatabase::get_full_abuildlist(PACKAGE_LIST *pkgList) {
+	SQLTable *abuilds = new SQLTable;
+	SQLRecord fields;
+	SQLRecord search;
+	db.get_sql_vtable(*abuilds, fields, "abuilds", search);
+	
+	int fPackage_id = abuilds->getFieldIndex("package_id");
+	int fURL = abuilds->getFieldIndex("url");
+
+	int package_id;
+	for (size_t i=0; i<abuilds->size(); ++i) {
+		package_id = atoi(abuilds->getValue(i, fPackage_id).c_str());
+		for (size_t p=0; p<pkgList->size(); ++p) {
+			if (package_id!=pkgList->at(p).get_id()) continue;
+			printf("%s\n", abuilds->getValue(i, fURL).c_str());
+			pkgList->get_package_ptr(p)->abuild_url = abuilds->getValue(i, fURL);
+		}
+	}
+}
 void mpkgDatabase::get_full_config_files_list(PACKAGE_LIST *pkgList) {
 	SQLTable *configs = new SQLTable;
 	SQLTable *c_options = new SQLTable;

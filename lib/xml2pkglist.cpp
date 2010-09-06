@@ -116,6 +116,7 @@ void parseXmlTag(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "tags")) parseTags(doc, cur, pkg);
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "repository_tags")) pkg.set_repository_tags(cutSpaces(key));
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "distro_version")) pkg.package_distro_version=cutSpaces(key);
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "abuild")) pkg.abuild_url=cutSpaces(key);
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "provides")) pkg.set_provides(cutSpaces(key));
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "conflicts")) pkg.set_conflicts(cutSpaces(key));
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "need_special_update")) {
@@ -167,6 +168,7 @@ int xml2pkglist(xmlDocPtr doc, PACKAGE_LIST &pkgList, const string& server_url) 
 	while(cur != NULL) {
 		if (!xmlStrcmp(cur->name, (const xmlChar *) "package")) {
 			parsePackage(doc, cur, *pkgList.get_package_ptr(counter));
+			if (!pkgList[counter].abuild_url.empty()) pkgList.get_package_ptr(counter)->abuild_url = server_url + pkgList.get_package_ptr(counter)->abuild_url;
 			counter++;
 		}
 		cur = cur->next;

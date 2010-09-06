@@ -77,6 +77,8 @@ class SQLProxy
 		int sqlFlush();
 		int64_t last_insert_id();
 
+		void closeDBConnection();
+
 
 		SQLProxy();
 		~SQLProxy();

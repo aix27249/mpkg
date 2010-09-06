@@ -37,6 +37,7 @@ class mpkgDatabase
 //		int get_server(int server_id, SERVER *server);
 		int get_locationlist(int package_id, vector<LOCATION> *location_list);
 		void get_full_locationlist(PACKAGE_LIST *pkgList);
+		void get_full_abuildlist(PACKAGE_LIST *pkgList);
 		void get_full_deltalist(PACKAGE_LIST *pkgList);
 //		int get_last_id(/*string table_name, string id_field=""*/);
 		int get_package_id(const PACKAGE& package);
@@ -77,6 +78,7 @@ class mpkgDatabase
 		int add_locationlist_record(int package_id, vector<LOCATION> *locationlist);
 		int add_delta_record(const int package_id, const vector<DeltaSource>& deltaSources);
 		int add_configfiles_record(const int package_id, const vector<ConfigFile>& config_files);
+		int add_abuild_record(const int package_id, const string& abuild_url);
 		int add_dependencylist_record(int package_id, vector<DEPENDENCY> *deplist);
 		int add_taglist_record(int package_id, vector<string> *taglist);
 		int add_tag_link(int package_id, int tag_id);
