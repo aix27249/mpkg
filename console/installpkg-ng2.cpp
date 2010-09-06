@@ -81,7 +81,7 @@ int main (int argc, char **argv)
 		
 	bool do_reset=true;
 	int ich;
-	const char* short_opt = "hvpdzfmkDLrailgyqNcwxHbFQVRZWPKCMt:GsE:S:A:";
+	const char* short_opt = "hvpdzfmkDLrailgyqNcwxHbFQVRZWPKCMt:GsE:S:A:B:";
 	//const char* short_opt = "abcdfghiklmpqrvzDLyNwxHFQVRZWPKCME"; // Try to sort this stuff...later :)
 	const struct option long_options[] =  {
 		{ "help",		0, NULL,	'h'},
@@ -122,6 +122,7 @@ int main (int argc, char **argv)
 		{ "md5index",		0, NULL,	'M'},
 		{ "conf",		1, NULL,	't'},
 		{ "exclusion-list",	1, NULL,	'E'},
+		{ "abuild",		1, NULL,	'B'},
 		{ NULL, 		0, NULL, 	0}
 	};
 
@@ -134,6 +135,10 @@ int main (int argc, char **argv)
 		
 
 		switch (ich) {
+			case 'B':
+					_cmdOptions["abuild_links_only"]="yes";
+					_cmdOptions["abuild_links_output"]=string(optarg);
+					break;
 			case 'E':
 					_cmdOptions["exclusion_list"]=string(optarg);
 					break;

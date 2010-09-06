@@ -1,0 +1,20 @@
+#!/bin/sh
+ARGS=$@
+TMP=/tmp/mpkgsrc
+rm -rf $TMP
+mkdir -p $TMP
+mpkg-install -B /tmp/mpkgsrc/abuild_list $ARGS;
+
+ABUILDS=`cat /tmp/mpkgsrc/abuild_list`
+CWD=`pwd`
+cd $TMP
+for URL in $ABUILDS ; do
+	if [ "$URL" != "" ] ; then
+		FILENAME=`basename $URL`
+		rm -f $TMP/$FILENAME 2>/dev/null 
+		( cd $TMP && wget $URL )
+		echo BTREE: $FILENAME
+		mkpkg -i -bt $TMP/$FILENAME || exit 1
+	fi
+done
+cd $CWD

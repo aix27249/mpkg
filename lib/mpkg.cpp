@@ -1016,7 +1016,7 @@ int mpkgDatabase::commit_actions()
 					else dialogMsg += _("Will be installed:\n");
 				}
 				installCount++;
-				if (install_list[i].get_type()==PKGTYPE_SOURCE) pkgTypeStr=_("(source)");
+				if (install_list[i].get_type()==PKGTYPE_SOURCE || _cmdOptions["abuild_links_only"]=="yes") pkgTypeStr=_("(source)");
 				else pkgTypeStr=_("(binary)");
 				if (!dialogMode) say("  [%d] %s %s %s %s %s\n", installCount, \
 						install_list[i].get_name().c_str(), \
@@ -1158,6 +1158,21 @@ int mpkgDatabase::commit_actions()
 		}
 		return 0;
 	}
+
+	if (_cmdOptions["abuild_links_only"]=="yes") {
+		printf("Source URL requested, here it is:\n");
+		vector<string> urls;
+		for (size_t i=0; i<install_list.size(); ++i) {
+			urls.push_back(install_list[i].abuild_url.c_str());
+			printf("%s\n", install_list[i].abuild_url.c_str());
+		}
+		if (!_cmdOptions["abuild_links_output"].empty()) {
+			WriteFileStrings(_cmdOptions["abuild_links_output"], urls);
+		}
+		return 0;
+	}
+
+	
 	// Building action list
 	actionBus.clear();
 	if (install_list.size()>0)
@@ -1441,6 +1456,7 @@ download_process:
 		time_t ETA_Time = 0;
 		MpkgErrorCode install_result;
 		for (size_t i=0;i<install_list.size(); ++i) {
+
 			pkgInstallStartTime=time(NULL); // TIMER 1: mark package installation start
 			
 			actionBus.setActionProgress(ACTIONID_INSTALL, i);
