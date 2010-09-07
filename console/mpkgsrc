@@ -3,7 +3,28 @@ ARGS=$@
 TMP=/tmp/mpkgsrc
 rm -rf $TMP
 mkdir -p $TMP
-mpkg-install -B /tmp/mpkgsrc/abuild_list $ARGS;
+MPKGARGS=
+MKPKGARGS=
+NOW_ARGS=0
+for ARG in $ARGS ; do
+	if [ "$ARG" = "--mkpkg" ] ; then
+		NOW_ARGS=1
+		continue
+	fi
+	if [ "$NOW_ARGS" = "0" ] ; then
+		MPKGARGS="$MPKGARGS $ARG"
+	else
+		MKPKGARGS="$MKPKGARGS $ARG"
+	fi
+done
+echo "MPKG arguments:"
+echo $MPKGARGS
+
+echo "MKPKG arguments:"
+echo $MKPKGARGS
+
+exit 0
+mpkg-install -B /tmp/mpkgsrc/abuild_list $MPKGARGS
 
 ABUILDS=`cat /tmp/mpkgsrc/abuild_list`
 CWD=`pwd`
@@ -14,7 +35,7 @@ for URL in $ABUILDS ; do
 		rm -f $TMP/$FILENAME 2>/dev/null 
 		wget $URL
 		echo BTREE: $FILENAME
-		mkpkg -i -bt $FILENAME || exit 1
+		mkpkg -i -bt $FILENAME $MKPKGARGS || exit 1
 	fi
 done
 cd $CWD
