@@ -23,7 +23,6 @@ echo $MPKGARGS
 echo "MKPKG arguments:"
 echo $MKPKGARGS
 
-exit 0
 mpkg-install -B /tmp/mpkgsrc/abuild_list $MPKGARGS
 
 ABUILDS=`cat /tmp/mpkgsrc/abuild_list`
