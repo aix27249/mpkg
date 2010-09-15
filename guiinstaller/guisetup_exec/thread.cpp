@@ -145,7 +145,11 @@ bool SetupThread::setMpkgConfig() {
 	vector<string> rList, dlist;
 
 	if (settings->value("pkgsource").toString()=="dvd") {
-		rList.push_back("cdrom://"+settings->value("volname").toString().toStdString()+"/"+settings->value("rep_location").toString().toStdString());
+		if (FileExists("/bootmedia/.volume_id")) {
+		       rList.push_back("file:///bootmedia/repository/");
+		       settings->setValue("pkgsource", "file:///bootmedia/repository/");
+		}
+		else rList.push_back("cdrom://"+settings->value("volname").toString().toStdString()+"/"+settings->value("rep_location").toString().toStdString());
 	}
 	else if (settings->value("pkgsource").toString().toStdString().find("iso:///")==0) {
 		system("mount -o loop " + settings->value("pkgsource").toString().toStdString().substr(6) + " /var/log/mount");
@@ -686,6 +690,56 @@ vector<OsRecord> SetupThread::getOsList() {
 	return ret;
 }
 
+bool SetupThread::grub2_install() {
+	string bootDevice = settings->value("bootloader").toString().toStdString();
+	if (bootDevice=="NONE") return true;
+
+	emit setSummaryText(tr("Installing GRUB2 to %1").arg(bootDevice.c_str()));
+	emit setDetailsText("");
+
+	// Installing GRUB into device
+	int ret = system("chroot /tmp/new_sysroot grub-install --no-floppy --force " + bootDevice);
+	if (ret!=0) {
+		emit setSummaryText(tr("Failed to install GRUB2 to %1").arg(bootDevice.c_str()));
+		emit setDetailsText(tr("grub-install returned %1, see log for details").arg(ret));
+
+		printf("FATAL: Failed to install grub via grub-install!\n");
+		return false;
+	}
+	else {
+		emit setSummaryText(tr("Generating GRUB2 menu"));
+		emit setDetailsText(tr("").arg(ret));
+
+		printf("GRUB2 installed successfully, generating config\n");
+		bool c_ret = grub2_mkconfig();
+		if (!c_ret) c_ret = grub2config();
+		if (!c_ret) {
+			emit setSummaryText(tr("Failed to generate GRUB2 configuration, expecting boot failure.").arg(bootDevice.c_str()));
+			emit setDetailsText(tr("You have to create config manually.").arg(ret));
+
+			printf("FATAL: Failed to create grub.cfg using both methods!\n");
+			return false;
+		}
+		return true;
+	}
+	
+
+
+}
+
+bool SetupThread::grub2_mkconfig() {
+	string bootDevice = settings->value("bootloader").toString().toStdString();
+	if (bootDevice=="NONE") return true;
+
+	// Generating configuration:
+	if (system("chroot /tmp/new_sysroot grub-mkconfig -o /boot/grub/grub.cfg")!=0) {
+		printf("Failed to generate GRUB menu via grub-mkconfig.\n");
+		return false;
+	}
+	printf("GRUB menu successfully generated via grub-mkconfig.\n");
+	return true;
+}
+
 bool SetupThread::grub2config() {
 	/* Data needed:
 	 systemConfig.rootMountPoint
@@ -891,7 +945,7 @@ bool SetupThread::postInstallActions() {
 	writeFstab();
 	system("chroot /tmp/new_sysroot depmod -a " + kernelversion);
 	buildInitrd();
-	grub2config();
+	grub2_install();
 	setupNetwork();
 	setTimezone();
 	if (FileExists("/tmp/new_sysroot/usr/bin/X")) {

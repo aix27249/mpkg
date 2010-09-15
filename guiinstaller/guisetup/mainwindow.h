@@ -7,6 +7,7 @@
 #include <mpkg-parted/raidtool.h>
 #include <mpkg-parted/lvmtool.h>
 #include "thread.h"
+#include "custompkgset.h"
 class QListWidgetItem;
 class QTranslator;
 namespace Ui {
@@ -14,11 +15,6 @@ namespace Ui {
 }
 class QSettings;
 
-struct CustomPkgSet {
-	string name, desc, full;
-	uint64_t csize, isize;
-	size_t count;
-};
 
 
 class MountOptions {
@@ -73,9 +69,6 @@ class MainWindow: public QMainWindow {
 		QString isopath, hddpath, urlpath;
 
 		vector<CustomPkgSet> customPkgSetList;
-		void getCustomSetupVariants(const vector<string>& rep_list);
-
-		CustomPkgSet getCustomPkgSet(const string& name);
 		void saveTimezone();
 		void saveSetupVariant();
 		void saveRootPassword();
@@ -114,7 +107,7 @@ class MainWindow: public QMainWindow {
 		bool checkLoad(int page);
 		void showHideReleaseNotes();
 
-		void receiveLoadSetupVariants(bool success);
+		void receiveLoadSetupVariants(bool success, const vector<CustomPkgSet> &);
 
 		void timezoneSearch(const QString &);
 		void updateMountItemUI();
@@ -123,13 +116,15 @@ class MainWindow: public QMainWindow {
 		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);
 		
 		void showSetupVariantDescription(int);
-		void calculatePkgSetSize(CustomPkgSet &set);
 
 		void mountFilterNoFormat(bool);
 		void mountFilterCustom(bool);
 		void mountFilterSwap(bool);
 		void mountFilterRoot(bool);
 		void mountFilterDontUse(bool);
+
+		void getLoadText(const QString &);
+		void getLoadProgress(int);
 	
 };
 

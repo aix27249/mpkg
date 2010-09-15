@@ -2,19 +2,24 @@
 
 void LoadSetupVariantsThread::run() {
 	system("umount /var/log/mount");
-	mpkg *core = new mpkg;
 	dvdDevice.clear();
 	vector<string> rList, dlist;
-	if (pkgsource=="dvd" || pkgsource.toStdString().find("iso:///")==0) {
+	if (pkgsource=="dvd" && FileExists("/bootmedia/.volume_id")) {
+	       rList.push_back("file:///bootmedia/repository/");
+	}
+	
+	else if (pkgsource=="dvd" || pkgsource.toStdString().find("iso:///")==0) {
 		if (pkgsource.toStdString().find("iso:///")==0) {
+			printf("Checking for ISO\n");
 			if (detectDVDDevice(pkgsource.toStdString().substr(6).c_str())=="") {
-				emit finished(false);
+				emit finished(false, customPkgSetList);
 				return;
 			}
 		}
 		else {
+			printf("Checking for DVD drive\n");
 			if (detectDVDDevice()=="") {
-				emit finished(false);
+				emit finished(false, customPkgSetList);
 				return;
 			}
 		}
@@ -22,31 +27,43 @@ void LoadSetupVariantsThread::run() {
 
 	}
 	else rList.push_back(pkgsource.toStdString());
-	// TODO: respect options other than DVD, please
-	/*if (pkgsource=="dvd") {
-		//mountDVD(dvdDevice);
-		//cacheCdromIndex(volname, rep_location);
-		//getCustomSetupVariants(rList);
-		//umountDVD();
-	}*/
+
+	mpkg *core = new mpkg;
 	core->set_repositorylist(rList, dlist);
+
+	emit sendLoadText("Mounting media");
+	emit sendLoadProgress(5);
 	mountDVD();
+
+	emit sendLoadText("Receiving repository data");
+	emit sendLoadProgress(10);
+
 	core->update_repository_data();
 	PACKAGE_LIST pkglist;
 	SQLRecord record;
 	core->get_packagelist(record, &pkglist, true);
-	if (pkglist.IsEmpty()) {
-		emit finished(false);
-	}
 	delete core;
+	if (pkglist.IsEmpty()) {
+		emit finished(false, customPkgSetList);
+		return;
+	}
+	
+	printf("Got %d repositories\n", (int) rList.size());
+	for (size_t i=0; i<rList.size(); ++i) {
+		printf("Repo %d: %s\n", (int) i, rList[i].c_str());
+	}
+	getCustomSetupVariants(rList);
+	system("umount /var/log/mount");
+	
 	//umountDVD();
 	printf("Repo detecting complete\n");
-	emit finished(true);
+	emit finished(true, customPkgSetList);
 
 }
 
 QString LoadSetupVariantsThread::detectDVDDevice(QString isofile) {
 	if (!dvdDevice.isEmpty()) return dvdDevice;
+	printf("%s\n", __func__);
 	system("umount /var/log/mount");
 	string cdlist = get_tmp_file();
 	vector<string> ret, mOptions;
@@ -73,7 +90,6 @@ QString LoadSetupVariantsThread::detectDVDDevice(QString isofile) {
 	// Maybe in future I will implement some sort of logic to detect this case
 
 
-	mpkg *core;
 	QString testdev, testoptions;
 	while (dvdDevice.isEmpty()) {
 		for (size_t i=0; i<ret.size(); ++i) {
@@ -95,7 +111,8 @@ QString LoadSetupVariantsThread::detectDVDDevice(QString isofile) {
 					volname = getCdromVolname(&rep_location);
 					printf("Detected volname: %s, rep_location: %s\n", volname.c_str(), rep_location.c_str());
 					system("rm -f /dev/cdrom 2>/dev/tty4 >/dev/tty4; ln -s " + testdev.toStdString() + " /dev/cdrom 2>/dev/tty4 >/dev/tty4");
-					core = new mpkg;
+
+					mpkg *core = new mpkg;
 					core->set_cdromdevice(testdev.toStdString());
 					core->set_cdrommountpoint("/var/log/mount/");
 					mConfig.setValue("cdrom_mountoptions", testoptions.toStdString());
@@ -145,3 +162,110 @@ bool LoadSetupVariantsThread::umountDVD() {
 	if (system("umount /var/log/mount")==0) return true;
 	return false;
 }
+
+
+CustomPkgSet LoadSetupVariantsThread::getCustomPkgSet(const string& name) {
+	vector<string> data = ReadFileStrings("/tmp/setup_variants/" + name + ".desc");
+	CustomPkgSet ret;
+	ret.name = name;
+	if (locale.size()>2) locale = "[" + locale.substr(0,2) + "]";
+	else locale = "";
+	string gendesc, genfull;
+	for (size_t i=0; i<data.size(); ++i) {
+		if (data[i].find("desc" + locale + ": ")==0) ret.desc = getParseValue("desc" + locale + ": ", data[i], true);
+		if (data[i].find("desc: ")==0) gendesc = getParseValue("desc: ", data[i], true);
+		if (data[i].find("full" + locale + ": ")==0) ret.full = getParseValue("full" + locale + ": ", data[i], true);
+		if (data[i].find("full: ")==0) genfull = getParseValue("full: ", data[i], true);
+	}
+	if (ret.desc.empty()) ret.desc = gendesc;
+	if (ret.full.empty()) ret.full = genfull;
+	calculatePkgSetSize(ret);
+	return ret;
+}
+
+void LoadSetupVariantsThread::calculatePkgSetSize(CustomPkgSet &set) {
+	vector<string> list = ReadFileStrings("/tmp/setup_variants/" + set.name + ".list");
+	PACKAGE_LIST pkgList;
+	SQLRecord record;
+	mpkg *core = new mpkg;
+	core->get_packagelist(record, &pkgList, true);
+	delete core;
+	int64_t csize = 0, isize = 0;
+	size_t count = 0;
+	vector<string> was;
+	bool pkgWas;
+	for (size_t i=0; i<list.size(); ++i) {
+		if (list[i].find("#")!=std::string::npos) continue;
+		if (cutSpaces(list[i]).empty()) continue;
+		pkgWas = false;
+		for (size_t w=0; !pkgWas && w<was.size(); ++w) {
+			if (was[w]==cutSpaces(list[i])) pkgWas = true;
+		}
+		if (pkgWas) continue;
+		for (size_t t=0; t<pkgList.size(); ++t) {
+			if (pkgList[t].get_name()!=cutSpaces(list[i])) continue;
+			was.push_back(cutSpaces(list[i]));
+			csize += atol(pkgList[t].get_compressed_size().c_str());
+			isize += atol(pkgList[t].get_installed_size().c_str());
+			count++;
+		}
+	}
+	set.isize = isize;
+	set.csize = csize;
+	set.count = count;
+
+}
+
+// Get setup variants
+void LoadSetupVariantsThread::getCustomSetupVariants(const vector<string>& rep_list) {
+	string tmpfile = get_tmp_file();
+	system("rm -rf /tmp/setup_variants");
+	system("mkdir -p /tmp/setup_variants");
+	string path;
+	customPkgSetList.clear();
+
+	DownloadsList downloadQueue;
+	DownloadItem tmpDownloadItem;
+	vector<string> itemLocations;
+	tmpDownloadItem.priority = 0;
+	tmpDownloadItem.status = DL_STATUS_WAIT;
+	string itemname;
+
+	for (size_t z=0; z<rep_list.size(); ++z) {
+		emit sendLoadText("Receiving setup variants");
+		emit sendLoadProgress(5+z*3);
+
+		downloadQueue.clear();
+		path = rep_list[z];
+		CommonGetFile(path + "/setup_variants.list", tmpfile);
+		vector<string> list = ReadFileStrings(tmpfile);
+		printf("Received %d setup variants\n", (int) list.size());
+		vector<CustomPkgSet> ret;
+		for (size_t i=0; i<list.size(); ++i) {
+			itemLocations.clear();
+			tmpDownloadItem.name=list[i];
+			tmpDownloadItem.file="/tmp/setup_variants/" + list[i] + ".desc";
+			itemLocations.push_back(path + "/setup_variants/" + list[i] + ".desc");
+			tmpDownloadItem.url_list = itemLocations;
+			downloadQueue.push_back(tmpDownloadItem);
+
+			itemLocations.clear();
+			tmpDownloadItem.name=list[i];
+			tmpDownloadItem.file="/tmp/setup_variants/" + list[i] + ".list";
+			itemLocations.push_back(path + "/setup_variants/" + list[i] + ".list");
+			tmpDownloadItem.url_list = itemLocations;
+			downloadQueue.push_back(tmpDownloadItem);
+		}
+		CommonGetFileEx(downloadQueue, &itemname);
+
+		printf("Starting importing package lists\n");
+		for (size_t i=0; i<list.size(); ++i) {
+			emit sendLoadText("Processing setup variants");
+			emit sendLoadProgress(5+z*3+( (100-(5+z*3)/list.size())*i ));
+
+			printf("Processing %d of %d\n", (int) i+1, (int) list.size());
+			customPkgSetList.push_back(getCustomPkgSet(list[i]));
+		}
+	}
+}
+

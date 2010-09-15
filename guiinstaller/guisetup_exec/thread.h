@@ -121,7 +121,9 @@ class SetupThread: public QThread {
 		void generateIssue();
 		void writeFstab();
 		void buildInitrd();
+		bool grub2_install();
 		bool grub2config();
+		bool grub2_mkconfig();
 		bool setHostname();
 		void setDefaultRunlevel(const string &);
 		void enablePlymouth(bool);

@@ -76,7 +76,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	ui->stackedWidget->setCurrentIndex(0);
 	settings = new QSettings("guiinstaller");
 	loadSetupVariantsThread = new LoadSetupVariantsThread;
-	connect(loadSetupVariantsThread, SIGNAL(finished(bool)), this, SLOT(receiveLoadSetupVariants(bool)));
+	qRegisterMetaType< vector<CustomPkgSet> > ("vector<CustomPkgSet>");
+	connect(loadSetupVariantsThread, SIGNAL(finished(bool, const vector<CustomPkgSet> &)), this, SLOT(receiveLoadSetupVariants(bool, const vector<CustomPkgSet> &)));
+	connect(loadSetupVariantsThread, SIGNAL(sendLoadText(const QString &)), this, SLOT(getLoadText(const QString &)));
+	connect(loadSetupVariantsThread, SIGNAL(sendLoadProgress(int)), this, SLOT(getLoadProgress(int)));
 	connect(ui->quitButton, SIGNAL(clicked()), this, SLOT(askQuit()));
 
 	// Setup variants handling
@@ -335,13 +338,13 @@ void MainWindow::updatePartitionLists() {
 
 void MainWindow::loadPartitioningDriveList() {
 	updatePartitionLists();
-	ui->autoPartitionDriveComboBox->clear();
+	/*ui->autoPartitionDriveComboBox->clear();
 	for (size_t i=0; i<drives.size(); ++i) {
 		ui->autoPartitionDriveComboBox->addItem(QString("%1 (%2)").arg(QString::fromStdString(drives[i].tag)).arg(QString::fromStdString(drives[i].value)));
 	}
 	for (size_t i=0; i<lvm_groups.size(); ++i) {
 		ui->autoPartitionDriveComboBox->addItem(QString("%1 (%2)").arg(QString::fromStdString(lvm_groups[i].name)).arg(QString::fromStdString(lvm_groups[i].size)));
-	}
+	}*/
 
 }
 
@@ -530,9 +533,19 @@ void MainWindow::saveMountSettings() {
 void MainWindow::loadBootloaderTree() {
 	updatePartitionLists();
 	ui->bootLoaderComboBox->clear();
+	ui->bootPartitionComboBox->clear();
+	
+	// Physical drives
 	for (size_t i=0; i<drives.size(); ++i) {
 		ui->bootLoaderComboBox->addItem(QString("%1 (%2)").arg(QString::fromStdString(drives[i].tag)).arg(QString::fromStdString(drives[i].value)));
 	}
+
+	// Bootable partitions
+	
+	for (size_t i=0; i<partitions.size(); ++i) {
+		ui->bootPartitionComboBox->addItem(QString("%1 (%2)").arg(QString::fromStdString(partitions[i].devname)).arg(QString::fromStdString(partitions[i].size + " Mb")));
+	}
+
 	ui->bootLoaderComboBox->addItem(tr("No bootloader"));
 }
 
@@ -548,8 +561,15 @@ void MainWindow::saveBootloaderSettings() {
 	QString fbmode = ui->fbResolutionComboBox->currentText();
 	if (fbmode=="KMS" || fbmode == "Kernel modesetting") fbmode = "text";
 	if (fbmode!="text") fbmode += "x" + ui->fbColorComboBox->currentText();
-	if (ui->bootLoaderComboBox->currentIndex()==ui->bootLoaderComboBox->count()-1) settings->setValue("bootloader", "NONE");
-	else settings->setValue("bootloader", drives[ui->bootLoaderComboBox->currentIndex()].tag.c_str());
+	if (ui->bootDeviceRadioButton->isChecked()) {
+		if (ui->bootLoaderComboBox->currentIndex()<0) return;
+		if (ui->bootLoaderComboBox->currentIndex()==ui->bootLoaderComboBox->count()-1) settings->setValue("bootloader", "NONE");
+		else settings->setValue("bootloader", drives[ui->bootLoaderComboBox->currentIndex()].tag.c_str());
+	}
+	else {
+		if (ui->bootPartitionComboBox->currentIndex()<0) return;
+		settings->setValue("bootloader", partitions[ui->bootPartitionComboBox->currentIndex()].devname.c_str());
+	}
 	settings->setValue("fbmode", fbmode);
 	settings->setValue("initrd_delay", ui->initrdDelayCheckBox->isChecked());
 	settings->setValue("kernel_options", ui->kernelOptionsLineEdit->text());
@@ -627,117 +647,26 @@ void MainWindow::savePkgsourceSettings() {
 }
 
 
-
-
-CustomPkgSet MainWindow::getCustomPkgSet(const string& name) {
-	vector<string> data = ReadFileStrings("/tmp/setup_variants/" + name + ".desc");
-	CustomPkgSet ret;
-	ret.name = name;
-	string locale = settings->value("language").toString().toStdString();
-	if (locale.size()>2) locale = "[" + locale.substr(0,2) + "]";
-	else locale = "";
-	string gendesc, genfull;
-	for (size_t i=0; i<data.size(); ++i) {
-		if (data[i].find("desc" + locale + ": ")==0) ret.desc = getParseValue("desc" + locale + ": ", data[i], true);
-		if (data[i].find("desc: ")==0) gendesc = getParseValue("desc: ", data[i], true);
-		if (data[i].find("full" + locale + ": ")==0) ret.full = getParseValue("full" + locale + ": ", data[i], true);
-		if (data[i].find("full: ")==0) genfull = getParseValue("full: ", data[i], true);
-	}
-	if (ret.desc.empty()) ret.desc = gendesc;
-	if (ret.full.empty()) ret.full = genfull;
-	calculatePkgSetSize(ret);
-	return ret;
+void MainWindow::getLoadText(const QString &_text) {
+	ui->repTextLabel->setText(_text);
 }
 
-void MainWindow::calculatePkgSetSize(CustomPkgSet &set) {
-	vector<string> list = ReadFileStrings("/tmp/setup_variants/" + set.name + ".list");
-	PACKAGE_LIST pkgList;
-	SQLRecord record;
-	mpkg *core = new mpkg;
-	core->get_packagelist(record, &pkgList, true);
-	delete core;
-	int64_t csize = 0, isize = 0;
-	size_t count = 0;
-	vector<string> was;
-	bool pkgWas;
-	for (size_t i=0; i<list.size(); ++i) {
-		if (list[i].find("#")!=std::string::npos) continue;
-		if (cutSpaces(list[i]).empty()) continue;
-		pkgWas = false;
-		for (size_t w=0; !pkgWas && w<was.size(); ++w) {
-			if (was[w]==cutSpaces(list[i])) pkgWas = true;
-		}
-		if (pkgWas) continue;
-		for (size_t t=0; t<pkgList.size(); ++t) {
-			if (pkgList[t].get_name()!=cutSpaces(list[i])) continue;
-			was.push_back(cutSpaces(list[i]));
-			csize += atol(pkgList[t].get_compressed_size().c_str());
-			isize += atol(pkgList[t].get_installed_size().c_str());
-			count++;
-		}
-	}
-	set.isize = isize;
-	set.csize = csize;
-	set.count = count;
-
+void MainWindow::getLoadProgress(int _r_v) {
+	ui->repProgressBar->setValue(_r_v);
 }
 
-// Get setup variants
-void MainWindow::getCustomSetupVariants(const vector<string>& rep_list) {
-	string tmpfile = get_tmp_file();
-	system("rm -rf /tmp/setup_variants");
-	system("mkdir -p /tmp/setup_variants");
-	string path;
-	customPkgSetList.clear();
-
-	DownloadsList downloadQueue;
-	DownloadItem tmpDownloadItem;
-	vector<string> itemLocations;
-	tmpDownloadItem.priority = 0;
-	tmpDownloadItem.status = DL_STATUS_WAIT;
-	string itemname;
-
-	for (size_t z=0; z<rep_list.size(); ++z) {
-		downloadQueue.clear();
-		path = rep_list[z];
-		CommonGetFile(path + "/setup_variants.list", tmpfile);
-		vector<string> list = ReadFileStrings(tmpfile);
-		printf("Received %d setup variants\n", (int) list.size());
-		vector<CustomPkgSet> ret;
-		for (size_t i=0; i<list.size(); ++i) {
-			itemLocations.clear();
-			tmpDownloadItem.name=list[i];
-			tmpDownloadItem.file="/tmp/setup_variants/" + list[i] + ".desc";
-			itemLocations.push_back(path + "/setup_variants/" + list[i] + ".desc");
-			tmpDownloadItem.url_list = itemLocations;
-			downloadQueue.push_back(tmpDownloadItem);
-
-			itemLocations.clear();
-			tmpDownloadItem.name=list[i];
-			tmpDownloadItem.file="/tmp/setup_variants/" + list[i] + ".list";
-			itemLocations.push_back(path + "/setup_variants/" + list[i] + ".list");
-			tmpDownloadItem.url_list = itemLocations;
-			downloadQueue.push_back(tmpDownloadItem);
-		}
-		CommonGetFileEx(downloadQueue, &itemname);
-
-		printf("Starting importing package lists\n");
-		for (size_t i=0; i<list.size(); ++i) {
-			printf("Processing %d of %d\n", (int) i+1, (int) list.size());
-			customPkgSetList.push_back(getCustomPkgSet(list[i]));
-		}
-	}
-}
 
 
 void MainWindow::loadSetupVariants() {
+	ui->repTextLabel->setText("");
+	ui->repProgressBar->setValue(0);
 	// Let's write down repo list
 	if (loadSetupVariantsThread->isRunning()) {
 		if (!loadSetupVariantsThread->wait(5000)) loadSetupVariantsThread->terminate();
 	}
 	loadSetupVariantsThread->pkgsource = settings->value("pkgsource").toString();
-	//loadSetupVariantsThread->volname = volname;
-	//loadSetupVariantsThread->rep_location = rep_location;
+	loadSetupVariantsThread->locale = settings->value("language").toString().toStdString();
+	
 	loadSetupVariantsThread->start();
 	ui->nextButton->setEnabled(false);
 	ui->backButton->setEnabled(false);
@@ -751,8 +680,9 @@ void MainWindow::showSetupVariantDescription(int index) {
 	ui->setupVariantDescription->setText(tr("<p><b>Description:</b> %1</p><p><b>Packages to install:</b> %2 (%3)</p><p><b>Disk space required:</b> %4</p><p>Please note that space requirement is estimated very approximately and does not respect partitioning scheme, temporary files and required space for work.</p>").arg(customPkgSetList[index].full.c_str()).arg(customPkgSetList[index].count).arg(humanizeSize(customPkgSetList[index].csize).c_str()).arg(humanizeSize(customPkgSetList[index].isize).c_str()));
 }
 
-void MainWindow::receiveLoadSetupVariants(bool success) {
+void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSet> &_pkgSet) {
 	if (!success) {
+		customPkgSetList = _pkgSet;
 		if (settings->value("pkgsource")=="dvd") {
 			if (QMessageBox::question(this, tr("DVD detection failed"), tr("Failed to detect DVD drive. Be sure you inserted installation DVD into this. Retry?"), QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
 				backButtonClick();
@@ -774,21 +704,13 @@ void MainWindow::receiveLoadSetupVariants(bool success) {
 	}
 	settings->setValue("volname", loadSetupVariantsThread->volname.c_str());
 	settings->setValue("rep_location", loadSetupVariantsThread->rep_location.c_str());
-
-	mpkg *core = new mpkg(false);
-	vector<string> rList = core->get_repositorylist();
-	printf("Got %d repositories\n", (int) rList.size());
-	for (size_t i=0; i<rList.size(); ++i) {
-		printf("Repo %d: %s\n", (int) i, rList[i].c_str());
-	}
-	getCustomSetupVariants(rList);
-	system("umount /var/log/mount");
+	
 	ui->setupVariantsListWidget->clear();
 	QListWidgetItem *item;
 	for (size_t i=0; i<customPkgSetList.size(); ++i) {
 		item = new QListWidgetItem(customPkgSetList[i].desc.c_str(), ui->setupVariantsListWidget);
 	}
-	delete core;
+
 	ui->nextButton->setEnabled(true);
 	ui->backButton->setEnabled(true);
 	nextButtonClick();
@@ -1054,7 +976,7 @@ void MainWindow::saveNvidia() {
 void MainWindow::saveAlternatives() {
 	QString alternatives;
 	settings->remove("alternatives");
-	if (ui->altBFSCheckBox->isChecked()) settings->setValue("alternatives/bfs", true);
+	//if (ui->altBFSCheckBox->isChecked()) settings->setValue("alternatives/bfs", true);
 	if (ui->altCleartypeCheckBox->isChecked()) settings->setValue("alternatives/cleartype", true);
 }
 
