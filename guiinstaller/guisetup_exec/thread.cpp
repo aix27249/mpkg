@@ -434,7 +434,12 @@ bool SetupThread::processInstall() {
 	emit setSummaryText(tr("Installing packages"));
 	emit setDetailsText(tr("Preparing to installation"));
 	core = new mpkg;
-	if (FileExists("/var/log/mount/cache")) system("ln -s /var/log/mount/cache /tmp/new_sysroot/var/mpkg/cache/.fcache");
+	if ((settings->value("pkgsource")=="dvd" || settings->value("pkgsource").toString().toStdString().find("iso://")==0) && FileExists("/var/log/mount/cache")) {
+		system("ln -sf /var/log/mount/cache /tmp/new_sysroot/var/mpkg/cache/.fcache");
+	}
+	else if (settings->value("pkgsource")=="file:///bootmedia/repository/" && FileExists("/bootmedia/cache")) {
+		system("ln -sf /bootmedia/cache /tmp/new_sysroot/var/mpkg/cache/.fcache");
+	}
 	printf("Committing\n");
 	if (core->commit()!=0) {
 		delete core;
@@ -614,7 +619,9 @@ void SetupThread::buildInitrd() {
 
 	emit setSummaryText(tr("Creating initrd"));
 	emit setDetailsText("");
-	system("chroot /tmp/new_sysroot mkinitrd -c -r " + rootdev + " -f " + rootPartitionType + " -w " + rootdev_wait + " -k " + kernelversion + " " + " " + use_swap + " " + use_raid + " " + use_lvm + " " + additional_modules);
+	int ret = system("chroot /tmp/new_sysroot mkinitrd -c -r " + rootdev + " -f " + rootPartitionType + " -w " + rootdev_wait + " -k " + kernelversion + " " + " " + use_swap + " " + use_raid + " " + use_lvm + " " + additional_modules);
+	// In case if first run fails (happened only twice, but happened)
+	if (ret) system("chroot /tmp/new_sysroot mkinitrd");
 }
 
 StringMap getDeviceMap(string mapFile) {
@@ -708,14 +715,14 @@ bool SetupThread::grub2_install() {
 	}
 	else {
 		emit setSummaryText(tr("Generating GRUB2 menu"));
-		emit setDetailsText(tr("").arg(ret));
+		emit setDetailsText(tr(""));
 
 		printf("GRUB2 installed successfully, generating config\n");
 		bool c_ret = grub2_mkconfig();
 		if (!c_ret) c_ret = grub2config();
 		if (!c_ret) {
 			emit setSummaryText(tr("Failed to generate GRUB2 configuration, expecting boot failure.").arg(bootDevice.c_str()));
-			emit setDetailsText(tr("You have to create config manually.").arg(ret));
+			emit setDetailsText(tr("You have to create config manually."));
 
 			printf("FATAL: Failed to create grub.cfg using both methods!\n");
 			return false;

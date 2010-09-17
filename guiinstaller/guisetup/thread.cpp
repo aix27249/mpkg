@@ -1,11 +1,12 @@
 #include "thread.h"
 
 void LoadSetupVariantsThread::run() {
-	system("umount /var/log/mount");
+	if (pkgsource=="dvd" || pkgsource.toStdString().find("iso:///")==0) system("umount /var/log/mount");
 	dvdDevice.clear();
 	vector<string> rList, dlist;
 	if (pkgsource=="dvd" && FileExists("/bootmedia/.volume_id")) {
 	       rList.push_back("file:///bootmedia/repository/");
+	       pkgsource="file:///bootmedia/repository/";
 	}
 	
 	else if (pkgsource=="dvd" || pkgsource.toStdString().find("iso:///")==0) {
@@ -31,9 +32,11 @@ void LoadSetupVariantsThread::run() {
 	mpkg *core = new mpkg;
 	core->set_repositorylist(rList, dlist);
 
-	emit sendLoadText("Mounting media");
-	emit sendLoadProgress(5);
-	mountDVD();
+	if (pkgsource=="dvd" || pkgsource.toStdString().find("iso:///")) {
+		emit sendLoadText("Mounting media");
+		emit sendLoadProgress(5);
+		mountDVD();
+	}
 
 	emit sendLoadText("Receiving repository data");
 	emit sendLoadProgress(10);
@@ -53,10 +56,11 @@ void LoadSetupVariantsThread::run() {
 		printf("Repo %d: %s\n", (int) i, rList[i].c_str());
 	}
 	getCustomSetupVariants(rList);
-	system("umount /var/log/mount");
+	if (pkgsource=="dvd" || pkgsource.toStdString().find("iso:///")) {
+		system("umount /var/log/mount");
+	}
 	
-	//umountDVD();
-	printf("Repo detecting complete\n");
+	printf("Repo detecting complete, sending %d items in pkgSetList\n", customPkgSetList.size());
 	emit finished(true, customPkgSetList);
 
 }
@@ -168,13 +172,14 @@ CustomPkgSet LoadSetupVariantsThread::getCustomPkgSet(const string& name) {
 	vector<string> data = ReadFileStrings("/tmp/setup_variants/" + name + ".desc");
 	CustomPkgSet ret;
 	ret.name = name;
-	if (locale.size()>2) locale = "[" + locale.substr(0,2) + "]";
-	else locale = "";
+	string c_locale = locale;
+	if (c_locale.size()>2) c_locale = "[" + c_locale.substr(0,2) + "]";
+	else c_locale = "";
 	string gendesc, genfull;
 	for (size_t i=0; i<data.size(); ++i) {
-		if (data[i].find("desc" + locale + ": ")==0) ret.desc = getParseValue("desc" + locale + ": ", data[i], true);
+		if (data[i].find("desc" + c_locale + ": ")==0) ret.desc = getParseValue("desc" + c_locale + ": ", data[i], true);
 		if (data[i].find("desc: ")==0) gendesc = getParseValue("desc: ", data[i], true);
-		if (data[i].find("full" + locale + ": ")==0) ret.full = getParseValue("full" + locale + ": ", data[i], true);
+		if (data[i].find("full" + c_locale + ": ")==0) ret.full = getParseValue("full" + c_locale + ": ", data[i], true);
 		if (data[i].find("full: ")==0) genfull = getParseValue("full: ", data[i], true);
 	}
 	if (ret.desc.empty()) ret.desc = gendesc;
@@ -261,7 +266,7 @@ void LoadSetupVariantsThread::getCustomSetupVariants(const vector<string>& rep_l
 		printf("Starting importing package lists\n");
 		for (size_t i=0; i<list.size(); ++i) {
 			emit sendLoadText("Processing setup variants");
-			emit sendLoadProgress(5+z*3+( (100-(5+z*3)/list.size())*i ));
+			emit sendLoadProgress(10+(z+1)*3+( (double)((100-(10+(z+1)*3))/(double) list.size())*(i+1) ));
 
 			printf("Processing %d of %d\n", (int) i+1, (int) list.size());
 			customPkgSetList.push_back(getCustomPkgSet(list[i]));

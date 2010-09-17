@@ -682,11 +682,9 @@ void MainWindow::showSetupVariantDescription(int index) {
 
 void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSet> &_pkgSet) {
 	if (!success) {
-		customPkgSetList = _pkgSet;
 		if (settings->value("pkgsource")=="dvd") {
 			if (QMessageBox::question(this, tr("DVD detection failed"), tr("Failed to detect DVD drive. Be sure you inserted installation DVD into this. Retry?"), QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
 				backButtonClick();
-				//loadSetupVariants();
 				return;
 			}
 			else qApp->quit();
@@ -694,7 +692,6 @@ void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSe
 		else {
 			if (QMessageBox::question(this, tr("Repository connection failed"), tr("Failed to connect to repository. If you trying to access network repository, check your network settings. Retry?"), QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
 				backButtonClick();
-				//loadSetupVariants();
 				return;
 			}
 			else qApp->quit();
@@ -702,6 +699,11 @@ void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSe
 
 		}
 	}
+
+	customPkgSetList = _pkgSet;
+	settings->setValue("pkgsource", loadSetupVariantsThread->pkgsource);
+
+	printf("Received %d items in pkgSetList\n", customPkgSetList.size());
 	settings->setValue("volname", loadSetupVariantsThread->volname.c_str());
 	settings->setValue("rep_location", loadSetupVariantsThread->rep_location.c_str());
 	
