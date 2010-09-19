@@ -8,7 +8,9 @@ fi
 
 # Update desktop database:
 echo "Updating desktop database: /usr/bin/update-desktop-database"
-/usr/bin/update-desktop-database
+if [ -x /usr/bin/update-desktop-database ] ; then
+	/usr/bin/update-desktop-database
+fi
 
 # These GTK+/pango files need to be kept up to date for
 # proper input method, pixbuf loaders, and font support.

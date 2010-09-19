@@ -600,7 +600,6 @@ void SetupThread::buildInitrd() {
 	string rootdev_wait = "0";
 	if (settings->value("initrd_delay").toBool()) rootdev_wait = "10";
 
-	system("chroot /tmp/new_sysroot mount -t proc none /proc ");
 	string rootdev;
 	string rootUUID = getUUID(rootPartition);
 	if (rootUUID.empty()) rootUUID=rootPartition;
@@ -737,6 +736,14 @@ bool SetupThread::grub2_install() {
 bool SetupThread::grub2_mkconfig() {
 	string bootDevice = settings->value("bootloader").toString().toStdString();
 	if (bootDevice=="NONE") return true;
+
+	// Fixing /etc/default/grub
+	string grub_default = ReadFile("/tmp/new_sysroot/etc/default/grub");
+	strReplace(&grub_default, "#GRUB_GFXPAYLOAD_LINUX=keep", "GRUB_GFXPAYLOAD_LINUX=\"" + settings->value("fbmode").toString().toStdString()+"\"");
+	strReplace(&grub_default, "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"", "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet " + settings->value("kernel_options").toString().toStdString() + "\"");
+
+	WriteFile("/tmp/new_sysroot/etc/default/grub", grub_default);
+	grub_default.clear();
 
 	// Generating configuration:
 	if (system("chroot /tmp/new_sysroot grub-mkconfig -o /boot/grub/grub.cfg")!=0) {
@@ -920,6 +927,13 @@ bool SetupThread::postInstallActions() {
 	emit setSummaryText(tr("Install complete, running post-install actions"));
 	emit setDetailsText("");
 
+	// Binding pseudo-filesystems
+	
+	system("mount -o bind /proc /tmp/new_sysroot/proc");
+	system("mount -o bind /dev /tmp/new_sysroot/dev");
+	system("mount -o bind /sys /tmp/new_sysroot/sys");
+
+	// Locale generation
 	if (settings->value("language")=="en_US.UTF-8") {
 		generateLangSh("en_US.UTF-8");
 		setConsoleKeymap("en");
@@ -1027,6 +1041,7 @@ void SetupThread::run() {
 	if (!processInstall()) return;
 	if (!postInstallActions()) return;
 	delete settings;
+	pData.unregisterEventHandler();
 	emit reportFinish();
 }
 

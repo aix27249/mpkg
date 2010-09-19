@@ -21,7 +21,7 @@ class MainWindow: public QMainWindow {
 		~MainWindow();
 	private:
 		Ui::MainWindowClass *ui;
-		SetupThread thread;
+		SetupThread *thread;
 
 		int currentPhoto;
 		QTimer *timer;

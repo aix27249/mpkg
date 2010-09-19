@@ -41,7 +41,8 @@ void MainWindow::errorHandler(ErrorDescription err, const QString& details) {
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindowClass) {
-	threadPtr=&thread;
+	thread = new SetupThread;
+	threadPtr=thread;
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	ui->setupUi(this);
 	//setWindowState(Qt::WindowMaximized);
@@ -49,24 +50,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	//changePhoto();
 	qRegisterMetaType<ErrorDescription> ("ErrorDescription");
 	qRegisterMetaType<MpkgErrorReturn> ("MpkgErrorReturn");
-	connect(&thread, SIGNAL(setSummaryText(const QString &)), ui->currentSummaryLabel, SLOT(setText(const QString &)), Qt::QueuedConnection);
-	connect(&thread, SIGNAL(setDetailsText(const QString &)), ui->currentDetailsLabel, SLOT(setText(const QString &)), Qt::QueuedConnection);
-	connect(&thread, SIGNAL(setProgress(int)), ui->progressBar, SLOT(setValue(int)), Qt::QueuedConnection);
-	connect(&thread, SIGNAL(setProgressMax(int)), ui->progressBar, SLOT(setMaximum(int)), Qt::QueuedConnection);
-	connect(&thread, SIGNAL(reportError(const QString &)), this, SLOT(showError(const QString &)), Qt::QueuedConnection);
-	connect(&thread, SIGNAL(reportFinish()), this, SLOT(finish()));
-	//connect(&thread, SIGNAL(minimizeWindow()), this, SLOT(minimizeWindow()));
-	//connect(&thread, SIGNAL(maximizeWindow()), this, SLOT(maximizeWindow()));
+	connect(thread, SIGNAL(setSummaryText(const QString &)), ui->currentSummaryLabel, SLOT(setText(const QString &)), Qt::QueuedConnection);
+	connect(thread, SIGNAL(setDetailsText(const QString &)), ui->currentDetailsLabel, SLOT(setText(const QString &)), Qt::QueuedConnection);
+	connect(thread, SIGNAL(setProgress(int)), ui->progressBar, SLOT(setValue(int)), Qt::QueuedConnection);
+	connect(thread, SIGNAL(setProgressMax(int)), ui->progressBar, SLOT(setMaximum(int)), Qt::QueuedConnection);
+	connect(thread, SIGNAL(reportError(const QString &)), this, SLOT(showError(const QString &)), Qt::QueuedConnection);
+	connect(thread, SIGNAL(reportFinish()), this, SLOT(finish()));
 
 	connect(ui->rebootNowButton, SIGNAL(clicked()), this, SLOT(reboot()));
 	connect(ui->rebootLaterButton, SIGNAL(clicked()), qApp, SLOT(quit()));
 
 	connect(ui->showLogButton, SIGNAL(clicked()), this, SLOT(showLog()));
-	connect(ui->skipMD5Button, SIGNAL(clicked()), &thread, SLOT(skipMD5()));
-	connect(&thread, SIGNAL(showMD5Button(bool)), ui->skipMD5Button, SLOT(setVisible(bool)));
-	connect(&thread, SIGNAL(enableMD5Button(bool)), ui->skipMD5Button, SLOT(setEnabled(bool)));
-	connect(this, SIGNAL(sendErrorResponce(MpkgErrorReturn)), &thread, SLOT(receiveErrorResponce(MpkgErrorReturn)));
-	connect(&thread, SIGNAL(sendErrorHandler(ErrorDescription, const QString &)), this, SLOT(errorHandler(ErrorDescription, const QString &)));
+	connect(ui->skipMD5Button, SIGNAL(clicked()), thread, SLOT(skipMD5()));
+	connect(thread, SIGNAL(showMD5Button(bool)), ui->skipMD5Button, SLOT(setVisible(bool)));
+	connect(thread, SIGNAL(enableMD5Button(bool)), ui->skipMD5Button, SLOT(setEnabled(bool)));
+	connect(this, SIGNAL(sendErrorResponce(MpkgErrorReturn)), thread, SLOT(receiveErrorResponce(MpkgErrorReturn)));
+	connect(thread, SIGNAL(sendErrorHandler(ErrorDescription, const QString &)), this, SLOT(errorHandler(ErrorDescription, const QString &)));
 			
 
 	// GTFO mounted cd :)
@@ -77,11 +76,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	//timer->setInterval(20000);
 	//connect(timer, SIGNAL(timeout()), this, SLOT(changePhoto()));
 	//timer->start(QThread::HighestPriority);
-	thread.start();
+	thread->start();
 
 }
 
 MainWindow::~MainWindow() {
+	if (thread) {
+		thread->terminate();
+		thread->wait();
+		delete thread;
+	}
 }
 
 void MainWindow::showError(const QString &err) {
@@ -91,6 +95,11 @@ void MainWindow::showError(const QString &err) {
 }
 
 void MainWindow::finish() {
+	if (thread) {
+		thread->wait();
+		delete thread;
+		thread = NULL;
+	}
 	ui->stackedWidget->setCurrentIndex(1);
 }
 
@@ -99,7 +108,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 				tr("Installation is not yet complete. If you interrupt it at this point, you will probably get your system completely unusable. Are you sure?"), 
 				QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
 	
-		thread.terminate();
+		thread->terminate();
 		event->accept();
 	}
 	else event->ignore();
@@ -119,7 +128,12 @@ void MainWindow::changePhoto() {
 }
 
 void MainWindow::reboot() {
-	system("sync && reboot &");
+	if (thread) {
+		thread->wait();
+		delete thread;
+		thread = NULL;
+	}
+	system("nohup /usr/local/bin/reboot_after_10_seconds.sh &");
 	qApp->quit();
 }
 
