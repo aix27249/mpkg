@@ -684,6 +684,8 @@ void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSe
 	if (!success) {
 		if (settings->value("pkgsource")=="dvd") {
 			if (QMessageBox::question(this, tr("DVD detection failed"), tr("Failed to detect DVD drive. Be sure you inserted installation DVD into this. Retry?"), QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
+				ui->nextButton->setEnabled(true);
+				ui->backButton->setEnabled(true);
 				backButtonClick();
 				return;
 			}
@@ -691,6 +693,9 @@ void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSe
 		}
 		else {
 			if (QMessageBox::question(this, tr("Repository connection failed"), tr("Failed to connect to repository. If you trying to access network repository, check your network settings. Retry?"), QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
+				ui->nextButton->setEnabled(true);
+				ui->backButton->setEnabled(true);
+
 				backButtonClick();
 				return;
 			}

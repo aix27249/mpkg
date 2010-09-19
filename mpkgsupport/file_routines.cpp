@@ -554,7 +554,6 @@ bool isMounted(string mountpoint) {
 
 string getCdromVolname(string *rep_location)
 {
-	//mDebug("checking in location " + CDROM_MOUNTPOINT);
 	bool hasMountedHere=false;
 	if (!isMounted(CDROM_MOUNTPOINT))
 	{
@@ -582,18 +581,10 @@ string getCdromVolname(string *rep_location)
 	// Validating
 	if (Svolname.find_first_of("\n\t/><| !@#$%%^&*()`\"\'")!=std::string::npos)
 	{
-		/*if (dialogMode) mError("Invalid volname [" + Svolname+"]"); */
-		//else ncInterface.showMsgBox(_("Invalid volname [") + Svolname + "]"); // FIXME: no backlinks to ncInterface
 		return "";
 	}
 	if (rep_location!=NULL)
 	{
-		/*if (repLoc.find_first_of("<>|!@#$%^&*()`\"\'")!=std::string::npos)
-		{
-			if (dialogMode) mError("Invalid repository path");
-			else ncInterface.showMsgBox(_("Invalid repository path ") + repLoc);
-			return "";
-		}*/
 		*rep_location = repLoc;
 	}
 	

@@ -60,7 +60,7 @@ void LoadSetupVariantsThread::run() {
 		system("umount /var/log/mount");
 	}
 	
-	printf("Repo detecting complete, sending %d items in pkgSetList\n", customPkgSetList.size());
+	printf("Repo detecting complete, sending %d items in pkgSetList\n", (int) customPkgSetList.size());
 	emit finished(true, customPkgSetList);
 
 }
@@ -112,6 +112,8 @@ QString LoadSetupVariantsThread::detectDVDDevice(QString isofile) {
 			if (mountDVD(testdev, testoptions, !isofile.isEmpty())) {
 				if (FileExists("/var/log/mount/.volume_id")) {
 					printf("Found volume_id on device %s\n", testdev.toStdString().c_str());
+					CDROM_MOUNTPOINT="/var/log/mount/";
+					CDROM_DEVICE=testdev.toStdString();
 					volname = getCdromVolname(&rep_location);
 					printf("Detected volname: %s, rep_location: %s\n", volname.c_str(), rep_location.c_str());
 					system("rm -f /dev/cdrom 2>/dev/tty4 >/dev/tty4; ln -s " + testdev.toStdString() + " /dev/cdrom 2>/dev/tty4 >/dev/tty4");
