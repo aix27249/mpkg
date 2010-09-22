@@ -11,6 +11,7 @@ const PACKAGE_LIST& DependencyTracker::get_install_list() const {
 	return installList;
 }
 
+// Note: seems to be not used anywhere.
 const PACKAGE_LIST& DependencyTracker::get_remove_list() const {
 	return removeList;
 }
@@ -35,7 +36,6 @@ void DependencyTracker::reset() {
 }
 void DependencyTracker::addToInstallQuery(const PACKAGE& pkg)
 {
-	//printf("addToInstallQuery ID: %d\n", pkg->get_id());
 	installQueryList.add(pkg);
 }
 void DependencyTracker::addToRemoveQuery(const PACKAGE& pkg)
@@ -373,9 +373,9 @@ int DependencyTracker::renderData()
 	}*/
 
 	bool skip;
-	for (unsigned int i=0; i<installedPackages.size(); i++) {
+	for (size_t i=0; i<installedPackages.size(); i++) {
 		skip=false;
-		for (unsigned int t=0; t<removeList.size(); t++) {
+		for (size_t t=0; t<removeList.size(); t++) {
 			if (removeList[t].get_id()==installedPackages[i].get_id()) {
 				skip=true;
 				break;
@@ -424,7 +424,7 @@ int DependencyTracker::renderData()
 	currentStatus=_("Dependency check completed, error count: ") + IntToStr(failureCounter);
 	_tmpRemoveStream = NULL;
 	_tmpInstallStream = NULL;
-	
+
 	filterDupeNames(&installList);
 	filterDupeNames(&removeList);
 	filterDupes(&installList);
@@ -741,16 +741,17 @@ void DependencyTracker::muxStreams(const PACKAGE_LIST& installStream, const PACK
        	proxyinstalledList.add(installQueuedList);
 	found=false;
 	for (size_t i=0; i<installStream.size(); ++i) {
-		//printf("CHECK: %s %s\n", installStream[i].get_name().c_str(), installStream[i].get_fullversion().c_str());
 		for (size_t t=0; t<proxyinstalledList.size(); ++t) {
 			if (proxyinstalledList[t].installed() && \
 					proxyinstalledList[t].get_corename() == installStream[i].get_corename() && \
 					proxyinstalledList[t].get_md5() != installStream[i].get_md5()) {
 				proxyinstalledList.get_package_ptr(t)->set_action(ST_REMOVE, "conflict");
+
 				conflict_list.add(proxyinstalledList[t]);
 				break;
 			}
 			else if (!installStream[i].get_conflicts().empty() && proxyinstalledList[t].get_corename()==installStream[i].get_conflicts()) {
+				proxyinstalledList.get_package_ptr(t)->set_action(ST_REMOVE, "conflict");
 				conflict_list.add(proxyinstalledList[t]);
 				break;
 			}
@@ -761,7 +762,6 @@ void DependencyTracker::muxStreams(const PACKAGE_LIST& installStream, const PACK
 	// 3.1 Filter conflict_list. Search for packages who required anything in conflict_list and it cannot be replaced by anything in installStream.
 	remove_list.add(conflict_list);
 #ifdef BACKTRACE_DEPS
-	mDebug("Backtracing dependencies");
 	PACKAGE_LIST removeCandidates;
 	PACKAGE_LIST removeQueue2;
 	PACKAGE_LIST willInstalled = installStream + installedPackages;
@@ -821,7 +821,6 @@ bool DependencyTracker::checkBrokenDeps(PACKAGE *pkg, PACKAGE_LIST searchList) /
 
 bool DependencyTracker::commitToDb()
 {
-	//printf("install_list size (begin): %d\n", installList.size());
 	mDebug("Tracking and committing to database");
 	int iC=0;
 	vector<int> i_ids;
@@ -905,7 +904,7 @@ bool DependencyTracker::commitToDb()
 		mError(_("Found essential packages, cannot continue"));
 		return false;
 	}
-	//printf("install_list size: %d\n", installList.size());
+	
 	// Commit actions to database if all OK
 	for (unsigned int i=0; i<installList.size(); i++) db->set_action(installList[i].get_id(), ST_INSTALL, installList[i].package_action_reason);
 	for (unsigned int i=0; i<removeList.size(); i++) db->set_action(removeList[i].get_id(), removeList[i].action(), removeList[i].package_action_reason);
