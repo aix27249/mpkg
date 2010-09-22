@@ -856,6 +856,7 @@ bool mpkgDatabase::check_cache(PACKAGE *package, bool clear_wrong, bool) {
 	string fname = SYS_CACHE + "/" + package->get_filename();
 	//if (package->usedSource.find("cdrom://")!=std::string::npos && FileExists(fname)) return true; // WHAT THE FUCK IS THIS??!!
 	string got_md5;
+
 	bool broken_sym;
 	if (FileExists(fname, &broken_sym) && !broken_sym) {
 		if (forceSkipLinkMD5Checks) {
@@ -863,22 +864,26 @@ bool mpkgDatabase::check_cache(PACKAGE *package, bool clear_wrong, bool) {
 			return true;
 		}
 
+		// Checking MD5
 		pData.setItemCurrentAction(package->itemID, _("Checking MD5"));
+		if (verbose) printf("Checking MD5 of %s/%s", SYS_CACHE.c_str(), package->get_filename().c_str());
 		got_md5 = get_file_md5(SYS_CACHE + "/" + package->get_filename());
-	       	if (package->get_md5() == got_md5) {
-			//printf("MD5 CHECK %s: %sOK%s (%s == %s)\n", package->get_name().c_str(), CL_GREEN, CL_WHITE, package->get_md5().c_str(), got_md5.c_str());
-			return true;
+
+		// If all ok, returning true
+	       	if (package->get_md5() == got_md5) return true;
+		
+		// And, if wrong, see if we should clear bad link. Note that if we use enableDownloadResume flag, clear_wrong is set to false always.
+		if (!clear_wrong) {
+			if (!dialogMode && !enableDownloadResume) {
+				say(_("Incorrect MD5 for package %s: received %s, but should be %s\n"), package->get_name().c_str(), got_md5.c_str(), package->get_md5().c_str());
+				mpkgErrorHandler.callError(MPKG_DOWNLOAD_ERROR, _("Invalid checksum in downloaded file ") + package->get_filename());
+				printf("\n\n");
+			}
 		}
-		printf("MD5 CHECK %s: %sFAILED%s (%s != %s)\n", package->get_name().c_str(), CL_RED, CL_WHITE, package->get_md5().c_str(), got_md5.c_str());
-		if (!dialogMode && !htmlMode) {
-			say(_("Incorrect MD5 for package %s: received %s, but should be %s\n"), package->get_name().c_str(), got_md5.c_str(), package->get_md5().c_str());
-			mpkgErrorHandler.callError(MPKG_DOWNLOAD_ERROR, _("Invalid checksum in downloaded file ") + package->get_filename());
-		}
-		if (clear_wrong) {
-			printf("Clearing bad MD5\n");
+		else { // If clearing, just do it. Used in first check when no download resume enabled.
+			if (!dialogMode && verbose) printf("Clearing orphaned file %s\n", fname.c_str());
 			unlink(fname.c_str());
 		}
-		return false;
 	}
 	return false;
 }
@@ -1240,7 +1245,7 @@ int mpkgDatabase::commit_actions()
 			msay(_("Checking cache and building download queue: ") + install_list[i].get_name());
 	
 	
-			if (skip || !check_cache(install_list.get_package_ptr(i), false)) {
+			if (skip || !check_cache(install_list.get_package_ptr(i), !enableDownloadResume)) {
 				needFullDownload[i]=!tryGetDelta(install_list.get_package_ptr(i));
 			}
 			if (needFullDownload[i]) {
@@ -1334,7 +1339,7 @@ download_process:
 			}
 			msay(_("Checking md5 of downloaded files: ") + install_list[i].get_name());
 	
-			if (!check_cache(install_list.get_package_ptr(i), false, false))
+			if (!check_cache(install_list.get_package_ptr(i), false))
 			{
 				pData.setItemState(install_list[i].itemID, ITEMSTATE_FAILED);
 	

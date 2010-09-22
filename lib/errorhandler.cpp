@@ -5,6 +5,7 @@
 #include "config.h"
 #include "debug.h"
 MpkgErrorReturn genericConsoleErrorHandler(ErrorDescription e, const string& errorDetails) {
+	if (e.action.size()==0) return MPKG_RETURN_ABORT;
 	if (e.action.size()==1) { // Case of no choice
 		if (e.action[0].ret==MPKG_RETURN_CONTINUE) {
 			say("%s\n",e.text.c_str());
