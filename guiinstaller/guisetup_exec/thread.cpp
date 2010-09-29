@@ -1114,12 +1114,15 @@ void SetupThread::setTimezone() {
 void SetupThread::setupNetwork() {
 	setHostname();
 	if (settings->value("netman").toString()=="wicd") {
-		system("chmod +x /etc/rc.d/rc.wicd");	
 		system("chroot /tmp/new_sysroot rc-update add wicd default");
 	}
 	else if (settings->value("netman").toString()=="networkmanager") {
-		system("chmod +x /etc/rc.d/rc.networkmanager");	
 		system("chroot /tmp/new_sysroot rc-update add networkmanager default");
+	}
+	else if (settings->value("netman").toString()=="netconfig") {
+		// This is just a TODO mark to setup network here
+		// Requires some GUI to get parameters.
+		//system("chroot /tmp/new_sysroot netconfig2 set USE_DHCP eth0 yes");
 	}
 
 }
@@ -1145,14 +1148,15 @@ void SetupThread::setDefaultRunlevels() {
 	system("chroot /tmp/new_sysroot rc-update add alsasound default");
 	system("chroot /tmp/new_sysroot rc-update add acpid default");
 	system("chroot /tmp/new_sysroot rc-update add cupsd default");
+	system("chroot /tmp/new_sysroot rc-update add cron default");
 
 	
 }
 
 void SetupThread::setDefaultXDM() {
-	if (FileExists("/tmp/new_sysroot/etc/rc.d/init.d/kdm")) system("chroot /tmp/new_sysroot rc-update add kdm default");
-	else if (FileExists("/tmp/new_sysroot/etc/rc.d/init.d/gdm")) system("chroot /tmp/new_sysroot rc-update add gdm default");
-	else if (FileExists("/tmp/new_sysroot/etc/rc.d/init.d/lxdm")) system("chroot /tmp/new_sysroot rc-update add lxdm default");
-	else if (FileExists("/tmp/new_sysroot/etc/rc.d/init.d/slim")) system("chroot /tmp/new_sysroot rc-update add slim default");
-	else if (FileExists("/tmp/new_sysroot/etc/rc.d/init.d/xdm")) system("chroot /tmp/new_sysroot rc-update add xdm default");
+	if (FileExists("/tmp/new_sysroot/etc/init.d/kdm")) system("chroot /tmp/new_sysroot rc-update add kdm default");
+	else if (FileExists("/tmp/new_sysroot/etc/init.d/gdm")) system("chroot /tmp/new_sysroot rc-update add gdm default");
+	else if (FileExists("/tmp/new_sysroot/etc/init.d/lxdm")) system("chroot /tmp/new_sysroot rc-update add lxdm default");
+	else if (FileExists("/tmp/new_sysroot/etc/init.d/slim")) system("chroot /tmp/new_sysroot rc-update add slim default");
+	else if (FileExists("/tmp/new_sysroot/etc/init.d/xdm")) system("chroot /tmp/new_sysroot rc-update add xdm default");
 }
