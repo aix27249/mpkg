@@ -268,8 +268,8 @@ void CursesInterface::showMsgBox(string text)
 	// Button
 	button1 = subwin(stdscr, 1, 14, box_start_l+box_height-2, box_start_c + box_width/2 - 7);
 	wbkgd(button1, A_BOLD | COLOR_PAIR(1));
-	wmove(button1, 0, (14-utf8strlen("OK"))/2);
-	waddstr(button1, "OK");
+	wmove(button1, 0, (14-utf8strlen(okStr))/2);
+	waddstr(button1, okStr.c_str());
 
 	// Drawing titles
 	drawTitles();
@@ -909,7 +909,7 @@ int CursesInterface::showMenu(string str,vector<MenuItem> menulist,int def_selec
 	wrefresh(subTitleWindow);
 	wrefresh(boxWindow);
 	wrefresh(textWindow);
-	chooseButton(button1,button2,choose, okStr.c_str(), cancelStr.c_str());
+	chooseButton(button1,button2,choose, okStr, cancelStr);
 	wrefresh(button1);
 	wrefresh(button2);
 	if (max_help_lines > 0) wrefresh(progressWindow);
@@ -1033,7 +1033,7 @@ int CursesInterface::showMenu(string str,vector<MenuItem> menulist,int def_selec
 			case KEY_RIGHT:
 			{
 				choose = (choose==false ? true : false);
-				chooseButton(button1,button2,choose, okStr.c_str(), cancelStr.c_str());
+				chooseButton(button1,button2,choose, okStr, cancelStr);
 				
 				break;
 			}
@@ -1315,7 +1315,7 @@ int CursesInterface::showExMenu(string text, vector<MenuItem> &menuItems,int def
 	wrefresh(boxWindow);
 	wrefresh(subTitleWindow);
 	wrefresh(textWindow);
-	chooseButton(button1,button2,choose, okStr.c_str(), cancelStr.c_str());
+	chooseButton(button1,button2,choose, okStr, cancelStr);
 
 	wmove(boxWindow,1,1);
 	
@@ -1741,7 +1741,7 @@ int CursesInterface::showExMenu(string text, vector<MenuItem> &menuItems,int def
 			case TAB:
 			{
 				choose = (choose==false ? true : false);
-				chooseButton(button1,button2,choose, "OK", "ОТМЕНА");
+				chooseButton(button1,button2,choose, okStr, cancelStr);
 				
 				break;
 			}
@@ -1779,7 +1779,7 @@ int CursesInterface::showExMenu(string text, vector<MenuItem> &menuItems,int def
 	wrefresh(mainWindow);
 	wrefresh(boxWindow);
 	wrefresh(textWindow);
-	chooseButton(button1,button2,choose, "OK", "ОТМЕНА");
+	chooseButton(button1,button2,choose, okStr, cancelStr);
 
 
 	}while(key!=ESCAPE);
