@@ -1097,6 +1097,7 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 		for (size_t t=0; t<candidates.size(); ++t) {
 			if (afraidAaaInDeps && candidates[t]->get_name()=="aaa_elflibs") continue;
 			// Skip compat32 packages
+			if (candidates[t]->isTaggedBy("compat32")) printf("%s is compat32, skipping\n", candidates[t]->get_name().c_str());
 			if (data->get_name()!="skype" && data->get_name()!="wine" && candidates[t]->isTaggedBy("compat32") && !data->isTaggedBy("x86")) continue;
 //			printf("Checking candidate %s for %s\n", candidates[t]->get_name().c_str(), results.getValue(i, fFile_name).c_str());
 			if (candidates[t]->get_name()=="aaa_elflibs") {

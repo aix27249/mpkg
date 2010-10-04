@@ -19,6 +19,10 @@ string getDepConditionBack(int db_in) {
 	}
 	return "";
 }
+void report_failure(int line) {
+	fprintf(stderr, "EPIC FAIL at line %d\n", line);
+	abort();
+}
 string getFancyDistro(string srv, string darch, string dver) {
 	if (srv=="core" || srv=="userland" || srv=="testing") return srv + "-" + darch;
 	else if (srv=="deprecated/core" || srv=="deprecated/userland" || srv=="deprecated/testing") return srv + "-" + darch + " (deprecated)";
@@ -31,15 +35,20 @@ void generateIndex2(MYSQL &conn, string srv, string darch, string dver, bool glo
 	
 	printf("Checking out package list...\n");
 	MYSQL_RES *packages;
-	if (!global) mysql_query(&conn, string("SELECT packages.*, locations.location_path FROM packages, locations WHERE packages.package_id=locations.packages_package_id AND locations.server_url='" + srv + "' AND locations.distro_arch='" + darch + "' AND locations.distro_version='" + dver + "' GROUP BY packages.package_id").c_str());
-	else mysql_query(&conn, "SELECT packages.*, locations.location_path, locations.distro_arch, locations.distro_version, locations.server_url FROM packages, locations WHERE packages.package_id=locations.packages_package_id GROUP BY packages.package_id");
+	int res;
+	if (!global) res = mysql_query(&conn, string("SELECT packages.*, locations.location_path FROM packages, locations WHERE packages.package_id=locations.packages_package_id AND locations.server_url='" + srv + "' AND locations.distro_arch='" + darch + "' AND locations.distro_version='" + dver + "' GROUP BY packages.package_id").c_str());
+	else res = mysql_query(&conn, "SELECT packages.*, locations.location_path, locations.distro_arch, locations.distro_version, locations.server_url FROM packages, locations WHERE packages.package_id=locations.packages_package_id GROUP BY packages.package_id");
+
+	if (res) report_failure(__LINE__);
 
 	printf("Count: %d\n", mysql_field_count(&conn));
 	packages = mysql_store_result(&conn);
 
 	printf("Checking out ABUILD list...\n");
 	MYSQL_RES *abuilds;
-	mysql_query(&conn, "SELECT package_id, filename FROM abuilds;");
+	res = mysql_query(&conn, "SELECT package_id, filename FROM abuilds;");
+	if (res) report_failure(__LINE__);
+
 	abuilds = mysql_store_result(&conn);
 	printf("%s %s %s - found %d packages\n", srv.c_str(), darch.c_str(), dver.c_str(), mysql_num_rows(packages));
 	
@@ -87,7 +96,8 @@ void generateIndex2(MYSQL &conn, string srv, string darch, string dver, bool glo
 		fprintf(xml, "\t<filename>%s</filename>\n", row[16]);
 		
 		// Deps... :)
-		mysql_query(&conn, string("SELECT dependency_package_name, dependency_condition, dependency_package_version FROM dependencies WHERE packages_package_id='" + string(row[0]) + "'").c_str());
+		res = mysql_query(&conn, string("SELECT dependency_package_name, dependency_condition, dependency_package_version FROM dependencies WHERE packages_package_id='" + string(row[0]) + "'").c_str());
+		if (res) report_failure(__LINE__);
 		deps = mysql_store_result(&conn);
 		if (mysql_num_rows(deps)>0) {
 			fprintf(xml, "\t<dependencies>\n");
@@ -103,7 +113,8 @@ void generateIndex2(MYSQL &conn, string srv, string darch, string dver, bool glo
 		}
 		mysql_free_result(deps);
 		// Tags
-		mysql_query(&conn, string("SELECT tags_name FROM tags,tags_links WHERE tags.tags_id=tags_links.tags_tag_id AND tags_links.packages_package_id='" + string(row[0]) + "").c_str());
+		res = mysql_query(&conn, string("SELECT tags_name FROM tags,tags_links WHERE tags.tags_id=tags_links.tags_tag_id AND tags_links.packages_package_id='" + string(row[0]) + "'").c_str());
+		if (res) report_failure(__LINE__);
 		tags = mysql_store_result(&conn);
 		if (tags && mysql_num_rows(tags)>0) {
 			fprintf(xml, "\t<tags>\n");
@@ -186,7 +197,8 @@ int main(int argc, char **argv) {
 	
 	
 	MYSQL_RES *available_repos;
-       	mysql_query(&conn, "SELECT server_url, distro_arch, distro_version FROM locations GROUP BY server_url, distro_arch");
+       	int res = mysql_query(&conn, "SELECT server_url, distro_arch, distro_version FROM locations GROUP BY server_url, distro_arch");
+	if (res) report_failure(__LINE__);
 	available_repos = mysql_store_result(&conn);
 	int repocount = mysql_num_rows(available_repos);
 	printf("Total repos: %d\n", repocount);
