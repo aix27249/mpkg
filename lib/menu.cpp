@@ -75,7 +75,7 @@ void showMainMenu(mpkg &core) {
 	do {
 		ncInterface.setTitle(_("MPKG package system ") + (string) mpkgVersion);
 		ncInterface.setSubtitle(_("Main menu"));
-		ret = ncInterface.showMenu2(_("MPKG package system"), menuItems);
+		ret = ncInterface.showMenu2(_("MPKG package system"), menuItems, ret);
 		MENUCASE("ACT_CLEAN") actClean(core);
 		MENUCASE("ACT_INDEX") {
 			ncInterface.setSubtitle(_("Select directory to index:"));
