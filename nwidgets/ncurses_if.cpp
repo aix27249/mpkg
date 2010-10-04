@@ -374,7 +374,10 @@ refreshWindows:
 	
 	kbd_input = getch();
 	touchwin(stdscr);
-	if (kbd_input == TAB || kbd_input == KEY_BTAB || kbd_input == 261 || kbd_input == 260) {
+	if (kbd_input == TAB || kbd_input == KEY_BTAB || \
+			kbd_input == 261 || kbd_input == 260 || \
+			kbd_input == KEY_LEFT || kbd_input == KEY_RIGHT || \
+			kbd_input == 113 || kbd_input == 114) {
 		if (currentButton == 0) {
 			currentButton = 1;
 			goto refreshWindows;
@@ -1026,6 +1029,8 @@ int CursesInterface::showMenu(string str,vector<MenuItem> menulist,int def_selec
 				break;
 			}
 			case TAB:
+			case KEY_LEFT:
+			case KEY_RIGHT:
 			{
 				choose = (choose==false ? true : false);
 				chooseButton(button1,button2,choose, okStr.c_str(), cancelStr.c_str());
