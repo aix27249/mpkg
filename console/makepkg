@@ -334,9 +334,11 @@ find . -type f -name '*.gz' | while read file ; do
 done
 
 # Warn about double-gzipped man pages
-find usr/man -name '*.gz.gz' | while read file ; do
-	echo "WARNING: Double-gzipped man page $file"
-done
+if [ -d usr/man ] ; then
+	find usr/man -name '*.gz.gz' | while read file ; do
+		echo "WARNING: Double-gzipped man page $file"
+	done
+fi
 
 # Some more handy warnings:
 if [ -d usr/share/man ]; then
