@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>845</width>
-    <height>466</height>
+    <height>464</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -358,11 +358,14 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
+       <item row="0" column="3">
         <widget class="QLineEdit" name="cdromDeviceEdit"/>
        </item>
        <item row="1" column="0">
         <widget class="QCheckBox" name="enableDownloadResumeCheckBox">
+         <property name="toolTip">
+          <string>By default, download resume is enabled for wget and aria2 tools. If you want to specify exact behaviour, choose some of this.</string>
+         </property>
          <property name="text">
           <string>Enable download resume</string>
          </property>
@@ -375,7 +378,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="2">
+       <item row="1" column="3">
         <widget class="QLineEdit" name="cdromMountEdit"/>
        </item>
        <item row="2" column="0">
@@ -395,14 +398,14 @@
        <item row="4" column="0">
         <widget class="QCheckBox" name="enableBDeltaCheckBox">
          <property name="toolTip">
-          <string>Enable support for delta updates. This feature extremely saves traffic, but still experimental</string>
+          <string>Enable support for delta updates. This feature extremely saves traffic, but eats your HDD and CPU. Support for this feature was dropped in repositories and may be removed permanently from mpkg.</string>
          </property>
          <property name="text">
-          <string>Enable bdelta support</string>
+          <string>Enable bdelta support (deprecated)</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
+       <item row="8" column="0">
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -414,6 +417,42 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_16">
+         <property name="text">
+          <string>Download tool:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QComboBox" name="downloadToolComboBox">
+         <item>
+          <property name="text">
+           <string>wget</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>aria2</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>mpkg (old default)</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="label_17">
+         <property name="text">
+          <string>By default, mpkg now uses wget as the most robust tool. If you want more speed, choose aria2 or mpkg.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

@@ -58,6 +58,10 @@ void SettingsDialog::load() {
 	ui->cdromDeviceEdit->setText(QString::fromStdString(mConfig.getValue("cdrom_device")));
 	ui->cdromMountEdit->setText(QString::fromStdString(mConfig.getValue("cdrom_mountpoint")));
 
+	if (mConfig.getValue("download_tool")=="aria2" || mConfig.getValue("download_tool")=="aria2c") ui->downloadToolComboBox->setCurrentIndex(1);
+	else if (mConfig.getValue("download_tool")=="mpkg") ui->downloadToolComboBox->setCurrentIndex(2);
+	else ui->downloadToolComboBox->setCurrentIndex(0);
+
 	// Tab 2: repositories 
 	// -----%<-------------------------from here------------------------------------->%-----------------
 	vector<string> enabledRepositories = mpkgconfig::get_repositorylist();
@@ -128,13 +132,25 @@ void SettingsDialog::save() {
 	if (ui->disableDependenciesCheckBox->isChecked()) mConfig.setValue("disable_dependencies", "yes");
 	else mConfig.setValue("disable_dependencies", "no");
 	if (ui->enableDownloadResumeCheckBox->isChecked()) mConfig.setValue("enable_download_resume", "yes");
-	else mConfig.setValue("enable_download_resume", "no");
+	else mConfig.setValue("enable_download_resume", ""); // Let it be automatic.
 	if (ui->enablePrelinkCheckBox->isChecked()) mConfig.setValue("enable_prelink", "yes");
 	else mConfig.setValue("enable_prelink", "no");
 	if (ui->enablePrelinkRandomCheckBox->isChecked()) mConfig.setValue("enable_prelink_randomization", "yes");
 	else mConfig.setValue("enable_prelink_randomization", "no");
 	if (ui->enableBDeltaCheckBox->isChecked()) mConfig.setValue("enable_delta", "yes");
 	else mConfig.setValue("enable_delta", "no");
+
+	switch (ui->downloadToolComboBox->currentIndex()) {
+		case 0:
+			mConfig.setValue("download_tool", "wget");
+			break;
+		case 1:
+			mConfig.setValue("download_tool", "aria2");
+			break;
+		case 2:
+			mConfig.setValue("download_tool", "mpkg");
+			break;
+	}
 	mConfig.setValue("cdrom_device", ui->cdromDeviceEdit->text().toStdString());
 	mConfig.setValue("cdrom_mountpoint", ui->cdromMountEdit->text().toStdString());
 
