@@ -2,6 +2,7 @@
 # Copyright 1994, 1998, 2008  Patrick Volkerding, Moorhead, Minnesota USA 
 # Copyright 2003  Slackware Linux, Inc.  Concord, CA USA
 # Copyright 2009  Patrick J. Volkerding, Sebeka, MN, USA
+# Copyright 2010  Bogdan "aix27249" Kokorev <i27249@gmail.com>, AgiliaLinux team
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -189,7 +190,7 @@ case $EXTENSION in
 esac
 
 echo
-echo "Slackware package maker, version 3.14159."
+echo "AgiliaLinux package maker, version 3.15."
 echo
 
 INST=$(mktemp $TMP/makepkg.XXXXXX)
@@ -282,7 +283,7 @@ if [ "$CHOWN" = "y" ]; then
   find . -type d -exec chown -v root.root {} \;
 fi
 
-echo "Creating Slackware package:  ${TARGET_NAME}/${TAR_NAME}.${EXTENSION}"
+echo "Creating AgiliaLinux package:  ${TARGET_NAME}/${TAR_NAME}.${EXTENSION}"
 echo
 rm -f ${TARGET_NAME}/${TAR_NAME}.${EXTENSION}
 case $EXTENSION in
@@ -332,6 +333,11 @@ find . -type f -name '*.gz' | while read file ; do
   fi
 done
 
+# Warn about double-gzipped man pages
+find usr/man -name '*.gz.gz' | while read file ; do
+	echo "WARNING: Double-gzipped man page $file"
+done
+
 # Some more handy warnings:
 if [ -d usr/share/man ]; then
   echo "WARNING:  /usr/share/man (with possibly not gzipped man pages) detected"
@@ -346,5 +352,5 @@ if find . | grep site_perl 1> /dev/null ; then
 fi
 
 echo
-echo "Slackware package ${TARGET_NAME}/${TAR_NAME}.${EXTENSION} created."
+echo "AgiliaLinux package ${TARGET_NAME}/${TAR_NAME}.${EXTENSION} created."
 echo
