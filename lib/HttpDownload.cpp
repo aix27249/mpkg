@@ -504,21 +504,14 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 							prData->setItemState(item->itemID,ITEMSTATE_INPROGRESS);
 						}
 						string dl_tool = mConfig.getValue("download_tool");
-						if (dl_tool=="wget") {
-							string opts;
-							if (enableDownloadResume) opts = " -c ";
-							int get_result = system("wget \'" + item->url_list.at(j) + "\' -O \'" + item->file + "\' " + opts + " --no-check-certificate");
-							if (get_result) result = CURLE_READ_ERROR;
-							else result = CURLE_OK;
-						}
-						else if (dl_tool=="aria2" || dl_tool=="aria2c") {
+						if (dl_tool=="aria2" || dl_tool=="aria2c") {
 							string opts;
 							if (enableDownloadResume) opts = " -c ";
 							int get_result = system("aria2c \'" + item->url_list.at(j) + "\' -d \'" + getDirectory(item->file) + "\' -o \'" + getFilename(item->file) + "\' " + opts + " --check-certificate=false");
 							if (get_result) result = CURLE_READ_ERROR;
 							else result = CURLE_OK;
 						}
-						else { // Default is libcurl
+						else if (dl_tool=="mpkg") { // Default is libcurl
 							resumePos = 0;
 							out = fopen (string(item->file + ".part").c_str(), "ab"); // NOTE: downloading to .part first!
 							if ( out == NULL ) {
@@ -592,6 +585,13 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 								}
 								} // End of CURL_DOWNLOAD
 						} // End of libcurl
+						else { // Now default is wget
+							string opts;
+							if (enableDownloadResume) opts = " -c ";
+							int get_result = system("wget \'" + item->url_list.at(j) + "\' -O \'" + item->file + "\' " + opts + " --no-check-certificate");
+							if (get_result) result = CURLE_READ_ERROR;
+							else result = CURLE_OK;
+						}
 					}
 	    				if ( result == CURLE_OK  ) {
 						if (ppActionBus->_abortActions) {

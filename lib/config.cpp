@@ -135,7 +135,14 @@ int loadGlobalConfig(string config_file)
 	endwin();
 #endif
 	if (mConfig.getValue("enable_download_resume")=="yes") enableDownloadResume = true;
-	else enableDownloadResume = false;
+	else if (mConfig.getValue("enable_download_resume")=="no") {
+		enableDownloadResume = false;
+	}
+	else {
+		// Default is to enable download resume for all variants except internal mpkg downloader
+		if (mConfig.getValue("download_tool")!="mpkg") enableDownloadResume=true;
+		else enableDownloadResume=false;
+	}
 	removeBlacklist = ReadFileStrings("/etc/mpkg-remove-blacklist");
 	string run_scripts="yes";
 	string cdrom_device="/dev/cdrom";

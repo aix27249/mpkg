@@ -2,7 +2,7 @@
 
 # Package metadata
 pkgname=mbuilder
-pkgver=0.15
+pkgver=0.16
 pkgbuild=1
 arch="auto"
 
@@ -15,7 +15,7 @@ source=("svn:svn://agilialinux.ru/mpkg/mpkg/trunk/mbuilder")
 
 # Tags
 tags="console dev-util"
-
+adddep="mkpkg"
 # Build system
 BUILD_SYSTEM="cmake"
 BUILD_KEYS="-DCMAKE_INSTALL_PREFIX=/usr"
