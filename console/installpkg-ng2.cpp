@@ -694,6 +694,7 @@ int main (int argc, char **argv)
 		PACKAGE_LIST pkgList1;
 		PACKAGE_LIST pkgList2;
 		SQLRecord sqlSearch;
+		printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
 		core.get_packagelist(sqlSearch, &pkgList1);
 		for (unsigned int i=0; i<pkgList1.size(); i++)
 		{
@@ -711,6 +712,7 @@ int main (int argc, char **argv)
 		PACKAGE_LIST pkgList1;
 		vector<string> queue;
 		SQLRecord sqlSearch;
+		printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
 		core.get_packagelist(sqlSearch, &pkgList1);
 		for (unsigned int i=0; i<pkgList1.size(); i++)
 		{
@@ -735,6 +737,7 @@ int main (int argc, char **argv)
 		PACKAGE_LIST pkgList1;
 		vector<string> queue;
 		SQLRecord sqlSearch;
+		printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
 		core.get_packagelist(sqlSearch, &pkgList1);
 		for (unsigned int i=0; i<pkgList1.size(); i++)
 		{
@@ -812,6 +815,7 @@ int main (int argc, char **argv)
 		PACKAGE_LIST checkList;
 		SQLRecord sqlSearch;
 		sqlSearch.addField("package_installed",ST_INSTALLED);
+		printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
 		core.get_packagelist(sqlSearch, &checkList);
 		if (optind>=argc) core.db->get_full_filelist(&checkList);
 		say(_("checking...\n"));

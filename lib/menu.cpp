@@ -249,7 +249,7 @@ void actUpgrade(mpkg &core, int action) {
 		else msay(_("Searching for updates..."));
 
 		PACKAGE_LIST resultList, uninstallList;
-		vector<string> errorList = core.getLatestUpdates(&resultList, &uninstallList, action == ACT_LISTUPGRADE);
+		vector<string> errorList = core.getLatestUpdates(&resultList, &uninstallList, true);
 		vector<MenuItem> menuItems; // Vector for update list
 		long double totalSizeC = 0, totalSizeI = 0;
 		string branch;

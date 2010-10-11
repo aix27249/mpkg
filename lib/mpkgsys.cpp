@@ -168,7 +168,8 @@ int mpkgSys::requestInstall(int package_id, mpkgDatabase *db, DependencyTracker 
 	SQLRecord sqlSearch;
 	sqlSearch.addField("package_name", tmpPackage.get_name());
 	PACKAGE_LIST candidates;
-	db->get_packagelist(sqlSearch, &candidates);
+	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
+	db->get_packagelist(sqlSearch, &candidates, true, false);
 	mDebug("received " + IntToStr(candidates.size()) + " candidates to update"); 
 	for (unsigned int i=0; i<candidates.size(); i++)
 	{
@@ -222,7 +223,9 @@ int mpkgSys::requestInstallGroup(string groupName, mpkgDatabase *db, DependencyT
 	mDebug("requesting data");
 	SQLRecord sqlSearch;
 	PACKAGE_LIST candidates;
-	db->get_packagelist(sqlSearch, &candidates);
+	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
+	db->get_packagelist(sqlSearch, &candidates, true, false);
+	db->get_full_taglist(&candidates);
 	vector<string> install_list;
 	for (unsigned int i=0; i<candidates.size(); i++)
 	{
@@ -259,7 +262,7 @@ int mpkgSys::requestInstall(vector<string> package_name, vector<string> package_
 	string pkgType;
 	for (unsigned int i=0; i<package_name.size(); i++) {
 		pkgType=getExtension(package_name[i]);
-		if (pkgType=="tgz" || pkgType == "tbz" || pkgType == "tlz" || pkgType=="txz" || pkgType == "spkg") {
+		if (pkgType=="txz" || pkgType == "tbz" || pkgType == "tlz" || pkgType=="tgz" || pkgType == "spkg") {
 		       if (FileExists(package_name[i])) {
 				_p = new LocalPackage(package_name[i]);
 				_p->injectFile();
@@ -288,7 +291,8 @@ int mpkgSys::requestInstall(vector<string> package_name, vector<string> package_
 	}
 	// 2. Requesting database by search array
 	PACKAGE_LIST pCache;
-	int query_ret = db->get_packagelist(sqlSearch, &pCache);
+	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
+	int query_ret = db->get_packagelist(sqlSearch, &pCache, true, false);
 	if (query_ret != 0) {
 		errorList.push_back(mError("Error querying database"));
 		if (eList) *eList = errorList;
@@ -412,7 +416,8 @@ int mpkgSys::requestInstall(string package_name, string package_version, string 
 	}
 	if (!package_build.empty()) sqlSearch.addField("package_build", package_build);
 	PACKAGE_LIST candidates;
-	int ret = db->get_packagelist(sqlSearch, &candidates);
+	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
+	int ret = db->get_packagelist(sqlSearch, &candidates, true, false);
 	mDebug("received " + IntToStr(candidates.size()) + " candidates for " + package_name);
 	candidates.initVersioning();
 	// TODO: let user know if multiple packages with same name, version and build are available, and let him choose.
@@ -540,7 +545,8 @@ int mpkgSys::requestUninstall(string package_name, mpkgDatabase *db, DependencyT
 	if (!purge) sqlSearch.addField("package_installed", 1);
 	else sqlSearch.addField("package_configexist",1);
 	PACKAGE_LIST candidates;
-	int ret = db->get_packagelist(sqlSearch, &candidates);
+	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
+	int ret = db->get_packagelist(sqlSearch, &candidates, true, false);
 	mDebug("candidates to uninstall size = " + IntToStr(candidates.size()));
 	int id=-1;
 	if (ret == 0)

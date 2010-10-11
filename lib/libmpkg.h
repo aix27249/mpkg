@@ -132,7 +132,7 @@ class mpkg
 		 * @@*/
 
 		// Package list retrieving
-		int get_packagelist(SQLRecord& sqlSearch, PACKAGE_LIST *packagelist, bool ultraFast=false);
+		int get_packagelist(SQLRecord& sqlSearch, PACKAGE_LIST *packagelist, bool ultraFast=false, bool needDescriptions=true);
 		/* get_packagelist(SQLRecord, PACKAGE_LIST *, bool):
 		 * Fills the packagelist by packages who meets sqlSearch requirements.
 		 * To use this, you should define sqlSearch first. See documentation about an SQLRecord object.

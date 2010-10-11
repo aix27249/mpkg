@@ -101,9 +101,28 @@ void filterDupeNames(PACKAGE_LIST *pkgList) {
 }
 void DependencyTracker::createPackageCache()
 {
-
+	// Let's check if there is anything to do.
 	SQLRecord sqlSearch;
-	db->get_packagelist(sqlSearch, &packageCache);
+	sqlSearch.setSearchMode(SEARCH_IN);
+	sqlSearch.addField("package_action", ST_REMOVE);
+	sqlSearch.addField("package_action", ST_PURGE);
+	sqlSearch.addField("package_action", ST_INSTALL);
+	sqlSearch.addField("package_action", ST_REPAIR);
+
+	PACKAGE_LIST dummyList;
+	db->get_packagelist(sqlSearch, &dummyList, true, false);
+
+	if (dummyList.size()==0) {
+		cacheCreated=true;
+	       	return;
+	}
+
+	SQLRecord cacheSqlSearch;
+	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
+	db->get_packagelist(cacheSqlSearch, &packageCache, true, false);	
+	//printf("FULL DEPLIST FETCH\n");
+	db->get_full_dependencylist(&packageCache);
+	//printf("FULL DEPLIST FETCH END\n");
 	cacheCreated=true;
 }
 

@@ -21,7 +21,7 @@ class mpkgDatabase
 		void unexportPackage(const string& output_dir, const PACKAGE& p);
 		// Functions to get data
 		int get_package(const int& package_id, PACKAGE *package, bool no_cache=false);
-		int get_packagelist(const SQLRecord& sqlSearch, PACKAGE_LIST *packagelist, bool ultraFast=false);
+		int get_packagelist(const SQLRecord& sqlSearch, PACKAGE_LIST *packagelist, bool ultraFast=false, bool needDescriptions=true);
 #ifdef ENABLE_INTERNATIONAL
 		int get_descriptionlist(const int& package_id, vector<DESCRIPTION> *desclist, string language="");
 #endif
@@ -47,7 +47,7 @@ class mpkgDatabase
 		int get_configexist(int package_id);
 
 //		int get_scripts(int package_id, SCRIPTS *scripts);
-		PACKAGE_LIST get_other_versions(const string& package_name);
+//		PACKAGE_LIST get_other_versions(const string& package_name);
 		PACKAGE* get_max_version(PACKAGE_LIST& pkgList, const DEPENDENCY& dep);
 		bool checkVersion(const string& version1, const int& condition, const string& version2);
 		int sqlFlush();

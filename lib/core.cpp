@@ -52,14 +52,14 @@ bool mpkgDatabase::checkVersion(const string& version1, const int& condition, co
 	return true;
 }
 
-PACKAGE_LIST mpkgDatabase::get_other_versions(const string& package_name)
+/*PACKAGE_LIST mpkgDatabase::get_other_versions(const string& package_name)
 {
 	PACKAGE_LIST pkgList;
 	SQLRecord sqlSearch;
 	sqlSearch.addField("package_name", package_name);
 	get_packagelist(sqlSearch, &pkgList);
 	return pkgList;
-}	// Seems to be deprecated
+}*/	// Seems to be deprecated
 PACKAGE* mpkgDatabase::get_max_version(PACKAGE_LIST& pkgList, const DEPENDENCY& dep)
 {
 	// Maybe optimization possible
@@ -146,7 +146,7 @@ void mpkgDatabase::fillEssentialFiles(bool force_update) {
 	sqlSearch.addField("package_installed", ST_INSTALLED);
 	sqlSearch.setSearchMode(SEARCH_AND);
 	PACKAGE_LIST p;
-	get_packagelist(sqlSearch, &p);
+	get_packagelist(sqlSearch, &p, true);
 	if (p.IsEmpty()) return;
 	if (p.size()!=1) {
 		printf("Multiple aaa_elflibs in database, fail!\n");
@@ -651,12 +651,20 @@ int mpkgDatabase::get_package(const int& package_id, PACKAGE *package, bool no_c
 	return MPKGERROR_NOPACKAGE;
 }
 
-int mpkgDatabase::get_packagelist (const SQLRecord& sqlSearch, PACKAGE_LIST *packagelist, bool ultraFast)//, bool GetExtraInfo, bool ultraFast)
+/*int mpkgDatabase::get_fast_packagelist (string query, PACKAGE_LIST *packagelist, bool needTags, bool needDeps, bool needFilelist, bool needAbuilds, bool needConfigs) {
+	
+}*/
+int gpkglist_counter=0, e_gpkglist_counter=0, gpkg_chit=0;
+int mpkgDatabase::get_packagelist (const SQLRecord& sqlSearch, PACKAGE_LIST *packagelist, bool ultraFast, bool needDescriptions)//, bool GetExtraInfo, bool ultraFast)
 {
+	gpkglist_counter++;
+	//printf("\n\nCOUNT: %d, fast: %d\n", gpkglist_counter, ultraFast);
 	// Ultrafast will request only basic info about package
 	
 	if (sqlSearch.empty() && !db.internalDataChanged)
 	{
+		gpkg_chit++;
+		//printf("Cache hit: %d\n", gpkg_chit);
 		*packagelist=packageDBCache;
 		return 0;
 	}
@@ -690,7 +698,7 @@ int mpkgDatabase::get_packagelist (const SQLRecord& sqlSearch, PACKAGE_LIST *pac
 	int fPackage_action = sqlTable->getFieldIndex("package_action");
 	int fPackage_md5 = sqlTable->getFieldIndex("package_md5");
 	int fPackage_filename = sqlTable->getFieldIndex("package_filename");
-	int fPackage_betarelease =sqlTable->getFieldIndex("package_betarelease");
+	//int fPackage_betarelease =sqlTable->getFieldIndex("package_betarelease");
 	int fPackage_installed_by_dependency = sqlTable->getFieldIndex("package_installed_by_dependency");
 	int fPackage_type = sqlTable->getFieldIndex("package_type");
 	int fPackage_add_date = sqlTable->getFieldIndex("package_add_date");
@@ -711,39 +719,39 @@ int mpkgDatabase::get_packagelist (const SQLRecord& sqlSearch, PACKAGE_LIST *pac
 		p->set_build(sqlTable->getValue(i, fPackage_build));
 		p->set_compressed_size(sqlTable->getValue(i, fPackage_compressed_size));
 		p->set_installed_size(sqlTable->getValue(i, fPackage_installed_size));
-		p->set_short_description(sqlTable->getValue(i, fPackage_short_description));
-		p->set_description(sqlTable->getValue(i, fPackage_description));
-		p->set_changelog(sqlTable->getValue(i, fPackage_changelog));
-		p->set_packager(sqlTable->getValue(i, fPackage_packager));
-		p->set_packager_email(sqlTable->getValue(i, fPackage_packager_email));
+		if (needDescriptions) p->set_short_description(sqlTable->getValue(i, fPackage_short_description));
+		if (needDescriptions) p->set_description(sqlTable->getValue(i, fPackage_description));
+		if (needDescriptions) p->set_changelog(sqlTable->getValue(i, fPackage_changelog));
+		if (needDescriptions) p->set_packager(sqlTable->getValue(i, fPackage_packager));
+		if (needDescriptions) p->set_packager_email(sqlTable->getValue(i, fPackage_packager_email));
 		p->set_installed(atoi(sqlTable->getValue(i,fPackage_installed).c_str()));
 		p->set_configexist(atoi(sqlTable->getValue(i, fPackage_configexist).c_str()));
 		p->set_action(atoi(sqlTable->getValue(i, fPackage_action).c_str()), sqlTable->getValue(i, fPackage_installed_by_dependency));
 
 		p->set_md5(sqlTable->getValue(i, fPackage_md5));
 		p->set_filename(sqlTable->getValue(i, fPackage_filename));
-		p->set_betarelease(sqlTable->getValue(i, fPackage_betarelease));
+		//p->set_betarelease(sqlTable->getValue(i, fPackage_betarelease));
 		p->set_installed_by_dependency(atoi(sqlTable->getValue(i, fPackage_installed_by_dependency).c_str()));
 		p->set_type(atoi(sqlTable->getValue(i, fPackage_type).c_str()));
-		p->add_date = atoi(sqlTable->getValue(i, fPackage_add_date).c_str());
-		p->build_date = atoi(sqlTable->getValue(i, fPackage_build_date).c_str());
-		p->set_repository_tags(sqlTable->getValue(i, fPackage_repository_tags));
-		p->package_distro_version = sqlTable->getValue(i, fPackage_distro_version);
+		if (needDescriptions) p->add_date = atoi(sqlTable->getValue(i, fPackage_add_date).c_str());
+		if (needDescriptions) p->build_date = atoi(sqlTable->getValue(i, fPackage_build_date).c_str());
+		if (needDescriptions) p->set_repository_tags(sqlTable->getValue(i, fPackage_repository_tags));
+		if (needDescriptions) p->package_distro_version = sqlTable->getValue(i, fPackage_distro_version);
 		p->set_provides(sqlTable->getValue(i, fPackage_provides));
 		p->set_conflicts(sqlTable->getValue(i, fPackage_conflicts));
 #ifdef ENABLE_INTERNATIONAL
 		get_descriptionlist(p->get_id(), packagelist[i].get_descriptions());
 #endif
 	}
-	if (!ultraFast) 
+	if (!ultraFast && !packagelist->IsEmpty()) 
 	{
 		get_full_taglist(packagelist);
 		get_full_dependencylist(packagelist);
 		get_full_config_files_list(packagelist);
-		get_full_abuildlist(packagelist);
+		if (needDescriptions) get_full_abuildlist(packagelist);
 	}
-	get_full_locationlist(packagelist);
-	get_full_deltalist(packagelist);
+	if (!packagelist->IsEmpty()) get_full_locationlist(packagelist);
+	//get_full_deltalist(packagelist);
 	if (!ultraFast && sqlSearch.empty())
 	{
 		packageDBCache=*packagelist;
@@ -751,6 +759,8 @@ int mpkgDatabase::get_packagelist (const SQLRecord& sqlSearch, PACKAGE_LIST *pac
 	}
 
 	delete sqlTable;
+	e_gpkglist_counter++;
+	//printf("\n\nEND COUNT: %d\n", e_gpkglist_counter);
 	return 0;
 
 }
@@ -816,6 +826,12 @@ void mpkgDatabase::get_full_filelist(PACKAGE_LIST *pkgList)
 	SQLRecord sqlFields;
 	sqlFields.addField("file_name");
 	sqlFields.addField("packages_package_id");
+	sqlSearch.setSearchMode(SEARCH_IN);
+	for (size_t i=0; i<pkgList->size(); ++i) {
+		sqlSearch.addField("packages_package_id", pkgList->at(i).get_id());
+	}
+
+
 	db.get_sql_vtable(*sqlTable, sqlFields, "files", sqlSearch);
 	int package_id;
 	size_t counter=0;
@@ -837,6 +853,7 @@ void mpkgDatabase::get_full_abuildlist(PACKAGE_LIST *pkgList) {
 	SQLTable *abuilds = new SQLTable;
 	SQLRecord fields;
 	SQLRecord search;
+
 	db.get_sql_vtable(*abuilds, fields, "abuilds", search);
 	
 	int fPackage_id = abuilds->getFieldIndex("package_id");
@@ -895,6 +912,12 @@ void mpkgDatabase::get_full_dependencylist(PACKAGE_LIST *pkgList) //TODO: incomp
 	SQLRecord fields;
 	SQLRecord search;
 	SQLTable deplist;
+	
+	search.setSearchMode(SEARCH_IN);
+	for (size_t i=0; i<pkgList->size(); ++i) {
+		search.addField("packages_package_id", pkgList->at(i).get_id());
+	}
+
 	db.get_sql_vtable(deplist, fields, "dependencies", search); // Emerging the list of all existing dependencies
 	string pid_str;
 	DEPENDENCY dep_tmp;
@@ -940,6 +963,12 @@ void mpkgDatabase::get_full_taglist(PACKAGE_LIST *pkgList)
 	
 	fields.addField("packages_package_id");
 	fields.addField("tags_tag_id");
+
+	search.setSearchMode(SEARCH_IN);
+	for (size_t i=0; i<pkgList->size(); ++i) {
+		search.addField("packages_package_id", pkgList->at(i).get_id());
+	}
+
 	db.get_sql_vtable(links, fields, "tags_links", search);
 	string tag_id_str;
 	
@@ -1113,6 +1142,11 @@ void mpkgDatabase::get_full_locationlist(PACKAGE_LIST *pkgList)
 	sqlFields.addField("location_id");
 	sqlFields.addField("server_url");
 	sqlFields.addField("packages_package_id");
+
+	sqlSearch.setSearchMode(SEARCH_IN);
+	for (size_t i=0; i<pkgList->size(); ++i) {
+		sqlSearch.addField("packages_package_id", pkgList->at(i).get_id());
+	}
 
 	db.get_sql_vtable(*sqlTable, sqlFields, "locations", sqlSearch);
 

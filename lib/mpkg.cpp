@@ -800,7 +800,7 @@ PACKAGE mpkgDatabase::get_installed_package(const string& pkg_name)
 	sqlSearch.addField("package_name", pkg_name);
 	sqlSearch.addField("package_installed", ST_INSTALLED);
 
-	get_packagelist(sqlSearch, &packagelist);
+	get_packagelist(sqlSearch, &packagelist, true, false);
 	// We do NOT allow multiple packages with same name to be installed, so, we simply get first package of list.
 	
 	if (packagelist.size()>0)
@@ -917,7 +917,8 @@ int mpkgDatabase::commit_actions()
 		ncInterface.setProgressMax(7); //TODO: поправить в соответствие с реальным количеством шагов
 		ncInterface.setProgress(1);
 	}
-	if (get_packagelist(sqlSearch, &remove_list)!=0) return MPKGERROR_SQLQUERYERROR;
+	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
+	if (get_packagelist(sqlSearch, &remove_list, false, false)!=0) return MPKGERROR_SQLQUERYERROR;
 	if (!remove_list.IsEmpty()) {
 		if (dialogMode) {
 			ncInterface.setProgressText(_("Sorting list of packages marked to remove"));
@@ -934,7 +935,8 @@ int mpkgDatabase::commit_actions()
 		ncInterface.setProgressText(_("Requesting list of packages marked to install"));
 		ncInterface.setProgress(3);
 	}
-	if (get_packagelist(sqlSearch, &install_list)!=0) return MPKGERROR_SQLQUERYERROR;
+	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
+	if (get_packagelist(sqlSearch, &install_list, false, false)!=0) return MPKGERROR_SQLQUERYERROR;
 	
 	// Sorting install order: from lowest priority to maximum one 
 	if (dialogMode) {
@@ -2550,6 +2552,7 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 	// Забираем текущий список пакетов
 	PACKAGE_LIST *pkgList = new PACKAGE_LIST;
 	SQLRecord sqlSearch;
+	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
 	get_packagelist(sqlSearch, pkgList);
 	
 	//say("Merging data\n");
@@ -2646,7 +2649,7 @@ int mpkgDatabase::clear_unreachable_packages() {
 	SQLRecord sqlSearch;
 	sqlSearch.addField("package_installed", ST_NOTINSTALLED);
 	sqlSearch.addField("package_configexist", ST_CONFIGNOTEXIST);
-	get_packagelist(sqlSearch, allList);
+	get_packagelist(sqlSearch, allList, true, false);
 	PACKAGE_LIST deleteQueue;
 	unsigned int rm_pkgs = 0;
 	for(unsigned int i=0; i<allList->size(); i++)

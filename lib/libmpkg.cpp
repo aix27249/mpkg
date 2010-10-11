@@ -241,10 +241,10 @@ int mpkg::clean_cache(bool clean_symlinks)
 }
 
 // Package list retrieving
-int mpkg::get_packagelist(SQLRecord& sqlSearch, PACKAGE_LIST *packagelist, bool ultraFast)
+int mpkg::get_packagelist(SQLRecord& sqlSearch, PACKAGE_LIST *packagelist, bool ultraFast, bool needDescriptions)
 {
 	currentStatus = _("Retrieving package list...");
-	int ret = db->get_packagelist(sqlSearch, packagelist, ultraFast);
+	int ret = db->get_packagelist(sqlSearch, packagelist, ultraFast, needDescriptions);
 	if (ret == 0) currentStatus = _("Retriveal complete");
 	else currentStatus = _("Failed retrieving package list!");
 	return ret;
@@ -556,7 +556,8 @@ bool mpkg::checkPackageIntegrity(const string& pkgName)
 	sqlSearch.addField("package_name", pkgName);
 	sqlSearch.addField("package_installed", ST_INSTALLED);
 	PACKAGE_LIST table;
-	get_packagelist(sqlSearch, &table);
+	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
+	get_packagelist(sqlSearch, &table, false, false);
 	if (table.size()==0)
 	{
 		mError(_("Cannot check package \"") + pkgName + _("\": it isn't installed"));
@@ -611,7 +612,8 @@ bool mpkg::repair(string fname)
 	sqlSearch.addField("package_name", fname);
 	sqlSearch.addField("package_installed", 1);
 	PACKAGE_LIST p;
-	get_packagelist(sqlSearch, &p);
+	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
+	get_packagelist(sqlSearch, &p, true, false);
 	if (p.size()==1)
 	{
 		return repair(p.get_package_ptr(0));
@@ -639,7 +641,8 @@ void mpkg::exportBase(string output_dir)
 	PACKAGE_LIST allPackages;
 	SQLRecord sqlSearch;
 	sqlSearch.addField("package_installed", 1);
-	get_packagelist(sqlSearch, &allPackages);
+	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
+	get_packagelist(sqlSearch, &allPackages, true, true);
 	say("Received %d packages\n",allPackages.size());
 	db->get_full_filelist(&allPackages);
 	for (unsigned int i=0; i<allPackages.size(); i++)
@@ -1030,7 +1033,12 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 		sqlPkgSearch.addField("package_id", results.getValue(i,fPackages_package_id));
 	}
 	//printf("\n\nQuerying packages\n");
-	if (results.size()>0) core.get_packagelist(sqlPkgSearch, &pkgList);
+	//
+	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
+	if (results.size()>0) {
+		core.get_packagelist(sqlPkgSearch, &pkgList, true, false);
+		core.db->get_full_taglist(&pkgList);
+	}
 	
 	PACKAGE_LIST minimalPkgList;
 	vector<PACKAGE *> candidates;
@@ -1161,7 +1169,11 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 		scriptPkgSearch.addField("package_name", script_deps[i]);
 	}
 	//printf("script_deps.size: %ld\n", script_deps.size());
-	if (script_deps.size()>0) core.get_packagelist(scriptPkgSearch, &scriptPkgList);
+	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
+	if (script_deps.size()>0) {
+		core.get_packagelist(scriptPkgSearch, &scriptPkgList, true, false);
+		core.db->get_full_taglist(&scriptPkgList);
+	}
 	for (size_t i=0; i<scriptPkgList.size(); ++i) {
 		if (scriptPkgList[i].get_name()==data->get_name()) continue;
 		if (!scriptPkgList[i].installed()) continue;
@@ -1643,6 +1655,7 @@ vector<string> mpkg::getLatestUpdates(PACKAGE_LIST *pkgList, PACKAGE_LIST *unins
 	SQLRecord sqlSearch;
 	// 2. Requesting database by search array
 	PACKAGE_LIST pCache;
+	//printf("SLOW=%d GET_PACKAGELIST CALL: %s %d\n", fast, __func__, __LINE__);
 	int query_ret = get_packagelist(sqlSearch, &pCache, fast);
 
 	vector<string> blackList = ReadFileStrings("/etc/mpkg-update-blacklist");
