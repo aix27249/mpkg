@@ -36,7 +36,7 @@ class DependencyTracker
 
 		PACKAGE_LIST packageCache;
 
-		void createPackageCache();
+		void createPackageCache(bool only_if_queue_exists=false);
 		void fillInstalledPackages();
 		void fillByName(const string& name, PACKAGE_LIST *p, PACKAGE_LIST *testPackages=NULL);
 		void fillByAction(int ACTION, PACKAGE_LIST *p);

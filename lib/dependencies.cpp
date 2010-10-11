@@ -99,22 +99,26 @@ void filterDupeNames(PACKAGE_LIST *pkgList) {
 	}
 	*pkgList=ret;
 }
-void DependencyTracker::createPackageCache()
+void DependencyTracker::createPackageCache(bool only_if_queue_exists)
 {
-	// Let's check if there is anything to do.
-	SQLRecord sqlSearch;
-	sqlSearch.setSearchMode(SEARCH_IN);
-	sqlSearch.addField("package_action", ST_REMOVE);
-	sqlSearch.addField("package_action", ST_PURGE);
-	sqlSearch.addField("package_action", ST_INSTALL);
-	sqlSearch.addField("package_action", ST_REPAIR);
 
-	PACKAGE_LIST dummyList;
-	db->get_packagelist(sqlSearch, &dummyList, true, false);
+	if (only_if_queue_exists && installQueryList.IsEmpty() && removeQueryList.IsEmpty() && installList.IsEmpty() && removeList.IsEmpty()) {
+		// Let's check if there is anything to do.
+		SQLRecord sqlSearch;
+	
+		sqlSearch.setSearchMode(SEARCH_IN);
+		sqlSearch.addField("package_action", ST_REMOVE);
+		sqlSearch.addField("package_action", ST_PURGE);
+		sqlSearch.addField("package_action", ST_INSTALL);
+		sqlSearch.addField("package_action", ST_REPAIR);
+	
+		PACKAGE_LIST dummyList;
+		db->get_packagelist(sqlSearch, &dummyList, true, false);
 
-	if (dummyList.size()==0) {
-		cacheCreated=true;
-	       	return;
+		if (dummyList.size()==0) {
+			cacheCreated=true;
+			return;
+		}
 	}
 
 	SQLRecord cacheSqlSearch;
@@ -316,7 +320,7 @@ int DependencyTracker::renderDependenciesInPackageList(PACKAGE_LIST *pkgList)
 int DependencyTracker::renderData()
 {
 	//printf("renderData(): installList size = %d\n", installList.size());
-	createPackageCache();
+	createPackageCache(true);
 	fillInstalledPackages();
 
 	mDebug("Rendering installations");
@@ -536,7 +540,7 @@ void DependencyTracker::fillByName(const string& name, PACKAGE_LIST *p, PACKAGE_
 {
 	PACKAGE_LIST *list;
 	if (testPackages==NULL) {
-		if (!cacheCreated) createPackageCache();
+		if (!cacheCreated) createPackageCache(true);
 		list = &packageCache;
 	}
 	else list = testPackages;
@@ -711,7 +715,7 @@ PACKAGE_LIST DependencyTracker::get_dependant_packages(const PACKAGE& package)
 
 void DependencyTracker::fillByAction(int action, PACKAGE_LIST *p)
 {
-	if (!cacheCreated) createPackageCache();
+	if (!cacheCreated) createPackageCache(true);
 	for (unsigned int i=0; i<packageCache.size(); i++)
 	{
 		if (packageCache[i].action()==action) p->add(packageCache[i]);
