@@ -1079,7 +1079,7 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 		//if (tmp.find("lib")!=0 && tmp.find("lib64")!=0 && tmp.find("usr/lib")!=0 && tmp.find("usr/lib64")!=0 && tmp.find("usr/local/lib")!=0 && tmp.find("usr/local/lib64")!=0 && tmp.find("usr/i486-slackware-linux")!=0 && tmp.find("usr/x86_64-slackware-linux")!=0 && tmp.find("lib/incoming")!=0 && tmp.find("lib64/incoming")!=0) continue;
 		if (so!=std::string::npos) lib1 = getFilename(results.getValue(i, fFile_name).substr(0, so+3));
 		else continue;
-		//printf("lib1: %s, primary candidate: %s\n", lib1.c_str(), pkgList.getPackageByIDPtr(atoi(results.getValue(i, fPackages_package_id).c_str()))->get_name().c_str());
+		if (verbose) printf("lib1: %s, primary candidate: %s\n", lib1.c_str(), pkgList.getPackageByIDPtr(atoi(results.getValue(i, fPackages_package_id).c_str()))->get_name().c_str());
 		for (size_t t=i+1; t<results.size(); ++t) {
 			if (results.getRecord(t)->empty()) continue;
 			lib2.clear();
@@ -1091,9 +1091,11 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 
 
 			if (!lib2.empty() && lib1==lib2) {
-//				printf("lib1==lib2==%s: Adding candidate %s as %s\n", lib1.c_str(), results.getValue(t, fPackages_package_id).c_str(), pkgList.getPackageByIDPtr(atoi(results.getValue(t, fPackages_package_id).c_str()))->get_name().c_str());
-//				printf("t size = %ld\n", results.getValue(t, fFile_name).size());
-//				printf("%s<==>%s\n", results.getValue(i, fFile_name).c_str(), results.getValue(t, fFile_name).c_str());
+				if (verbose) {
+					printf("lib1==lib2==%s: Adding candidate %s as %s\n", lib1.c_str(), results.getValue(t, fPackages_package_id).c_str(), pkgList.getPackageByIDPtr(atoi(results.getValue(t, fPackages_package_id).c_str()))->get_name().c_str());
+					printf("t size = %ld\n", results.getValue(t, fFile_name).size());
+					printf("%s<==>%s\n", results.getValue(i, fFile_name).c_str(), results.getValue(t, fFile_name).c_str());
+				}
 				candidates.push_back(pkgList.getPackageByIDPtr(atoi(results.getValue(t, fPackages_package_id).c_str())));
 				if (!isLibsResolvable && candidates[candidates.size()-1]->isTaggedBy("libs")) isLibsResolvable=true;
 				results.getRecord(t)->clear();
@@ -1107,14 +1109,14 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 			// Skip compat32 packages
 			if (candidates[t]->isTaggedBy("compat32")) printf("%s is compat32, skipping\n", candidates[t]->get_name().c_str());
 			if (data->get_name()!="skype" && data->get_name()!="wine" && candidates[t]->isTaggedBy("compat32") && !data->isTaggedBy("x86")) continue;
-//			printf("Checking candidate %s for %s\n", candidates[t]->get_name().c_str(), results.getValue(i, fFile_name).c_str());
+			if (verbose) printf("Checking candidate %s for %s\n", candidates[t]->get_name().c_str(), results.getValue(i, fFile_name).c_str());
 			if (candidates[t]->get_name()=="aaa_elflibs") {
-//				printf("good as aaa: %s\n", candidates[t]->get_name().c_str());
+				if (verbose) printf("good as aaa: %s\n", candidates[t]->get_name().c_str());
 				goodPkg=candidates[t];
 				break;
 			}
 			if (candidates[t]->isTaggedBy("base")) {	
-//				printf("good as base: %s\n", candidates[t]->get_name().c_str());
+				if (verbose) printf("good as base: %s\n", candidates[t]->get_name().c_str());
 				goodPkg=candidates[t];
 				break;
 			}
@@ -1124,7 +1126,7 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 			if (isLibsResolvable && !candidates[t]->isTaggedBy("libs")) continue; // Skip non-library candidates if possible
 			//if (candidates[t]->get_corename()=="nvidia-driver") continue; // Skip nvidia driver, please!
 			if (maxSize==0 || strtod(candidates[t]->get_installed_size().c_str(), NULL)<maxSize) {
-//				printf("possible good as maxsize %d<%d: %s\n", (int) strtod(candidates[t]->get_installed_size().c_str(), NULL), (int) maxSize, candidates[t]->get_name().c_str());
+				if (verbose) printf("possible good as maxsize %d<%d: %s\n", (int) strtod(candidates[t]->get_installed_size().c_str(), NULL), (int) maxSize, candidates[t]->get_name().c_str());
 				goodPkg=candidates[t];
 				maxSize=strtod(candidates[t]->get_installed_size().c_str(), NULL);
 			}
