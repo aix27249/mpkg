@@ -975,9 +975,9 @@ void actGetRepositorylist(string url) {
 	string out = get_tmp_file();
 	if (url.empty()) {
 #ifdef X86_64
-		url = "http://mopspackages.ru/x86_64-7.0.rlist";
+		url = "http://www.agilialinux.ru/x86_64-7.0.rlist";
 #else
-		url = "http://mopspackages.ru/x86-7.0.rlist";
+		url = "http://www.agilialinux.ru/x86-7.0.rlist";
 #endif
 	}
 	if (CommonGetFile(url, out)==DOWNLOAD_OK) {
