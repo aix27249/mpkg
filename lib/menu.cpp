@@ -160,9 +160,9 @@ void showMainMenu(mpkg &core) {
 		MENUCASE("ACT_GETONLINEREPOSITORYLIST") {
 			string url;
 #ifdef X86_64
-			url = "http://packages.agilialinux.ru/x86_64-7.0.rlist";
+			url = "http://www.agilialinux.ru/x86_64-7.0.rlist";
 #else
-			url = "http://packages.agilialinux.ru/x86-7.0.rlist";
+			url = "http://www.agilialinux.ru/x86-7.0.rlist";
 #endif
 
 			url = ncInterface.showInputBox(_("Enter URL for repository list:"), url);
