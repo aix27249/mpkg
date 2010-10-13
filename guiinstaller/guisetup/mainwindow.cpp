@@ -164,12 +164,6 @@ void MainWindow::backButtonClick() {
 
 bool MainWindow::validatePageSettings(int index) {
 	switch(index) {
-		case PAGE_LICENSE:
-			if (!ui->licenseAcceptCheckBox->isChecked()) {
-				QMessageBox::critical(this, tr("License not accepted"), tr("Without accepting license, you cannot proceed."));
-				return false;
-			}
-			break;
 		case PAGE_PARTITIONING:
 			if (ui->partitioningManualRadioButton->isChecked()) runPartitioningTool();
 			updatePartitionLists();
@@ -213,9 +207,6 @@ bool MainWindow::validatePageSettings(int index) {
 
 void MainWindow::storePageSettings(int index) {
 	switch(index) {
-		case PAGE_LICENSE:
-			settings->setValue("license_accepted", true);
-			break;
 		case PAGE_PARTITIONING:
 			break;
 		case PAGE_MOUNTPOINTS:
@@ -229,9 +220,6 @@ void MainWindow::storePageSettings(int index) {
 			break;
 		case PAGE_INSTALLTYPE:
 			saveSetupVariant();
-			break;
-		case PAGE_ALTERNATIVES:
-			saveAlternatives();
 			break;
 		case PAGE_NVIDIA:
 			saveNvidia();
@@ -257,9 +245,6 @@ void MainWindow::storePageSettings(int index) {
 
 void MainWindow::updatePageData(int index) {
 	switch(index) {
-		case PAGE_LICENSE:
-			loadLicense();
-			break;
 		case PAGE_PARTITIONING:
 			loadPartitioningDriveList();
 			break;
@@ -283,12 +268,6 @@ void MainWindow::updatePageData(int index) {
 			break;
 	}
 	settings->sync();
-}
-
-void MainWindow::loadLicense() {
-	QString lang = settings->value("language").toString();
-	QString license = ReadFile("/usr/local/share/setup/licenses/license." + lang.toStdString()).c_str();
-	ui->licenseBrowser->setPlainText(license);
 }
 
 /*string getUUID(const string& dev) {
@@ -558,9 +537,7 @@ bool MainWindow::validateBootloaderSettings() {
 }
 
 void MainWindow::saveBootloaderSettings() {
-	QString fbmode = ui->fbResolutionComboBox->currentText();
-	if (fbmode=="KMS" || fbmode == "Kernel modesetting") fbmode = "text";
-	if (fbmode!="text") fbmode += "x" + ui->fbColorComboBox->currentText();
+	QString fbmode = "text";
 	if (ui->bootDeviceRadioButton->isChecked()) {
 		if (ui->bootLoaderComboBox->currentIndex()<0) return;
 		if (ui->bootLoaderComboBox->currentIndex()==ui->bootLoaderComboBox->count()-1) settings->setValue("bootloader", "NONE");
@@ -708,7 +685,7 @@ void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSe
 	customPkgSetList = _pkgSet;
 	settings->setValue("pkgsource", loadSetupVariantsThread->pkgsource);
 
-	printf("Received %d items in pkgSetList\n", customPkgSetList.size());
+	printf("Received %d items in pkgSetList\n", (int) customPkgSetList.size());
 	settings->setValue("volname", loadSetupVariantsThread->volname.c_str());
 	settings->setValue("rep_location", loadSetupVariantsThread->rep_location.c_str());
 	
@@ -978,13 +955,6 @@ void MainWindow::saveNvidia() {
 	else if (ui->nvidia173RadioButton->isChecked()) settings->setValue("nvidia-driver", "173");
 	else if (ui->nvidia96RadioButton->isChecked()) settings->setValue("nvidia-driver", "96");
 	else if (ui->nvidiaNVRadioButton->isChecked()) settings->setValue("nvidia-driver", "nouveau");
-}
-
-void MainWindow::saveAlternatives() {
-	QString alternatives;
-	settings->remove("alternatives");
-	//if (ui->altBFSCheckBox->isChecked()) settings->setValue("alternatives/bfs", true);
-	if (ui->altCleartypeCheckBox->isChecked()) settings->setValue("alternatives/cleartype", true);
 }
 
 void MainWindow::showHideReleaseNotes() {

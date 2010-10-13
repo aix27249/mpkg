@@ -75,7 +75,6 @@ class MainWindow: public QMainWindow {
 		void saveUsers();
 		void saveNetworking();
 		void saveNvidia();
-		void saveAlternatives();
 		int hasNvidia;
 		map<int, bool> skipPages;
 		QTranslator *translator;
@@ -93,7 +92,6 @@ class MainWindow: public QMainWindow {
 		void closeEvent(QCloseEvent *event);
 
 		void saveConfigAndExit();
-		void loadLicense();
 		void loadPartitioningDriveList();
 		void loadMountsTree();
 		void runPartitioningTool();
@@ -130,12 +128,10 @@ class MainWindow: public QMainWindow {
 
 enum {
 	PAGE_WELCOME = 0,
-	PAGE_LICENSE,
 	PAGE_NETWORKING,
 	PAGE_PKGSOURCE,
 	PAGE_WAITPKGSOURCE,
 	PAGE_INSTALLTYPE,
-	PAGE_ALTERNATIVES,
 	PAGE_NVIDIA,
 	PAGE_PARTITIONING,
 	PAGE_MOUNTPOINTS,

@@ -103,10 +103,6 @@ bool SetupThread::validateConfig() {
 
 	emit setSummaryText(tr("Validating config"));
 	emit setDetailsText("");
-	if (!settings->value("license_accepted").toBool()) {
-		emit reportError(tr("License not accepted, cannot continue"));
-		return false;
-	}
 	if (settings->value("bootloader").toString().isEmpty()) {
 		emit reportError(tr("Bootloader partition not specified, how you wish to boot, Luke?"));
 		return false;
