@@ -319,6 +319,10 @@ int DependencyTracker::renderDependenciesInPackageList(PACKAGE_LIST *pkgList)
 
 int DependencyTracker::renderData()
 {
+
+	db->get_full_dependencylist(&installQueryList);
+       	db->get_full_dependencylist(&removeQueryList);
+
 	//printf("renderData(): installList size = %d\n", installList.size());
 	createPackageCache(true);
 	fillInstalledPackages();
