@@ -25,6 +25,11 @@ int print_usage() {
 }
 
 int main(int argc, char **argv) {
+
+	setlocale(LC_ALL, "");
+	bindtextdomain( "mpkg", "/usr/share/locale");
+	textdomain("mpkg");
+
 	if (argc>1) return print_usage();
 
 	interactive_mode=true;
