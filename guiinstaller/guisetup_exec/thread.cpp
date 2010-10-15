@@ -442,10 +442,10 @@ bool SetupThread::processInstall() {
 		printf("Commit failed");
 		return false;
 	}
-	printf("\n\n\nCommit OK, moving to export\n\n\n\n");
+	printf("\n\n\nCommit OK, going to post-install\n\n\n\n");
 	emit setSummaryText(tr("Finishing installation"));
-	emit setDetailsText(tr("Exporting pkgtools-compatible database"));
-	core->exportBase("/tmp/new_sysroot/var/log/packages");
+	emit setDetailsText("");
+//	core->exportBase("/tmp/new_sysroot/var/log/packages"); // Not used anymore
 
 	delete core;
 	return true;
@@ -454,11 +454,11 @@ void SetupThread::xorgSetLangConf() {
 	string lang = "us";
 	sysconf_lang = "en_US.UTF-8";
 	if (settings->value("language").toString()=="ru_RU.UTF-8") {
-	       lang +=",ru(winkeys)";
+	       lang +=",ru";
 	       sysconf_lang = "ru_RU.UTF-8";
 	}
 	if (settings->value("language").toString()=="uk_UA.UTF-8") {
-	       	lang +=",ua(winkeys)";
+	       	lang +=",ua";
 		sysconf_lang = "uk_UA.UTF-8";
 	}
 
@@ -483,11 +483,11 @@ void SetupThread::xorgSetLangHALEx() {
 	langmenu.push_back(MenuItem("us", "", "", true));
 	sysconf_lang = "en_US.UTF-8";
 	if (settings->value("language").toString()=="ru_RU.UTF-8") {
-	       langmenu.push_back(MenuItem("ru", "winkeys", "", true));
+	       langmenu.push_back(MenuItem("ru", "", "", true));
 	       sysconf_lang = "ru_RU.UTF-8";
 	}
 	if (settings->value("language").toString()=="uk_UA.UTF-8") {
-		langmenu.push_back(MenuItem("ua", "winkeys", "", true));
+		langmenu.push_back(MenuItem("ua", "", "", true));
 		sysconf_lang = "uk_UA.UTF-8";
 	}
 	size_t cnt=0;

@@ -1527,6 +1527,8 @@ download_process:
 		msay(_("Installation complete."), SAYMODE_INLINE_END);
 		actionBus.setActionState(ACTIONID_INSTALL);
 	}
+
+	pData.setCurrentAction(_("Updating system files"));
 	if (removeFailures!=0 && installFailures!=0) return MPKGERROR_COMMITERROR;
 	actionBus.clear();
 	sqlFlush(); // Teh fuckin' trouble place
@@ -1614,88 +1616,6 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	string statusHeader = "["+IntToStr((int) actionBus.progress())+"/"+IntToStr((int)actionBus.progressMaximum())+"] "+_("Installing package ") + package->get_name()+": ";
 	currentStatus = statusHeader + _("initialization");
 	
-	// Checking if it is a symlink. If it is broken, and package installs from CD, ask to insert and mount
-	//bool broken_sym=false;
-	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": checking package source"));
-
-	// Если ставим с CD/DVD, попытаемся молча смонтировать диск.
-	// UPD: а зачем на этом этапе это делать, если диск либо уже вставлен, либо уже не вставлен? о_О
-	
-	
-	/***************** BEGINNING OF WEIRD CODE *******************************
-	
-	if (package->usedSource.find("cdrom://")!=std::string::npos) {
-		if (!FileExists(sys_cache + package->get_filename(), &broken_sym) || broken_sym) {
-			system("mount " + CDROM_DEVICE + " " + CDROM_MOUNTPOINT + " 2>/dev/null >/dev/null");
-		}
-	}
-	broken_sym = false;
-
-	if (!FileExists(sys_cache + package->get_filename(), &broken_sym) || broken_sym) // If file not found
-	{
-		//printf("Link is broken. Looking for the package source\n");
-		// Let's see what source is used
-		if (package->usedSource.find("cdrom://")!=std::string::npos)
-		{
-			msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": mounting CD-ROM"));
-
-			// Yeah, we used CD and there are symlink. Let's ask for appropriate disc
-			// First, determine Volume ID
-			string source;
-		        source = package->usedSource.substr(strlen("cdrom://"));
-			//printf("source created\n");
-			string cdromVolName;
-		        cdromVolName = source.substr(0,source.find_first_of("/"));
-			//printf("cdromVolName created\n");
-			bool mountedOk=false, abortMount=false;
-			string recv_volname;
-			while (!mountedOk)
-			{
-				//printf("Trying to mount\n");
-				if (dialogMode) 
-				{
-					string oldtitle = ncInterface.subtitle;
-					ncInterface.setSubtitle(_("Installing package ") + package->get_name() + _(": mounting CD/DVD..."));
-					//printf("Yes, we are installing package from CD. Ejecting, mounting and checking the volume\n");
-					if (!noEject) {
-						system("eject " + CDROM_DEVICE + " 2>/dev/null >/dev/null");
-					}
-
-					if (ncInterface.showYesNo(_("Please insert DVD with label ") + cdromVolName + _(" in drive ") + CDROM_DEVICE, "OK", "Cancel"))
-					{
-						system("umount " + CDROM_MOUNTPOINT + " 2>/dev/null >/dev/null");
-						system("mount " + CDROM_DEVICE + " " + CDROM_MOUNTPOINT + " 2>/dev/null >/dev/null");
-						recv_volname = getCdromVolname();
-						if (recv_volname == cdromVolName)
-						{
-							mountedOk = true;
-						}
-						else {
-							if (noEject) system("umount " + CDROM_MOUNTPOINT + " 2>/dev/null >/dev/null");
-							else {
-								system("eject " + CDROM_DEVICE + " 2>/dev/null >/dev/null");
-								if (setupMode) system("echo EJECTING mpkg:1182 > /dev/tty4");
-							}
-							ncInterface.showMsgBox(_("You have inserted a wrong disk.\nRequired: [")+cdromVolName+_("]\nInserted: [") + recv_volname + "]\n");
-						}
-					}
-					else abortMount = true;
-					ncInterface.setSubtitle(oldtitle);
-				}
-				else {
-					if (mpkgErrorHandler.callError(MPKG_CDROM_MOUNT_ERROR)==MPKG_RETURN_ABORT) abortMount=true;
-				}
-				if (abortMount) mountedOk=true;
-			}
-			if (abortMount) return MPKGERROR_ABORTED;
-		}
-		else {
-			mError(_("Installation error: file not found"));
-			mError(_("Filename was: ") + SYS_CACHE + package->get_filename());
-			return MPKG_INSTALL_EXTRACT_ERROR;
-		}
-	}*/
-
 	// NEW (04.10.2007): Check if package is source, and build if needed. Also, import to database the output binary package and prepare to install it.
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() +_( ": checking package type"));
 
@@ -1860,40 +1780,13 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 #endif
 	
 	string sys;
-	pData.increaseItemProgress(package->itemID);
-	if (actionBus._abortActions)
-	{
-		sqlFlush();
-		actionBus._abortComplete=true;
-		actionBus.setActionState(ACTIONID_INSTALL, ITEMSTATE_ABORTED);
-		return MPKGERROR_ABORTED;
-	}
 
-	printHtmlProgress();
-/*	if (!DO_NOT_RUN_SCRIPTS)
-	{
-		printHtmlProgress();
-		currentStatus = statusHeader + _("executing pre-install scripts");
-		if (dialogMode) ncInterface.setProgressText(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + "\n" + index_hole + _("executing pre-install script"));
-		msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": executing pre-install script"));
-		if (FileExists(package->get_scriptdir() + "preinst.sh"))
-		{
-			string preinst="cd " + SYS_ROOT + " ; sh "+package->get_scriptdir() + "preinst.sh";
-			if (setupMode) preinst += " 2>> /dev/tty4";
-			if (!simulate) system(preinst.c_str());
-		}
-	}
-
-	printHtmlProgress();*/
 	// Extracting package
 	currentStatus = statusHeader + _("extracting...");
 	if (dialogMode) ncInterface.setProgressText(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + "\n" + index_hole + _("extracting ") + IntToStr(package->get_files().size()) + _(" files"));
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": extracting ") + IntToStr(package->get_files().size()) + _(" files"));
 	pData.increaseItemProgress(package->itemID);
 
-	// UPD: I don't think that creating root here is useful thing
-	/*string create_root="mkdir -p '"+sys_root+"' 2>/dev/null";
-	if (!simulate) system(create_root.c_str());*/
 
 	sys="(cd "+sys_root+" && tar xf '"+sys_cache + package->get_filename() + "'";
 	//If previous version isn't purged, do not overwrite config files
@@ -1989,7 +1882,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": updating database"));
 	if (_cmdOptions["warpmode"]!="yes") sqlFlush();
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": exporting legacy data"));
-	if (!setupMode) exportPackage(SYS_ROOT+"/"+legacyPkgDir, *package);
+	//if (!setupMode) exportPackage(SYS_ROOT+"/"+legacyPkgDir, *package); // We do not provide pkgtools compatibility mode anymore.
 	pData.increaseItemProgress(package->itemID);
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": complete"), SAYMODE_INLINE_END);
 	package->set_action(ST_NONE, "install_complete");
@@ -1998,6 +1891,8 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 
 // New optimized exportPackage function.
 void mpkgDatabase::exportPackage(const string& output_dir, PACKAGE& p) {
+	return;
+	/*
 	ofstream filestr;
 	filestr.open(string(output_dir+"/"+p.get_name()+"-"+p.get_version()+"-"+p.get_arch()+"-"+p.get_build()).c_str());
 	if (!filestr.is_open()) {
@@ -2016,13 +1911,15 @@ void mpkgDatabase::exportPackage(const string& output_dir, PACKAGE& p) {
 	}
 	filestr << "\n";
 	filestr.close();
-	return;
+	return;*/
 }
 
 void mpkgDatabase::unexportPackage(const string& output_dir, const PACKAGE& p)
 {
+	return;
+	/*
 	string victim = output_dir+"/"+p.get_name()+"-"+p.get_version()+"-"+p.get_arch()+"-"+p.get_build();
-	unlink(victim.c_str());
+	unlink(victim.c_str());*/
 }
 
 int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsigned int packagesTotal)
@@ -2314,7 +2211,7 @@ int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsi
 		sqlFlush();
 		currentStatus = statusHeader + _("remove complete");
 		package->get_files_ptr()->clear();
-		unexportPackage(SYS_ROOT+"/"+legacyPkgDir, *package);
+		//unexportPackage(SYS_ROOT+"/"+legacyPkgDir, *package);
 		pData.setItemProgress(package->itemID, pData.getItemProgressMaximum(package->itemID));
 		if (package->action()==ST_UPDATE) msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str + _(": done"));
 		else msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str+": done", SAYMODE_INLINE_END);
