@@ -148,6 +148,7 @@ bool LoadSetupVariantsThread::mountDVD(QString dev, QString mountOptions, bool i
 	}
 	if (!iso) {
 		printf("Mounting real DVD drive [%s]\n", dev.toStdString().c_str());
+		system("mkdir -p /var/log/mount");
 		if (system("mount " + mountOptions.toStdString() + " " + dev.toStdString() + " /var/log/mount")==0) {
 			printf("Real DVD mount of [%s] successful, returning true\n", dev.toStdString().c_str());
 			return true;
@@ -155,6 +156,7 @@ bool LoadSetupVariantsThread::mountDVD(QString dev, QString mountOptions, bool i
 	}
 	else {
 		printf("Mounting ISO image %s\n", dev.toStdString().c_str());
+		system("mkdir -p /var/log/mount");
 		if (system("mount -o loop " + dev.toStdString() + " /var/log/mount")==0) {
 			printf("ISO image mount of [%s] successful, returning true\n", dev.toStdString().c_str());
 			return true;

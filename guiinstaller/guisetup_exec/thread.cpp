@@ -956,6 +956,9 @@ bool SetupThread::postInstallActions() {
 	setRootPassword();
 	createUsers();
 
+	// Copy skel to root directory
+	system("cp -ar /tmp/new_sysroot/etc/skel/* /tmp/new_sysroot/root/");
+	system("chown -R root:root /tmp/new_sysroot/root");
 	//xorgSetLangHALEx();
 	xorgSetLangConf();
 	generateIssue();
@@ -995,9 +998,9 @@ bool SetupThread::postInstallActions() {
 	vector<string> cdlist_v = ReadFileStrings(cdlist);
 	unlink(cdlist.c_str());
 	if (!cdlist_v.empty()) {
-		system("chroot /tmp/new_sysroot ln -s /dev/" + cdlist_v[0] + " /dev/cdrom");
+		if (!FileExists("/tmp/new_sysroot/dev/cdrom")) system("chroot /tmp/new_sysroot ln -s /dev/" + cdlist_v[0] + " /dev/cdrom");
 	}
-	system("chroot /tmp/new_sysroot ln -s /dev/psaux /dev/cdrom"); // Everybody today has this mouse device, so I don't care about COM port users
+	if (!FileExists("/tmp/new_sysroot/dev/mouse")) system("chroot /tmp/new_sysroot ln -s /dev/psaux /dev/mouse"); // Everybody today has this mouse device, so I don't care about COM port users
 
 	umountFilesystems();
 

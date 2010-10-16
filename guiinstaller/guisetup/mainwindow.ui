@@ -16,12 +16,6 @@
     <height>300</height>
    </size>
   </property>
-  <property name="maximumSize">
-   <size>
-    <width>800</width>
-    <height>580</height>
-   </size>
-  </property>
   <property name="font">
    <font>
     <family>Droid Sans</family>

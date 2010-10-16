@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	guiObject = this;
 	ui->setupUi(this);
 	ui->releaseNotesTextBrowser->hide();
-	setWindowState(Qt::WindowMaximized);
+	//setWindowState(Qt::WindowMaximized);
 	connect(ui->nextButton, SIGNAL(clicked()), this, SLOT(nextButtonClick()));
 	connect(ui->backButton, SIGNAL(clicked()), this, SLOT(backButtonClick()));
 	connect(ui->mountPointsTreeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), this, SLOT(updateMountsGUI(QTreeWidgetItem *, QTreeWidgetItem *)));
@@ -91,6 +91,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(ui->mountSwapRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterSwap(bool)));
 	connect(ui->mountCustomRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterCustom(bool)));
 	connect(ui->mountNoFormatRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterNoFormat(bool)));
+
+	// Just in case...
+	system("mkdir -p /var/log/mount");
 
 }
 
@@ -317,14 +320,6 @@ void MainWindow::updatePartitionLists() {
 
 void MainWindow::loadPartitioningDriveList() {
 	updatePartitionLists();
-	/*ui->autoPartitionDriveComboBox->clear();
-	for (size_t i=0; i<drives.size(); ++i) {
-		ui->autoPartitionDriveComboBox->addItem(QString("%1 (%2)").arg(QString::fromStdString(drives[i].tag)).arg(QString::fromStdString(drives[i].value)));
-	}
-	for (size_t i=0; i<lvm_groups.size(); ++i) {
-		ui->autoPartitionDriveComboBox->addItem(QString("%1 (%2)").arg(QString::fromStdString(lvm_groups[i].name)).arg(QString::fromStdString(lvm_groups[i].size)));
-	}*/
-
 }
 
 
@@ -332,7 +327,7 @@ void MainWindow::runPartitioningTool() {
 	Qt::WindowStates winstate = windowState();
 	setWindowState(Qt::WindowMinimized);
 	system("gparted");
-	setWindowState(Qt::WindowMaximized);
+	setWindowState(Qt::WindowNoState);
 	deviceCacheActual = false;
 	partitionCacheActual = false;
 	updatePartitionLists();
