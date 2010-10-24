@@ -89,7 +89,7 @@ struct versionData
 	string version;
 	string condition;
 };
-
+class PACKAGE;
 class DEPENDENCY
 {
     private:
@@ -104,6 +104,7 @@ class DEPENDENCY
     public:
 	// Comparsion
 	bool equalTo(const DEPENDENCY& dependency) const;
+	bool isResolvableBy(const PACKAGE &) const;
 
 	// Data retriveal
 	const int& get_id() const;

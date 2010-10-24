@@ -239,6 +239,15 @@ void DEPENDENCY::set_broken(const int& broken) {
 	dependency_broken=broken;
 }
 
+bool DEPENDENCY::isResolvableBy(const PACKAGE &p) const {
+	if (dependency_package_name!=p.get_corename()) return false; // Name does not match - false
+	if (meetVersion(get_version_data(), p.get_version())) return true;
+	return false;
+}
+	
+
+
+
 // Emptyness, etc
 
 bool DEPENDENCY::IsEmpty() const {
