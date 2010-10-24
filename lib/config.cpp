@@ -12,7 +12,7 @@
 map<string, string> _cmdOptions;
 bool enableSpkgIndexing=false;
 bool afraidAaaInDeps=false;
-bool forceFullDBUpdate=true;
+bool forceFullDBUpdate=false;
 bool getlinksOnly=false;
 #ifndef SERVERAPP
 string CONFIG_FILE = "/etc/mpkg.xml";

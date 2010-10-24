@@ -2443,14 +2443,18 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 	db.clear_table("locations");
 	db.clear_table("deltas");
 	db.clear_table("abuilds");
-	//if (forceFullDBUpdate) db.clear_table("dependencies");  // Teh WTF!
+	// In case of repository bugs, full resync may be needed.
+	if (forceFullDBUpdate) {
+		db.clear_table("dependencies");
+		db.clear_table("tags_links");
+	}
 	
 
 	// Забираем текущий список пакетов
 	PACKAGE_LIST *pkgList = new PACKAGE_LIST;
 	SQLRecord sqlSearch;
 	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
-	get_packagelist(sqlSearch, pkgList);
+	get_packagelist(sqlSearch, pkgList, false, true);
 	
 	//say("Merging data\n");
 	// Ищем соответствия // TODO: надо б тут что-нить прооптимизировать
@@ -2480,7 +2484,8 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 			}
 			else needUpdateDistroVersion.push_back(false);
 			
-			//pkgList->get_package_ptr(pkgNumber)->set_dependencies(newPackages->at(i).get_dependencies());
+			pkgList->get_package_ptr(pkgNumber)->set_dependencies(newPackages->at(i).get_dependencies());
+			pkgList->get_package_ptr(pkgNumber)->set_tags(newPackages->at(i).get_tags());
 			//db.sql_exec("DELETE FROM dependencies WHERE packages_package_id='" + IntToStr(pkgList->get_package_ptr(pkgNumber)->get_id()) + "';");
 		}
 		else			// Если соответствие НЕ найдено...
@@ -2530,7 +2535,10 @@ int mpkgDatabase::syncronize_data(PACKAGE_LIST *pkgList, vector<bool> needUpdate
 				update_package_record(pkgList->at(i).get_id(), *sqlUpdate);
 				delete sqlUpdate;
 			}
-			//add_dependencylist_record(pkgList->at(i).get_id(), pkgList->get_package_ptr(i)->get_dependencies_ptr());
+			if (forceFullDBUpdate) {
+				add_dependencylist_record(pkgList->at(i).get_id(), pkgList->get_package_ptr(i)->get_dependencies_ptr());
+				add_taglist_record(pkgList->get_package_ptr(i)->get_id(), pkgList->get_package_ptr(i)->get_tags_ptr());
+			}
 		}
 	}
 	delete pkgList;

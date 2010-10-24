@@ -81,7 +81,7 @@ int main (int argc, char **argv)
 		
 	bool do_reset=true;
 	int ich;
-	const char* short_opt = "hvpdzfmkDLrailgyqNcwxHbFQVRZWPKCMt:GsE:S:A:B:";
+	const char* short_opt = "hvpdzfmkDLrailgyqNcwxHbFQVRZWPKCMt:GsE:S:A:B:Y";
 	//const char* short_opt = "abcdfghiklmpqrvzDLyNwxHFQVRZWPKCME"; // Try to sort this stuff...later :)
 	const struct option long_options[] =  {
 		{ "help",		0, NULL,	'h'},
@@ -123,6 +123,7 @@ int main (int argc, char **argv)
 		{ "conf",		1, NULL,	't'},
 		{ "exclusion-list",	1, NULL,	'E'},
 		{ "abuild",		1, NULL,	'B'},
+		{ "resync",		0, NULL,	'Y'},
 		{ NULL, 		0, NULL, 	0}
 	};
 
@@ -135,6 +136,9 @@ int main (int argc, char **argv)
 		
 
 		switch (ich) {
+			case 'Y':
+					forceFullDBUpdate = true;
+					break;
 			case 'B':
 					_cmdOptions["abuild_links_only"]="yes";
 					_cmdOptions["abuild_links_output"]=string(optarg);
