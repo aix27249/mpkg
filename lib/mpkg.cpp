@@ -23,11 +23,15 @@ void pkgConfigInstall(const PACKAGE &package) {
 	bool sysconf_exists, orig_exists;
 	string sysconf_name, orig_name, old_name;
 	for (size_t i=0; i<package.config_files.size(); ++i) {
+		if (verbose) printf("Install: checking config file %s\n", sysconf_name.c_str());
+		
+		if (package.config_files[i].hasAttribute("class", "sample")) continue; // No need for manipulation with these files
+		if (package.config_files[i].hasAttribute("class", "generated")) continue; // Nothing to do with this stuff
+		
 		sysconf_name = SYS_ROOT + "/" + package.config_files[i].name;
 		orig_name = SYS_ROOT+"/var/mpkg/configs/" + package.get_corename() + "/" + package.config_files[i].name;
 		old_name = SYS_ROOT+"/var/mpkg/configs/" + package.get_corename() + "/" + package.config_files[i].name + ".old";
 
-		if (verbose) printf("Install: checking config file %s\n", sysconf_name.c_str());
  
 		// Проверяется, есть ли уже такой конфиг в системе:
 		sysconf_exists = FileExists(sysconf_name);
