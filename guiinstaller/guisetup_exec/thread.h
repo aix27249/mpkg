@@ -112,6 +112,7 @@ class SetupThread: public QThread {
 		bool formatPartitions();
 		bool mountPartitions();
 		bool moveDatabase();
+		bool createBaselayout();
 		bool processInstall();
 		bool postInstallActions();
 		void updateData(const ItemState& a);

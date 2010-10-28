@@ -1037,13 +1037,19 @@ void SetupThread::run() {
 	if (!formatPartitions()) return;
 	if (!mountPartitions()) return;
 	if (!moveDatabase()) return;
+	if (!createBaselayout()) return;
 	if (!processInstall()) return;
 	if (!postInstallActions()) return;
 	delete settings;
 	pData.unregisterEventHandler();
 	emit reportFinish();
 }
-
+bool SetupThread::createBaselayout() {
+	system("mkdir -p /tmp/new_sysroot/{dev,etc,home,media,mnt,proc,root,sys,tmp}");
+	system("chmod 710 /root");
+	system("chmod 1777 /tmp");
+	return true;
+}
 bool setPasswd(string username, string passwd) {
 	string tmp_file = "/tmp/new_sysroot/tmp/wtf";
 	string data = passwd + "\n" + passwd + "\n";
