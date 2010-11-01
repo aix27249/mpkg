@@ -17,9 +17,9 @@ TempFileController::TempFileController() {
 }
 
 TempFileController::~TempFileController() {
-	printf("Cleaning %d temporary files, please wait\n", tFiles.size());
+	//printf("Cleaning %d temporary files, please wait\n", tFiles.size());
 	clear_all();
-	printf("Done\n");
+	//printf("Done\n");
 }
 
 int getProcessPid(const string& name) {
