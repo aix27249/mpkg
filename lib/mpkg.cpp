@@ -19,10 +19,8 @@
 // Two functions to install/remove configuration files
 void pkgConfigInstall(const PACKAGE &package) {
 	if (package.config_files.empty()) {
-		printf("\n\nPACKAGE NAS NO CONFIG FILES\n");
 		return;
 	}
-	printf("\nProcessing config files\n\n");
        	
 	bool sysconf_exists, orig_exists;
 	string sysconf_name, orig_name, old_name;
@@ -1850,7 +1848,6 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 #endif*/
 
 	// Managing config files
-	printf("\nCALLING PKGCONFIG_INSTALL PROCESS WITH %d configs\n", package->config_files.size());
 	pkgConfigInstall(*package);	
 
 	package->get_files_ptr()->clear();
