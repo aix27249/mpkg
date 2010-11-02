@@ -735,6 +735,13 @@ void show_package_info(mpkg *core, string name, string version, string build, bo
 	}
 	else say(_("%sABUILD:%s %s\n"), CL_GREEN, CL_WHITE, _("none"));
 
+	if (!pkg->config_files.empty()) {
+		say(_("%sConfig files:%s\n"), CL_GREEN, CL_WHITE);
+		for (size_t i=0; i<pkg->config_files.size(); ++i) {
+			say("\t\t%s\n", pkg->config_files[i].name.c_str());
+		}
+	}
+
 		
 	say(_("%sTags:%s "), CL_GREEN, CL_WHITE);
 	if (pkg->get_tags().empty())

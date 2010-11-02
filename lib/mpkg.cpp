@@ -18,7 +18,11 @@
 
 // Two functions to install/remove configuration files
 void pkgConfigInstall(const PACKAGE &package) {
-	if (package.config_files.empty()) return;
+	if (package.config_files.empty()) {
+		printf("\n\nPACKAGE NAS NO CONFIG FILES\n");
+		return;
+	}
+	printf("\nProcessing config files\n\n");
        	
 	bool sysconf_exists, orig_exists;
 	string sysconf_name, orig_name, old_name;
@@ -47,6 +51,7 @@ void pkgConfigInstall(const PACKAGE &package) {
  
 		// Если системный конфиг существует, а так же существует оригинальный конфиг, но они НЕ совпадают, или же оригинального конфига нет - то:
 		if ((sysconf_exists && orig_exists && get_file_md5(sysconf_name) != get_file_md5(orig_name)) || !orig_exists) {
+			printf("\nUnmatched config %s, doing something\n", sysconf_name.c_str());
 
 			system("mkdir -p " + getDirectory(orig_name));
 			// Если конфиг имеет флаг force_new, то старый системный конфиг копируется в var/mpkg/configs/$pkgname/$conf_path/$conf_file.old, а на его место записывается новый конфиг:
@@ -63,6 +68,7 @@ void pkgConfigInstall(const PACKAGE &package) {
 				printf("\nNEED ATTENTION: modified config detected: copying %s.new to %s, CHECK FOR CHANGES!\n", sysconf_name.c_str(), orig_name.c_str());
 			}
 			else {
+				printf("\nCreating backup copy of config file %s\n", sysconf_name.c_str());
 				system("cp " + sysconf_name + " " + orig_name);
 			}
 		}
@@ -1702,7 +1708,10 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		return MPKGERROR_ABORTED;
 	}
 #ifndef INSTALL_DEBUG
-	if (package->get_files().empty()) lp.fill_filelist(package); // Extracting file list
+	if (package->get_files().empty()) {
+		printf("\nFilling file list\n");
+		lp.fill_filelist(package); // Extracting file list
+	}
 #endif
 	
 	if (!needUpdateXFonts) {
@@ -1806,7 +1815,6 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	if (_cmdOptions["skip_static_a_installation"]=="true") {
 		sys += " --exclude 'lib/*.a' --exclude 'lib64/*.a'";
 	}
-	package->get_files_ptr()->clear();
 	if (setupMode && dialogMode) sys+=" > /dev/tty4 2>/dev/tty4 )";
 	else if (dialogMode) sys+=" >/dev/null 2>>/var/log/mpkg-errors.log )";
 	else sys+= " )";
@@ -1842,8 +1850,10 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 #endif*/
 
 	// Managing config files
+	printf("\nCALLING PKGCONFIG_INSTALL PROCESS WITH %d configs\n", package->config_files.size());
 	pkgConfigInstall(*package);	
 
+	package->get_files_ptr()->clear();
 	// Creating and running POST-INSTALL script
 	if (!DO_NOT_RUN_SCRIPTS)
 	{
@@ -2451,6 +2461,8 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 	if (forceFullDBUpdate) {
 		db.clear_table("dependencies");
 		db.clear_table("tags_links");
+		db.clear_table("config_files");
+		db.clear_table("config_options");
 	}
 	
 
@@ -2542,6 +2554,7 @@ int mpkgDatabase::syncronize_data(PACKAGE_LIST *pkgList, vector<bool> needUpdate
 			if (forceFullDBUpdate) {
 				add_dependencylist_record(pkgList->at(i).get_id(), pkgList->get_package_ptr(i)->get_dependencies_ptr());
 				add_taglist_record(pkgList->get_package_ptr(i)->get_id(), pkgList->get_package_ptr(i)->get_tags_ptr());
+				add_configfiles_record(pkgList->get_package_ptr(i)->get_id(), pkgList->get_package_ptr(i)->config_files);
 			}
 		}
 	}
