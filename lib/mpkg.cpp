@@ -1707,7 +1707,6 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	}
 #ifndef INSTALL_DEBUG
 	if (package->get_files().empty()) {
-		printf("\nFilling file list\n");
 		lp.fill_filelist(package); // Extracting file list
 	}
 #endif

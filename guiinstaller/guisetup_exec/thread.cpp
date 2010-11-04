@@ -207,6 +207,7 @@ bool SetupThread::prepareInstallQueue() {
 	if (settings->value("alternatives/cleartype").toBool()) alternatives.push_back("cleartype");
 	
 	if (settings->value("nvidia-driver")=="latest" || settings->value("nvidia-driver")=="173" || settings->value("nvidia-driver")=="96") {
+		alternatives.push_back("nvidia");
 		for (size_t i=0; i<commitList.size(); ++i) {
 			if (commitList[i].get_name()=="nvidia-driver" || commitList[i].get_name()=="nvidia-kernel") commitList.get_package_ptr(i)->set_action(ST_INSTALL, "nvidia-select");
 		}
@@ -1048,6 +1049,10 @@ bool SetupThread::createBaselayout() {
 	system("mkdir -p /tmp/new_sysroot/{dev,etc,home,media,mnt,proc,root,sys,tmp}");
 	system("chmod 710 /root");
 	system("chmod 1777 /tmp");
+	
+	// Some programs except generic directories in some very weird places.
+	// For example, KDE assumes that /var/tmp is a symlink to /tmp. I'm too lazy to patch this out, so I'll just create this symlink.
+	system("ln -sf ../tmp /tmp/new_sysroot/var/tmp");
 	return true;
 }
 bool setPasswd(string username, string passwd) {
