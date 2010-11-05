@@ -70,9 +70,6 @@
 		<repository>
 			http://userland32.agilialinux.ru/
 		</repository>
-		<repository>
-			ftp://archlich.homeip.net:2121/games/
-		</repository>
 		<disabled_repository>
 			http://testing32.agilialinux.ru/
 		</disabled_repository>
