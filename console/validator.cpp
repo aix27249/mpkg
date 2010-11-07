@@ -123,21 +123,21 @@ int checkPackage(string filename) {
 	}
 	else ok(_("Dependencies are resolvable using installed or available packages"));
 	// Checking descriptions
-	if (p->get_short_description().empty() || p->get_short_description()=="0") {
+	if (cutSpaces(p->get_short_description()).empty() || cutSpaces(p->get_short_description())=="0") {
 		warning(_("No short description"));
 	}
 	else ok(_("Short description is good"));
 
-	if (p->get_description().empty() || p->get_description()=="0") {
+	if (cutSpaces(p->get_description()).empty() || cutSpaces(p->get_description())=="0") {
 		warning(_("No description"));
 	}
 	else ok(_("Description is good"));
 	// Maintainer
-	if (p->get_packager().empty() || p->get_packager()=="0") {
+	if (cutSpaces(p->get_packager()).empty() || cutSpaces(p->get_packager())=="0") {
 		warning(_("No maintainer name specified"));
 	}
 	else ok(_("Maintainer name is good"));
-	if (p->get_packager_email().empty() || p->get_packager_email()=="0") {
+	if (cutSpaces(p->get_packager_email()).empty() || cutSpaces(p->get_packager_email())=="0") {
 		warning(_("No maintainer email specified"));
 	}
 	else ok(_("Maintainer email is good"));
