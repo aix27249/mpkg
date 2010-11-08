@@ -43,7 +43,7 @@
        <number>0</number>
       </property>
       <property name="currentIndex">
-       <number>12</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -128,8 +128,20 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Droid Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 2010.10 Pre-beta Release Notes&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This is a development snapshot intended for testing use only. It may even fail to install. For more information, see official site: http://www.agilialinux.ru/&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 8.0 Beta1 Release Notes&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Welcome to AgiliaLinux! This tool will install the system to your computer. If you need help, please visit our forum: http://forum.agilialinux.ru/ or join jabber conference: agilialinux@conference.jabber.ru. &lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This installer is running inside a live system. It contains a working environment with web browser, IM client and other useful things, which you can use to get assistance at installation time.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;TINY DISCLAIMER&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This is a first beta. Please report bugs to http://trac.agilialinux.ru/.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;It is known that it contain some bugs (and some of them are unknown), it may even fail to install. It can eat your cat, make your eyes red and glowing, cause permanent insomnia and make other bad things.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;But we hope you find it useful and we don't waste our time :)&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;For more information, see official site: http://www.agilialinux.ru/&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -385,7 +397,7 @@ p, li { white-space: pre-wrap; }
                 <item>
                  <widget class="QRadioButton" name="netNetconfigRadioButton">
                   <property name="text">
-                   <string>Netconfig (manual network management)</string>
+                   <string>Manual network management</string>
                   </property>
                  </widget>
                 </item>
@@ -1104,7 +1116,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QRadioButton" name="nvidiaLatestRadioButton">
           <property name="text">
-           <string>256.xx: GeForce 6 and later cards (including Quadro and ION)</string>
+           <string>260.xx: GeForce 6 and later cards (including Quadro and ION)</string>
           </property>
           <property name="checked">
            <bool>false</bool>
@@ -1823,6 +1835,13 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item>
+            <widget class="QCheckBox" name="useTmpfsCheckBox">
+             <property name="text">
+              <string>Use tmpfs for /tmp volume</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QCheckBox" name="initrdDelayCheckBox">
              <property name="text">
               <string>Enable boot delay [deprecated, should be autodetected by initrd scripts]</string>
@@ -1852,13 +1871,6 @@ p, li { white-space: pre-wrap; }
               <widget class="QLineEdit" name="initrdModulesLineEdit"/>
              </item>
             </layout>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="useTmpfsCheckBox">
-             <property name="text">
-              <string>Use tmpfs for /tmp volume</string>
-             </property>
-            </widget>
            </item>
           </layout>
          </widget>
