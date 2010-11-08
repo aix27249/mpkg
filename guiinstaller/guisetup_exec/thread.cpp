@@ -212,10 +212,10 @@ bool SetupThread::prepareInstallQueue() {
 			if (commitList[i].get_name()=="nvidia-driver" || commitList[i].get_name()=="nvidia-kernel") commitList.get_package_ptr(i)->set_action(ST_INSTALL, "nvidia-select");
 		}
 	}
-	else if (settings->value("nvidia-driver")=="173") {
+	if (settings->value("nvidia-driver")=="173") {
 		alternatives.push_back("legacy173");
 	}
-	else if (settings->value("nvidia-driver")=="96") {
+	if (settings->value("nvidia-driver")=="96") {
 		alternatives.push_back("legacy96");
 	}
 	for (size_t i=0; i<alternatives.size(); ++i) {
