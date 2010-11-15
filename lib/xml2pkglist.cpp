@@ -102,8 +102,12 @@ void parseXmlTag(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "build")) pkg.set_build(cutSpaces(key));
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "compressed_size")) pkg.set_compressed_size(cutSpaces(key));
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "installed_size")) pkg.set_installed_size(cutSpaces(key));
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "short_description")) pkg.set_short_description(cutSpaces(key));
-	else if (!xmlStrcmp(cur->name, (const xmlChar *) "description")) pkg.set_description(cutSpaces(key));
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "short_description")) {
+		if (pkg.get_short_description().empty()) pkg.set_short_description(cutSpaces(key));
+	}
+	else if (!xmlStrcmp(cur->name, (const xmlChar *) "description")) {
+		if (pkg.get_description().empty()) pkg.set_description(cutSpaces(key));
+	}
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "changelog")) pkg.set_changelog(cutSpaces(key));
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "md5")) pkg.set_md5(cutSpaces(key));
 	else if (!xmlStrcmp(cur->name, (const xmlChar *) "maintainer")) parseMaintainer(doc, cur, pkg);

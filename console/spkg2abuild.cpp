@@ -1,7 +1,7 @@
 #include <mpkg/libmpkg.h>
 
 string shellEscape(string data) {
-	strReplace(&data, "'", "\\'");
+	strReplace(&data, "\"", "\\\"");
 	return data;
 }
 
@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
 	abuild.push_back("# Package description");
 	abuild.push_back("shortdesc=(\"" + shellEscape(metapkg->data->pkg.get_short_description()) + "\")");
 	abuild.push_back("longdesc=(\"" + shellEscape(metapkg->data->pkg.get_description()) + "\")");
-
+	cout << metapkg->data->pkg.get_short_description() << endl;
 	// Source URL
 	abuild.push_back("");
 	abuild.push_back("# Source URL");
