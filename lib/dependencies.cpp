@@ -712,7 +712,7 @@ PACKAGE_LIST DependencyTracker::get_dependant_packages(const PACKAGE& package)
 	// Setting appropriary actions
 	for (unsigned int i=0; i<dependantPackages.size(); i++)
 	{
-		dependantPackages.get_package_ptr(i)->set_action(ST_REMOVE, "indirect-getdep");
+		dependantPackages.get_package_ptr(i)->set_action(ST_REMOVE, "indirect-getdep by " + package.get_name());
 	}
 	return dependantPackages;
 }
