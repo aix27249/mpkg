@@ -43,6 +43,13 @@ vector<string> DepReactor::getErrorList() const {
 	return errorList;
 }
 
+map<PACKAGE *, PACKAGE *> DepReactor::getDepInstallPaths() const {
+	return depInstallPaths;
+}
+
+map<PACKAGE *, PACKAGE *> DepReactor::getDepRemovePaths() const {
+	return depRemovePaths;
+}
 // Maintenance routine
 
 void DepReactor::cleanup() {
@@ -52,6 +59,8 @@ void DepReactor::cleanup() {
 	finalInstallList.clear();
 	finalRemoveList.clear();
 	errorList.clear();
+	depInstallPaths.clear();
+	depRemovePaths.clear();
 }
 
 // Main function: processing
@@ -105,7 +114,7 @@ bool DepReactor::process() {
 		slaveRemoveQueue.clear();
 		
 		cnt++;
-		printf("\nLoop %d\n", cnt);
+		//printf("\nLoop %d\n", cnt);
 	}
 
 	// Debug section
@@ -202,6 +211,7 @@ bool DepReactor::expandInstallLayer(vector<PACKAGE *> masterQueue, vector<PACKAG
 					}
 					if (!depPkg) {
 						loopStop = true;
+						depInstallPaths[packageDB.get_package_ptr(t)]=masterQueue[i];
 						slaveInstallQueue.push_back(packageDB.get_package_ptr(t)); 
 						break;
 					}
@@ -294,7 +304,7 @@ bool DepReactor::expandRemoveLayer(vector<PACKAGE *> masterRemoveQueue, const ve
 
 				loopCounter++;
 				if (dep->get_package_name()==corename) {
-					printf("Possible: %s\n", corename.c_str());
+					//printf("Possible: %s\n", corename.c_str());
 					// Possible candidate to remove. Check if it's deps can be fixed with masterQueue
 					resolvable = false;
 					for (size_t m=0; !resolvable && m<masterQueue.size(); ++m) {
@@ -311,14 +321,18 @@ bool DepReactor::expandRemoveLayer(vector<PACKAGE *> masterRemoveQueue, const ve
 							if (masterRemoveQueue[m]==packageDB.get_package_ptr(t)) already = true;
 						}
 
-						if (!already) slaveRemoveQueue.push_back(packageDB.get_package_ptr(t));
+						if (!already) {
+
+							depRemovePaths[packageDB.get_package_ptr(t)]=masterRemoveQueue[i];
+							slaveRemoveQueue.push_back(packageDB.get_package_ptr(t));
+						}
 						break;
 					}
 				}
 			}
 		}
 	}
-	printf("Iterations: %d\n", loopCounter);
+	//printf("Iterations: %d\n", loopCounter);
 
 	return true;
 }

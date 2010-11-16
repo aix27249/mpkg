@@ -881,62 +881,71 @@ void searchByFile(mpkg *core, string filename, bool strict)
 	}
 	if (dialogMode) ncInterface.showMsgBox(data);
 }
-void actListDependants(mpkg &core, string filename, bool showOnlyInstalled) {
 
-	ncInterface.setSubtitle(_("Searching for packages depending on ") + filename);
-	PACKAGE_LIST tList, dependant;
-	PACKAGE *pkg = new PACKAGE;
+void actListDependants(mpkg &core, string filename, bool includeNotInstalled) {
+	PACKAGE_LIST packages;
 	SQLRecord sqlSearch;
-	string search = filename;
-	core.get_packagelist(sqlSearch, &tList);
-	string data;
-	for (unsigned int i=0; i<tList.size(); i++)
-	{
-		if (tList[i].get_name()==search)
-		{
-			if (!showOnlyInstalled || tList[i].installed ())
-			{
-				pkg = tList.get_package_ptr(i);
+	if (!includeNotInstalled) sqlSearch.addField("package_installed", 1);
+	core.get_packagelist(sqlSearch, &packages);
+
+	string core_name, data;
+	// First, check if such package exists
+	for (size_t i=0; i<packages.size(); ++i) {
+		if (packages[i].installed() && packages[i].get_name()==filename) {
+			core_name = packages[i].get_corename();
+		}
+	}
+	if (core_name.empty()) {
+		mError(_("Package ") + filename + _(" not installed"));
+		return;
+	}
+
+	vector<PACKAGE *> list;
+	bool found;
+	for (size_t i=0; i<packages.size(); ++i) {
+		for (size_t t=0; t<packages[i].get_dependencies().size(); ++t) {
+			if (packages[i].get_dependencies().at(t).get_package_name()==core_name) {
+				found = false;
+				for (size_t z=0; !found && z<list.size(); ++z) {
+					if (list[z]==packages.get_package_ptr(i)) found=true;
+				}
+				if (!found) list.push_back(packages.get_package_ptr(i));
 			}
 		}
 	}
-	dependant = core.DepTracker->get_dependant_packages(*pkg);
-	if (dependant.size()==0)
-	{
-		if (showOnlyInstalled) {
-			if (!dialogMode) say(_("No installed packages depends on %s\n"), filename.c_str());
-			else data = _("No installed packages depends on ") + filename;
-		}
-		else {
-			if (!dialogMode) say(_("No package depends on %s\n"), filename.c_str());
-			else data = _("No package depends on ") + filename;
-		}
-		ncInterface.showMsgBox(data);
-		//delete pkg;
-		return;
-	}
+	// Output
+	
+	
+	if (!dialogMode) say(_("Next packages depends on %s: \n"), filename.c_str());
 	else {
-		if (!dialogMode) say(_("Next packages depends on %s: \n"), filename.c_str());
-		else data = _("Next packages depends on ") + filename + "\n";
+		ncInterface.setSubtitle(_("Searching for packages depending on ") + filename);
+		data = _("Next packages depends on ") + filename + "\n";
 	}
-	for (unsigned int i=0; i<dependant.size(); i++) {
+
+	if (list.empty()) {
+		if (dialogMode) data = _("No package depends on ") + filename;
+		else say(_("No package depends on %s\n"), filename.c_str());
+	}
+
+	for (size_t i=0; i<list.size(); ++i) {
 		if (!dialogMode) {
 			if (verbose) {
-				for (size_t t=0; t<dependant[i].get_dependencies().size(); ++t) {
-					if (dependant[i].get_dependencies().at(t).get_package_name()==filename) {
-						say(_("%s %s requires: %s\n"), dependant[i].get_name().c_str(), dependant[i].get_fullversion().c_str(), dependant[i].get_dependencies().at(t).getDepInfo().c_str());
+				for (size_t t=0; t<list[i]->get_dependencies().size(); ++t) {
+					if (list[i]->get_dependencies().at(t).get_package_name()==filename) {
+						say(_("%s %s requires: %s\n"), list[i]->get_name().c_str(), list[i]->get_fullversion().c_str(), list[i]->get_dependencies().at(t).getDepInfo().c_str());
 						break;
 					}
 				}
 			}
-			else say("%s %s\n", dependant[i].get_name().c_str(), dependant[i].get_fullversion().c_str());
+			else say("%s %s\n", list[i]->get_name().c_str(), list[i]->get_fullversion().c_str());
 		}
 		else {
-			data += dependant[i].get_name() + " " + dependant[i].get_fullversion() + "\n";
+			data += list[i]->get_name() + " " + list[i]->get_fullversion() + "\n";
 		}
+
 	}
-	ncInterface.showMsgBox(data);
-	//delete pkg;
+
+	if (dialogMode) ncInterface.showMsgBox(data);
 }
 
 void actSearchByDescription(mpkg &core, const vector<string> &query, bool showOnlyInstalled, bool showOnlyAvailable) {

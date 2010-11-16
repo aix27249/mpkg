@@ -52,6 +52,10 @@ class DepReactor {
 
 		vector<string> getErrorList() const; // Returns human-readable error list
 
+		map<PACKAGE *, PACKAGE *> getDepInstallPaths() const;
+		map<PACKAGE *, PACKAGE *> getDepRemovePaths() const;
+
+
 		void cleanup(); // Cleans everything for future use.
 
 	private:
@@ -67,6 +71,8 @@ class DepReactor {
 		bool expandInstallLayer(vector<PACKAGE *> masterQueue, vector<PACKAGE *> &slaveInstallQueue, size_t installQueueSize);
 		bool expandRemoveLayer(vector<PACKAGE *> masterRemoveQueue, const vector<PACKAGE *>& masterQueue, vector<PACKAGE *> &slaveRemoveQueue, size_t removeQueueSize);
 		vector<PACKAGE *> replaceScanner(vector<PACKAGE *> masterQueue);
+
+		map<PACKAGE *, PACKAGE *> depInstallPaths, depRemovePaths;
 };
 
 #endif //DEPENDENCIES_V2_H_
