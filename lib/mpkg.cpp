@@ -1214,6 +1214,7 @@ int mpkgDatabase::commit_actions()
 	}
 	// Done
 
+	system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S` GOING TO INSTALL: " + IntToStr(install_list.size()) + ", TO REMOVE: " + IntToStr(remove_list.size()) + " >> /var/log/mpkg-installation.log");
 	msay(_("Looking for install queue"));
 	vector<bool> needFullDownload(install_list.size());
 	if (install_list.size()>0)
@@ -1317,6 +1318,7 @@ download_process:
 		}
 // installProcess:
 	
+
 		actionBus.setCurrentAction(ACTIONID_MD5CHECK);
 		pData.resetItems(_("waiting"), 0, 1, ITEMSTATE_WAIT);
 	
@@ -1595,6 +1597,8 @@ download_process:
 		msay(_("Syncing disks..."), SAYMODE_NEWLINE);
 		system("sync &");
 	}
+
+	system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S` FINISHED >> /var/log/mpkg-installation.log");
 	return 0;
 }
 
@@ -1602,10 +1606,10 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 {
 	bool ultraFastMode = true;
 #ifndef INSTALL_DEBUG
-	if (setupMode) {
+	if (setupMode && dialogMode) {
 		system("echo Installing package " + package->get_name() + "-" + package->get_fullversion() + " >> /dev/tty4");
 	}
-	system("echo Installing package " + package->get_name() + "-" + package->get_fullversion() + " >> /var/log/mpkg-installation.log");
+	system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S` Installing package " + package->get_name() + "-" + package->get_fullversion() + " >> /var/log/mpkg-installation.log");
 #endif
 	
 	// Check if package already has been installed
@@ -1934,6 +1938,7 @@ void mpkgDatabase::unexportPackage(const string& output_dir, const PACKAGE& p)
 
 int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsigned int packagesTotal)
 {
+	system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S`  Removing package " + package->get_name() + "-" + package->get_fullversion() + " >> /var/log/mpkg-installation.log");
 	string index_str, action_str, by_str;
 	if (packagesTotal>0) {
 		index_str = "[" + IntToStr(packageNum+1) + "/"+IntToStr(packagesTotal)+"] ";
