@@ -686,7 +686,7 @@ int main (int argc, char **argv)
 		_cmdOptions["sql_readonly"]="yes";
 		if (argc<=optind) return print_usage(stderr, 1);
 		if (!dialogMode) say(_("Searching for packages which depends on %s\n"),argv[optind]);
-		actListDependants(core, argv[optind], showOnlyInstalled);
+		actListDependants(core, argv[optind], showOnlyAvailable);
 		return 0;
 	}
 
