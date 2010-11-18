@@ -831,20 +831,22 @@ void mpkgDatabase::get_full_filelist(PACKAGE_LIST *pkgList)
 		sqlSearch.addField("packages_package_id", pkgList->at(i).get_id());
 	}
 
+	// Create pkg-id map
+	map<int, size_t> pkgmap;
+	for (size_t i=0; i<pkgList->size(); ++i) {
+		pkgmap[pkgList->at(i).get_id()]=i;
+	}
+	size_t pkgnum;
+
 
 	db.get_sql_vtable(*sqlTable, sqlFields, "files", sqlSearch);
 	int package_id;
-	size_t counter=0;
 	size_t fPackages_package_id=sqlTable->getFieldIndex("packages_package_id");
 	size_t fFile_name=sqlTable->getFieldIndex("file_name");
 	for (size_t i=0; i<sqlTable->size(); ++i) {
 		package_id=atoi(sqlTable->getValue(i, fPackages_package_id).c_str());
-		for (size_t t=0; t<pkgList->size(); ++t) {
-			counter++;
-			if (pkgList->get_package_ptr(t)->get_id()==package_id) {
-				pkgList->get_package_ptr(t)->get_files_ptr()->push_back(sqlTable->getValue(i, fFile_name));
-			}
-		}
+		pkgnum = pkgmap[package_id];
+		pkgList->get_package_ptr(pkgnum)->get_files_ptr()->push_back(sqlTable->getValue(i, fFile_name));
 	}
 	delete sqlTable;
 }
@@ -956,8 +958,6 @@ void mpkgDatabase::get_full_dependencylist(PACKAGE_LIST *pkgList) //TODO: incomp
 
 void mpkgDatabase::get_full_taglist(PACKAGE_LIST *pkgList)
 {
-	int counter=0;
-	int success=0;
 	SQLRecord fields;
 	SQLRecord search;
 	SQLTable tags;
@@ -974,89 +974,37 @@ void mpkgDatabase::get_full_taglist(PACKAGE_LIST *pkgList)
 	}
 
 	db.get_sql_vtable(links, fields, "tags_links", search);
-	string tag_id_str;
 	
 	// Index
-	
 	int fLinksPackages_package_id = links.getFieldIndex("packages_package_id");
 	int fLinksTags_tag_id = links.getFieldIndex("tags_tag_id");
 
 	int fTagsTags_id = tags.getFieldIndex("tags_id");
 	int fTagsTags_name = tags.getFieldIndex("tags_name");
+
+	// Create pkg-id map
+	map<int, size_t> pkgmap;
+	for (size_t i=0; i<pkgList->size(); ++i) {
+		pkgmap[pkgList->at(i).get_id()]=i;
+	}
+
+	// Create tag-id map
+	map<int, size_t> tagmap;
+	for (size_t i=0; i<tags.size(); ++i) {
+		tagmap[atoi(tags.getValue(i, fTagsTags_id).c_str())]=i;
+	}
+
+	
 	int currentLinkPackageID;
-	for (unsigned int i=0; i<links.size(); i++)
-	{
+	size_t pkgnum, tagnum;
+	
+	for (size_t i=0; i<links.size(); ++i) {
 		currentLinkPackageID = atoi(links.getValue(i, fLinksPackages_package_id).c_str());
-		for (unsigned int p=0; p<pkgList->size(); p++)
-		{
-			counter++;
-			if (pkgList->get_package_ptr(p)->get_id()==currentLinkPackageID)
-			{
-				tag_id_str=links.getValue(i, fLinksTags_tag_id);
-				for (unsigned int t=0; t<tags.size(); t++)
-				{
-					if (tags.getValue(t, fTagsTags_id)==tag_id_str)
-					{
-						success++;
-						pkgList->get_package_ptr(p)->get_tags_ptr()->push_back(tags.getValue(t, fTagsTags_name));
-						break;
-					}
-				}
-			}
-		}
+		pkgnum = pkgmap[currentLinkPackageID];
+		tagnum = tagmap[atoi(links.getValue(i, fLinksTags_tag_id).c_str())];
+		pkgList->get_package_ptr(pkgnum)->get_tags_ptr()->push_back(tags.getValue(tagnum, fTagsTags_name));
 	}
 }
-
-
-
-/*int mpkgDatabase::get_taglist(int package_id, vector<string> *taglist)
-{
-	printf("USING GET_TAGLIST\n");
-	// Step 1. Read link table, and create a list of tag's ids.
-	SQLTable *id_sqlTable = new SQLTable;
-	SQLRecord id_sqlFields;
-	id_sqlFields.addField("tags_tag_id");
-	SQLRecord id_sqlSearch;
-	id_sqlSearch.addField("packages_package_id", package_id);
-	db.get_sql_vtable(*id_sqlTable, id_sqlFields, "tags_links", id_sqlSearch);
-
-	taglist->clear();
-	SQLTable *sqlTable;
-	SQLRecord sqlFields;
-	sqlFields.addField("tags_name");
-	SQLRecord sqlSearch;
-	unsigned int fTags_tag_id=id_sqlTable->getFieldIndex("tags_tag_id");
-	if (!id_sqlTable->empty())
-	{
-		sqlTable = new SQLTable;
-		sqlSearch.setSearchMode(SEARCH_IN);
-		for (unsigned int i=0; i<id_sqlTable->getRecordCount(); i++)
-		{
-			sqlSearch.addField("tags_id", id_sqlTable->getValue(i, fTags_tag_id));
-		}
-	}
-	else
-	{
-		delete id_sqlTable;
-		return 0;
-	}
-	delete id_sqlTable;
-
-	// Step 2. Read the tags with readed ids
-	db.get_sql_vtable(*sqlTable, sqlFields, "tags", sqlSearch);
-
-
-//	if (!sqlTable->empty())
-//	{
-//		taglist->resize(sqlTable->getRecordCount());
-//		for (int i=0; i<sqlTable->getRecordCount(); i++)
-//		{
-//			taglist->at(i)=*sqlTable->getValue(i, "tags_name");
-//		}
-//	}
-	delete sqlTable;
-	return 0;
-}*/
 
 void mpkgDatabase::get_available_tags(vector<string> *output)
 {
