@@ -930,23 +930,27 @@ void mpkgDatabase::get_full_dependencylist(PACKAGE_LIST *pkgList) //TODO: incomp
 	int fDependency_package_version = deplist.getFieldIndex("dependency_package_version");
 	int fDependency_build_only = deplist.getFieldIndex("dependency_build_only");
 	
+	// Create pkg-id map
+	map<int, size_t> pkgmap;
+	for (size_t i=0; i<pkgList->size(); ++i) {
+		pkgmap[pkgList->at(i).get_id()]=i;
+	}
+
 	// Processing
 	int currentDepID;
-	for (unsigned int i=0; i<deplist.size(); i++)
-	{
+	size_t dsize, pkgnum;
+	DEPENDENCY *dep;
+	for (size_t i=0; i<deplist.size(); ++i) {
 		currentDepID = atoi(deplist.getValue(i, fPackages_package_id).c_str());
-		for (unsigned int p=0; p<pkgList->size(); p++)
-		{
-			if (pkgList->get_package_ptr(p)->get_id()==currentDepID)
-			{
-				dep_tmp.set_condition(deplist.getValue(i, fDependency_condition));
-				dep_tmp.set_type(deplist.getValue(i, fDependency_type));
-				dep_tmp.set_package_name(deplist.getValue(i, fDependency_package_name));
-				dep_tmp.set_package_version(deplist.getValue(i, fDependency_package_version));
-				dep_tmp.setBuildOnly(atoi(deplist.getValue(i, fDependency_build_only).c_str()));
-				pkgList->get_package_ptr(p)->get_dependencies_ptr()->push_back(dep_tmp);
-			}
-		}
+		pkgnum = pkgmap[currentDepID];
+		pkgList->get_package_ptr(pkgnum)->get_dependencies_ptr()->push_back(dep_tmp);
+		dsize = pkgList->get_package_ptr(pkgnum)->get_dependencies().size();
+		dep = &pkgList->get_package_ptr(pkgnum)->get_dependencies_ptr()->at(dsize-1);
+		dep->set_condition(deplist.getValue(i, fDependency_condition));
+		dep->set_type(deplist.getValue(i, fDependency_type));
+		dep->set_package_name(deplist.getValue(i, fDependency_package_name));
+		dep->set_package_version(deplist.getValue(i, fDependency_package_version));
+		dep->setBuildOnly(atoi(deplist.getValue(i, fDependency_build_only).c_str()));
 	}
 }
 
