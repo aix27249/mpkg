@@ -2077,7 +2077,7 @@ int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsi
 		bool removeThis;
 		int unlink_ret;
 		for (size_t i=0; i<remove_files->size(); ++i) {
-			if (i==0 || i==remove_files->size() || i%10==0) msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str + _(": removing files [") + IntToStr(i) + "/"+IntToStr(remove_files->size())+"]");
+			if (i==0 || i==remove_files->size() || i%20==0) msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str + _(": removing files [") + IntToStr(i) + "/"+IntToStr(remove_files->size())+"]");
 			fname=sys_root + remove_files->at(i);
 			for (size_t t=0; t<backups.size(); ++t) {
 				if (remove_files->at(i)==*backups[t].filename) {
@@ -2122,7 +2122,8 @@ int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsi
 					}
 				}
 			}
-			pData.increaseItemProgress(package->itemID);
+			// DISABLED FOR SPEED DEBUG
+			//pData.increaseItemProgress(package->itemID);
 		}
 		msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str+_(": removing empty directories"));
 

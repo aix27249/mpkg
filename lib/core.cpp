@@ -821,6 +821,7 @@ int mpkgDatabase::get_sql_vtable(SQLTable& output, const SQLRecord& fields, cons
 
 void mpkgDatabase::get_full_filelist(PACKAGE_LIST *pkgList)
 {
+	if (pkgList->IsEmpty()) return;
 	SQLTable *sqlTable = new SQLTable;
 	SQLRecord sqlSearch;
 	SQLRecord sqlFields;
@@ -846,12 +847,17 @@ void mpkgDatabase::get_full_filelist(PACKAGE_LIST *pkgList)
 	for (size_t i=0; i<sqlTable->size(); ++i) {
 		package_id=atoi(sqlTable->getValue(i, fPackages_package_id).c_str());
 		pkgnum = pkgmap[package_id];
+		if (pkgnum >= pkgList->size()) {
+			continue;
+		}
+
 		pkgList->get_package_ptr(pkgnum)->get_files_ptr()->push_back(sqlTable->getValue(i, fFile_name));
 	}
 	delete sqlTable;
 }
 
 void mpkgDatabase::get_full_abuildlist(PACKAGE_LIST *pkgList) {
+	if (pkgList->IsEmpty()) return;
 	SQLTable *abuilds = new SQLTable;
 	SQLRecord fields;
 	SQLRecord search;
@@ -871,6 +877,7 @@ void mpkgDatabase::get_full_abuildlist(PACKAGE_LIST *pkgList) {
 	}
 }
 void mpkgDatabase::get_full_config_files_list(PACKAGE_LIST *pkgList) {
+	if (pkgList->IsEmpty()) return;
 	SQLTable *configs = new SQLTable;
 	SQLTable *c_options = new SQLTable;
 	SQLRecord fields;
@@ -911,6 +918,7 @@ void mpkgDatabase::get_full_config_files_list(PACKAGE_LIST *pkgList) {
 
 void mpkgDatabase::get_full_dependencylist(PACKAGE_LIST *pkgList) //TODO: incomplete
 {
+	if (pkgList->IsEmpty()) return;
 	SQLRecord fields;
 	SQLRecord search;
 	SQLTable deplist;
@@ -945,6 +953,9 @@ void mpkgDatabase::get_full_dependencylist(PACKAGE_LIST *pkgList) //TODO: incomp
 	for (size_t i=0; i<deplist.size(); ++i) {
 		currentDepID = atoi(deplist.getValue(i, fPackages_package_id).c_str());
 		pkgnum = pkgmap[currentDepID];
+		if (pkgnum >= pkgList->size()) {
+			continue;
+		}
 		pkgList->get_package_ptr(pkgnum)->get_dependencies_ptr()->push_back(dep_tmp);
 		dsize = pkgList->get_package_ptr(pkgnum)->get_dependencies().size();
 		dep = &pkgList->get_package_ptr(pkgnum)->get_dependencies_ptr()->at(dsize-1);
@@ -958,6 +969,7 @@ void mpkgDatabase::get_full_dependencylist(PACKAGE_LIST *pkgList) //TODO: incomp
 
 void mpkgDatabase::get_full_taglist(PACKAGE_LIST *pkgList)
 {
+	if (pkgList->IsEmpty()) return;
 	SQLRecord fields;
 	SQLRecord search;
 	SQLTable tags;
@@ -1001,7 +1013,14 @@ void mpkgDatabase::get_full_taglist(PACKAGE_LIST *pkgList)
 	for (size_t i=0; i<links.size(); ++i) {
 		currentLinkPackageID = atoi(links.getValue(i, fLinksPackages_package_id).c_str());
 		pkgnum = pkgmap[currentLinkPackageID];
+		if (pkgnum >= pkgList->size()) {
+			continue;
+		}
 		tagnum = tagmap[atoi(links.getValue(i, fLinksTags_tag_id).c_str())];
+		if (tagnum >= tags.size()) {
+			continue;
+		}
+
 		pkgList->get_package_ptr(pkgnum)->get_tags_ptr()->push_back(tags.getValue(tagnum, fTagsTags_name));
 	}
 }
@@ -1087,6 +1106,7 @@ void mpkgDatabase::get_full_deltalist(PACKAGE_LIST *pkgList)
 
 void mpkgDatabase::get_full_locationlist(PACKAGE_LIST *pkgList)
 {
+	if (pkgList->IsEmpty()) return;
 	SQLTable *sqlTable = new SQLTable;
 	SQLRecord sqlFields;
 	SQLRecord sqlSearch;

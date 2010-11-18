@@ -1,0 +1,28 @@
+#!/bin/sh
+# This script builds all components and installs it into system (because of building requirements).
+# Do not use this for package build
+TARGETS="mpkgsupport nwidgets lib console i18n mpkg-parted manager2 mpkg-gui-installer packagebuilder mparted mbuilder installer installer2 guiinstaller/guisetup guiinstaller/guisetup_exec guiinstaller/langselect"
+set -e
+CWD=`pwd`
+if [ `uname -m` = "i686" ] ; then
+	MARCH="-march=i686"
+fi
+NUMJOBS=${NUMJOBS:--j4}
+CXXFLAGS="-O0 $MARCH -pthread -g -DDEBUG"
+export CXXFLAGS
+CFLAGS=$CXXFLAGS
+export CFLAGS
+
+for i in $TARGETS ; do
+	mkdir -p $CWD/$i/build
+	cd $CWD/$i/build
+	CXXFLAGS=$CXXFLAGS CFLAGS=$CFLAGS cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS:STRING="$CFLAGS" -DCMAKE_CXX_FLAGS:STRING="$CXXFLAGS" ..
+	make $NUMJOBS
+	if [ "$i" == "installer" -o "$i" == "guiinstaller/guisetup"  -o "$i" == "guiinstaller/guisetup_exec"  -o "$i" == "guiinstaller/langselect"  -o "$i" == "installer2"  ] ; then
+		echo "$i build ok"
+	else
+		sudo make install
+	fi
+
+done
+cd $CWD
