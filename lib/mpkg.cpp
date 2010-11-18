@@ -793,6 +793,7 @@ int emerge_package(string file_url, string *package_name, string march, string m
 mpkgDatabase::mpkgDatabase()
 {
 	hasFileList=false;
+	essentialFilesFilled=false;
 }
 mpkgDatabase::~mpkgDatabase(){}
 

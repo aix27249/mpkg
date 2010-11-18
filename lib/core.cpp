@@ -138,7 +138,7 @@ bool mpkgDatabase::checkEssentialFile(const string& filename) {
 }
 
 void mpkgDatabase::fillEssentialFiles(bool force_update) {
-	if (!essentialFiles.empty() && !force_update) return;
+	if (essentialFilesFilled && !force_update) return;
 	//printf("Filling essential files...\n");
 	SQLRecord sqlSearch;
 	string pkgname = "aaa_elflibs";
@@ -147,6 +147,7 @@ void mpkgDatabase::fillEssentialFiles(bool force_update) {
 	sqlSearch.setSearchMode(SEARCH_AND);
 	PACKAGE_LIST p;
 	get_packagelist(sqlSearch, &p, true);
+	essentialFilesFilled=true;
 	if (p.IsEmpty()) return;
 	if (p.size()!=1) {
 		printf("Multiple aaa_elflibs in database, fail!\n");

@@ -7,7 +7,7 @@ CWD=`pwd`
 if [ `uname -m` = "i686" ] ; then
 	MARCH="-march=i686"
 fi
-NUMJOBS=${NUMJOBS:--j4}
+NUMJOBS=${NUMJOBS:--j1}
 CXXFLAGS="-O3 $MARCH -fomit-frame-pointer -fPIC -funroll-all-loops -fopenmp -funroll-loops -ffast-math -O3 -fgraphite-identity -floop-interchange -floop-strip-mine -ftree-parallelize-loops=4 -pthread -floop-block"
 export CXXFLAGS
 CFLAGS=$CXXFLAGS

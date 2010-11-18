@@ -67,6 +67,7 @@ class mpkgDatabase
 		void fillEssentialFiles(bool force_update=false);
 
 		vector<string> essentialFiles;
+		bool essentialFilesFilled;
 
 
 
