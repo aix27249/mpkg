@@ -6,7 +6,6 @@ string shellEscape(string data) {
 }
 
 int main(int argc, char **argv) {
-
 	string filename;
 	if (argc>1) filename = argv[1];
 	// TODO: create empty tree if no filename provided
@@ -96,9 +95,9 @@ int main(int argc, char **argv) {
 	vector<string> after_build_script = MakeStrings(data);
 	vector<string> doinst = MakeStrings(metapkg->sp->readPostinstallScript());
 	if (metapkg->data->buildsystem=="script") {
-		abuild.push_back("# Main build script (used only if build_system=\"script\")");
+		abuild.push_back("# Main build script");
 		abuild.push_back("build() {");
-		abuild.push_back("\tcd $srcdir/$pkgname-$pkgver"); // Should be replaced with automatic directory finding
+		abuild.push_back("\tgo_src_dir"); // Should be replaced with automatic directory finding
 		abuild.push_back("\tburn_patches");
 		for (size_t i=0; i<after_build_script.size(); ++i) {
 			abuild.push_back("\t" + after_build_script[i]);
