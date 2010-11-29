@@ -17,8 +17,8 @@ class mpkgDatabase
 {
 	public:
 		int get_sql_vtable(SQLTable& output, const SQLRecord& fields, const string& table_name, const SQLRecord& search);
-		void exportPackage(const string& output_dir, PACKAGE& p);
-		void unexportPackage(const string& output_dir, const PACKAGE& p);
+//		void exportPackage(const string& output_dir, PACKAGE& p);
+//		void unexportPackage(const string& output_dir, const PACKAGE& p);
 		// Functions to get data
 		int get_package(const int& package_id, PACKAGE *package, bool no_cache=false);
 		int get_packagelist(const SQLRecord& sqlSearch, PACKAGE_LIST *packagelist, bool ultraFast=false, bool needDescriptions=true);
@@ -111,8 +111,8 @@ class mpkgDatabase
 		int set_installed(int package_id, int status);
 
 		int emerge_to_db(PACKAGE *package);	// Adds new package to database, filtering data
-		int install_package(PACKAGE *package, unsigned int packageNum=0, unsigned int packagesTotal=0); // PHYSICALLY install package (extract, execute scripts)
-		int remove_package(PACKAGE *package, unsigned int packageNum=0, unsigned int packagesTotal=0); // PHYSICALLY remove package (delete files, execute remove scripts)
+		int install_package(PACKAGE *package, size_t packageNum, size_t packagesTotal, int transaction_id); // PHYSICALLY install package (extract, execute scripts)
+		int remove_package(PACKAGE *package, size_t packageNum, size_t packagesTotal, int transaction_id); // PHYSICALLY remove package (delete files, execute remove scripts)
 		int uninstall(vector<string>* pkgnames); // Wrapper, uninstalls all packages with given names.
 		int updateRepositoryData(PACKAGE_LIST *newPackages);
 		int syncronize_data(PACKAGE_LIST *pkgList, vector<bool> needUpdateRepositoryTags, vector<bool> needUpdateDistroVersion);

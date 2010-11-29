@@ -13,7 +13,7 @@
 #include "errorhandler.h"
 int b_t = 0;
 int c_t = 0;
-const string MPKGTableVersion="1.10";
+const string MPKGTableVersion="1.11";
 bool SQLiteDB::CheckDatabaseIntegrity()
 {
 	if (\
@@ -236,6 +236,32 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 
 			sql_exec("CREATE TABLE abuilds (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, package_id INTEGER, url TEXT);");
 		}
+
+
+		hideErrors = true;
+		if (sql_exec("select id from transactions limit 1;")!=0)
+		{
+			hideErrors = false;
+			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg update') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
+				return false;
+			}
+
+			sql_exec("CREATE TABLE transactions (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, t_start TIMESTAMP, t_end TIMESTAMP, t_status INTEGER, custom_details TEXT);");
+		}
+
+		hideErrors = true;
+		if (sql_exec("select id from transaction_details limit 1;")!=0)
+		{
+			hideErrors = false;
+			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg update') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
+				return false;
+			}
+
+			sql_exec("CREATE TABLE transaction_details (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, transaction_id INTEGER, package_name TEXT, package_version TEXT, package_build TEXT, package_md5 TEXT, action_type INTEGER, action_date TIMESTAMP);");
+		}
+
 
 
 		hideErrors = false;

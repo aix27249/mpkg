@@ -633,7 +633,7 @@ bool mpkg::repair(PACKAGE *package)
 	db->set_action(package->get_id(), ST_REPAIR, "repair");
 	return true;
 }
-void mpkg::exportBase(string output_dir)
+/*void mpkg::exportBase(string output_dir)
 {
 	say("Exporting data to %s directory\n",output_dir.c_str());
 	// First of all, clear previous contents
@@ -650,7 +650,7 @@ void mpkg::exportBase(string output_dir)
 		say("[%d/%d] Exporting package %s\n",i+1,allPackages.size(),allPackages[i].get_name().c_str());
 		db->exportPackage(output_dir, *allPackages.get_package_ptr(i));
 	}
-}
+}*/
 
 void dumpPackage(PACKAGE *p, PackageConfig *pc, string filename)
 {

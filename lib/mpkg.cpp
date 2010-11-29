@@ -15,7 +15,7 @@
 #include <fstream>
 #include <stdint.h>
 #include "errorhandler.h"
-
+#include "transactions.h"
 // Two functions to install/remove configuration files
 void pkgConfigInstall(const PACKAGE &package) {
 	if (package.config_files.empty()) {
@@ -1216,6 +1216,7 @@ int mpkgDatabase::commit_actions()
 	// Done
 
 	system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S` GOING TO INSTALL: " + IntToStr(install_list.size()) + ", TO REMOVE: " + IntToStr(remove_list.size()) + " >> /var/log/mpkg-installation.log");
+	int transaction_id = startTransaction(install_list, remove_list, getSqlDb());
 	msay(_("Looking for install queue"));
 	vector<bool> needFullDownload(install_list.size());
 	if (install_list.size()>0)
@@ -1404,8 +1405,7 @@ download_process:
 		}
 		string _actionName;
 		ncInterface.setProgressMax(remove_list.size());
-		for(unsigned int i=0;i<remove_list.size();i++)
-		{
+		for(size_t i=0; i<remove_list.size(); ++i) {
 			if (remove_list[i].action()==ST_UPDATE) {
 				_actionName = _("Updating package");
 				if (dialogMode) ncInterface.setSubtitle(_("Updating packages"));
@@ -1433,7 +1433,7 @@ download_process:
 
 			msay(_actionName+" " + remove_list[i].get_name());
 
-			if (remove_package(remove_list.get_package_ptr(i))!=0) {
+			if (remove_package(remove_list.get_package_ptr(i), i, remove_list.size(), transaction_id)!=0) {
 				removeFailures++;
 				pData.setItemCurrentAction(remove_list[i].itemID, _("Remove failed"));
 				pData.setItemState(remove_list[i].itemID, ITEMSTATE_FAILED);
@@ -1501,7 +1501,7 @@ download_process:
 				//csz += atol(install_list[i].get_installed_size().c_str());
 				//ncInterface.setProgress(csz);
 			}
-			install_result = (MpkgErrorCode) install_package(install_list.get_package_ptr(i),i,install_list.size());
+			install_result = (MpkgErrorCode) install_package(install_list.get_package_ptr(i),i,install_list.size(), transaction_id);
 			if (install_result!=0)
 			{
 				mpkgErrorHandler.callError(install_result, _("Failed to install package ") + install_list[i].get_name() + " " + install_list[i].get_fullversion());
@@ -1600,10 +1600,11 @@ download_process:
 	}
 
 	system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S` FINISHED >> /var/log/mpkg-installation.log");
+	endTransaction(transaction_id, getSqlDb());
 	return 0;
 }
 
-int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, unsigned int packagesTotal)
+int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t packagesTotal, int transaction_id)
 {
 	bool ultraFastMode = true;
 #ifndef INSTALL_DEBUG
@@ -1662,7 +1663,7 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 		// Now replace record in install_list:
 		*package = binary_package;
 		say(_("Processing to install binary\n"));
-		return install_package(package, packageNum, packagesTotal );
+		return install_package(package, packageNum, packagesTotal, transaction_id);
 	}
 
 	// First of all: EXTRACT file list and scripts!!!
@@ -1901,13 +1902,13 @@ int mpkgDatabase::install_package(PACKAGE* package, unsigned int packageNum, uns
 	pData.increaseItemProgress(package->itemID);
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": complete"), SAYMODE_INLINE_END);
 	package->set_action(ST_NONE, "install_complete");
+	recordPackageTransaction(*package, transaction_id, 0, getSqlDb());
 	return 0;
 }	//End of install_package
 
 // New optimized exportPackage function.
-void mpkgDatabase::exportPackage(const string& output_dir, PACKAGE& p) {
-	return;
-	/*
+/*void mpkgDatabase::exportPackage(const string& output_dir, PACKAGE& p) {
+
 	ofstream filestr;
 	filestr.open(string(output_dir+"/"+p.get_name()+"-"+p.get_version()+"-"+p.get_arch()+"-"+p.get_build()).c_str());
 	if (!filestr.is_open()) {
@@ -1926,18 +1927,16 @@ void mpkgDatabase::exportPackage(const string& output_dir, PACKAGE& p) {
 	}
 	filestr << "\n";
 	filestr.close();
-	return;*/
-}
-
-void mpkgDatabase::unexportPackage(const string& output_dir, const PACKAGE& p)
-{
 	return;
-	/*
-	string victim = output_dir+"/"+p.get_name()+"-"+p.get_version()+"-"+p.get_arch()+"-"+p.get_build();
-	unlink(victim.c_str());*/
-}
+}*/
 
-int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsigned int packagesTotal)
+/*void mpkgDatabase::unexportPackage(const string& output_dir, const PACKAGE& p)
+{
+	string victim = output_dir+"/"+p.get_name()+"-"+p.get_version()+"-"+p.get_arch()+"-"+p.get_build();
+	unlink(victim.c_str());
+}*/
+
+int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t packagesTotal, int transaction_id)
 {
 	system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S`  Removing package " + package->get_name() + "-" + package->get_fullversion() + " >> /var/log/mpkg-installation.log");
 	string index_str, action_str, by_str;
@@ -2234,9 +2233,10 @@ int mpkgDatabase::remove_package(PACKAGE* package, unsigned int packageNum, unsi
 		else msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str+": done", SAYMODE_INLINE_END);
 		
 		printHtmlProgress();
+		recordPackageTransaction(*package, transaction_id, 1, getSqlDb());
 		// If update: run install now (for fault tolerance)
 		if (package->action()==ST_UPDATE) {
-			return install_package(package->updatingBy, packageNum, packagesTotal);
+			return install_package(package->updatingBy, packageNum, packagesTotal, transaction_id);
 		}
 		return 0;
 	}
