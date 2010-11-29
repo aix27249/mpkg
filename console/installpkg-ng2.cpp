@@ -643,7 +643,7 @@ int main (int argc, char **argv)
 		list_rep(&core);
 		return 0;
 	}
-	if (action == ACT_EXPORT)
+	/*if (action == ACT_EXPORT)
 	{
 
 		_cmdOptions["sql_readonly"]="yes";
@@ -652,7 +652,7 @@ int main (int argc, char **argv)
 
 		core.exportBase(dest_dir);
 		return 0;
-	}
+	}*/
 	if (action == ACT_LISTGROUPS)
 	{
 
@@ -1400,7 +1400,7 @@ int print_usage(FILE* stream, int exit_code)
 	fprintf(stream,_("\tconvert_dir <outp_dir>    convert whole directory (including sub-dirs) to MPKG format\n"));
 	fprintf(stream,_("\tconvert <filename>        convert package to MPKG format\n"));
 	fprintf(stream,_("\tnativize [dir]            search directory for non-native packages and convert it to MPKG format\n"));
-	fprintf(stream,_("\texport [dir]              export database in slackware format to dir (by default, /var/log/packages/)\n"));
+	//fprintf(stream,_("\texport [dir]              export database in slackware format to dir (by default, /var/log/packages/)\n"));
 	fprintf(stream,_("\tgendeps <filename(s)>         generate dependencies and import it into package\n"));
 	fprintf(stream,_("\tgendeps2 <filename(s)>         generate dependencies and import it into package (new algorithm\n"));
 	fprintf(stream,_("\tcleardeps <filename>         clear package dependencies\n"));
@@ -1594,8 +1594,8 @@ int setup_action(char* act)
 		return ACT_MENU;
 	if (_act == "config")
 		return ACT_CONFIG;
-	if (_act == "export")
-		return ACT_EXPORT;
+	/*if (_act == "export")
+		return ACT_EXPORT;*/
 	if (_act == "gendeps2" || _act == "gendeps") // From now on, old gendeps algorithm is removed.
 		return ACT_GENDEPSNEW;
 	if (_act == "cleardeps")

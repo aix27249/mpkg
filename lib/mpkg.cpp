@@ -1902,7 +1902,7 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 	pData.increaseItemProgress(package->itemID);
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": complete"), SAYMODE_INLINE_END);
 	package->set_action(ST_NONE, "install_complete");
-	recordPackageTransaction(*package, transaction_id, 0, getSqlDb());
+	recordPackageTransaction(*package, 0, transaction_id, getSqlDb());
 	return 0;
 }	//End of install_package
 
@@ -2233,7 +2233,7 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 		else msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str+": done", SAYMODE_INLINE_END);
 		
 		printHtmlProgress();
-		recordPackageTransaction(*package, transaction_id, 1, getSqlDb());
+		recordPackageTransaction(*package, 1, transaction_id, getSqlDb());
 		// If update: run install now (for fault tolerance)
 		if (package->action()==ST_UPDATE) {
 			return install_package(package->updatingBy, packageNum, packagesTotal, transaction_id);

@@ -689,6 +689,27 @@ const vector<string> SQLiteDB::getFieldNames(const string& table_name) const {
 		fieldNames.push_back("url");
 	}
 
+	if (table_name=="transactions") {
+		fieldNames.push_back("id");
+		fieldNames.push_back("t_start");
+		fieldNames.push_back("t_end");
+		fieldNames.push_back("t_status");
+		fieldNames.push_back("custom_details");
+	}
+
+
+	if (table_name=="transaction_details") {
+		fieldNames.push_back("id");
+		fieldNames.push_back("transaction_id");
+		fieldNames.push_back("package_name");
+		fieldNames.push_back("package_version");
+		fieldNames.push_back("package_build");
+		fieldNames.push_back("package_md5");
+		fieldNames.push_back("action_type");
+		fieldNames.push_back("action_date");
+
+	}
+
 
 #ifdef ENABLE_INTERNATIONAL
 	if (table_name=="descriptions") {
