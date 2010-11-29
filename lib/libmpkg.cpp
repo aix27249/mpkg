@@ -1675,7 +1675,7 @@ vector<string> mpkg::getLatestUpdates(PACKAGE_LIST *pkgList, PACKAGE_LIST *unins
 		addedToRemove = false;
 		blacklisted = false;
 		for (size_t t=0; !blacklisted && t<blackList.size(); ++t) {
-			if (pCache[i].get_corename()==blackList[t] || pCache[i].get_name()==blacklist[t]) {
+			if (pCache[i].get_corename()==blackList[t] || pCache[i].get_name()==blackList[t]) {
 				if (!dialogMode && verbose) printf(_("Skipping %s: BLACKLISTED\n"), pCache[i].get_name().c_str());
 				blacklisted = true;
 			}
