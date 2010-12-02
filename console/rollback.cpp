@@ -31,7 +31,11 @@ int main(int argc, char **argv) {
 		}
 	}
 	if (rollback_to==0) return print_usage();
-
+	
+	if (getuid()>0) {
+		mError("This program should be run as root.");
+		return 1;
+	}
 
 	printf(_("Gathering data\n"));
 	SQLRecord sqlSearch;
