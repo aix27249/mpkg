@@ -46,9 +46,10 @@ int main(int argc, char **argv) {
 	vector<string> ip_name, ip_version, ip_build, rp_name;
 
 
-	for (size_t i=0; i<transactions.size(); ++i) {
+	for (size_t i=transactions.size()-1; i>=0 && i<(size_t) -1; i--) {
 		printf("%sRolling back transaction ID:%s %s\nStarted: %s\nFinished at: %s\nStatus: %s\n", CL_GREEN, CL_WHITE, transactions.getValue(i, fTr_id).c_str(), transactions.getValue(i, fTr_date_start).c_str(), transactions.getValue(i, fTr_date_end).c_str(), decodeStatus(transactions.getValue(i, fTr_status)).c_str());
 
+		if (atoi(transactions.getValue(i, fTr_id).c_str())<rollback_to) continue;
 		for (size_t t=0; t<transaction_details.size(); ++t) {
 			if (atoi(transactions.getValue(i, fTr_id).c_str())<rollback_to) continue;
 			if (transaction_details.getValue(t, fTrd_tid)!=transactions.getValue(i, fTr_id)) continue;
