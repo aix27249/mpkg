@@ -254,18 +254,20 @@ void actUpgrade(mpkg &core, int action) {
 		long double totalSizeC = 0, totalSizeI = 0;
 		string branch;
 		string distro;
+		string size;
 		if (errorList.empty() && resultList.size()>0)	{
 			if (!dialogMode) msay(_("Found ") + IntToStr(resultList.size()) + _(" updates\n"));
 			for (unsigned int i=0; i<resultList.size(); i++) {
 				totalSizeC += atoi(resultList[i].get_compressed_size().c_str());
 				totalSizeI += atoi(resultList[i].get_installed_size().c_str());
+				size = " " + humanizeSize(atol(resultList[i].get_compressed_size().c_str()));
 				if (resultList[i].get_repository_tags().empty() || resultList[i].get_repository_tags()=="0") branch.clear();
 				else branch = "[" + resultList[i].get_repository_tags() + "]";
 				if (resultList[i].package_distro_version.empty() || resultList[i].package_distro_version == "0") distro.clear();
 				else distro = "[" + resultList[i].package_distro_version + "]";
 
 				menuItems.push_back(MenuItem(IntToStr(i+1), resultList[i].get_name() + ": " + \
-						uninstallList[i].get_fullversion() + " ==> " + resultList[i].get_fullversion() + branch + distro, resultList[i].get_description(), true));
+						uninstallList[i].get_fullversion() + " ==> " + resultList[i].get_fullversion() + branch + distro + size, resultList[i].get_description(), true));
 			}
 			PACKAGE_LIST uList;
 
@@ -290,15 +292,16 @@ void actUpgrade(mpkg &core, int action) {
 						else branch = "[" + resultList[i].get_repository_tags() + "]";
 						if (resultList[i].package_distro_version.empty() || resultList[i].package_distro_version == "0") distro.clear();
 						else distro = "[" + resultList[i].package_distro_version + "]";
+						size = " " + humanizeSize(atol(resultList[i].get_compressed_size().c_str()));
 
-
-						if (!verbose) say("%s: %s%s%s ==> %s%s%s %s%s%s\n", resultList[i].get_name().c_str(), \
+						if (!verbose) say("%s: %s%s%s ==> %s%s%s %s%s%s%s\n", resultList[i].get_name().c_str(), \
 								CL_6, uninstallList[i].get_fullversion().c_str(), CL_WHITE, \
 								CL_GREEN, resultList[i].get_fullversion().c_str(), \
-								CL_BLUE, branch.c_str(), distro.c_str(), CL_WHITE);
+								CL_BLUE, branch.c_str(), distro.c_str(), CL_WHITE, size.c_str());
 						else for (unsigned int t=0; t<resultList[i].get_locations().size(); t++) {
 							say("%s%s\n", resultList[i].get_locations().at(t).get_full_url().c_str(), resultList[i].get_filename().c_str());
 						}
+						say(_("Total: %s to download\n"), humanizeSize(totalSizeC).c_str());
 					}
 				}
 				else {
