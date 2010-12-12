@@ -302,8 +302,11 @@ int mpkg::set_checkFiles(unsigned int value)
 	return mpkgconfig::set_checkFiles(value);
 }
 
-int mpkg::add_repository(string repository_url)
-{
+int mpkg::add_repository(string repository_url) {
+	// First of all, validate repository URL
+	if (repository_url.empty()) return 0; // Drop empty ones
+	if (repository_url[repository_url.size()-1]!='/') repository_url += "/"; // Automatically add closing slash
+	if (repository_url[0]=='/') repository_url = "file://" + repository_url; // Automatically form file:// repositories
 	vector<string> enabledRepositories, disabledRepositories, n1;
 	enabledRepositories = get_repositorylist();
 	disabledRepositories = get_disabled_repositorylist();
