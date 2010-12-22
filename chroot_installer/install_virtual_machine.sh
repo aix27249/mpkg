@@ -13,6 +13,7 @@ CWD=$(pwd)
 rm -rf $NODE
 mkdir -p ${NODE}/{etc,tmp}
 mkdir -p ${NODE}/var/mpkg/{packages,scripts,configs,backup}
+mkdir -p ${NODE}/root
 
 # Copying 
 cp $CWD/mpkg.xml.system ${NODE}/etc/mpkg.xml.system
@@ -21,7 +22,7 @@ cp packages.db ${NODE}/var/mpkg/
 
 # Installing
 mpkg-update --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE}
-mpkg-installfromlist --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE} -y $CWD/${LIST_NAME}
+mpkg-installfromlist --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE}  $CWD/${LIST}
 
 # Moving config
 mv ${NODE}/etc/mpkg.xml.system ${NODE}/etc/mpkg.xml
