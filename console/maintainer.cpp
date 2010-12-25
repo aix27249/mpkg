@@ -12,6 +12,12 @@ int main(int argc, char **argv) {
 	string mName = mConfig.getValue("maintainer_name");
 	string mEmail = mConfig.getValue("maintainer_email");
 
+	if (getuid() && FileExists(getenv("HOME") + string("/.mpkg-maintainer"))) {
+		vector<string> mdata = ReadFileStrings(getenv("HOME") + string("/.mpkg-maintainer"));
+		if (mdata.size()>0) mName=cutSpaces(mdata[0]);
+		if (mdata.size()>1) mEmail=cutSpaces(mdata[1]);
+	}
+
 	switch (mode) {
 		case MODE_HELP:
 			fprintf(stderr, _("%s: shows or sets maintainer name and email\nSyntax:\n"), argv[0]);
@@ -22,8 +28,15 @@ int main(int argc, char **argv) {
 		case MODE_SET:
 			mName = argv[2];
 			mEmail = argv[3];
-			mConfig.setValue("maintainer_name", mName);
-			mConfig.setValue("maintainer_email", mEmail);
+			if (getuid()) {
+				printf("Writing user maintainer\n");
+				system("echo " + mName + " > ~/.mpkg-maintainer");
+				system("echo " + mEmail + " >> ~/.mpkg-maintainer");
+			}
+			else {
+				mConfig.setValue("maintainer_name", mName);
+				mConfig.setValue("maintainer_email", mEmail);
+			}
 			// Doesn't break here, let's show data
 
 		case MODE_SHOW:
