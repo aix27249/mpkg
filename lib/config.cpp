@@ -124,6 +124,7 @@ int loadGlobalConfig(string config_file)
 	if (mConfig.getValue("skip_man_installation")=="yes") _cmdOptions["skip_man_installation"]="true";
 	if (mConfig.getValue("skip_doc_installation")=="yes") _cmdOptions["skip_doc_installation"]="true";
 	if (mConfig.getValue("server_mode")=="yes") serverMode = true;
+	_cmdOptions["arch"]=mConfig.getValue("override_arch");
 #ifdef HTTP_LIB
 	mError("error: core running non-core code\n");
 #endif

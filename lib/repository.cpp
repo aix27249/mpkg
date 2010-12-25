@@ -22,15 +22,23 @@ bool checkAcceptedArch(const PACKAGE *pkg) {
 	// Filling default set
 	acceptedArch.push_back("noarch");
 	acceptedArch.push_back("fw");
+	if (_cmdOptions["arch"].empty()) {
 #ifdef X86_64
-	acceptedArch.push_back("x86_64");
+		_cmdOptions["arch"]="x86_64";
 #else
-	acceptedArch.push_back("i686");
-	acceptedArch.push_back("i486");
-	acceptedArch.push_back("x86");
-	acceptedArch.push_back("i386");
-	acceptedArch.push_back("i586");
+		_cmdOptions["arch"]="x86";
 #endif
+	}
+	if (_cmdOptions["arch"]=="x86_64") {
+		acceptedArch.push_back("x86_64");
+	}
+	else {
+		acceptedArch.push_back("i686");
+		acceptedArch.push_back("i486");
+		acceptedArch.push_back("x86");
+		acceptedArch.push_back("i386");
+		acceptedArch.push_back("i586");
+	}
 	for (size_t i=0; i<acceptedArch.size(); ++i) {
 		if (pkg->get_arch()==acceptedArch[i]) return true;
 	}

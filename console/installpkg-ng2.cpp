@@ -81,7 +81,7 @@ int main (int argc, char **argv)
 		
 	bool do_reset=true;
 	int ich;
-	const char* short_opt = "hvpdzfmkDLrailgyqNcwxHbFQVRZWPKCMt:GsE:S:A:B:Y";
+	const char* short_opt = "hvpdzfmkDLrailgyqNcwxHbFQVRZWPKCMt:GsE:S:A:B:Ye:";
 	//const char* short_opt = "abcdfghiklmpqrvzDLyNwxHFQVRZWPKCME"; // Try to sort this stuff...later :)
 	const struct option long_options[] =  {
 		{ "help",		0, NULL,	'h'},
@@ -124,6 +124,7 @@ int main (int argc, char **argv)
 		{ "exclusion-list",	1, NULL,	'E'},
 		{ "abuild",		1, NULL,	'B'},
 		{ "resync",		0, NULL,	'Y'},
+		{ "arch",		1, NULL,	'e'},
 		{ NULL, 		0, NULL, 	0}
 	};
 
@@ -136,6 +137,9 @@ int main (int argc, char **argv)
 		
 
 		switch (ich) {
+			case 'e':
+					_cmdOptions["arch"]=string(optarg);
+					break;
 			case 'Y':
 					forceFullDBUpdate = true;
 					break;
@@ -1352,6 +1356,7 @@ int print_usage(FILE* stream, int exit_code)
 	fprintf(stream,_("\t-K    --skip-deprecated   while sync, skip deprecated packages\n"));
 	fprintf(stream,_("\t-s    --keep-symlinks     keep symlinks in archive instead of moving it to doinst.sh\n"));
 	fprintf(stream,_("\t-E    --exclusion-list=FILENAME   Exclude paths from being checked by gendeps2\n"));
+	fprintf(stream,_("\t-e    --arch=ARCH         temporarily override architecture. Valid options is x86_64 and x86.\n"));
 
 	
 	fprintf(stream,_("\nActions:\n"));
