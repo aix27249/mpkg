@@ -301,8 +301,8 @@ void actUpgrade(mpkg &core, int action) {
 						else for (unsigned int t=0; t<resultList[i].get_locations().size(); t++) {
 							say("%s%s\n", resultList[i].get_locations().at(t).get_full_url().c_str(), resultList[i].get_filename().c_str());
 						}
-						say(_("Total: %s to download\n"), humanizeSize(totalSizeC).c_str());
 					}
+					say(_("Total: %s to download\n"), humanizeSize(totalSizeC).c_str());
 				}
 				else {
 					/*for (int i=0; i<resultList.size(); i++) {

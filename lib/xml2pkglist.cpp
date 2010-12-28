@@ -5,10 +5,7 @@
 void parseMaintainer(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 	cur = cur->xmlChildrenNode;
 	while (cur != NULL) {
-		if (!xmlStrcmp(cur->name, (const xmlChar *) "name")) {
-			cout << pkg.get_name() << " " << pkg.get_fullversion() << endl;
-			pkg.set_packager(cutSpaces((const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1)));
-		}
+		if (!xmlStrcmp(cur->name, (const xmlChar *) "name")) pkg.set_packager(cutSpaces((const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1)));
 		else if (!xmlStrcmp(cur->name, (const xmlChar *) "email")) pkg.set_packager_email(cutSpaces((const char *) xmlNodeListGetString(doc, cur->xmlChildrenNode, 1)));
 		cur = cur->next;
 	}
