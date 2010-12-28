@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 		if (fname.empty() || fname[fname.size()-1]=='/' || fname.find("etc/")==0 || fname.find("dev/")==0 || fname.find("lib/modules/")==0 || fname.find("usr/share/")==0 || fname.find("usr/man/")==0 || fname.find("usr/include/")==0 || fname.find("usr/doc/")==0 || fname.find("usr/lib/locale/")==0 || fname.find("usr/lib64/locale/")==0 || fname.find("opt/")==0) continue;
 		if (access(string("/" + fname).c_str(), X_OK)) continue;
 		msay("[Errors found: " + IntToStr(pkgSearch.size()) + "] [" + IntToStr(i+1) + "/" + IntToStr(files.size()) + "] Checking file /" + fname);
-		system("ldd '/" + files.getValue(i, fName) + "' 2>/dev/null | grep 'not found' > " + tmpfile);
+		system("ldd -r '/" + files.getValue(i, fName) + "' 2>&1 | grep -P 'undefined symbol|not found' > " + tmpfile);
 		data = ReadFile(tmpfile);
 		if (data.empty()) continue;
 		pkgSearch.addField("package_id", files.getValue(i, fId));
