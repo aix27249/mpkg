@@ -116,7 +116,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 
 void MainWindow::changePhoto() {
 	return;
-	if (FileExists("/usr/local/share/setup/images/" + IntToStr(currentPhoto+1) + ".png")) {
+	if (FileExists("/usr/share/setup/images/" + IntToStr(currentPhoto+1) + ".png")) {
 		currentPhoto++;
 	}
 	else {
@@ -124,7 +124,7 @@ void MainWindow::changePhoto() {
 		else return;
 	}
 	//ui->svgWidget->load(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".svg"));
-	//ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/local/share/setup/images/" + IntToStr(currentPhoto) + ".png")).scaledToHeight(300));
+	//ui->imageLabel->setPixmap(QPixmap(QString::fromStdString("/usr/share/setup/images/" + IntToStr(currentPhoto) + ".png")).scaledToHeight(300));
 }
 
 void MainWindow::reboot() {
@@ -133,7 +133,7 @@ void MainWindow::reboot() {
 		delete thread;
 		thread = NULL;
 	}
-	system("nohup /usr/local/bin/reboot_after_10_seconds.sh &");
+	system("nohup /usr/bin/reboot_after_10_seconds.sh &");
 	qApp->quit();
 }
 

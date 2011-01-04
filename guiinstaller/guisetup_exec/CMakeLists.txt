@@ -55,9 +55,18 @@ INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 ADD_EXECUTABLE(guisetup_exec ${guisetup_SRC} ${guisetup_MOC_SRC} ${guisetup_UI_HDR} ${guisetup_RCC_SRCS})
 TARGET_LINK_LIBRARIES(guisetup_exec ${QT_LIBRARIES} mpkg mpkg-parted)
 
+FILE(GLOB icons "${CMAKE_CURRENT_SOURCE_DIR}/icons/*.png")
+FILE(GLOB l10n "${CMAKE_CURRENT_SOURCE_DIR}/*.qm")
+FILE(GLOB scripts "${CMAKE_CURRENT_SOURCE_DIR}/*.sh")
+FILE(GLOB shared "${CMAKE_CURRENT_SOURCE_DIR}/shared/*")
+
 # Installation
  
 INSTALL(TARGETS guisetup_exec
 		RUNTIME DESTINATION bin
 )
+INSTALL(FILES ${icons} DESTINATION share/setup/icons)
+INSTALL(FILES ${l10n} DESTINATION share/setup/l10n)
+INSTALL(FILES ${scripts} DESTINATION bin)
+INSTALL(FILES ${shared} DESTINATION share/setup)
 

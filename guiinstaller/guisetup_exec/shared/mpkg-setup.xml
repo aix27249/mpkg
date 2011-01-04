@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mpkgconfig>
+	<sys_root>
+		/tmp/new_sysroot/
+	</sys_root>
+	<sys_cache>
+		/tmp/new_sysroot/var/mpkg/cache/
+	</sys_cache>
+	<database_url>
+		sqlite:///tmp/packages.db
+	</database_url>
+	<scripts_dir>
+		/tmp/new_sysroot/var/mpkg/scripts/
+	</scripts_dir>
+	<run_scripts>
+		yes
+	</run_scripts>
+	<cdrom_device>
+		/dev/sr0
+	</cdrom_device>
+	<cdrom_mountpoint>
+		/var/log/mount/
+	</cdrom_mountpoint>
+	<checkFileConflicts>
+		preinstall
+	</checkFileConflicts>
+	<repository_list>
+		<repository>
+			http://packages.agilialinux.ru/
+		</repository>
+	</repository_list>
+	<sys_backup>
+		/tmp/new_sysroot/var/mpkg/backup/
+	</sys_backup>
+	<disable_dependencies>
+		no
+	</disable_dependencies>
+</mpkgconfig>
