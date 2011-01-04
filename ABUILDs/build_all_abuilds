@@ -5,3 +5,5 @@ for i in $MODULES ; do
 	( cd $i && mkpkg -i )
 done
 
+# Installer has not to be installed
+( cd agilia-gui-installer && mkpkg )
