@@ -66,6 +66,7 @@ FILE(GLOB icons "${CMAKE_CURRENT_SOURCE_DIR}/icons/*.png")
 FILE(GLOB helpfiles_ru "${CMAKE_CURRENT_SOURCE_DIR}/help/ru/*.html")
 FILE(GLOB helpfiles_en "${CMAKE_CURRENT_SOURCE_DIR}/help/en/*.html")
 FILE(GLOB l10n "${CMAKE_CURRENT_SOURCE_DIR}/*.qm")
+FILE(GLOB desktop "${CMAKE_CURRENT_SOURCE_DIR}/guisetup.desktop")
 
 # Installation
  
@@ -76,4 +77,5 @@ INSTALL(FILES ${icons} DESTINATION share/setup/icons)
 INSTALL(FILES ${helpfiles_ru} DESTINATION share/setup/help/ru)
 INSTALL(FILES ${helpfiles_en} DESTINATION share/setup/help/en)
 INSTALL(FILES ${l10n} DESTINATION share/setup/l10n)
+INSTALL(FILES ${desktop} DESTINATION share/applications)
 

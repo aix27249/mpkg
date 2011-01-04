@@ -1,15 +1,15 @@
 [Desktop Entry]
 Encoding=UTF-8
 Version=1.0
-Comment=MPKG Package Manager
-Comment[ru]=Менеджер пакетов MPKG
+Comment=MPKG package system: graphical front-end
+Comment[ru]=Менеджер пакетов MPKG: графический интерфейс
 Exec=manager2
 TryExec=manager2
-GenericName=MPKG Package manager
+GenericName=MPKG Package manager GUI
 GenericName[ru]=Менеджер пакетов MPKG
 Icon=mpkg-manager2
 MimeType=
-Name=MOPSLinux Package Manager 2 (mpkg)
+Name=MPKG Package Manager 2 (mpkg)
 Name[ru]=Установка/удаление пакетов
 Name[en]=Install/remove packages
 Path=

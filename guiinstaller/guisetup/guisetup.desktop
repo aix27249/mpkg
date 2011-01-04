@@ -1,0 +1,15 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Comment=AgiliaLinux installer
+Comment[ru]=Установщик AgiliaLinux
+Exec=guisetup
+GenericName=AgiliaLinux installer
+GenericName[ru]=Установщик AgiliaLinux
+Icon=guisetup
+Name=AgiliaLinux installer
+Name[ru]=Установщик AgiliaLinux
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=System;
