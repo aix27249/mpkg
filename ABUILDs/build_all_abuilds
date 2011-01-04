@@ -1,5 +1,5 @@
 #!/bin/sh
-MODULES="mpkgsupport nwidgets mpkg-core mpkg-console mbuilder mpkg-packagebuilder mpkg-manager2 mpkg-i18n mpkg-gui-installer"
+MODULES="mpkgsupport nwidgets mpkg-core mpkg-console mpkg-manager2 mpkg-i18n"
 set -e
 for i in $MODULES ; do
 	( cd $i && mkpkg -i )
