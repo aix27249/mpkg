@@ -1,0 +1,4 @@
+# /dev/sda2
+
+# Required for X shared memory
+none	/dev/shm	tmpfs	defaults	0 0
