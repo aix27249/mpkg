@@ -1,0 +1,23 @@
+#!/bin/sh
+BASE_SSHD_CONFDIR=${SSHD_CONFDIR:-/etc/ssh}
+
+
+gen_keys() {
+	if [ ! -e "${SSHD_CONFDIR}"/ssh_host_key ] ; then
+		echo "Generating Hostkey..."
+		/usr/bin/ssh-keygen -t rsa1 -f "${SSHD_CONFDIR}"/ssh_host_key -N '' || return 1
+	fi
+	if [ ! -e "${SSHD_CONFDIR}"/ssh_host_dsa_key ] ; then
+		echo "Generating DSA-Hostkey..."
+		/usr/bin/ssh-keygen -d -f "${SSHD_CONFDIR}"/ssh_host_dsa_key -N '' || return 1
+	fi
+	if [ ! -e "${SSHD_CONFDIR}"/ssh_host_rsa_key ] ; then
+		echo "Generating RSA-Hostkey..."
+		/usr/bin/ssh-keygen -t rsa -f "${SSHD_CONFDIR}"/ssh_host_rsa_key -N '' || return 1
+	fi
+	return 0
+}
+for i in /nodes/x86/* /nodes/x86_64/* ; do
+	SSHD_CONFDIR=$i/$BASE_SSHD_CONFDIR	
+	gen_keys
+done

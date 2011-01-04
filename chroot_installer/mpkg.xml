@@ -3,6 +3,9 @@
 	<sys_cache>
 		NODE/var/mpkg/cache/
 	</sys_cache>
+	<override_arch>
+		ARCH
+	</override_arch>
 	<database_url>
 		sqlite://NODE/var/mpkg/packages.db
 	</database_url>
