@@ -97,11 +97,22 @@ for ARG in `cat /proc/cmdline`; do
     debug)
       DEBUG=1
     ;;
+    fsdir)
+      FSROOTDIR=`echo $ARG | cut -f2 -d=`
     0|1|2|3|4|5|6)
-      RUNLEVEL=$ARG
+      RUNLEVEL=`echo $ARG | cut -f2 -d=`
     ;;
   esac
 done
+
+# Detecting system architecture. It is usable to create architecture-hybrid ISO with both architectures.
+  if [ `uname -m` = "x86_64" ] ; then
+	ARCH=64
+  else
+	ARCH=32
+  fi
+
+
 
 # Load kernel modules:
 if [ ! -d /lib/modules/`uname -r` ]; then
@@ -211,24 +222,28 @@ if [ "$RESCUE" = "" ]; then
   mkdir /tmpfs
   mount -t tmpfs none /tmpfs
 
+
 # Trying to find installation media. From smart detection to brute force :)
+  if [ "$FSROOTDIR" = "" ] ; then
+	FSROOTDIR=fs$ARCH
+  fi
 
   echo "Mounting installation media with squashed filesystems"
   echo "Trying to mount using root=$ROOTDEV and rootfs=$ROOTFS"
   mount -o ro -t $ROOTFS $ROOTDEV /media
-  if [ ! -r /media/fs/rootfs.sfs ] ; then
+  if [ ! -r /media/$FSROOTDIR/rootfs.sfs ] ; then
 	umount /media >/dev/null 2>/dev/null
   	echo "Retrying to mount using root=$ROOTDEV with FS type autodetection"
 	mount -o ro $ROOTDEV /media
   fi
 
  # If none of above works, lets wait 10 seconds to let devices settle and use brute force detection
-  if [ ! -r /media/fs/rootfs.sfs ] ; then
+  if [ ! -r /media/$FSROOTDIR/rootfs.sfs ] ; then
 	umount /media >/dev/null 2>/dev/null
 	for TESTDEV in `ls /dev/sr* 2>/dev/null` `ls /dev/scd* 2>/dev/null` `ls /dev/sd* 2>/dev/null` `ls /dev/hd* 2>/dev/null` ; do
 		echo "Trying to mount $TESTDEV"
 		mount -o ro $TESTDEV /media
-  		if [ -r /media/fs/rootfs.sfs ] ; then
+  		if [ -r /media/$FSROOTDIR/rootfs.sfs ] ; then
 			echo "Media found successfully in $TESTDEV, continuing boot"
 			break;
 		fi
@@ -236,7 +251,7 @@ if [ "$RESCUE" = "" ]; then
 	done
   fi
 
-if [ ! -r /media/fs/rootfs.sfs ] ; then
+if [ ! -r /media/$FSROOTDIR/rootfs.sfs ] ; then
 	# If nothing helps, let's wait 10 seconds and retry. If fail will occur twice, then enter rescue shell
 	echo "Sleeping 10 seconds to let devices to detect"
 	sleep 10
@@ -245,19 +260,19 @@ if [ ! -r /media/fs/rootfs.sfs ] ; then
 	echo "Mounting installation media with squashed filesystems"
 	echo "Trying to mount using root=$ROOTDEV and rootfs=$ROOTFS"
 	mount -o ro -t $ROOTFS $ROOTDEV /media
-	if [ ! -r /media/fs/rootfs.sfs ] ; then
+	if [ ! -r /media/$FSROOTDIR/rootfs.sfs ] ; then
 		umount /media >/dev/null 2>/dev/null
 		echo "Retrying to mount using root=$ROOTDEV with FS type autodetection"
 		mount -o ro $ROOTDEV /media
 	fi
 
 	# If none of above works, lets wait 10 seconds to let devices settle and use brute force detection
-	if [ ! -r /media/fs/rootfs.sfs ] ; then
+	if [ ! -r /media/$FSROOTDIR/rootfs.sfs ] ; then
 		umount /media >/dev/null 2>/dev/null
 		for TESTDEV in `ls /dev/sr* 2>/dev/null` `ls /dev/scd* 2>/dev/null` `ls /dev/sd* 2>/dev/null` `ls /dev/hd* 2>/dev/null` ; do
 			echo "Trying to mount $TESTDEV"
 			mount -o ro $TESTDEV /media
-			if [ -r /media/fs/rootfs.sfs ] ; then
+			if [ -r /media/$FSROOTDIR/rootfs.sfs ] ; then
 				echo "Media found successfully in $TESTDEV, continuing boot"
 				break;
 			fi
@@ -266,7 +281,7 @@ if [ ! -r /media/fs/rootfs.sfs ] ; then
 	fi
 fi
 
-if [ ! -r /media/fs/rootfs.sfs ] ; then
+if [ ! -r /media/$FSROOTDIR/rootfs.sfs ] ; then
 	echo "Mounting media failed, entering rescue shell"
 	echo "You can try to mount it manually to /media directory"
 	echo "Then done, type 'exit' to continue booting"
@@ -282,7 +297,7 @@ fi
 #       umount /media
 #       echo "Result: $?"
 #  fi
-  FSDIR=/media/fs
+  FSDIR=/media/$FSROOTDIR
   if [ "$FULL_INRAM" == "1" ] ; then
        echo "Copying images into RAM"
   	mkdir -p /squashfs
