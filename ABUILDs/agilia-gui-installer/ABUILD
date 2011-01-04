@@ -17,7 +17,7 @@ source=("svn:svn://agilialinux.ru/mpkg/mpkg/trunk/guiinstaller")
 tags="xapps sys-apps"
 
 # Many additional dependencies which are used indirectly during setup process.
-adddep="bash>=4.0 wget e2fsprogs xfsprogs reiserfsprogs jfsutils btrfsprogs gparted rsync"
+adddep="bash>=4.0 wget e2fsprogs xfsprogs reiserfsprogs jfsutils btrfs-progs gparted rsync"
 
 # Build system
 BUILD_SYSTEM="cmake"
