@@ -6,8 +6,28 @@
 #include <QListWidgetItem>
 #include "help.h"
 #include "mount.h"
+#include <QLocale>
 MainWindow *guiObject;
 
+string getHelpPageName(int page_num) {
+	QLocale lc; // good thing to have system locale in hand
+	switch(page_num) {
+		case PAGE_WELCOME: return "welcome.html";
+		case PAGE_NETWORKING: return "networking.html";
+		case PAGE_PKGSOURCE: return "pkgsource.html";
+		case PAGE_WAITPKGSOURCE: return "waitpkgsource.html";
+		case PAGE_INSTALLTYPE: return "installtype.html";
+		case PAGE_NVIDIA: return "nvidia.html";
+		case PAGE_PARTITIONING: return "partitioning.html";
+		case PAGE_MOUNTPOINTS: return "mountpoints.html";
+		case PAGE_BOOTLOADER: return "bootloader.html";
+		case PAGE_ROOTPASSWORD: return "rootpassword.html";
+		case PAGE_USERS: return "users.html";
+		case PAGE_TIMEZONE: return "timezone.html";
+		case PAGE_CONFIRMATION: return "confirmation.html";
+	}
+	return "notavailable.html";
+}
 
 MpkgErrorReturn qtErrorHandler(ErrorDescription err, const string& details) {
 	return guiObject->errorHandler(err, details);
@@ -111,7 +131,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 
 void MainWindow::showHelp() {
-	QString text = ReadFile("/usr/local/share/setup/help/" + IntToStr(ui->stackedWidget->currentIndex()) + ".html").c_str();
+	QString text = ReadFile("/usr/share/setup/help/" + getHelpPageName(ui->stackedWidget->currentIndex())).c_str();
 	if (text.isEmpty()) {
 		QMessageBox::information(this, tr("No help available"), tr("Sorry, no help available for this part"));
 		return;
