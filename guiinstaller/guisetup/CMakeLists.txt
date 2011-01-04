@@ -63,7 +63,8 @@ ADD_EXECUTABLE(guisetup ${guisetup_SRC} ${guisetup_MOC_SRC} ${guisetup_UI_HDR} $
 TARGET_LINK_LIBRARIES(guisetup ${QT_LIBRARIES} mpkg mpkg-parted)
 
 FILE(GLOB icons "${CMAKE_CURRENT_SOURCE_DIR}/icons/*.png")
-FILE(GLOB helpfiles "${CMAKE_CURRENT_SOURCE_DIR}/help/*.html")
+FILE(GLOB helpfiles_ru "${CMAKE_CURRENT_SOURCE_DIR}/help/ru/*.html")
+FILE(GLOB helpfiles_en "${CMAKE_CURRENT_SOURCE_DIR}/help/en/*.html")
 FILE(GLOB l10n "${CMAKE_CURRENT_SOURCE_DIR}/*.qm")
 
 # Installation
@@ -71,7 +72,8 @@ FILE(GLOB l10n "${CMAKE_CURRENT_SOURCE_DIR}/*.qm")
 INSTALL(TARGETS guisetup
 		RUNTIME DESTINATION bin
 		FILES ${icons} DESTINATION share/setup/icons
-		FILES ${helpfiles} DESTINATION share/setup/help
+		FILES ${helpfiles_ru} DESTINATION share/setup/help/ru
+		FILES ${helpfiles_en} DESTINATION share/setup/help/en
 		FILES ${l10n} DESTINATION share/setup/l10n
 )
 
