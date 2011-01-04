@@ -20,8 +20,8 @@ void printWarning(string type, string name, string ver, string build) {
 int main(int argc, char **argv) {
 	interactive_mode=true;
 
-	if (argc<2) return print_usage();
-
+	if (argc<1) return print_usage();
+	string rollback_package;
 	bool verbose = false;
 	int rollback_to = 0;
 	for (int i=1; i<argc; ++i) {
@@ -29,8 +29,9 @@ int main(int argc, char **argv) {
 		else if (atoi(argv[i])>0) {
 			rollback_to = atoi(argv[i]);
 		}
+		else if (IntToStr(atoi(argv[i]))==string(argv[i])) return print_usage();
+		else rollback_package = argv[i];
 	}
-	if (rollback_to==0) return print_usage();
 	
 	if (getuid()>0) {
 		mError("This program should be run as root.");
@@ -70,7 +71,26 @@ int main(int argc, char **argv) {
 	vector<string> ip_name, ip_version, ip_build, rp_name;
 	int pkgNum;
 
+	if (rollback_to==0) {
+		// Get latest transaction number
+		if (!rollback_package.empty()) {
+			printf(_("Searching for latest transaction with %s\n"), rollback_package.c_str());
+			for (size_t t=transaction_details.size()-1; t>=0; --t) {
+				if (transaction_details.getValue(t, fTrd_pkgname)!=rollback_package) continue;
+				rollback_to = atoi(transaction_details.getValue(t, fTrd_tid).c_str());
+				printf(_("Found transaction %d\n"), rollback_to);
+				break;
+			}
+			if (rollback_to==0) {
+				printf(_("No actions with package %s in history\n"), rollback_package.c_str());
+				return 0;
+			}
+		}
+		if (rollback_to==0) rollback_to = atoi(transactions.getValue(transactions.size()-1, fTr_id).c_str());
+	}
+
 	// Going thru transactions from the end.
+	
 	for (size_t i=transactions.size()-1; (int) i>=0; i--) {
 		// If ID is less than required, skip it
 		if (atoi(transactions.getValue(i, fTr_id).c_str())<rollback_to) continue;
@@ -81,6 +101,8 @@ int main(int argc, char **argv) {
 		for (size_t t=0; t<transaction_details.size(); ++t) {
 			if (transaction_details.getValue(t, fTrd_tid)!=transactions.getValue(i, fTr_id)) continue; // Skip other transaction details
 		
+			// If package name specified, skip others
+			if (!rollback_package.empty() && transaction_details.getValue(t, fTrd_pkgname)!=rollback_package) continue;
 			// Now look by MD5.
 			pkgNum = pkgListModified.getPackageNumberByMD5(transaction_details.getValue(t, fTrd_md5));
 			if (pkgNum==-1) {
