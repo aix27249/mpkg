@@ -23,5 +23,12 @@ BUILD_KEYS="-DCMAKE_INSTALL_PREFIX=/usr"
 after_build() {
 	( cd ${pkgdir}/usr/bin ; ln -s mpkg buildpkg )
 	( cd ${pkgdir}/usr/bin ; ln -s mpkg buildsrcpkg )
+	mkdir -p ${pkgdir}/usr/share/man/ru/1/
+	cd $srcdir
+	svn co svn://agilialinux.ru/i18n/mpkg mpkg-manuals
+	cd $srcdir/mpkg-manuals
+	for i in `find . -name '*.1'` ; do
+		install -m0644 $i ${pkgdir}/usr/share/man/ru/1/`basename $i`
+	done
 }
 

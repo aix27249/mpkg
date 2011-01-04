@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
 		// Get latest transaction number
 		if (!rollback_package.empty()) {
 			printf(_("Searching for latest transaction with %s\n"), rollback_package.c_str());
-			for (size_t t=transaction_details.size()-1; t>=0; --t) {
+			for (size_t t=transaction_details.size()-1; (int) t>=0; --t) {
 				if (transaction_details.getValue(t, fTrd_pkgname)!=rollback_package) continue;
 				rollback_to = atoi(transaction_details.getValue(t, fTrd_tid).c_str());
 				printf(_("Found transaction %d\n"), rollback_to);
@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
 		printf("%sRolling back transaction %s%s (%s)\n", CL_GREEN, CL_WHITE, transactions.getValue(i, fTr_id).c_str(), transactions.getValue(i, fTr_date_end).c_str());
 
 		// Packages that was installed
-		for (size_t t=0; t<transaction_details.size(); ++t) {
+		for (size_t t=transaction_details.size()-1; (int) t>=0; --t) {
 			if (transaction_details.getValue(t, fTrd_tid)!=transactions.getValue(i, fTr_id)) continue; // Skip other transaction details
 		
 			// If package name specified, skip others
