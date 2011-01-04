@@ -71,9 +71,9 @@ FILE(GLOB l10n "${CMAKE_CURRENT_SOURCE_DIR}/*.qm")
  
 INSTALL(TARGETS guisetup
 		RUNTIME DESTINATION bin
-		FILES ${icons} DESTINATION share/setup/icons
-		FILES ${helpfiles_ru} DESTINATION share/setup/help/ru
-		FILES ${helpfiles_en} DESTINATION share/setup/help/en
-		FILES ${l10n} DESTINATION share/setup/l10n
-)
+		)
+INSTALL(FILES ${icons} DESTINATION share/setup/icons)
+INSTALL(FILES ${helpfiles_ru} DESTINATION share/setup/help/ru)
+INSTALL(FILES ${helpfiles_en} DESTINATION share/setup/help/en)
+INSTALL(FILES ${l10n} DESTINATION share/setup/l10n)
 
