@@ -958,7 +958,7 @@ bool SetupThread::postInstallActions() {
 	createUsers();
 
 	// Copy skel to root directory
-	system("cp -ar /tmp/new_sysroot/etc/skel/* /tmp/new_sysroot/root/");
+	system("rsync -arvh /tmp/new_sysroot/etc/skel/ /tmp/new_sysroot/root/");
 	system("chown -R root:root /tmp/new_sysroot/root");
 	//xorgSetLangHALEx();
 	xorgSetLangConf();
