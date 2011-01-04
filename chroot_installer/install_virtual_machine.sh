@@ -28,7 +28,7 @@ cp packages.db ${NODE}/var/mpkg/
 
 # Installing
 mpkg-update --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE}
-mpkg-installfromlist --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE}  $CWD/${LIST}
+mpkg-installfromlist -y -m --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE}  $CWD/${LIST}
 
 # Moving config
 mv ${NODE}/etc/mpkg.xml.system ${NODE}/etc/mpkg.xml
