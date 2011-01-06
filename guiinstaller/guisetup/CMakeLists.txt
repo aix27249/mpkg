@@ -63,8 +63,6 @@ ADD_EXECUTABLE(guisetup ${guisetup_SRC} ${guisetup_MOC_SRC} ${guisetup_UI_HDR} $
 TARGET_LINK_LIBRARIES(guisetup ${QT_LIBRARIES} mpkg mpkg-parted)
 
 FILE(GLOB icons "${CMAKE_CURRENT_SOURCE_DIR}/icons/*.png")
-FILE(GLOB helpfiles_ru "${CMAKE_CURRENT_SOURCE_DIR}/help/ru/*.html")
-FILE(GLOB helpfiles_en "${CMAKE_CURRENT_SOURCE_DIR}/help/en/*.html")
 FILE(GLOB l10n "${CMAKE_CURRENT_SOURCE_DIR}/*.qm")
 FILE(GLOB desktop "${CMAKE_CURRENT_SOURCE_DIR}/guisetup.desktop")
 
@@ -74,8 +72,12 @@ INSTALL(TARGETS guisetup
 		RUNTIME DESTINATION bin
 		)
 INSTALL(FILES ${icons} DESTINATION share/setup/icons)
-INSTALL(FILES ${helpfiles_ru} DESTINATION share/setup/help/ru_RU)
-INSTALL(FILES ${helpfiles_en} DESTINATION share/setup/help/en_US)
 INSTALL(FILES ${l10n} DESTINATION share/setup/l10n)
 INSTALL(FILES ${desktop} DESTINATION share/applications)
+
+# Help system now goes from another SVN.
+#FILE(GLOB helpfiles_ru "${CMAKE_CURRENT_SOURCE_DIR}/help/ru/*.html")
+#FILE(GLOB helpfiles_en "${CMAKE_CURRENT_SOURCE_DIR}/help/en/*.html")
+#INSTALL(FILES ${helpfiles_ru} DESTINATION share/setup/help/ru_RU)
+#INSTALL(FILES ${helpfiles_en} DESTINATION share/setup/help/en_US)
 
