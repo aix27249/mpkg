@@ -74,8 +74,8 @@ INSTALL(TARGETS guisetup
 		RUNTIME DESTINATION bin
 		)
 INSTALL(FILES ${icons} DESTINATION share/setup/icons)
-INSTALL(FILES ${helpfiles_ru} DESTINATION share/setup/help/ru)
-INSTALL(FILES ${helpfiles_en} DESTINATION share/setup/help/en)
+INSTALL(FILES ${helpfiles_ru} DESTINATION share/setup/help/ru_RU)
+INSTALL(FILES ${helpfiles_en} DESTINATION share/setup/help/en_US)
 INSTALL(FILES ${l10n} DESTINATION share/setup/l10n)
 INSTALL(FILES ${desktop} DESTINATION share/applications)
 

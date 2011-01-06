@@ -10,7 +10,6 @@
 MainWindow *guiObject;
 
 string getHelpPageName(int page_num) {
-	QLocale lc; // good thing to have system locale in hand
 	switch(page_num) {
 		case PAGE_WELCOME: return "welcome.html";
 		case PAGE_NETWORKING: return "networking.html";
@@ -131,9 +130,11 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 
 void MainWindow::showHelp() {
-	QString text = ReadFile("/usr/share/setup/help/" + getHelpPageName(ui->stackedWidget->currentIndex())).c_str();
+	QLocale lc;
+	string helpPath = "/usr/share/setup/help/" + lc.name().toStdString() + "/" + getHelpPageName(ui->stackedWidget->currentIndex());
+	QString text = ReadFile(helpPath).c_str();
 	if (text.isEmpty()) {
-		QMessageBox::information(this, tr("No help available"), tr("Sorry, no help available for this part"));
+		QMessageBox::information(this, tr("No help available"), tr("Sorry, no help available at %1").arg(QString::fromStdString(helpPath)));
 		return;
 	}
 	HelpForm *helpForm = new HelpForm;
