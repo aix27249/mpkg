@@ -646,9 +646,9 @@ void MainWindow::savePkgsourceSettings() {
 	}
 	// Advanced stuff
 	QStringList advancedRepos;
-	if (ui->autoUpdateCheckBox->isChecked()) advancedRepos.add(coreRepo);
-	if (ui->includeTestingCheckBox->isChecked()) advancedRepos.add(testingRepo);
-	if (ui->includeUserlandCheckBox->isChecked()) advancedRepos.add(userlandRepo);
+	if (ui->autoUpdateCheckBox->isChecked()) advancedRepos << coreRepo;
+	if (ui->includeTestingCheckBox->isChecked()) advancedRepos << testingRepo;
+	if (ui->includeUserlandCheckBox->isChecked()) advancedRepos << userlandRepo;
 }
 
 
