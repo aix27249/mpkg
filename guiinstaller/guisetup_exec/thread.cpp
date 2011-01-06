@@ -152,7 +152,15 @@ bool SetupThread::setMpkgConfig() {
 		rList.push_back("cdrom://"+settings->value("volname").toString().toStdString()+"/"+settings->value("rep_location").toString().toStdString());
 	}
 	else rList.push_back(settings->value("pkgsource").toString().toStdString());
-	// TODO: respect options other than DVD, please
+	// Now, alternate package sources: for updates and so on
+	settings->beginGroup("additional_repositories");
+	QStringList additionalRepositories = settings->childKeys();
+	settings->endGroup();
+	// TODO: add URL validation
+	for (int i=0; i<additionalRepositories.size(); ++i) {
+		rList.push_back(additionalRepositories[i].toStdString());
+	}
+
 	core = new mpkg;
 	core->set_repositorylist(rList, dlist);
 	delete core;
