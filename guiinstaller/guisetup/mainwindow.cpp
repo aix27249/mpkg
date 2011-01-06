@@ -619,6 +619,16 @@ bool MainWindow::validatePkgSources() {
 	return true;
 }
 void MainWindow::savePkgsourceSettings() {
+#ifdef X86_64
+	QString coreRepo = "http://core64.agilialinux.ru/";
+	QString userlandRepo = "http://userland64.agilialinux.ru/";
+	QString testingRepo = "http://testing64.agilialinux.ru/";
+#else
+	QString coreRepo = "http://core32.agilialinux.ru/";
+	QString userlandRepo = "http://userland32.agilialinux.ru/";
+	QString testingRepo = "http://testing32.agilialinux.ru/";
+#endif
+
 	if (ui->pkgSourceDVDRadioButton->isChecked()) {
 		settings->setValue("pkgsource", "dvd");
 	}
@@ -632,12 +642,13 @@ void MainWindow::savePkgsourceSettings() {
 		settings->setValue("pkgsource", urlpath);
 	}
 	else if (ui->pkgSourceNetworkRadioButton->isChecked()) {
-#ifdef X86_64
-		settings->setValue("pkgsource", "http://core64.agilialinux.ru/");
-#else
-		settings->setValue("pkgsource", "http://core32.agilialinux.ru/");
-#endif
+		settings->setValue("pkgsource", coreRepo);
 	}
+	// Advanced stuff
+	QStringList advancedRepos;
+	if (ui->autoUpdateCheckBox->isChecked()) advancedRepos.add(coreRepo);
+	if (ui->includeTestingCheckBox->isChecked()) advancedRepos.add(testingRepo);
+	if (ui->includeUserlandCheckBox->isChecked()) advancedRepos.add(userlandRepo);
 }
 
 

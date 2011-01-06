@@ -38,7 +38,7 @@
        <number>0</number>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -353,7 +353,7 @@ p, li { white-space: pre-wrap; }
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>271</height>
+                <height>379</height>
                </size>
               </property>
              </spacer>
@@ -812,9 +812,16 @@ p, li { white-space: pre-wrap; }
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_27">
             <item>
-             <widget class="QCheckBox" name="checkBox">
+             <widget class="QCheckBox" name="includeUserlandCheckBox">
               <property name="text">
-               <string>Include packages from testing</string>
+               <string>Include userland repository</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="includeTestingCheckBox">
+              <property name="text">
+               <string>Include testing repository</string>
               </property>
              </widget>
             </item>
@@ -826,7 +833,7 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item>
-             <widget class="QPlainTextEdit" name="plainTextEdit"/>
+             <widget class="QPlainTextEdit" name="additionalRepositoriesTextEdit"/>
             </item>
            </layout>
           </widget>
