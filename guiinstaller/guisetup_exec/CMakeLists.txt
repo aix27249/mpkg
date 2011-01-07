@@ -59,7 +59,7 @@ FILE(GLOB icons "${CMAKE_CURRENT_SOURCE_DIR}/icons/*.png")
 FILE(GLOB l10n "${CMAKE_CURRENT_SOURCE_DIR}/*.qm")
 FILE(GLOB scripts "${CMAKE_CURRENT_SOURCE_DIR}/*.sh")
 FILE(GLOB conftemplate "${CMAKE_CURRENT_SOURCE_DIR}/shared/mpkg*.xml")
-FILE(GLOB dbtemplate "${CMAKE_CURRENT_SOURCE_DIR}/shared/packages.db");
+FILE(GLOB dbtemplate "${CMAKE_CURRENT_SOURCE_DIR}/shared/packages.db")
 # Installation
  
 INSTALL(TARGETS guisetup_exec
