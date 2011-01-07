@@ -38,20 +38,29 @@ int main(int argc, char *argv[]) {
 
 
 	setlocale(LC_ALL, "");
-	bindtextdomain( "mpkg", "/usr/local/share/locale");
+	bindtextdomain( "mpkg", "/usr/share/locale");
 	textdomain("mpkg");
 	
-	CONFIG_FILE="/usr/local/share/setup/mpkg-setup.xml";
+	if (!FileExists("/usr/share/setup/packages.db")) {
+		mError("Oops, no database template in /usr/share/setup/packages.db!");
+		return 1;
+	}
+	if (!FileExists("/usr/share/setup/mpkg-setup.xml")) {
+		mError("Oops, no config template in /usr/share/setup/mpkg-setup.xml!");
+		return 1;
+	}
+
+	CONFIG_FILE="/usr/share/setup/mpkg-setup.xml";
 	mConfig.configName=CONFIG_FILE;
 	unlink("/tmp/packages.db");
-	system("cp /usr/local/share/setup/packages.db /tmp/packages.db");
+	system("cp /usr/share/setup/packages.db /tmp/packages.db");
 
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 	QApplication a(argc, argv);
 	QLocale lc;
 	QTranslator translator;
-	translator.load("guisetup_exec_" + lc.name(), "/usr/local/share/setup/l10n");
+	translator.load("guisetup_exec_" + lc.name(), "/usr/share/setup/l10n");
 	a.installTranslator(&translator);
 
 	MainWindow w;
