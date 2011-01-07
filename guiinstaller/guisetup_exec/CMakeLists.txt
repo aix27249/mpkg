@@ -58,8 +58,8 @@ TARGET_LINK_LIBRARIES(guisetup_exec ${QT_LIBRARIES} mpkg mpkg-parted)
 FILE(GLOB icons "${CMAKE_CURRENT_SOURCE_DIR}/icons/*.png")
 FILE(GLOB l10n "${CMAKE_CURRENT_SOURCE_DIR}/*.qm")
 FILE(GLOB scripts "${CMAKE_CURRENT_SOURCE_DIR}/*.sh")
-FILE(GLOB shared "${CMAKE_CURRENT_SOURCE_DIR}/shared/mpkg*.xml ${CMAKE_CURRENT_SOURCE_DIR}/shared/packages.db")
-
+FILE(GLOB conftemplate "${CMAKE_CURRENT_SOURCE_DIR}/shared/mpkg*.xml")
+FILE(GLOB dbtemplate "${CMAKE_CURRENT_SOURCE_DIR}/shared/packages.db");
 # Installation
  
 INSTALL(TARGETS guisetup_exec
@@ -68,5 +68,6 @@ INSTALL(TARGETS guisetup_exec
 INSTALL(FILES ${icons} DESTINATION share/setup/icons)
 INSTALL(FILES ${l10n} DESTINATION share/setup/l10n)
 INSTALL(FILES ${scripts} DESTINATION bin)
-INSTALL(FILES ${shared} DESTINATION share/setup)
+INSTALL(FILES ${conftemplate} DESTINATION share/setup)
+INSTALL(FILES ${dbtemplate} DESTINATION share/setup)
 
