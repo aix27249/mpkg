@@ -20,9 +20,9 @@ else
 fi
 
 if [ "$ARCH" = "x86" ] ; then
-	REPO=file:///home/aix/mnt_hd/core32-mirror/repository/
+	REPO=${REPO:-http://core32.agilialinux.ru/}
 else
-	REPO=file:///home/aix/mnt_hd/core64-mirror/repository/
+	REPO=${REPO:-http://core64.agilialinux.ru/}
 fi
 LIST=${SUBLIST}.list
 
@@ -46,6 +46,11 @@ rm -rf $NODE/var/mpkg/cache
 cat $CWD/shadow > $NODE/etc/shadow
 cat $CWD/passwd > $NODE/etc/passwd
 cat $CWD/fstab > $NODE/etc/fstab
+
+# Copy X11 keymap
+mkdir -p ${NODE}/etc/X11/xorg.conf.d
+cat $CWD/10-keymap.conf > ${NODE}/etc/X11/xorg.conf.d/10-keymap.conf
+
 # Copy skel to root dir
 rsync -arvh $NODE/etc/skel/ $NODE/root/
 

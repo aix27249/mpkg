@@ -11,8 +11,6 @@ echo Repo: $REPO
 echo List: $LIST
 echo Arch: $ARCH
 
-sleep 5
-
 
 # Creating directory structure
 CWD=$(pwd)
