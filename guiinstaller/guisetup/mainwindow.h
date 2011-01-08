@@ -85,6 +85,7 @@ class MainWindow: public QMainWindow {
 		
 	public slots:
 		void showHelp();
+		void loadHelp();
 		void askQuit();
 		void nextButtonClick();
 		void backButtonClick();

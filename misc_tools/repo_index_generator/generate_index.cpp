@@ -193,6 +193,7 @@ void generateIndex2(MYSQL &conn, string srv, string darch, string dver, bool glo
 					}
 				}
 			}
+			system("( cd " + srv + "/" + darch + "/" + dver + "/repository/ && tar -cJvf setup_variants.tar.xz setup_variants )");
 		}
 		fclose(setup_variants);
 	}

@@ -14,6 +14,11 @@
 int b_t = 0;
 int c_t = 0;
 const string MPKGTableVersion="1.11";
+bool SQLiteDB::canWriteDB() {
+	if (access(db_filename.c_str(), R_OK|W_OK)==0) return true;
+	return false;
+
+}
 bool SQLiteDB::CheckDatabaseIntegrity()
 {
 	if (\
@@ -41,7 +46,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		{
 			hideErrors = false;
 			// Mean we have an old 1.0 table version. Have to update!
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(" (current version: 1.0).\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -53,7 +58,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select package_betarelease from packages limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -65,7 +70,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select package_installed_by_dependency from packages limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -77,7 +82,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select dependency_build_only from dependencies limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -89,7 +94,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select package_type from packages limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -101,7 +106,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select package_add_date from packages limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -113,7 +118,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select package_build_date from packages limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -125,7 +130,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select package_repository_tags from packages limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -136,7 +141,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select package_distro_version from packages limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -148,7 +153,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select package_provides from packages limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -160,7 +165,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select package_conflicts from packages limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -173,7 +178,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		hideErrors = true;
 		if (sql_exec("select * from history limit 1;")!=0) {
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -183,7 +188,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		hideErrors = true;
 		if (sql_exec("select * from deltas limit 1;")!=0) {
 			hideErrors=false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -193,7 +198,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select delta_size from deltas limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -206,7 +211,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select package_id from config_files limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -217,7 +222,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select id from config_options limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -229,7 +234,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select package_id from abuilds limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg list') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -242,7 +247,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select id from transactions limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg update') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}
@@ -254,7 +259,7 @@ bool SQLiteDB::CheckDatabaseIntegrity()
 		if (sql_exec("select id from transaction_details limit 1;")!=0)
 		{
 			hideErrors = false;
-			if (getuid()!=0 || _cmdOptions["sql_readonly"]=="yes") {
+			if (!canWriteDB() || _cmdOptions["sql_readonly"]=="yes") {
 				mError(_("Your database need to be upgraded to new version ") + MPKGTableVersion +_(".\nPlease run mpkg (e.g. 'mpkg update') as root to do this\nNote: it will be backward-compatible with all previous versions of mpkg"));
 				return false;
 			}

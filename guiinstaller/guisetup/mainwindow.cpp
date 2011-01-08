@@ -72,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	guiObject = this;
 	ui->setupUi(this);
+	ui->helpBrowserDockWidget->hide();
 	ui->releaseNotesTextBrowser->hide();
 	//setWindowState(Qt::WindowMaximized);
 	connect(ui->nextButton, SIGNAL(clicked()), this, SLOT(nextButtonClick()));
@@ -89,6 +90,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(ui->mountPointEdit, SIGNAL(textEdited(const QString &)), this, SLOT(updateMountItemUI()));
 	connect(ui->releaseNotesButton, SIGNAL(clicked()), this, SLOT(showHideReleaseNotes()));
 	connect(ui->helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+	connect(ui->stackedWidget, SIGNAL(currentChanged(int)), this, SLOT(loadHelp()));
 	connect(ui->saveConfigButton, SIGNAL(clicked()), this, SLOT(saveConfigAndExit()));
 	lockUIUpdate = false;
 	connect(ui->timezoneSearchEdit, SIGNAL(textEdited(const QString &)), this, SLOT(timezoneSearch(const QString &)));
@@ -111,6 +113,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(ui->mountCustomRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterCustom(bool)));
 	connect(ui->mountNoFormatRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterNoFormat(bool)));
 
+
 	// Just in case...
 	system("mkdir -p /var/log/mount");
 
@@ -129,7 +132,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 	else event->ignore();
 }
 
-void MainWindow::showHelp() {
+void MainWindow::loadHelp() {
 	QLocale lc;
 	string helpPath = "/usr/share/setup/help/" + lc.name().toStdString() + "/" + getHelpPageName(ui->stackedWidget->currentIndex());
 	QString text = ReadFile(helpPath).c_str();
@@ -137,10 +140,18 @@ void MainWindow::showHelp() {
 		QMessageBox::information(this, tr("No help available"), tr("Sorry, no help available at %1").arg(QString::fromStdString(helpPath)));
 		return;
 	}
-	HelpForm *helpForm = new HelpForm;
-	helpForm->loadText(text);
-	helpForm->show();
+	ui->helpBrowser->setText(text);
+}
 
+void MainWindow::showHelp() {
+	if (ui->helpBrowserDockWidget->isHidden()) {
+		ui->helpBrowserDockWidget->show();
+		ui->helpButton->setText(tr("Hide help (F1)"));
+	}
+	else {
+		ui->helpBrowserDockWidget->hide();
+		ui->helpButton->setText(tr("Show help (F1)"));
+	}
 }
 
 void MainWindow::askQuit() {
@@ -331,9 +342,18 @@ string getLABEL(const string& dev) {
 	return data.substr(0, a);
 }
 void MainWindow::updatePartitionLists() {
+	// Let's go setuid. At least, let's try.
+	uid_t uid = getuid();
+	if (uid) {
+		perror("Failed to obtain root privileges to read disk partition table");
+		QMessageBox::critical(this, tr("Failed to obtain root privileges"), tr("This program should have suid bit, or be run from root. Otherwise, it could not get drive information.\nThis is fatal, and we have to exit."));
+		qApp->quit();
+		return;
+	}
 	drives = getDevList();
 	partitions = getPartitionList();
 	lvm_groups = getLVM_VGList();
+
 	// Since fslabel in libparted means completely other thing, let's get this from blkid
 	for (size_t i=0; i<partitions.size(); ++i) {
 		partitions[i].fslabel = getLABEL(partitions[i].devname).c_str();
@@ -682,7 +702,20 @@ void MainWindow::showSetupVariantDescription(int index) {
 		ui->setupVariantDescription->clear();
 		return;
 	}
-	ui->setupVariantDescription->setText(tr("<p><b>Description:</b> %1</p><p><b>Packages to install:</b> %2 (%3)</p><p><b>Disk space required:</b> %4</p><p>Please note that space requirement is estimated very approximately and does not respect partitioning scheme, temporary files and required space for work.</p>").arg(customPkgSetList[index].full.c_str()).arg(customPkgSetList[index].count).arg(humanizeSize(customPkgSetList[index].csize).c_str()).arg(humanizeSize(customPkgSetList[index].isize).c_str()));
+	QImage *image;
+	if (FileExists("/tmp/setup_variants/" + customPkgSetList[index].name + ".png")) image = new QImage(QString("/tmp/setup_variants/%1.png").arg(customPkgSetList[index].name.c_str()));
+	else image = new QImage("/usr/share/setup/default_image.png");
+
+	ui->setupVariantDescription->setText(tr("<p>%1</p><p><b>Description:</b> %2</p><p><b>Packages to install:</b> %3 (%4)</p><p><b>Disk space required:</b> %5</p><p>Please note that space requirement is estimated very approximately and does not respect partitioning scheme, temporary files and required space for work.</p>").arg(customPkgSetList[index].desc.c_str()).arg(customPkgSetList[index].full.c_str()).arg(customPkgSetList[index].count).arg(humanizeSize(customPkgSetList[index].csize).c_str()).arg(humanizeSize(customPkgSetList[index].isize).c_str()));
+	ui->setupVariantImage->setPixmap(QPixmap::fromImage(*image));
+	QString hasX11, hasDM;
+	if (customPkgSetList[index].hasX11) hasX11 = tr("<b style='color: green;'>yes</b>");
+	else hasX11 = tr("<span style='color: red;'>no</span>");
+	if (customPkgSetList[index].hasDM) hasDM = tr("<b style='color: green;'>yes</b>");
+	else hasDM = tr("<span style='color: red;'>no</span>");
+
+	ui->setupVariantMetaFlags->setText(tr("<b>GUI:</b> %1<br><b>GUI login:</b> %2<br>Hardware requirements:<br>%3").arg(hasX11).arg(hasDM).arg(customPkgSetList[index].hw.c_str()));
+	delete image;
 }
 
 void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSet> &_pkgSet) {
@@ -720,7 +753,7 @@ void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSe
 	ui->setupVariantsListWidget->clear();
 	QListWidgetItem *item;
 	for (size_t i=0; i<customPkgSetList.size(); ++i) {
-		item = new QListWidgetItem(customPkgSetList[i].desc.c_str(), ui->setupVariantsListWidget);
+		item = new QListWidgetItem(customPkgSetList[i].name.c_str(), ui->setupVariantsListWidget);
 	}
 
 	ui->nextButton->setEnabled(true);

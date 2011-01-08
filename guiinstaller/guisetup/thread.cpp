@@ -175,16 +175,23 @@ bool LoadSetupVariantsThread::umountDVD() {
 CustomPkgSet LoadSetupVariantsThread::getCustomPkgSet(const string& name) {
 	vector<string> data = ReadFileStrings("/tmp/setup_variants/" + name + ".desc");
 	CustomPkgSet ret;
+	ret.hasX11 = false;
+	ret.hasDM = false;
 	ret.name = name;
+	printf("Processing %s\n", name.c_str());
 	string c_locale = locale;
 	if (c_locale.size()>2) c_locale = "[" + c_locale.substr(0,2) + "]";
 	else c_locale = "";
 	string gendesc, genfull;
 	for (size_t i=0; i<data.size(); ++i) {
 		if (data[i].find("desc" + c_locale + ": ")==0) ret.desc = getParseValue("desc" + c_locale + ": ", data[i], true);
-		if (data[i].find("desc: ")==0) gendesc = getParseValue("desc: ", data[i], true);
-		if (data[i].find("full" + c_locale + ": ")==0) ret.full = getParseValue("full" + c_locale + ": ", data[i], true);
-		if (data[i].find("full: ")==0) genfull = getParseValue("full: ", data[i], true);
+		else if (data[i].find("desc: ")==0) gendesc = getParseValue("desc: ", data[i], true);
+		else if (data[i].find("full" + c_locale + ": ")==0) ret.full = getParseValue("full" + c_locale + ": ", data[i], true);
+		else if (data[i].find("full: ")==0) genfull = getParseValue("full: ", data[i], true);
+		else if (data[i].find("hasX11")==0) ret.hasX11 = true;
+		else if (data[i].find("hasDM")==0) ret.hasDM = true;
+		else if (data[i].find("hardware" + c_locale + ": ")==0) ret.hw = getParseValue("hardware" + c_locale + ": ", data[i], true);
+		else if (data[i].find("hardware: ")==0) if (ret.hw.empty()) ret.hw = getParseValue("hardware: ", data[i], true);
 	}
 	if (ret.desc.empty()) ret.desc = gendesc;
 	if (ret.full.empty()) ret.full = genfull;
@@ -247,25 +254,31 @@ void LoadSetupVariantsThread::getCustomSetupVariants(const vector<string>& rep_l
 		downloadQueue.clear();
 		path = rep_list[z];
 		CommonGetFile(path + "/setup_variants.list", tmpfile);
+		CommonGetFile(path + "/setup_variants.tar.xz", "/tmp/setup_variants.tar.xz");
 		vector<string> list = ReadFileStrings(tmpfile);
 		printf("Received %d setup variants\n", (int) list.size());
 		vector<CustomPkgSet> ret;
-		for (size_t i=0; i<list.size(); ++i) {
-			itemLocations.clear();
-			tmpDownloadItem.name=list[i];
-			tmpDownloadItem.file="/tmp/setup_variants/" + list[i] + ".desc";
-			itemLocations.push_back(path + "/setup_variants/" + list[i] + ".desc");
-			tmpDownloadItem.url_list = itemLocations;
-			downloadQueue.push_back(tmpDownloadItem);
+		if (!FileExists("/tmp/setup_variants.tar.xz")) {
+			for (size_t i=0; i<list.size(); ++i) {
+				itemLocations.clear();
+				tmpDownloadItem.name=list[i];
+				tmpDownloadItem.file="/tmp/setup_variants/" + list[i] + ".desc";
+				itemLocations.push_back(path + "/setup_variants/" + list[i] + ".desc");
+				tmpDownloadItem.url_list = itemLocations;
+				downloadQueue.push_back(tmpDownloadItem);
 
-			itemLocations.clear();
-			tmpDownloadItem.name=list[i];
-			tmpDownloadItem.file="/tmp/setup_variants/" + list[i] + ".list";
-			itemLocations.push_back(path + "/setup_variants/" + list[i] + ".list");
-			tmpDownloadItem.url_list = itemLocations;
-			downloadQueue.push_back(tmpDownloadItem);
+				itemLocations.clear();
+				tmpDownloadItem.name=list[i];
+				tmpDownloadItem.file="/tmp/setup_variants/" + list[i] + ".list";
+				itemLocations.push_back(path + "/setup_variants/" + list[i] + ".list");
+				tmpDownloadItem.url_list = itemLocations;
+				downloadQueue.push_back(tmpDownloadItem);
+			}
+			CommonGetFileEx(downloadQueue, &itemname);
 		}
-		CommonGetFileEx(downloadQueue, &itemname);
+		else {
+			system("( cd /tmp && tar xf setup_variants.tar.xz )");
+		}
 
 		printf("Starting importing package lists\n");
 		for (size_t i=0; i<list.size(); ++i) {

@@ -6,6 +6,8 @@
 #include <QTranslator>
 int main(int argc, char *argv[]) {
 	
+	uid_t uid = getuid();
+	printf("Current UID: %d\n", uid);
 	if (FileExists("/var/run/guisetup_exec.pid")) {
 		string pid_locked = ReadFile("/var/run/guisetup_exec.pid").c_str();
 		if (isProcessRunning(pid_locked)) {
@@ -31,7 +33,7 @@ int main(int argc, char *argv[]) {
 	textdomain("mpkg");
 	
 	// For mpkg, note that we copy config to temp directory	
-	CONFIG_FILE="/tmp/mpkg-setup.xml";
+	CONFIG_FILE="/tmp/mpkg.xml";
 	mConfig.configName=CONFIG_FILE;
 	unlink("/tmp/packages.db");
 	unlink("/tmp/mpkg.xml");

@@ -49,6 +49,7 @@ class SQLiteDB
 		int sql_delete(const string& table_name, const SQLRecord& search);
 
 		int64_t last_insert_id();
+		bool canWriteDB();
 		
 		SQLiteDB(string filename=DB_FILENAME, bool skip_integrity_check = false);
 		~SQLiteDB();
