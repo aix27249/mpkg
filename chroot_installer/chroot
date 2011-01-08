@@ -1,0 +1,3 @@
+#!/bin/sh
+# Useful wrapper for mklivecd
+fakechroot /usr/bin/chroot $@
