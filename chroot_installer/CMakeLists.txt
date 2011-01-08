@@ -18,13 +18,13 @@ FILE(GLOB dbtemplate "${CMAKE_CURRENT_SOURCE_DIR}/packages.db")
 
 # Live elements: lots of stuff, but needed
 
-INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live_elements/isolinux.cfg" DESTINATION share/mklivecd/scripts/live-elements)
-INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live_elements/init" DESTINATION share/mklivecd/scripts/live-elements)
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/isolinux.cfg" DESTINATION share/mklivecd/scripts/live-elements)
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/init" DESTINATION share/mklivecd/scripts/live-elements)
 
 # Default templates, seems to be ok for most of LiveCDs
-INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live_elements/passwd" DESTINATION share/mklivecd/scripts/live-elements)
-INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live_elements/shadow" DESTINATION share/mklivecd/scripts/live-elements)
-INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live_elements/fstab" DESTINATION share/mklivecd/scripts/live-elements)
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/passwd" DESTINATION share/mklivecd/scripts/live-elements)
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/shadow" DESTINATION share/mklivecd/scripts/live-elements)
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/fstab" DESTINATION share/mklivecd/scripts/live-elements)
 
 # Configuration file and ISOBUILD example
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/ISOBUILD.example" DESTINATION share/mklivecd)
