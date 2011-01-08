@@ -1053,7 +1053,7 @@ bool lockDatabase()
 	
 	if (_cmdOptions["sql_readonly"]=="yes") return true; // No need to lock if we using read-only access
 	// Lock file will be /var/run/mpkg.lock
-	string var_directory = "/var";
+	string var_directory = SYS_ROOT + "/var";
 	if (!mConfig.getValue("var_directory").empty()) var_directory=mConfig.getValue("var_directory");
 	if (FileExists(var_directory + "/run/mpkg.lock", NULL)) {
 		if (!isProcessRunning(ReadFile(var_directory + "/run/mpkg.lock"))) {
@@ -1065,13 +1065,14 @@ bool lockDatabase()
 			return false;
 		}
 	}
+	system("mkdir -p " + var_directory + "/run");
 	WriteFile(var_directory + "/run/mpkg.lock", IntToStr(getpid()));
 	return true;
 }
 
 bool unlockDatabase()
 {
-	string var_directory = "/var";
+	string var_directory = SYS_ROOT + "/var";
 	if (!mConfig.getValue("var_directory").empty()) var_directory=mConfig.getValue("var_directory");
 
 	if (FileExists(var_directory + "/run/mpkg.lock", NULL))
@@ -1095,7 +1096,7 @@ bool unlockDatabase()
 
 bool isDatabaseLocked()
 {
-	string var_directory = "/var";
+	string var_directory = SYS_ROOT + "/var";
 	if (!mConfig.getValue("var_directory").empty()) var_directory=mConfig.getValue("var_directory");
 
 	if (FileExists(var_directory + "/run/mpkg.lock", NULL))

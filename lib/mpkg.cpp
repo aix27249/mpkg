@@ -1215,7 +1215,7 @@ int mpkgDatabase::commit_actions()
 	}
 	// Done
 
-	system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S` GOING TO INSTALL: " + IntToStr(install_list.size()) + ", TO REMOVE: " + IntToStr(remove_list.size()) + " >> /var/log/mpkg-installation.log");
+	//system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S` GOING TO INSTALL: " + IntToStr(install_list.size()) + ", TO REMOVE: " + IntToStr(remove_list.size()) + " >> /var/log/mpkg-installation.log");
 	int transaction_id = startTransaction(install_list, remove_list, getSqlDb());
 	msay(_("Looking for install queue"));
 	vector<bool> needFullDownload(install_list.size());
@@ -1599,7 +1599,7 @@ download_process:
 		system("sync &");
 	}
 
-	system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S` FINISHED >> /var/log/mpkg-installation.log");
+	//system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S` FINISHED >> /var/log/mpkg-installation.log");
 	endTransaction(transaction_id, getSqlDb());
 	return 0;
 }
@@ -1611,7 +1611,7 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 	if (setupMode && dialogMode) {
 		system("echo Installing package " + package->get_name() + "-" + package->get_fullversion() + " >> /dev/tty4");
 	}
-	system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S` Installing package " + package->get_name() + "-" + package->get_fullversion() + " >> /var/log/mpkg-installation.log");
+	//system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S` Installing package " + package->get_name() + "-" + package->get_fullversion() + " >> /var/log/mpkg-installation.log");
 #endif
 	
 	// Check if package already has been installed
@@ -1938,7 +1938,7 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 
 int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t packagesTotal, int transaction_id)
 {
-	system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S`  Removing package " + package->get_name() + "-" + package->get_fullversion() + " >> /var/log/mpkg-installation.log");
+	//system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S`  Removing package " + package->get_name() + "-" + package->get_fullversion() + " >> /var/log/mpkg-installation.log");
 	string index_str, action_str, by_str;
 	if (packagesTotal>0) {
 		index_str = "[" + IntToStr(packageNum+1) + "/"+IntToStr(packagesTotal)+"] ";

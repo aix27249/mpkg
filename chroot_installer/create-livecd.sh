@@ -1,6 +1,10 @@
 #!/bin/bash
 # This script should be run as root or fakeroot.
 set -e
+
+# Set alias for chroot to fakechroot. Let's see if it can work such way
+alias chroot=fakechroot
+
 # Loading global config
 if [ -r "/etc/mklivecd.conf" ] ; then
 	. /etc/mklivecd.conf
@@ -127,3 +131,5 @@ done
 mkdir -p $ISO_OUTPUT
 ISO_FILE=$ISO_OUTPUT/$ISO_FILENAME ISO_ROOT=$LIVE_ROOT $CWD/makeiso.sh
 set +e
+
+unalias chroot
