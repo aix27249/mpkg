@@ -1,9 +1,15 @@
 #!/bin/bash
 
+
+export REAL_HOME="$HOME"
+
+# Checking if ISOBUILD exists
 if [ ! -r "ISOBUILD" ] ; then
 	echo "Sorry, no ISOBUILD file here, aborting"
 	exit 1
 fi
+
+# Loading configs. Note that they will be loaded twice - once here, and next in fakeroot environment
 
 # Loading global config
 if [ -r "/etc/mklivecd.conf" ] ; then
@@ -11,19 +17,19 @@ if [ -r "/etc/mklivecd.conf" ] ; then
 fi
 
 # Loading local user config
-if [ -r "~/.mklivecd.conf" ] ; then
-	. ~/.mklivecd.conf
+if [ -r "${REAL_HOME}/.mklivecd.conf" ] ; then
+	. ${REAL_HOME}/.mklivecd.conf
 fi
 
-# Loading ISOBUILD
-. ISOBUILD
-
-
 # Checking and defining variables
-startdir=`pwd`
-scriptdir=${scriptdir:-/usr/share/mklivecd/scripts} # This should be defined in global config at package build time in case if you use another paths
+export ISO_OUTPUT=${output_dir:-${REAL_HOME}/.mklivecd/iso}
+export BUILD_ROOT=${output_dir:-${REAL_HOME}/.mklivecd/build}
+export startdir=`pwd`
 
-# Go building
-cd "$scriptdir"
-. create-livecd.sh
-cd "$startdir"
+
+if [ "`id -u`" != "0" ] ; then
+	FAKEROOT=fakeroot
+fi
+
+$FAKEROOT create-livecd.sh
+

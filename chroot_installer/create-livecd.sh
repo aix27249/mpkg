@@ -1,9 +1,20 @@
 #!/bin/bash
-# 
-# NOTE: You *HAVE* to define variables first!!! See examples in openbox-x86-live.sh script.
-#
-#
+# This script should be run as root or fakeroot.
 
+# Loading global config
+if [ -r "/etc/mklivecd.conf" ] ; then
+	. /etc/mklivecd.conf
+fi
+
+# Loading local user config
+if [ -r "${REAL_HOME}/.mklivecd.conf" ] ; then
+	. ${REAL_HOME}/.mklivecd.conf
+fi
+
+scriptdir=${scriptdir:-/usr/share/mklivecd/scripts} # This should be defined in global config at package build time in case if you use another paths
+
+# Loading ISOBUILD
+. ISOBUILD
 
 # Cleanup
 
