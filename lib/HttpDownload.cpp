@@ -141,7 +141,7 @@ int cdromFetch(std::string source, std::string output, bool do_cache) // Caching
 	bool mounted = false;
 	mDebug("source=["+source+"]");
 	mDebug("output=["+output+"]");
-	// Special case: packages.xml.gz from CD
+	// Special case: packages.xml.gz or packages.xml.xz from CD
 	// First, trying to get from cache
 	string cdromVolName = source.substr(0,source.find_first_of("/"));
 	string rep_location = source.substr(source.find_first_of("/"));
@@ -149,10 +149,11 @@ int cdromFetch(std::string source, std::string output, bool do_cache) // Caching
 	strReplace(&rep_location_id, "/", "_");
 	string sourceFileName = CDROM_MOUNTPOINT + source.substr(source.find_first_of("/"));
 	//printf("fetching %s to %s, caching: %d\n", source.c_str(), output.c_str(), do_cache);
-	if ((source.find("packages.xml.gz")!=std::string::npos || source.find("setup_variants")!=std::string::npos) && FileExists("/var/mpkg/index_cache/"+cdromVolName+"~" + rep_location_id + "/packages.xml.gz"))
+	if ((source.find("packages.xml.xz")!=std::string::npos || source.find("packages.xml.gz")!=std::string::npos || source.find("setup_variants")!=std::string::npos) && (FileExists("/var/mpkg/index_cache/"+cdromVolName+"~" + rep_location_id + "/packages.xml.xz") || FileExists("/var/mpkg/index_cache/"+cdromVolName+"~" + rep_location_id + "/packages.xml.gz")))
 	{
 		//printf("cached contents\n");
-		sourceFileName = "/var/mpkg/index_cache/"+cdromVolName+"~" + rep_location_id+"/packages.xml.gz";
+		if (FileExists("/var/mpkg/index_cache/"+cdromVolName+"~" + rep_location_id + "/packages.xml.xz")) sourceFileName = "/var/mpkg/index_cache/"+cdromVolName+"~" + rep_location_id+"/packages.xml.xz";
+		else sourceFileName = "/var/mpkg/index_cache/"+cdromVolName+"~" + rep_location_id+"/packages.xml.gz";
 		do_cache=true;
 		string _cp_cmd;
        		int _link_ret;
@@ -187,7 +188,7 @@ int cdromFetch(std::string source, std::string output, bool do_cache) // Caching
 	// 5. If all required media is processed, eject the last and return.
 	// Note: VOLNAME should be determined by file .volume_id at root of CD
 	
-	if (source.find("packages.xml.gz")!=std::string::npos) do_cache = true;
+	if (source.find("packages.xml.gz")!=std::string::npos || source.find("packages.xml.xz")!=std::string::npos) do_cache = true;
 	string ej;
 	if (!noEject) ej = "eject " + CDROM_DEVICE;
 	else ej = "umount " + CDROM_MOUNTPOINT;
@@ -541,7 +542,8 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 								downloadUrl_string = item->url_list.at(j);
 								if (dialogMode) ncInterface.setSubtitle(_("Downloading files from ") + getHostFromUrl(downloadUrl_string));
 	
-								if (item->url_list.at(j).find("packages.xml.gz")==std::string::npos && 
+								if (item->url_list.at(j).find("packages.xml.xz")==std::string::npos && 
+									item->url_list.at(j).find("packages.xml.gz")==std::string::npos && 
 									item->url_list.at(j).find("PACKAGES.TXT")==std::string::npos &&
 									item->url_list.at(j).find("Packages.gz")==std::string::npos) 
 								{
@@ -562,7 +564,8 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 								max_set = false;
 								result = curl_easy_perform(ch);
 								if (!currentDownloadingString.empty()) { 
-									if (item->url_list.at(j).find("packages.xml.gz")==std::string::npos && 
+									if (item->url_list.at(j).find("packages.xml.xz")==std::string::npos && 
+										item->url_list.at(j).find("packages.xml.gz")==std::string::npos && 
 										item->url_list.at(j).find("PACKAGES.TXT")==std::string::npos &&
 										item->url_list.at(j).find("Packages.gz")==std::string::npos) 
 									{

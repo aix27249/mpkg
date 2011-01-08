@@ -172,10 +172,17 @@ void generateIndex2(MYSQL &conn, string srv, string darch, string dver, bool glo
  	if (!global) {
 		unlink(string(srv + "/" + darch + "/" + dver + "/repository/packages.xml.gz").c_str());
 		system("gzip -9 " + srv + "/" + darch + "/" + dver + "/repository/packages.xml");
+		// Compress with xz
+		printf("compressing %s/%s xz...\n", srv.c_str(), darch.c_str());
+		system("zcat " + srv + "/" + darch + "/" + dver + "/repository/packages.xml.gz | xz -e > " + srv + "/" + darch + "/" + dver + "/repository/packages.xml.xz");
 	}
 	else {
 		unlink(string("global_repository/packages.xml.gz").c_str());
 		system("gzip -9 global_repository/packages.xml");
+
+		// Compress with xz
+		printf("compressing global xz...\n");
+		system("zcat global_repository/packages.xml.gz | xz -e > global_repository/packages.xml.xz");
 	}
 
 	

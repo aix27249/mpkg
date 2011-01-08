@@ -1401,7 +1401,7 @@ int print_usage(FILE* stream, int exit_code)
 	fprintf(stream,_("\tmenu                      shows the package selection menu\n"));
 	
 	fprintf(stream,_("\nRepository maintaining functions:\n"));
-	fprintf(stream,_("\tindex                     create a repository index file \"packages.xml.gz\"\n"));
+	fprintf(stream,_("\tindex                     create a repository index file \"packages.xml.xz\"\n"));
 	fprintf(stream,_("\tconvert_dir <outp_dir>    convert whole directory (including sub-dirs) to MPKG format\n"));
 	fprintf(stream,_("\tconvert <filename>        convert package to MPKG format\n"));
 	fprintf(stream,_("\tnativize [dir]            search directory for non-native packages and convert it to MPKG format\n"));

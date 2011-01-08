@@ -6,8 +6,8 @@ int main(int argc, char **argv) {
 	//WriteFile("sqlite_dump.sql", getDBStructure());
 	if (path.find("://")==std::string::npos) {
 		path = "./";
-		if (!FileExists(path+"packages.xml.gz")) {
-			mError(_("Index file ") + path+_("packages.xml.gz not found"));
+		if (!FileExists(path + "packages.xml.xz") && !FileExists(path+"packages.xml.gz")) {
+			mError(_("Index file ") + path+_("packages.xml.xz or packages.xml.gz not found"));
 			return 1;
 		}
 		path = "file://" + getAbsolutePath(path) + "/";

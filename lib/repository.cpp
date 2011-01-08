@@ -669,6 +669,7 @@ int Repository::build_index(string path, bool make_filelist)
 	//mDebug("Compressing files");
 	if (!dialogMode) say(_("Compressing files\n"));
 	if (system("gzip -f " + path+"/packages.xml")==0) {
+		system("zcat " + path + "/packages.xml.gz | xz -e > " + path + "/packages.xml.xz");
 	       if (!dialogMode) say(_("\n-------------SUMMARY------------------\nTotal: %d packages\n\nRepository index created successfully\n"),pkgcounter);
 	       else ncInterface.showMsgBox(_("Repository index created\nTotal: ") + IntToStr(pkgcounter) + _(" packages"));
 	}
@@ -701,19 +702,26 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 	//mDebug("get_index!");
 	// First: detecting repository type
 	// Trying to download in this order (if successful, we have detected a repository type):
-	// 1. packages.xml.gz 	(Native MPKG)
+	// 1. packages.xml.xz or packages.xml.gz (Native MPKG)
 	// 2. PACKAGES.TXT	(Legacy Slackware)
 	// 3. Packages.gz	(Debian)
 	// (and something else for RPM, in future)
 	string index_filename = get_tmp_file();
 	string md5sums_filename = get_tmp_file();
 	string cm = "gunzip -f "+index_filename+".gz >/dev/null 2>/dev/null";
+	bool mpkgDownloadOk = false;
 	if (type == TYPE_MPKG || type == TYPE_AUTO)
 	{
 		actionBus.getActionState(0);
 		//mDebug("trying MPKG, type = "+ IntToStr(type));
-	       if (CommonGetFile(server_url + "packages.xml.gz", index_filename+".gz")==DOWNLOAD_OK)
-		{
+	       	if (CommonGetFile(server_url + "packages.xml.xz", index_filename+".xz")==DOWNLOAD_OK) {
+		       cm = "xz -df " + index_filename + ".xz > /dev/null 2>/dev/null";
+		       mpkgDownloadOk = true;
+	       	}
+		else if (CommonGetFile(server_url + "packages.xml.gz", index_filename+".gz")==DOWNLOAD_OK) {
+			mpkgDownloadOk = true;
+		}
+		if (mpkgDownloadOk) {
 			actionBus.getActionState(0);
 			//mDebug("download ok, validating contents...");
 			if (system(cm.c_str())==0 && \
