@@ -13,6 +13,11 @@ PROJECT(MKLIVECD)
 # Main wrapper: /usr/sbin/mklivecd
 
 FILE(GLOB scripts "${CMAKE_CURRENT_SOURCE_DIR}/*.sh")
-FILE(GLOB defconfig "${CMAKE_CURRENT_SOURCE_DIR}/mpkg.xml*")
-FILE(GLOB defdb "${CMAKE_CURRENT_SOURCE_DIR}/packages.db")
+FILE(GLOB conftemplate "${CMAKE_CURRENT_SOURCE_DIR}/mpkg.xml*")
+FILE(GLOB dbtemplate "${CMAKE_CURRENT_SOURCE_DIR}/packages.db")
+
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mklivecd" DESTINATION sbin)
+INSTALL(FILES ${scripts} DESTINATION share/mklivecd/scripts)
+INSTALL(FILES ${conftemplate} DESTINATION share/mklivecd)
+INSTALL(FILES ${dbtemplate} DESTINATION share/mklivecd)
 

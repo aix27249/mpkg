@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ ! -r "ISOBUILD" ] ; then
+	echo "Sorry, no ISOBUILD file here, aborting"
+	exit 1
+fi
+
+# Loading global config
+if [ -r "/etc/mklivecd.conf" ] ; then
+	. /etc/mklivecd.conf
+fi
+
+# Loading local user config
+if [ -r "~/.mklivecd.conf" ] ; then
+	. ~/.mklivecd.conf
+fi
+
+# Loading ISOBUILD
+. ISOBUILD
+
+
+# Checking and defining variables
+startdir=`pwd`
+scriptdir=${scriptdir:-/usr/share/mklivecd/scripts} # This should be defined in global config at package build time in case if you use another paths
+
+# Go building
+cd "$scriptdir"
+. create-livecd.sh
+cd "$startdir"
