@@ -1,0 +1,9 @@
+# ISOBUILD example
+iso_name=AgiliaLinux_minimal
+arch=x86_64
+package_list=http://core64.agilialinux.ru/setup_variants/minimal.list
+REPO=http://packages.agilialinux.ru/
+
+custom_actions() {
+	echo "Here can be some custom actions you need to perform."
+}

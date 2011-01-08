@@ -22,8 +22,9 @@ if [ -r "${REAL_HOME}/.mklivecd.conf" ] ; then
 fi
 
 # Checking and defining variables
-export ISO_OUTPUT=${output_dir:-${REAL_HOME}/.mklivecd/iso}
-export BUILD_ROOT=${output_dir:-${REAL_HOME}/.mklivecd/build}
+export ISO_OUTPUT=${ISO_OUTPUT:-${REAL_HOME}/.mklivecd/iso}
+export BUILD_ROOT=${BUILD_ROOT:-${REAL_HOME}/.mklivecd/build}
+export LIVE_BUILD_ROOT=${LIVE_BUILD_ROOT:-${REAL_HOME}/.mklivecd/live}
 export startdir=`pwd`
 
 

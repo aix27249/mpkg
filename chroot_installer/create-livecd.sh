@@ -13,14 +13,23 @@ fi
 
 scriptdir=${scriptdir:-/usr/share/mklivecd/scripts} # This should be defined in global config at package build time in case if you use another paths
 
+# Helper environments for ISOBUILD
+filedir=${startdir}/files
+
 # Loading ISOBUILD
 . ISOBUILD
 
-# Cleanup
+# Defining variables
+ARCH=$arch
+NODE="${BUILD_ROOT}/${iso_name}-${ARCH}"
+INITRD_ROOT="${NODE}/boot/initrd-tree"
+LIVE_ROOT="${LIVE_BUILD_ROOT}/${iso_name}-${ARCH}"
+ISO_FILENAME=${ISO_FILENAME:-${iso_name}-${ARCH}.iso}
 
-rm -rf $NODE
-rm -rf $INITRD_ROOT
-rm -rf $LIVE_ROOT
+# Cleanup
+rm -rf "$NODE"
+rm -rf "$INITRD_ROOT"
+rm -rf "$LIVE_ROOT"
 
 # Let's go :)
 
@@ -29,20 +38,28 @@ if [ "$ARCH" = "x86" ] ; then
 else
 	BITS=64
 fi
-
-if [ "$ARCH" = "x86" ] ; then
-	REPO=${REPO:-http://core32.agilialinux.ru/}
-else
-	REPO=${REPO:-http://core64.agilialinux.ru/}
+if [ "$REPO" = "" ] ; then
+	if [ "$ARCH" = "x86" ] ; then
+		REPO=${REPO:-http://core32.agilialinux.ru/}
+	else
+		REPO=${REPO:-http://core64.agilialinux.ru/}
+	fi
 fi
-LIST=${SUBLIST}.list
+
+LIST="${startdir}/pkglist"
+
+# Getting online list if needed
+if [ "`echo $package_list | grep ^http:`" != "" -o "`echo $package_list | grep ^ftp:`" != "" ] ; then
+	wget "$package_list" -O "${startdir}/pkglist"
+fi
 
 # Installation
-ARCH=$ARCH LIST=$LIST NODE=$NODE REPO=$REPO ./install_virtual_machine.sh
-NODE=$NODE ./add_default_services.sh
+ARCH=$ARCH LIST="$LIST" NODE="$NODE" REPO="$REPO" ./install_virtual_machine.sh
+NODE="$NODE" ./add_default_services.sh
 
 # Rip out all documentation, includes and static libs
-CWD=`pwd`/live-elements
+CWD=${scriptdir}/live-elements
+
 if [ "$do_minimize" != "" ] ; then
 	rm -rf $NODE/usr/doc
 	rm -rf $NODE/usr/include
@@ -99,7 +116,12 @@ mkinitrd -s $INITRD_ROOT -o $LIVE_ROOT/boot/initrd$BITS.img
 
 # Copying isolinux configs
 mkdir -p $LIVE_ROOT/isolinux
-cp -a $CWD/syslinux$BITS/* $LIVE_ROOT/isolinux/
+cat $CWD/syslinux.cfg | sed ARCH/$BITS > $LIVE_ROOT/isolinux/syslinux.cfg
+
+# ISOLINUX binaries
+for i in linux.c32 vesamenu.c32 vesainfo.c32 isolinux.bin ; do
+	cp /usr/lib${BITS}/syslinux/$i $LIVE_ROOT/isolinux/
+done
 
 # Creating ISO
 mkdir -p $ISO_OUTPUT
