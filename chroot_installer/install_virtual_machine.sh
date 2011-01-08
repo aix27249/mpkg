@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 # Configuration variables. I think it's names and content shows everything.
 NODE=${NODE:-/nodes/x86/gnome}
 REPO=${REPO:-file:///core32-mirror/repository/}
@@ -13,22 +13,24 @@ echo Arch: $ARCH
 
 
 # Creating directory structure
-CWD=$(pwd)
+scriptdir=${scriptdir:-$(pwd)}
 rm -rf $NODE
 mkdir -p ${NODE}/{etc,tmp}
 mkdir -p ${NODE}/var/mpkg/{packages,scripts,configs,backup}
 mkdir -p ${NODE}/{root,home,proc,sys,dev}
 
 # Copying 
-cp $CWD/mpkg.xml.system ${NODE}/etc/mpkg.xml.system
-cat $CWD/mpkg.xml | sed -e s#NODE#$NODE#g | sed -e s#REPOSITORY#$REPO#g | sed -e s#ARCH#$ARCH#g > ${NODE}/etc/mpkg.xml
-cp packages.db ${NODE}/var/mpkg/
+cp ${scriptdir}/mpkg.xml.system ${NODE}/etc/mpkg.xml.system
+cat ${scriptdir}/mpkg.xml | sed -e s#NODE#$NODE#g | sed -e s#REPOSITORY#$REPO#g | sed -e s#ARCH#$ARCH#g > ${NODE}/etc/mpkg.xml
+cp ${scriptdir}/packages.db ${NODE}/var/mpkg/
 
 # Installing
 mpkg-update --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE}
-mpkg-installfromlist -y -m --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE}  $CWD/${LIST}
+mpkg-installfromlist -y -m --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE}  ${LIST}
 
 # Moving config
 mv ${NODE}/etc/mpkg.xml.system ${NODE}/etc/mpkg.xml
 cat /etc/resolv.conf > ${NODE}/etc/resolv.conf
 echo "Installation complete"
+
+set +e

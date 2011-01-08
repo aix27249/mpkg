@@ -13,10 +13,14 @@ DEF_SERVICE_LIST="consolefont \
 	networkmanager"
 
 for i in $SYS_SERVICE_LIST ; do
-	chroot $NODE rc-update add $i sysinit
+	if [ -x "$NODE/etc/init.d/$i" ] ; then
+		chroot $NODE rc-update add $i sysinit
+	fi
 done
 
 for i in $DEF_SERVICE_LIST ; do
-	chroot $NODE rc-update add $i default
+	if [ -x "$NODE/etc/init.d/$i" ] ; then
+		chroot $NODE rc-update add $i default
+	fi
 done
 

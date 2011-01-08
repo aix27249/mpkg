@@ -1,6 +1,6 @@
 #!/bin/bash
 # This script should be run as root or fakeroot.
-
+set -e
 # Loading global config
 if [ -r "/etc/mklivecd.conf" ] ; then
 	. /etc/mklivecd.conf
@@ -126,4 +126,4 @@ done
 # Creating ISO
 mkdir -p $ISO_OUTPUT
 ISO_FILE=$ISO_OUTPUT/$ISO_FILENAME ISO_ROOT=$LIVE_ROOT $CWD/makeiso.sh
-
+set +e
