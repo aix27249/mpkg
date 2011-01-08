@@ -2,7 +2,7 @@
 pkgname=mklivecd
 pkgver=1.0
 pkgbuild=1
-arch=("auto")
+arch=("noarch")
 
 # Package description
 shortdesc=("AgiliaLinux LiveCD build scripts")

@@ -26,11 +26,11 @@ export ISO_OUTPUT=${ISO_OUTPUT:-${REAL_HOME}/.mklivecd/iso}
 export BUILD_ROOT=${BUILD_ROOT:-${REAL_HOME}/.mklivecd/build}
 export LIVE_BUILD_ROOT=${LIVE_BUILD_ROOT:-${REAL_HOME}/.mklivecd/live}
 export startdir=`pwd`
-
+export scriptdir=${scriptdir:-/usr/share/mklivecd/scripts} # This should be defined in global config at package build time in case if you use another paths
 
 if [ "`id -u`" != "0" ] ; then
 	FAKEROOT=fakeroot
 fi
 
-$FAKEROOT create-livecd.sh
+$FAKEROOT ${scriptdir}/create-livecd.sh
 

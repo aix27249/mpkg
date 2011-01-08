@@ -17,7 +17,7 @@ scriptdir=${scriptdir:-/usr/share/mklivecd/scripts} # This should be defined in 
 filedir=${startdir}/files
 
 # Loading ISOBUILD
-. ISOBUILD
+. ${startdir}/ISOBUILD
 
 # Defining variables
 ARCH=$arch
@@ -54,8 +54,8 @@ if [ "`echo $package_list | grep ^http:`" != "" -o "`echo $package_list | grep ^
 fi
 
 # Installation
-ARCH=$ARCH LIST="$LIST" NODE="$NODE" REPO="$REPO" ./install_virtual_machine.sh
-NODE="$NODE" ./add_default_services.sh
+ARCH=$ARCH LIST="$LIST" NODE="$NODE" REPO="$REPO" ${scriptdir}/install_virtual_machine.sh
+NODE="$NODE" ${scriptdir}/add_default_services.sh
 
 # Rip out all documentation, includes and static libs
 CWD=${scriptdir}/live-elements
