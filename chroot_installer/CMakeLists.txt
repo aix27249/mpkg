@@ -19,7 +19,7 @@ FILE(GLOB dbtemplate "${CMAKE_CURRENT_SOURCE_DIR}/packages.db")
 # Live elements: lots of stuff, but needed
 
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/isolinux.cfg" DESTINATION share/mklivecd/scripts/live-elements)
-INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/init" DESTINATION share/mklivecd/scripts/live-elements)
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/init" DESTINATION share/mklivecd/scripts/live-elements )
 
 # Default templates, seems to be ok for most of LiveCDs
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/passwd" DESTINATION share/mklivecd/scripts/live-elements)
@@ -30,8 +30,8 @@ INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/fstab" DESTINATION shar
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/ISOBUILD.example" DESTINATION share/mklivecd)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mklivecd.conf" DESTINATION etc)
 
-INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mklivecd" DESTINATION sbin)
-INSTALL(FILES ${scripts} DESTINATION share/mklivecd/scripts)
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mklivecd" DESTINATION sbin PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE)
+INSTALL(FILES ${scripts} DESTINATION share/mklivecd/scripts PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE)
 INSTALL(FILES ${conftemplate} DESTINATION share/mklivecd)
 INSTALL(FILES ${dbtemplate} DESTINATION share/mklivecd)
 
