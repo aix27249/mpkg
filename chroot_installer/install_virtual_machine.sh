@@ -20,7 +20,7 @@ scriptdir=${scriptdir:-$(pwd)}
 rm -rf $NODE
 mkdir -p ${NODE}/{etc,tmp}
 mkdir -p ${NODE}/var/mpkg/{packages,scripts,configs,backup}
-mkdir -p ${NODE}/{root,home,proc,sys,dev}
+mkdir -p ${NODE}/{root,home,proc,sys,dev,mnt,media}
 mkdir -p ${NODE}/usr/local/{bin,lib,sbin,share,doc}
 mkdir -p ${NODE}/etc/init.d
 mkdir -p ${NODE}/etc/rc.d

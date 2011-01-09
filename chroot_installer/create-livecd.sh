@@ -83,6 +83,16 @@ cat $CWD/fstab > $NODE/etc/fstab
 mkdir -p ${NODE}/etc/X11/xorg.conf.d
 cat $CWD/10-keymap.conf > ${NODE}/etc/X11/xorg.conf.d/10-keymap.conf
 
+# Remove xinitrc if any and recreate it:
+if [ -d ${NODE}/etc/X11/xinit ] ; then
+	rm -f ${NODE}/etc/X11/xinit/xinitrc
+	( cd ${NODE}/etc/X11/xinit
+		for i in xinitrc.* ; do
+			ln -sf $i xinitrc
+		done
+	)
+fi
+
 # Copy skel to root dir
 rsync -arvh $NODE/etc/skel/ $NODE/root/
 
