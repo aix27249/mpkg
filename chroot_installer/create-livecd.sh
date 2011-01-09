@@ -1,7 +1,7 @@
 #!/bin/bash
 # This script should be run as root or fakeroot.
 set -e
-export PATH=$PATH:${scriptdir}/bin
+export PATH=${scriptdir}/bin:$PATH
 # Set alias for chroot to fakechroot. Let's see if it can work such way
 
 # Loading global config
