@@ -10,6 +10,10 @@ echo Node: $NODE
 echo Repo: $REPO
 echo List: $LIST
 echo Arch: $ARCH
+echo PATH: $PATH
+echo Chroot: `which chroot`
+
+sleep 5
 
 
 # Creating directory structure
