@@ -145,7 +145,7 @@ echo -ne "$root_password\n$root_password\n" | chroot $NODE passwd root
 # Add standard user. If not specified, user will be agilia/agilia
 if [ "$no_user" = "" ] ; then
 	if [ "$user_name" = "" ] ; then
-		username=agilia
+		user_name=agilia
 	fi
 	if [ "$user_password" = "" ] ; then
 		if [ "$empty_user_password" != "" ] ; then
@@ -153,8 +153,8 @@ if [ "$no_user" = "" ] ; then
 		fi
 	fi
 	user_groups=${user_groups:-audio,cdrom,floppy,video,netdev,plugdev,power}
-	chroot $NODE /usr/sbin/useradd -d /home/$user_name -m -g users -G $user_groups -s /bin/bash $username
-	echo -ne "$root_password\n$root_password\n" | chroot $NODE passwd $user_name
+	chroot $NODE /usr/sbin/useradd -d /home/$user_name -m -g users -G $user_groups -s /bin/bash $user_name
+	echo -ne "$user_password\n$user_password\n" | chroot $NODE passwd $user_name
 fi
 
 
