@@ -148,7 +148,7 @@ if [ "$no_user" = "" ] ; then
 		user_name=agilia
 	fi
 	if [ "$user_password" = "" ] ; then
-		if [ "$empty_user_password" != "" ] ; then
+		if [ "$empty_user_password" = "" ] ; then
 			user_password=agilia
 		fi
 	fi

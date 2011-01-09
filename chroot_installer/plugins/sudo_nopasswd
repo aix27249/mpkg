@@ -1,0 +1,1 @@
+echo "$user_name ALL=(ALL) NOPASSWD: ALL" >> ${NODE}/etc/sudoers
