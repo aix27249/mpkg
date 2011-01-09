@@ -21,6 +21,7 @@ rm -rf $NODE
 mkdir -p ${NODE}/{etc,tmp}
 mkdir -p ${NODE}/var/mpkg/{packages,scripts,configs,backup}
 mkdir -p ${NODE}/{root,home,proc,sys,dev}
+mkdir -p ${NODE}/usr/local/{bin,lib,sbin,share,doc}
 
 # Copying 
 cp ${scriptdir}/mpkg.xml.system ${NODE}/etc/mpkg.xml.system

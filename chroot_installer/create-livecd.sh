@@ -109,9 +109,14 @@ rm -rf $INITRD_ROOT/lib/modules
 mkdir -p $INITRD_ROOT/$MOD_PATH/
 cp $NODE/$MOD_PATH/kernel/fs/squashfs/squashfs.ko $INITRD_ROOT/$MOD_PATH/
 cp $NODE/$MOD_PATH/kernel/fs/aufs/aufs.ko $INITRD_ROOT/$MOD_PATH/
-cp $NODE/$MOD_PATH/kernel/drivers/virtio/virtio*.ko $INITRD_ROOT/$MOD_PATH/
-cp $NODE/$MOD_PATH/kernel/drivers/block/virtio*.ko $INITRD_ROOT/$MOD_PATH/
+cp $NODE/$MOD_PATH/kernel/drivers/virtio/virtio.ko $INITRD_ROOT/$MOD_PATH/
+cp $NODE/$MOD_PATH/kernel/drivers/block/virtio_blk.ko $INITRD_ROOT/$MOD_PATH/
 rm $INITRD_ROOT/load_kernel_modules
+
+# Generate load_kernel_modules script
+for i in "squashfs aufs virtio virtio_blk" ; do
+	echo "insmod /lib/modules/$KERNEL_VER/$i" >> $INITRD_ROOT/load_kernel_modules
+done
 
 # Copy kernel image
 mkdir -p $LIVE_ROOT/boot/
