@@ -1,0 +1,27 @@
+# Remove extra locales from node
+
+# Hands check
+if [ "$NODE" = "" -o "$NODE" = "/" ] ; then
+	echo "OMG, did you really want to destroy your system, luke?"
+	exit 1
+fi
+
+
+for i in $NODE/usr/share/locale/* ; do
+	if [ `basename $i` != "ru" -a `basename $i` != "en"  -a `basename $i` != "C"  -a `basename $i` != "locale.alias" ] ; then
+		rm -rf $i
+	fi
+done
+
+if [ "$ARCH" = "x86_64" ] ; then
+	LIBDIRSUFFIX=64
+else
+	LIBDIRSUFFIX=
+fi
+
+for i in $NODE/usr/lib$LIBDIRSUFFIX/locale/* ; do
+	if [ `basename $i` != "ru_RU.utf8" -a `basename $i` != "en_US.utf8"  -a `basename $i` != "ru_RU"   -a `basename $i` != "en_US" ] ; then
+		rm -rf $i
+	fi
+done
+

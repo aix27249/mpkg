@@ -18,6 +18,7 @@ scriptdir=${scriptdir:-/usr/share/mklivecd/scripts} # This should be defined in 
 
 # Helper environments for ISOBUILD
 filedir=${startdir}/files
+plugindir=${scriptdir}/plugins
 
 # Loading ISOBUILD
 . ${startdir}/ISOBUILD
