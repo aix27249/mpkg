@@ -60,7 +60,6 @@ LIST="${startdir}/pkglist"
 if [ "`echo $package_list | grep ^http:`" != "" -o "`echo $package_list | grep ^ftp:`" != "" ] ; then
 	wget "$package_list" -O "${startdir}/pkglist"
 fi
-
 # List-tuning
 # Add
 if [ ! -z "$add_to_list" ] ; then
@@ -71,11 +70,14 @@ fi
 # Remove
 if [ ! -z "$remove_from_list" ] ; then
 	for i in $remove_from_list ; do
-		_SEDARG=${_SEDARG}|$i
+		if [ -z "$_SEDARG" ] ; then
+			_SEDARG="$i"
+		else
+			_SEDARG="${_SEDARG}|$i"
+		fi
 	done
 	sed -i "s/($_SEDARG)//g" $LIST
 fi
-
 
 # Installation
 if [ "$skip_stage1" = "" ] ; then
