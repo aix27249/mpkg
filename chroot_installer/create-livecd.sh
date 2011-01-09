@@ -123,7 +123,7 @@ mkdir -p $LIVE_ROOT/boot/
 cp $NODE/boot/vmlinuz-$KERNEL_VER $LIVE_ROOT/boot/vmlinuz$BITS
 
 # Generating initrd image
-mkinitrd -s $INITRD_ROOT -o $LIVE_ROOT/boot/initrd$BITS.img
+mkinitrd -s $INITRD_ROOT -o $LIVE_ROOT/boot/initrd$BITS.img -k $KERNEL_VER
 
 # Copying isolinux configs
 mkdir -p $LIVE_ROOT/isolinux
