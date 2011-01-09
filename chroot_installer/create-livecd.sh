@@ -119,7 +119,7 @@ mkinitrd -s $INITRD_ROOT -o $LIVE_ROOT/boot/initrd$BITS.img
 
 # Copying isolinux configs
 mkdir -p $LIVE_ROOT/isolinux
-cat $CWD/syslinux.cfg | sed ARCH/$BITS > $LIVE_ROOT/isolinux/syslinux.cfg
+cat $CWD/isolinux.cfg | sed s/@ARCH@/$BITS/g | sed "s/@ISO_TITLE@/${iso_title}/g" > $LIVE_ROOT/isolinux/isolinux.cfg
 
 # ISOLINUX binaries
 for i in linux.c32 vesamenu.c32 vesainfo.c32 isolinux.bin ; do
