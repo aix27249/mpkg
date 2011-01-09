@@ -89,7 +89,7 @@ rsync -arvh $NODE/etc/skel/ $NODE/root/
 # Custom actions. May vary for different live systems
 custom_actions
 
-OUTPUT=$LIVE_ROOT/fs32
+OUTPUT=$LIVE_ROOT/fs${BITS}
 mkdir -p $OUTPUT
 
 # Creating sfs files
@@ -109,6 +109,8 @@ rm -rf $INITRD_ROOT/lib/modules
 mkdir -p $INITRD_ROOT/$MOD_PATH/
 cp $NODE/$MOD_PATH/kernel/fs/squashfs/squashfs.ko $INITRD_ROOT/$MOD_PATH/
 cp $NODE/$MOD_PATH/kernel/fs/aufs/aufs.ko $INITRD_ROOT/$MOD_PATH/
+cp $NODE/$MOD_PATH/kernel/drivers/virtio/virtio*.ko $INITRD_ROOT/$MOD_PATH/
+cp $NODE/$MOD_PATH/kernel/drivers/block/virtio*.ko $INITRD_ROOT/$MOD_PATH/
 rm $INITRD_ROOT/load_kernel_modules
 
 # Copy kernel image
