@@ -5,6 +5,28 @@ package_list=http://core64.agilialinux.ru/setup_variants/minimal.list
 REPO=http://packages.agilialinux.ru/
 iso_title="AgiliaLinux minimal $arch"
 
+# Removes documentation AND devel components from image
+do_minimize=1
+# Or, you can specify only one part of it:
+#remove_docs=1
+#remove_devel=1
+
+# Root password. 
+root_password=root
+# It can be empty, but you need to specify it explicitly
+#empty_root_password=1
+
+user_name=agilia
+user_password=agilia
+# It can be empty, but you need to specify it explicitly
+#empty_user_password=1
+
+# Also, you can skip user creation:
+# no_user=1
+
+# You can override default groups for user. Do not do this unless you really need so
+#user_groups=kvm
+
 custom_actions() {
 	echo "Here can be some custom actions you need to perform."
 	# Also, you can use plugins like this:

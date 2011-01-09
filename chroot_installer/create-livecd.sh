@@ -64,19 +64,32 @@ NODE="$NODE" ${scriptdir}/add_default_services.sh
 # Rip out all documentation, includes and static libs
 CWD=${scriptdir}/live-elements
 
-if [ "$do_minimize" != "" ] ; then
+if [ "$remove_docs" != "" -o "$do_minimize" != ""] ; then
 	rm -rf $NODE/usr/doc
-	rm -rf $NODE/usr/include
 	rm -rf $NODE/usr/share/gtk-doc
 	rm -rf $NODE/usr/share/doc
+fi
+
+if [ "$remove_devel" != "" -o "$do_minimize" != ""] ; then
+	rm -rf $NODE/usr/include
+	rm -rf $NODE/usr/lib/*.a
+	rm -rf $NODE/usr/lib/*.la
+	if [ -d $NODE/usr/lib64 ] ; then
+		rm -rf $NODE/usr/lib64/*.a
+		rm -rf $NODE/usr/lib64/*.la
+	fi
+	rm -rf $NODE/lib/*.a
+	if [ -d $NODE/lib64 ] ; then
+		rm -rf $NODE/lib64/*.la
+	fi
 fi
 
 # Cache has to be removed anyway.
 rm -rf $NODE/var/mpkg/cache
 
 # Copy root stuff. Login as agilia with no password.
-cat $CWD/shadow > $NODE/etc/shadow
-cat $CWD/passwd > $NODE/etc/passwd
+# cat $CWD/shadow > $NODE/etc/shadow
+# cat $CWD/passwd > $NODE/etc/passwd
 cat $CWD/fstab > $NODE/etc/fstab
 
 # Copy X11 keymap
@@ -95,6 +108,32 @@ fi
 
 # Copy skel to root dir
 rsync -arvh $NODE/etc/skel/ $NODE/root/
+
+# Set root password if defined by ISOBUILD
+if [ "$root_password" = "" ] ; then
+	if [ "$empty_root_password" != "" ] ; then
+		root_password=root
+	fi
+fi
+
+chroot $NODE echo -ne "$root_password\n$root_password" | passwd root
+
+# Add standard user. If not specified, user will be agilia/agilia
+if [ "$no_user" = "" ] ; then
+	if [ "$user_name" = "" ] ; then
+		username=agilia
+	fi
+	if [ "$user_password" = "" ] ; then
+		if [ "$empty_user_password" != "" ] ; then
+			user_password=agilia
+		fi
+	fi
+	$user_groups=${user_groups:-audio,cdrom,floppy,video,netdev,plugdev,power}
+	chroot $NODE /usr/sbin/useradd -d /home/$user_name -m -g users -G $user_groups -s /bin/bash $username
+fi
+
+
+
 
 # Custom actions. May vary for different live systems
 custom_actions
