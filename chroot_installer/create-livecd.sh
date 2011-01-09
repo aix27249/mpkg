@@ -31,9 +31,13 @@ LIVE_ROOT="${LIVE_BUILD_ROOT}/${iso_name}-${ARCH}"
 ISO_FILENAME=${ISO_FILENAME:-${iso_name}-${ARCH}.iso}
 
 # Cleanup
-rm -rf "$NODE"
-rm -rf "$INITRD_ROOT"
-rm -rf "$LIVE_ROOT"
+if [ "$skip_stage1" = "" ] ; then
+	rm -rf "$NODE"
+fi
+if [ "$skip_stage2" = "" ] ; then
+	rm -rf "$INITRD_ROOT"
+	rm -rf "$LIVE_ROOT"
+fi
 
 # Let's go :)
 
@@ -58,19 +62,21 @@ if [ "`echo $package_list | grep ^http:`" != "" -o "`echo $package_list | grep ^
 fi
 
 # Installation
-ARCH=$ARCH LIST="$LIST" NODE="$NODE" REPO="$REPO" ${scriptdir}/install_virtual_machine.sh
-NODE="$NODE" ${scriptdir}/add_default_services.sh
+if [ "$skip_stage1" = "" ] ; then
+	ARCH=$ARCH LIST="$LIST" NODE="$NODE" REPO="$REPO" ${scriptdir}/install_virtual_machine.sh
+	NODE="$NODE" ${scriptdir}/add_default_services.sh
+fi
 
 # Rip out all documentation, includes and static libs
 CWD=${scriptdir}/live-elements
 
-if [ "$remove_docs" != "" -o "$do_minimize" != ""] ; then
+if [ "$remove_docs" = "1" -o "$do_minimize" = "1" ] ; then
 	rm -rf $NODE/usr/doc
 	rm -rf $NODE/usr/share/gtk-doc
 	rm -rf $NODE/usr/share/doc
 fi
 
-if [ "$remove_devel" != "" -o "$do_minimize" != ""] ; then
+if [ "$remove_devel" = "1" -o "$do_minimize" = "1" ] ; then
 	rm -rf $NODE/usr/include
 	rm -rf $NODE/usr/lib/*.a
 	rm -rf $NODE/usr/lib/*.la
@@ -111,12 +117,12 @@ rsync -arvh $NODE/etc/skel/ $NODE/root/
 
 # Set root password if defined by ISOBUILD
 if [ "$root_password" = "" ] ; then
-	if [ "$empty_root_password" != "" ] ; then
+	if [ "$empty_root_password" = "" ] ; then
 		root_password=root
 	fi
 fi
 
-chroot $NODE echo -ne "$root_password\n$root_password" | passwd root
+echo -ne "$root_password\n$root_password\n" | chroot $NODE passwd root
 
 # Add standard user. If not specified, user will be agilia/agilia
 if [ "$no_user" = "" ] ; then
@@ -128,8 +134,9 @@ if [ "$no_user" = "" ] ; then
 			user_password=agilia
 		fi
 	fi
-	$user_groups=${user_groups:-audio,cdrom,floppy,video,netdev,plugdev,power}
+	user_groups=${user_groups:-audio,cdrom,floppy,video,netdev,plugdev,power}
 	chroot $NODE /usr/sbin/useradd -d /home/$user_name -m -g users -G $user_groups -s /bin/bash $username
+	echo -ne "$root_password\n$root_password\n" | chroot $NODE passwd $user_name
 fi
 
 
