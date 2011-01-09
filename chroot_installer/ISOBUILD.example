@@ -27,6 +27,10 @@ user_password=agilia
 # You can override default groups for user. Do not do this unless you really need so
 #user_groups=kvm
 
+# You can add stuff to list or remove it
+add_to_list="agilia-gui-installer gcc-libs gcc-g++-libs gcc-java-libs"
+remove_from_list="gcc gcc-g++ gcc-java"
+
 custom_actions() {
 	echo "Here can be some custom actions you need to perform."
 	# Also, you can use plugins like this:

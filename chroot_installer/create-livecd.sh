@@ -61,6 +61,22 @@ if [ "`echo $package_list | grep ^http:`" != "" -o "`echo $package_list | grep ^
 	wget "$package_list" -O "${startdir}/pkglist"
 fi
 
+# List-tuning
+# Add
+if [ ! -z "$add_to_list" ] ; then
+	for i in $add_to_list ; do
+		echo $i >> ${LIST}
+	done
+fi
+# Remove
+if [ ! -z "$remove_from_list" ] ; then
+	for i in $remove_from_list ; do
+		_SEDARG=${_SEDARG}|$i
+	done
+	sed -i "s/($_SEDARG)//g" $LIST
+fi
+
+
 # Installation
 if [ "$skip_stage1" = "" ] ; then
 	ARCH=$ARCH LIST="$LIST" NODE="$NODE" REPO="$REPO" ${scriptdir}/install_virtual_machine.sh
@@ -192,6 +208,7 @@ done
 
 # Creating ISO
 mkdir -p $ISO_OUTPUT
+rm -f $ISO_OUTPUT/$ISO_FILENAME
 ISO_FILE=$ISO_OUTPUT/$ISO_FILENAME ISO_ROOT=$LIVE_ROOT $CWD/makeiso.sh
 set +e
 
