@@ -1,0 +1,2 @@
+sed -i "s/#AutoLoginEnable=true/AutoLoginEnable=true/g" ${NODE}/etc/kdm/kdmrc
+sed -i "s/#AutoLoginUser=fred/AutoLoginUser=${user_name}/g" ${NODE}/etc/kdm/kdmrc

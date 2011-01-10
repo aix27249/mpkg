@@ -38,7 +38,8 @@ INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mklivecd.conf" DESTINATION etc)
 # Plugins
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/plugins/remove_extra_locales" DESTINATION share/mklivecd/scripts/plugins)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/plugins/sudo_nopasswd" DESTINATION share/mklivecd/scripts/plugins)
-INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/plugins/gdm-gnome-autologin" DESTINATION share/mklivecd/scripts/plugins)
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/plugins/gdm-autologin" DESTINATION share/mklivecd/scripts/plugins)
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/plugins/kdm-autologin" DESTINATION share/mklivecd/scripts/plugins)
 
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/make_rootfs.sh" DESTINATION share/mklivecd/scripts/live-elements PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/makeiso.sh" DESTINATION share/mklivecd/scripts/live-elements PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE)
