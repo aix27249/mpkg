@@ -24,6 +24,9 @@ mkdir -p ${NODE}/{root,home,proc,sys,dev,mnt,media}
 mkdir -p ${NODE}/usr/local/{bin,lib,sbin,share,doc}
 mkdir -p ${NODE}/etc/init.d
 mkdir -p ${NODE}/etc/rc.d
+# This is for KDE:
+( cd ${NODE}/var ; ln -s ../tmp tmp )
+
 # For malformed packages
 ( cd ${NODE}/etc/rc.d ; ln -s ../init.d init.d )
 
