@@ -1,0 +1,2 @@
+echo -ne "[daemon]\nAutomaticLogin=$user_name\nAutomaticLoginEnable=True\n" > ${NODE}/etc/gdm/custom.conf
+
