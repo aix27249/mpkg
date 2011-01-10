@@ -68,16 +68,14 @@ if [ ! -z "$add_to_list" ] ; then
 	done
 fi
 # Remove
+set -x
 if [ ! -z "$remove_from_list" ] ; then
 	for i in $remove_from_list ; do
-		if [ -z "$_SEDARG" ] ; then
-			_SEDARG="$i"
-		else
-			_SEDARG="${_SEDARG}|$i"
-		fi
+		sed -i "s/^$i$//g" $LIST
 	done
-	sed -i "s/($_SEDARG)//g" $LIST
 fi
+# DEBUG
+exit 1
 
 # Installation
 if [ "$skip_stage1" = "" ] ; then
