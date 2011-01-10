@@ -5,9 +5,18 @@
 #include <QLocale>
 #include <QTranslator>
 int main(int argc, char *argv[]) {
-	
-	uid_t uid = getuid();
-	printf("Current UID: %d\n", uid);
+	// This should be run as root since libparted requires it.
+	if (getuid()) {
+		// trying to obtain root UID
+		setuid(0);
+		if (getuid()) {
+			string args;
+			for (int i=1; i<argc; ++i) {
+				args += string(argv[i]) + " ";
+			}
+			return system("xdg-su -c \"" + string(argv[0]) + " " + args + "\"");
+		}
+	}
 	if (FileExists("/var/run/guisetup_exec.pid")) {
 		string pid_locked = ReadFile("/var/run/guisetup_exec.pid").c_str();
 		if (isProcessRunning(pid_locked)) {
@@ -19,13 +28,13 @@ int main(int argc, char *argv[]) {
 	
 	
 	if (FileExists("/var/run/guisetup.pid")) {
-		string pid_locked = ReadFile("/tmp/guisetup.pid").c_str();
+		string pid_locked = ReadFile("/var/run/guisetup.pid").c_str();
 		if (isProcessRunning(pid_locked)) {
 			fprintf(stderr, "Another setup process %s is alrealy running.\n", pid_locked.c_str());
 			return 1;
 		}
 	}
-	WriteFile("/tmp/guisetup.pid", IntToStr(pid));
+	WriteFile("/var/run/guisetup.pid", IntToStr(pid));
 
 
 	setlocale(LC_ALL, "");

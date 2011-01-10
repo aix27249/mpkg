@@ -5,6 +5,19 @@
 #include <QLocale>
 #include <QTranslator>
 int main(int argc, char *argv[]) {
+	// This should be run as root since it does lots of things that require root privileges.
+	if (getuid()) {
+		// trying to obtain root UID
+		setuid(0);
+		if (getuid()) {
+			string args;
+			for (int i=1; i<argc; ++i) {
+				args += string(argv[i]) + " ";
+			}
+			return system("xdg-su -c \"" + string(argv[0]) + " " + args + "\"");
+		}
+	}
+
 	// Check for already running process
 	if (FileExists("/var/run/guisetup.pid")) {
 		string pid_locked = ReadFile("/var/run/guisetup.pid").c_str();
