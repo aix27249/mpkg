@@ -68,14 +68,11 @@ if [ ! -z "$add_to_list" ] ; then
 	done
 fi
 # Remove
-set -x
 if [ ! -z "$remove_from_list" ] ; then
 	for i in $remove_from_list ; do
 		sed -i "s/^$i$//g" $LIST
 	done
 fi
-# DEBUG
-exit 1
 
 # Installation
 if [ "$skip_stage1" = "" ] ; then
