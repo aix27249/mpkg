@@ -165,7 +165,7 @@ void MainWindow::runInstaller() {
 	}
 	unlink("/tmp/guisetup.pid"); // need to unlock before starting next process
 	string runString = "LC_ALL=" + settings->value("language").toString().toStdString() + " nohup guisetup_exec 2>&1 >/var/log/guisetup_exec.log &";
-	if (getuid()) runString = "gksu -k " + runString;
+	//if (getuid()) runString = "gksu -k " + runString;
 	system(runString);
 	qApp->quit();
 }
