@@ -708,7 +708,7 @@ void MainWindow::showSetupVariantDescription(QAbstractButton *btn) {
 	if (FileExists("/tmp/setup_variants/" + customPkgSetList[index].name + ".png")) image = new QImage(QString("/tmp/setup_variants/%1.png").arg(customPkgSetList[index].name.c_str()));
 	else image = new QImage("/usr/share/setup/default_image.png");
 
-	ui->setupVariantDescription->setText(tr("<p>%1</p><p></p>").arg(customPkgSetList[index].desc.c_str()).arg(customPkgSetList[index].full.c_str()));
+	ui->setupVariantDescription->setText(tr("%1").arg(customPkgSetList[index].full.c_str()));
 	ui->setupVariantImage->setPixmap(QPixmap::fromImage(*image));
 	QString hasX11, hasDM;
 	if (customPkgSetList[index].hasX11) hasX11 = tr("<b style='color: green;'>yes</b>");
@@ -796,24 +796,33 @@ void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSe
 	QVector <string> svSort;
 	svSort	<< "GNOME" << "KDE" << "OPENBOX" << "LXDE" << "XFCE" << "FLUXBOX" << "SERVER" << "MINIMAL";
 
-	// Fill in known variants
-	for (int i=0; i<svSort.size(); ++i) {
-		for (size_t t=0; t<customPkgSetList.size(); ++t) {
-			if (setupVariantMap.size()>=setupVariantButtons.size()) break; // No buttons available, sorry
-			if (customPkgSetList[t].name==svSort[i]) {
-				setupVariantMap[setupVariantButtons[setupVariantMap.size()]] = t;
-				printf("Loaded %s in sort queue\n", customPkgSetList[t].name.c_str());
+	// Four-step sorting procedure.
+	// First: with icons
+	// Fill in known variants.
+	for (int hasIcon=1; hasIcon>-1; --hasIcon) {
+		for (int i=0; i<svSort.size(); ++i) {
+			for (size_t t=0; t<customPkgSetList.size(); ++t) {
+				if (setupVariantMap.size()>=setupVariantButtons.size()) break; // No buttons available, sorry
+				if (setupVariantMap.key(t, NULL)!=NULL) continue; // Skipping already enqueued stuff
+				if (hasIcon && !FileExists("/tmp/setup_variants/" + customPkgSetList[t].name + "_logo.png")) continue;
+				if (customPkgSetList[t].name==svSort[i]) {
+					setupVariantMap[setupVariantButtons[setupVariantMap.size()]] = t;
+					printf("Loaded %s in sort queue\n", customPkgSetList[t].name.c_str());
+				}
 			}
 		}
-	}
-	// Now fill unknown ones
-	for (size_t i=0; i<customPkgSetList.size(); ++i) {
-		if (setupVariantMap.key(i, NULL)==NULL) {
-			setupVariantMap[setupVariantButtons[setupVariantMap.size()-1]] = i;
+		// Now fill unknown ones
+		for (size_t i=0; i<customPkgSetList.size(); ++i) {
+			if (setupVariantMap.size()>=setupVariantButtons.size()) break; // No buttons available, sorry
+			if (setupVariantMap.key(i, NULL)!=NULL) continue;
+			if (hasIcon && !FileExists("/tmp/setup_variants/" + customPkgSetList[i].name + "_logo.png")) continue;
+			setupVariantMap[setupVariantButtons[setupVariantMap.size()]] = i;
 			printf("Loaded %s in UNSORT queue\n", customPkgSetList[i].name.c_str());
 		}
-
+		// Terminator: if we have unfilled one, let it be empty
+		if (hasIcon && setupVariantMap.size()%2) setupVariantMap[setupVariantButtons[setupVariantMap.size()]] = -1;
 	}
+
 
 	// Now, lets show some action!
 	for (int i=0; i<setupVariantButtons.size(); ++i) {
