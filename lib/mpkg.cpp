@@ -1144,9 +1144,15 @@ int mpkgDatabase::commit_actions()
 				say("\n");
 				say(_("Continue? [Y/n]\n"));
 				string input;
+				bool skipBad;
 				while (input!="y" && input!="Y" && input!="yes" && input!="\n") {
 					input.clear();
 					input=cin.get();
+					skipBad = false;
+					for (size_t q=0; !skipBad && q<input.size(); ++q) {
+						if ((unsigned int) input[q]>127) skipBad = true;
+					}
+					if (skipBad) continue;
 					if (input=="n" || input=="N" || input == "no") return MPKGERROR_ABORTED;
 					if (input!="y" && input!="Y" && input!="yes" && input!="\n") {
 						say(_("Please answer Y (yes) or N (no)\n"));
