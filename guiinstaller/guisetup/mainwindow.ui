@@ -44,7 +44,7 @@
        <number>0</number>
       </property>
       <property name="currentIndex">
-       <number>11</number>
+       <number>7</number>
       </property>
       <widget class="QWidget" name="welcomePage">
        <layout class="QVBoxLayout" name="verticalLayout_26">
