@@ -164,6 +164,7 @@ void MainWindow::runInstaller() {
 		return;
 	}
 	unlink("/tmp/guisetup.pid"); // need to unlock before starting next process
+	// FIXME: This method falls process into zombie when running via gksu. Need a workaround
 	string runString = "LC_ALL=" + settings->value("language").toString().toStdString() + " nohup guisetup_exec 2>&1 >/var/log/guisetup_exec.log &";
 	//if (getuid()) runString = "gksu -k " + runString;
 	system(runString);
