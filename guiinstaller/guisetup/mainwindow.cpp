@@ -163,12 +163,10 @@ void MainWindow::runInstaller() {
 		QMessageBox::critical(this, tr("Please confirm settings"), tr("You chould confirm that settings are OK. Check the appropriate check box."));
 		return;
 	}
-	unlink("/tmp/guisetup.pid"); // need to unlock before starting next process
-	// FIXME: This method falls process into zombie when running via gksu. Need a workaround
-	//string runString = "LC_ALL=" + settings->value("language").toString().toStdString() + " nohup guisetup_exec 2>&1 >/var/log/guisetup_exec.log &";
-	string runString = "LC_ALL=" + settings->value("language").toString().toStdString() + " guisetup_exec 2>&1 >/var/log/guisetup_exec.log";
+	unlink("/var/run/guisetup.pid"); // need to unlock before starting next process
+	string runString = "LC_ALL=" + settings->value("language").toString().toStdString() + " nohup guisetup_exec 2>&1 >/var/log/guisetup_exec.log &";
+	//string runString = "LC_ALL=" + settings->value("language").toString().toStdString() + " guisetup_exec 2>&1 >/var/log/guisetup_exec.log";
 	//if (getuid()) runString = "gksu -k " + runString;
-	hide();
 	system(runString);
 	qApp->quit();
 }
