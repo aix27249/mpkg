@@ -108,7 +108,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(loadSetupVariantsThread, SIGNAL(finished(bool, const vector<CustomPkgSet> &)), this, SLOT(receiveLoadSetupVariants(bool, const vector<CustomPkgSet> &)));
 	connect(loadSetupVariantsThread, SIGNAL(sendLoadText(const QString &)), this, SLOT(getLoadText(const QString &)));
 	connect(loadSetupVariantsThread, SIGNAL(sendLoadProgress(int)), this, SLOT(getLoadProgress(int)));
-	connect(ui->quitButton, SIGNAL(clicked()), this, SLOT(askQuit()));
+	//connect(ui->quitButton, SIGNAL(clicked()), this, SLOT(askQuit()));
 
 	// Setup variants handling
 	//connect(ui->setupVariantsListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(showSetupVariantDescription(int)));
@@ -121,6 +121,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(ui->mountNoFormatRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterNoFormat(bool)));
 
 
+	ui->progressBar->setMaximum(ui->stackedWidget->count());
 	// Just in case...
 	system("mkdir -p /var/log/mount");
 
@@ -182,7 +183,8 @@ void MainWindow::nextButtonClick() {
 	if (ui->stackedWidget->currentIndex()==ui->stackedWidget->count()-1-shift) ui->nextButton->setEnabled(false);
 	else if (ui->stackedWidget->currentIndex()==0) ui->backButton->setEnabled(true);
 	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->currentIndex()+shift);
-	ui->statusbar->showMessage(tr("Step %1 of %2").arg(ui->stackedWidget->currentIndex()).arg(ui->stackedWidget->count()-1));
+	//ui->statusbar->showMessage(tr("Step %1 of %2").arg(ui->stackedWidget->currentIndex()).arg(ui->stackedWidget->count()-1));
+	ui->progressBar->setValue(ui->stackedWidget->currentIndex()+1);
 	updatePageData(ui->stackedWidget->currentIndex());
 }
 
@@ -193,7 +195,8 @@ void MainWindow::backButtonClick() {
 	if (ui->stackedWidget->currentIndex()==PAGE_INSTALLTYPE) shift=2;
 	while (!checkLoad(ui->stackedWidget->currentIndex()-shift)) shift--;
 	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->currentIndex()-shift);
-	ui->statusbar->showMessage(tr("Step %1 of %2").arg(ui->stackedWidget->currentIndex()).arg(ui->stackedWidget->count()-1));
+	ui->progressBar->setValue(ui->stackedWidget->currentIndex()+1);
+	//ui->statusbar->showMessage(tr("Step %1 of %2").arg(ui->stackedWidget->currentIndex()).arg(ui->stackedWidget->count()-1));
 	//updatePageData(ui->stackedWidget->currentIndex());
 
 }
@@ -297,9 +300,17 @@ void MainWindow::updatePageData(int index) {
 			break;
 		case PAGE_TIMEZONE:
 			loadTimezones();
+			ui->timezoneSearchEdit->setFocus(Qt::OtherFocusReason);
+			break;
+		case PAGE_ROOTPASSWORD:
+			ui->rootPasswordEdit->setFocus(Qt::OtherFocusReason);
+			break;
+		case PAGE_USERS:
+			ui->usernameEdit->setFocus(Qt::OtherFocusReason);
 			break;
 		case PAGE_NETWORKING:
 			loadNetworking();
+			ui->hostnameEdit->setFocus(Qt::OtherFocusReason);
 			break;
 		case PAGE_CONFIRMATION:
 			loadConfirmationData();
@@ -1151,16 +1162,11 @@ void MainWindow::mountFilterDontUse(bool enabled) {
 
 void MainWindow::loadNetworking() {
 	// Let's autogenerate hostname.
-	settings->beginGroup("users");
-	QStringList userList = settings->childKeys();
-	settings->endGroup();
-	if (!userList.isEmpty()) {
-		QString machineType;
-		if (system("laptop-detect")) machineType = "pc";
-		else machineType = "laptop";
+	QString machineType;
+	if (system("laptop-detect")) machineType = "pc";
+	else machineType = "laptop";
 
-		ui->hostnameEdit->setText(userList[0] + "-" + machineType);
-	}
+	ui->hostnameEdit->setText(ui->usernameEdit->text() + "-" + machineType);
 
 	// Now let's filter out network settings variants
 	int hasNetworkManager = system("[ \"`cat /tmp/setup_variants/" + settings->value("setup_variant").toString().toStdString() + ".list | grep '^NetworkManager$'`\" = \"\" ]");
