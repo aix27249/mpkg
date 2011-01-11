@@ -703,6 +703,8 @@ void MainWindow::showSetupVariantDescription(QAbstractButton *btn) {
 		ui->setupVariantDescription->clear();
 		return;
 	}
+
+	selectedSetupVariant=index;
 	ui->setupVariantInfoGroupBox->setTitle(tr("%1: detailed info").arg(customPkgSetList[index].name.c_str()));
 	QImage *image;
 	if (FileExists("/tmp/setup_variants/" + customPkgSetList[index].name + ".png")) image = new QImage(QString("/tmp/setup_variants/%1.png").arg(customPkgSetList[index].name.c_str()));
@@ -781,7 +783,6 @@ void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSe
 		backButtonClick();
 		return;
 	}
-	selectedSetupVariant=0;
 
 	customPkgSetList = _pkgSet;
 	settings->setValue("pkgsource", loadSetupVariantsThread->pkgsource);
