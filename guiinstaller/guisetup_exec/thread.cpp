@@ -190,7 +190,11 @@ bool SetupThread::prepareInstallQueue() {
 	vector<string> installset_contains;
 	if (!installset_filename.empty() && FileExists(installset_filename)) {
 		vector<string> versionz; // It'll be lost after, but we can't carry about it here: only one version is available.
-		parseInstallList(ReadFileStrings(installset_filename), installset_contains, versionz);
+		vector<string> pkgListStrings = ReadFileStrings(installset_filename);
+		if (settings->value("netman")=="networkmanager") pkgListStrings.push_back("NetworkManager");
+		else if (settings->value("netman")=="wicd") pkgListStrings.push_back("wicd");
+		parseInstallList(pkgListStrings, installset_contains, versionz);
+		pkgListStrings.clear();
 		if (installset_contains.empty()) {
 			reportError(tr("Package set contains no packages, installation failed."));
 			return false;
@@ -1138,9 +1142,7 @@ void SetupThread::setupNetwork() {
 		system("chroot /tmp/new_sysroot rc-update add networkmanager default");
 	}
 	else if (settings->value("netman").toString()=="netconfig") {
-		// This is just a TODO mark to setup network here
-		// Requires some GUI to get parameters.
-		//system("chroot /tmp/new_sysroot netconfig2 set USE_DHCP eth0 yes");
+		// This requires manual network configuration. Left to user.
 	}
 
 }

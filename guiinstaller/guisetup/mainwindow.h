@@ -109,6 +109,7 @@ class MainWindow: public QMainWindow {
 		void processMountEdit(QTreeWidgetItem *item);
 		void loadBootloaderTree();
 		void loadSetupVariants();
+		void loadNetworking();
 		void loadTimezones();
 		void loadConfirmationData();
 		bool checkNvidiaLoad();
@@ -138,7 +139,6 @@ class MainWindow: public QMainWindow {
 
 enum {
 	PAGE_WELCOME = 0,
-	PAGE_NETWORKING,
 	PAGE_PKGSOURCE,
 	PAGE_WAITPKGSOURCE,
 	PAGE_INSTALLTYPE,
@@ -148,6 +148,7 @@ enum {
 	PAGE_BOOTLOADER,
 	PAGE_ROOTPASSWORD,
 	PAGE_USERS,
+	PAGE_NETWORKING,
 	PAGE_TIMEZONE,
 	PAGE_CONFIRMATION
 };

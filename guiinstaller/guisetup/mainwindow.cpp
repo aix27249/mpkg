@@ -298,6 +298,9 @@ void MainWindow::updatePageData(int index) {
 		case PAGE_TIMEZONE:
 			loadTimezones();
 			break;
+		case PAGE_NETWORKING:
+			loadNetworking();
+			break;
 		case PAGE_CONFIRMATION:
 			loadConfirmationData();
 		default:
@@ -1146,4 +1149,26 @@ void MainWindow::mountFilterDontUse(bool enabled) {
 	ui->mountNoFormatRadioButton->setChecked(true);
 }
 
+void MainWindow::loadNetworking() {
+	// Let's autogenerate hostname.
+	settings->beginGroup("users");
+	QStringList userList = settings->childKeys();
+	settings->endGroup();
+	if (!userList.isEmpty()) {
+		QString machineType;
+		if (system("laptop-detect")) machineType = "pc";
+		else machineType = "laptop";
 
+		ui->hostnameEdit->setText(userList[0] + "-" + machineType);
+	}
+
+	// Now let's filter out network settings variants
+	int hasNetworkManager = system("[ \"`cat /tmp/setup_variants/" + settings->value("setup_variant").toString().toStdString() + ".list | grep '^NetworkManager$'`\" = \"\" ]");
+	int hasWicd = system("[ \"`cat /tmp/setup_variants/" + settings->value("setup_variant").toString().toStdString() + ".list | grep '^wicd$'`\" = \"\" ]");
+
+	// Now let's choose some stuff. First, select default settings
+	if (hasNetworkManager) ui->netNMRadioButton->setChecked(true);
+	else if (hasWicd) ui->netWicdRadioButton->setChecked(true);
+	else ui->netNetconfigRadioButton->setChecked(true);
+
+}
