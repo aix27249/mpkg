@@ -72,6 +72,7 @@ INSTALL(TARGETS guisetup
 		RUNTIME DESTINATION bin
 		)
 INSTALL(FILES ${icons} DESTINATION share/setup/icons)
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/default_image.png" DESTINATION share/setup)
 INSTALL(FILES ${l10n} DESTINATION share/setup/l10n)
 INSTALL(FILES ${desktop} DESTINATION share/applications)
 

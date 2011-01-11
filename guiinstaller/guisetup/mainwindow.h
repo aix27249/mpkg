@@ -14,7 +14,7 @@ namespace Ui {
 	class MainWindowClass;
 }
 class QSettings;
-
+class HelpForm;
 
 
 class MountOptions {
@@ -79,6 +79,14 @@ class MainWindow: public QMainWindow {
 		int hasNvidia;
 		map<int, bool> skipPages;
 		QTranslator *translator;
+		HelpForm *helpWindow;
+		void initSetupVariantButtons();
+		void hideAllSetupVariantButtons();
+		void loadSetupVariantButton(QPushButton *, int);
+		QVector<QPushButton *> setupVariantButtons; // Technically useless, but good for code compaction
+		QMap<QPushButton *, int> setupVariantMap;
+		size_t selectedSetupVariant;
+		QButtonGroup *svButtonGroup;
 
 
 
@@ -115,7 +123,7 @@ class MainWindow: public QMainWindow {
 		void runInstaller();
 		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);
 		
-		void showSetupVariantDescription(int);
+		void showSetupVariantDescription(QAbstractButton *);
 
 		void mountFilterNoFormat(bool);
 		void mountFilterCustom(bool);

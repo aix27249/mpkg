@@ -72,7 +72,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	guiObject = this;
 	ui->setupUi(this);
-	ui->helpBrowserDockWidget->hide();
+	helpWindow = new HelpForm;
+	initSetupVariantButtons();
+	hideAllSetupVariantButtons();
+	svButtonGroup = new QButtonGroup;
+	for (int i=0; i<setupVariantButtons.size(); ++i) {
+		svButtonGroup->addButton(setupVariantButtons[i], i);
+	}
+	connect(svButtonGroup, SIGNAL(buttonClicked(QAbstractButton *)), this, SLOT(showSetupVariantDescription(QAbstractButton *)));
 	ui->releaseNotesTextBrowser->hide();
 	//setWindowState(Qt::WindowMaximized);
 	connect(ui->nextButton, SIGNAL(clicked()), this, SLOT(nextButtonClick()));
@@ -104,7 +111,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(ui->quitButton, SIGNAL(clicked()), this, SLOT(askQuit()));
 
 	// Setup variants handling
-	connect(ui->setupVariantsListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(showSetupVariantDescription(int)));
+	//connect(ui->setupVariantsListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(showSetupVariantDescription(int)));
 
 	// Mountpoints action filtering
 	connect(ui->mountDontUseRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterDontUse(bool)));
@@ -140,18 +147,11 @@ void MainWindow::loadHelp() {
 		QMessageBox::information(this, tr("No help available"), tr("Sorry, no help available at %1").arg(QString::fromStdString(helpPath)));
 		return;
 	}
-	ui->helpBrowser->setText(text);
+	helpWindow->loadText(text);
 }
 
 void MainWindow::showHelp() {
-	if (ui->helpBrowserDockWidget->isHidden()) {
-		ui->helpBrowserDockWidget->show();
-		ui->helpButton->setText(tr("Hide help (F1)"));
-	}
-	else {
-		ui->helpBrowserDockWidget->hide();
-		ui->helpButton->setText(tr("Show help (F1)"));
-	}
+	helpWindow->show();
 }
 
 void MainWindow::askQuit() {
@@ -697,16 +697,18 @@ void MainWindow::loadSetupVariants() {
 	ui->backButton->setEnabled(false);
 }
 
-void MainWindow::showSetupVariantDescription(int index) {
+void MainWindow::showSetupVariantDescription(QAbstractButton *btn) {
+	int index = setupVariantMap.value((QPushButton *) btn, -1);
 	if (index<0 || index>=(int) customPkgSetList.size()) {
 		ui->setupVariantDescription->clear();
 		return;
 	}
+	ui->setupVariantInfoGroupBox->setTitle(tr("%1: detailed info").arg(customPkgSetList[index].name.c_str()));
 	QImage *image;
 	if (FileExists("/tmp/setup_variants/" + customPkgSetList[index].name + ".png")) image = new QImage(QString("/tmp/setup_variants/%1.png").arg(customPkgSetList[index].name.c_str()));
 	else image = new QImage("/usr/share/setup/default_image.png");
 
-	ui->setupVariantDescription->setText(tr("<p>%1</p><p><b>Description:</b> %2</p><p><b>Packages to install:</b> %3 (%4)</p><p><b>Disk space required:</b> %5</p><p>Please note that space requirement is estimated very approximately and does not respect partitioning scheme, temporary files and required space for work.</p>").arg(customPkgSetList[index].desc.c_str()).arg(customPkgSetList[index].full.c_str()).arg(customPkgSetList[index].count).arg(humanizeSize(customPkgSetList[index].csize).c_str()).arg(humanizeSize(customPkgSetList[index].isize).c_str()));
+	ui->setupVariantDescription->setText(tr("<p>%1</p><p></p>").arg(customPkgSetList[index].desc.c_str()).arg(customPkgSetList[index].full.c_str()));
 	ui->setupVariantImage->setPixmap(QPixmap::fromImage(*image));
 	QString hasX11, hasDM;
 	if (customPkgSetList[index].hasX11) hasX11 = tr("<b style='color: green;'>yes</b>");
@@ -714,10 +716,40 @@ void MainWindow::showSetupVariantDescription(int index) {
 	if (customPkgSetList[index].hasDM) hasDM = tr("<b style='color: green;'>yes</b>");
 	else hasDM = tr("<span style='color: red;'>no</span>");
 
-	ui->setupVariantMetaFlags->setText(tr("<b>GUI:</b> %1<br><b>GUI login:</b> %2<br>Hardware requirements:<br>%3").arg(hasX11).arg(hasDM).arg(customPkgSetList[index].hw.c_str()));
+	ui->setupVariantMetaFlags->setText(tr("<h1>%1</h1><b>GUI:</b> %2<br><b>GUI login:</b> %3<br><b>Hardware requirements:</b> %4<br><b>Packages to install:</b> %5 (%6)<br><b>Disk space required:</b> %7").\
+			arg(customPkgSetList[index].desc.c_str()).\
+			arg(hasX11).\
+			arg(hasDM).\
+			arg(customPkgSetList[index].hw.c_str()).\
+			arg(customPkgSetList[index].count).\
+			arg(humanizeSize(customPkgSetList[index].csize).c_str()).\
+			arg(humanizeSize(customPkgSetList[index].isize).c_str()));
 	delete image;
 }
+void MainWindow::initSetupVariantButtons() {
+	setupVariantButtons.clear();
+	setupVariantButtons.push_back(ui->sv1Button);
+	setupVariantButtons.push_back(ui->sv2Button);
+	setupVariantButtons.push_back(ui->sv3Button);
+	setupVariantButtons.push_back(ui->sv4Button);
+	setupVariantButtons.push_back(ui->sv5Button);
+	setupVariantButtons.push_back(ui->sv6Button);
+	setupVariantButtons.push_back(ui->sv7Button);
+	setupVariantButtons.push_back(ui->sv8Button);
+	setupVariantButtons.push_back(ui->sv9Button);
+	setupVariantButtons.push_back(ui->sv10Button);
+	setupVariantButtons.push_back(ui->sv11Button);
+	setupVariantButtons.push_back(ui->sv12Button);
+	
 
+
+}
+
+void MainWindow::hideAllSetupVariantButtons() {
+	for (int i=0; i<setupVariantButtons.size(); ++i) {
+		setupVariantButtons[i]->hide();
+	}
+}
 void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSet> &_pkgSet) {
 	if (!success) {
 		if (settings->value("pkgsource")=="dvd") {
@@ -742,6 +774,14 @@ void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSe
 
 		}
 	}
+	if (_pkgSet.empty()) {
+		QMessageBox::information(this, tr("No setup variants detected"), tr("Sorry, no setup variants detected in selected repository. Please select another one."));
+		ui->nextButton->setEnabled(true);
+		ui->backButton->setEnabled(true);
+		backButtonClick();
+		return;
+	}
+	selectedSetupVariant=0;
 
 	customPkgSetList = _pkgSet;
 	settings->setValue("pkgsource", loadSetupVariantsThread->pkgsource);
@@ -750,17 +790,53 @@ void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSe
 	settings->setValue("volname", loadSetupVariantsThread->volname.c_str());
 	settings->setValue("rep_location", loadSetupVariantsThread->rep_location.c_str());
 	
-	ui->setupVariantsListWidget->clear();
-	QListWidgetItem *item;
-	for (size_t i=0; i<customPkgSetList.size(); ++i) {
-		item = new QListWidgetItem(customPkgSetList[i].name.c_str(), ui->setupVariantsListWidget);
+	// Smart-loading buttons
+	hideAllSetupVariantButtons();
+	setupVariantMap.clear();
+	QVector <string> svSort;
+	svSort	<< "GNOME" << "KDE" << "OPENBOX" << "LXDE" << "XFCE" << "FLUXBOX" << "SERVER" << "MINIMAL";
+
+	// Fill in known variants
+	for (int i=0; i<svSort.size(); ++i) {
+		for (size_t t=0; t<customPkgSetList.size(); ++t) {
+			if (setupVariantMap.size()>=setupVariantButtons.size()) break; // No buttons available, sorry
+			if (customPkgSetList[t].name==svSort[i]) {
+				setupVariantMap[setupVariantButtons[setupVariantMap.size()]] = t;
+				printf("Loaded %s in sort queue\n", customPkgSetList[t].name.c_str());
+			}
+		}
 	}
+	// Now fill unknown ones
+	for (size_t i=0; i<customPkgSetList.size(); ++i) {
+		if (setupVariantMap.key(i, NULL)==NULL) {
+			setupVariantMap[setupVariantButtons[setupVariantMap.size()-1]] = i;
+			printf("Loaded %s in UNSORT queue\n", customPkgSetList[i].name.c_str());
+		}
+
+	}
+
+	// Now, lets show some action!
+	for (int i=0; i<setupVariantButtons.size(); ++i) {
+		if (setupVariantMap.value(setupVariantButtons[i], -1)>=0) {
+			loadSetupVariantButton(setupVariantButtons[i], setupVariantMap.value(setupVariantButtons[i]));
+		}
+	}
+	// NOTE: we assume that at least one button exists. Be aware!
+	showSetupVariantDescription(setupVariantButtons[0]);
 
 	ui->nextButton->setEnabled(true);
 	ui->backButton->setEnabled(true);
 	nextButtonClick();
 }
+void MainWindow::loadSetupVariantButton(QPushButton * btn, int index) {
+	QImage *image = NULL;
+	if (FileExists("/tmp/setup_variants/" + customPkgSetList[index].name + "_logo.png")) image = new QImage(QString("/tmp/setup_variants/%1_logo.png").arg(customPkgSetList[index].name.c_str()));
+	btn->setText("");
+	if (image) btn->setIcon(QIcon(QPixmap::fromImage(*image)));
+	else btn->setText(customPkgSetList[index].name.c_str());
+	btn->show();
 
+}
 void MainWindow::loadTimezones() {
 	string tmpfile = get_tmp_file();
 	system("( cd /usr/share/zoneinfo && find . -type f | sed -e 's/\\.\\///g') > " + tmpfile);
@@ -774,8 +850,7 @@ void MainWindow::loadTimezones() {
 }
 
 void MainWindow::saveSetupVariant() {
-	int index = ui->setupVariantsListWidget->currentRow();
-	if (index!=-1) settings->setValue("setup_variant", customPkgSetList[index].name.c_str());
+	settings->setValue("setup_variant", customPkgSetList[selectedSetupVariant].name.c_str());
 }
 
 void MainWindow::saveTimezone() {
