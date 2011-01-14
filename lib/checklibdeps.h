@@ -24,10 +24,11 @@ class PkgScanResults {
 		void parseUndefined(const string & filename, const string & data);
 		void parseNotFound(const string & filename, const string & data);
 
-		size_t size();
+		size_t size() const;
 
-		vector<string> getLostSymbols(vector<string> symFilter);
-		vector<string> getLostLibs(vector<string> libFilter);
+		vector<string> getLostSymbols(const vector<string>& symFilter) const;
+		vector<string> getLostLibs(const vector<string>& libFilter) const;
+		size_t filteredSize(const vector<string>& symFilter, const vector<string>& libFilter) const;
 };
 
 

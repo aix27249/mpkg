@@ -44,11 +44,11 @@ bool PkgScanResults::isUndefinedSym(const string &data_str) {
 	return false;
 }
 
-size_t PkgScanResults::size() {
+size_t PkgScanResults::size() const {
 	return symbolErrors.size() + notFoundErrors.size();
 }
 
-vector<string> PkgScanResults::getLostSymbols(vector<string> symFilter) {
+vector<string> PkgScanResults::getLostSymbols(const vector<string>& symFilter) const {
 	vector<string> ret;
 	bool found;
 	for (size_t i=0; i<symbolErrors.size(); ++i) {
@@ -71,7 +71,7 @@ vector<string> PkgScanResults::getLostSymbols(vector<string> symFilter) {
 	return ret;
 }
 
-vector<string> PkgScanResults::getLostLibs(vector<string> libFilter) {
+vector<string> PkgScanResults::getLostLibs(const vector<string>& libFilter) const {
 	vector<string> ret;
 	bool found;
 	for (size_t i=0; i<notFoundErrors.size(); ++i) {
@@ -94,7 +94,9 @@ vector<string> PkgScanResults::getLostLibs(vector<string> libFilter) {
 	return ret;
 }
 
-
+size_t PkgScanResults::filteredSize(const vector<string>& symFilter, const vector<string>& libFilter) const {
+	return getLostSymbols(symFilter).size() + getLostLibs(libFilter).size();
+}
 
 
 // Overloaded for list
@@ -103,9 +105,9 @@ map<const PACKAGE *, PkgScanResults> checkRevDeps(const PACKAGE_LIST &pkgList, b
 	for (size_t i=0; i<pkgList.size(); ++i) {
 		// If not installed - skip it
 		if (!pkgList[i].installed()) continue;
-		printf("[%d/%d] %s\n", (int) i+1, (int) pkgList.size(), pkgList[i].get_name().c_str());
+		fprintf(stderr, "[%d/%d] %s\n", (int) i+1, (int) pkgList.size(), pkgList[i].get_name().c_str());
 		ret[&pkgList[i]] = checkRevDeps(pkgList[i], fast);
-		if (ret[&pkgList[i]].size()>0) printf("\t%sERRORS:%s %d\n", CL_RED, CL_WHITE, (int) ret[&pkgList[i]].size());
+		if (ret[&pkgList[i]].size()>0) fprintf(stderr, "\t%sERRORS:%s %d\n", CL_RED, CL_WHITE, (int) ret[&pkgList[i]].size());
 	}
 	return ret;
 }

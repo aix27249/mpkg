@@ -3,9 +3,16 @@
 #include <mpkg/checklibdeps.h>
 int print_usage() {
 	printf(_("mpkg-checklibdeps: checks binary dependencies using ldd for missing libraries\n"));
-	printf(_("Usage: mpkg-checklibdeps [PKGNAME] - checks package for errors\n"));
+	printf(_("Usage: mpkg-checklibdeps [PKGNAME] [OPTIONS] - checks specified package for errors\n"));
 	printf(_("Running mpkg-checklibdeps without parameters will check whole system.\n"));
-	printf(_("Output will be written to /var/log/mpkg-checklibdeps.log and /var/log/mpkg-checklibdeps-extended.log"));
+	printf(_("Available options:"));
+	printf(_("\t-h\t--help\tShow this help\n"));
+	printf(_("\t-f\t--help\tFast mode: skip directories which rarely contains anything that does make sence\n"));
+	printf(_("\t-l\t--filter-lib=LIBRARY\tFilter errors for specified library. Example: -l libgmp.so.1\n"));
+	printf(_("\t-s\t--filter-sym=SYMBOL\tFilter errors for specified symbol. Example: -s PythonUnicode_UCS2_FromLatin1\n"));
+	printf(_("\t-c\t--compact\tCompact mode: makes output more machine-readable\n"));
+	printf(_("\t-v\t--verbose\tVerbose mode: shows names of missing libs and symbols\n"));
+	printf(_("\t-V\t--very-verbose\tVery verbose mode: shows maximum details\n"));
 	return 0;
 }
 
@@ -101,7 +108,7 @@ int main(int argc, char **argv) {
 	// NOTE: due to STL map implementation, it's size may increase with read-only operations, so please use errorCount variable if you wanna know initial count of packages affected by troubles.
 	size_t errorCount = scanResults.size();
 
-	printf("Total: %d possibly broken packages\n", (int) errorCount);
+	if (!compact) printf("Total: %d possibly broken packages\n", (int) errorCount);
 
 	if (get_xml) {
 	}
@@ -111,8 +118,12 @@ int main(int argc, char **argv) {
 			if (!pkgList[i].installed()) continue;
 			res = scanResults[&pkgList[i]];
 			if (res.size()==0) continue;
-			printf("%s-%s: %d errors\n", pkgList[i].get_name().c_str(), pkgList[i].get_fullversion().c_str(), (int) res.size());
-			if (verbose_level>0) {
+			if (!symFilter.empty() || !libFilter.empty()) {
+				if (res.filteredSize(symFilter, libFilter)==0) continue;
+			}
+			if (!compact) printf("%s-%s: %d errors\n", pkgList[i].get_name().c_str(), pkgList[i].get_fullversion().c_str(), (int) res.size());
+			else printf("%s\n", pkgList[i].get_name().c_str());
+			if (verbose_level>0 && !compact) {
 				vector<string> sE = res.getLostSymbols(symFilter);
 				vector<string> lE = res.getLostLibs(libFilter);
 				printf("\tSymbol errors: %d\n", (int) sE.size());
@@ -125,7 +136,7 @@ int main(int argc, char **argv) {
 				}
 			}
 			if (verbose_level>1) {
-				printf("\tDetails:\n");
+				if (!compact) printf("\tDetails:\n");
 				for (size_t t=0; t<res.symbolErrors.size(); ++t) {
 					cout << "\t\tUNRESOLVED: " << res.symbolErrors[t].symbol << " (" << res.symbolErrors[t].filename << ")" << endl;
 				}
