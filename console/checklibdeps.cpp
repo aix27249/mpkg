@@ -1,5 +1,6 @@
 #include <mpkg/libmpkg.h>
 #include <mpkg/terminal.h>
+#include <mpkg/checklibdeps.h>
 int print_usage() {
 	printf(_("mpkg-checklibdeps: checks binary dependencies using ldd for missing libraries\n"));
 	printf(_("Usage: mpkg-checklibdeps [PKGNAME] - checks package for errors\n"));
@@ -7,7 +8,143 @@ int print_usage() {
 	printf(_("Output will be written to /var/log/mpkg-checklibdeps.log and /var/log/mpkg-checklibdeps-extended.log"));
 	return 0;
 }
+
 int main(int argc, char **argv) {
+
+	setlocale(LC_ALL, "");
+	bindtextdomain( "mpkg", "/usr/share/locale");
+	textdomain("mpkg");
+
+	int ich;
+	const char* program_name;
+	extern int optind;
+	extern char* optarg;
+	const char* short_opt = "fhxvVcs:l:";
+	const struct option long_options[] =  {
+		{ "help",		0, NULL,	'h'},
+		{ "fast", 		0, NULL,	'f'},
+		{ "get-xml",		0, NULL,	'x'},
+		{ "verbose",		0, NULL,	'v'},
+		{ "very-verbose",	0, NULL,	'V'},
+		{ "compact",		0, NULL,	'c'},
+		{ "filter-lib",		1, NULL,	'l'},
+		{ "filter-symbol",	1, NULL,	's'},
+		{ NULL, 		0, NULL, 	0}
+	};
+
+	bool fast = false;
+	bool get_xml = false;
+	bool compact = false;
+
+	vector<string> symFilter, libFilter;
+
+
+	int verbose_level = 0;
+	_cmdOptions["sql_readonly"] = "yes";
+	program_name = argv[0];
+	do {
+		ich = getopt_long(argc, argv, short_opt, long_options, NULL);
+		
+
+		switch (ich) {
+			case 'h':
+			case '?':
+					return print_usage();
+			case 'f':
+					fast = true;
+					break;
+			case 'x':
+					get_xml = true;
+					break;
+			case 'v':
+					verbose_level = 1;
+					break;
+			case 'V':
+					verbose_level = 2;
+					break;
+			case 'c':
+					compact = true;
+					break;
+
+			case 'l':
+					libFilter.push_back((string) optarg);
+					break;
+
+			case 's':
+					symFilter.push_back((string) optarg);
+					break;
+
+			case -1:
+					break;
+					
+
+			default:
+					abort();
+		}
+	
+	}  while ( ich != -1 );
+
+
+	PACKAGE_LIST pkgList;
+	mpkg *core = new mpkg;
+	SQLRecord sqlSearch;
+	for (int i=optind; i<argc; ++i) {
+		sqlSearch.addField("package_name", (string) argv[i]);
+	}
+	if (sqlSearch.empty()) sqlSearch.addField("package_installed", 1);
+	core->get_packagelist(sqlSearch, &pkgList);
+	core->db->get_full_filelist(&pkgList);
+	delete core;
+
+	map<const PACKAGE *, PkgScanResults> scanResults = checkRevDeps(pkgList, fast);
+
+	// NOTE: due to STL map implementation, it's size may increase with read-only operations, so please use errorCount variable if you wanna know initial count of packages affected by troubles.
+	size_t errorCount = scanResults.size();
+
+	printf("Total: %d possibly broken packages\n", (int) errorCount);
+
+	if (get_xml) {
+	}
+	else {
+		PkgScanResults res;
+		for (size_t i=0; i<pkgList.size(); ++i) {
+			if (!pkgList[i].installed()) continue;
+			res = scanResults[&pkgList[i]];
+			if (res.size()==0) continue;
+			printf("%s-%s: %d errors\n", pkgList[i].get_name().c_str(), pkgList[i].get_fullversion().c_str(), (int) res.size());
+			if (verbose_level>0) {
+				vector<string> sE = res.getLostSymbols(symFilter);
+				vector<string> lE = res.getLostLibs(libFilter);
+				printf("\tSymbol errors: %d\n", (int) sE.size());
+				for (size_t t=0; t<sE.size(); ++t) {
+					cout << "\t\t" << sE[t] << endl;
+				}
+				printf("\tLibrary errors: %d\n", (int) lE.size());
+				for (size_t t=0; t<lE.size(); ++t) {
+					cout << "\t\t" << lE[t] << endl;
+				}
+			}
+			if (verbose_level>1) {
+				printf("\tDetails:\n");
+				for (size_t t=0; t<res.symbolErrors.size(); ++t) {
+					cout << "\t\tUNRESOLVED: " << res.symbolErrors[t].symbol << " (" << res.symbolErrors[t].filename << ")" << endl;
+				}
+				for (size_t t=0; t<res.notFoundErrors.size(); ++t) {
+					cout << "\t\tNOT FOUND: " << res.notFoundErrors[t].libname << " (" << res.notFoundErrors[t].filename << ")" << endl;
+				}
+			}
+
+		}
+	}
+
+	
+	
+
+}
+/*
+
+
+int main_old(int argc, char **argv) {
 	mpkg core;
 	SQLTable files;
 	SQLRecord fields;
@@ -75,3 +212,5 @@ int main(int argc, char **argv) {
 	WriteFileStrings("/var/log/mpkg-checklibdeps_extended.log", ePkgErrList);
 	return 0;
 }
+
+*/
