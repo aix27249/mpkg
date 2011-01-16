@@ -1142,6 +1142,7 @@ void SetupThread::setupNetwork() {
 		system("chroot /tmp/new_sysroot rc-update add networkmanager default");
 	}
 	else if (settings->value("netman").toString()=="netconfig") {
+		system("chroot /tmp/new_sysroot rc-update add network default");
 		// This requires manual network configuration. Left to user.
 	}
 
@@ -1158,6 +1159,9 @@ void SetupThread::copyMPKGConfig() {
 
 void SetupThread::setDefaultRunlevels() {
 // We don't know which of them are in system in real, but let's try them all
+
+	system("chroot /tmp/new_sysroot rc-update add mdadm boot");
+	system("chroot /tmp/new_sysroot rc-update add lvm boot");
 	system("chroot /tmp/new_sysroot rc-update add sysfs sysinit");
 	system("chroot /tmp/new_sysroot rc-update add udev sysinit");
 	system("chroot /tmp/new_sysroot rc-update add consolefont default");

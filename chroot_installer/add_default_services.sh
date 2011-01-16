@@ -1,4 +1,5 @@
 #!/bin/sh
+BOOT_SERVICE_LIST="mdadm lvm"
 SYS_SERVICE_LIST="sysfs udev"
 DEF_SERVICE_LIST="consolefont \
 	hald \
@@ -11,6 +12,13 @@ DEF_SERVICE_LIST="consolefont \
 	gdm \
 	kdm \
 	networkmanager"
+
+for i in $BOOT_SERVICE_LIST ; do
+	if [ -f "$NODE/etc/init.d/$i" ] ; then
+		( cd ${NODE}/etc/runlevels/boot ; ln -s /etc/init.d/$i $i )
+	fi
+done
+
 
 for i in $SYS_SERVICE_LIST ; do
 	if [ -f "$NODE/etc/init.d/$i" ] ; then
