@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-16 21:47+0300\n"
+"POT-Creation-Date: 2011-01-17 00:23+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -363,12 +363,27 @@ msgstr ""
 msgid "\t-z    --no-dep            totally ignore dependencies existance\n"
 msgstr ""
 
+#: ../console/checklibdeps.cpp:139
+#, c-format
+msgid "\tDetails:\n"
+msgstr ""
+
+#: ../console/checklibdeps.cpp:133
+#, c-format
+msgid "\tLibrary errors: %d\n"
+msgstr ""
+
 #: ../lib/menu.cpp:785
 msgid "\tPackage contains no files\n"
 msgstr ""
 
 #: ../lib/menu.cpp:791
 msgid "\tPackage is not installed\n"
+msgstr ""
+
+#: ../console/checklibdeps.cpp:129
+#, c-format
+msgid "\tSymbol errors: %d\n"
 msgstr ""
 
 #: ../console/installpkg-ng2.cpp:1385
@@ -1183,6 +1198,11 @@ msgstr ""
 #: ../lib/mpkgsys.cpp:510
 #, c-format
 msgid "%s-%s doesn't present in the system\n"
+msgstr ""
+
+#: ../console/checklibdeps.cpp:124
+#, c-format
+msgid "%s-%s: %d errors\n"
 msgstr ""
 
 #: ../console/installpkg-ng2.cpp:873
@@ -4888,6 +4908,11 @@ msgstr ""
 #: ../lib/menu.cpp:451 ../lib/menu.cpp:990
 #, c-format
 msgid "Total: %d packages\n"
+msgstr ""
+
+#: ../console/checklibdeps.cpp:111
+#, c-format
+msgid "Total: %d possibly broken packages\n"
 msgstr ""
 
 #: ../lib/menu.cpp:305

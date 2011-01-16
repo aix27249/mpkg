@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-16 21:47+0300\n"
+"POT-Creation-Date: 2011-01-17 00:23+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -816,6 +816,16 @@ msgid "\t-z    --no-dep            totally ignore dependencies existance\n"
 msgstr ""
 "\t-z    --no-dep            повністю ігнорувати існування залежностей\n"
 
+#: ../console/checklibdeps.cpp:139
+#, c-format
+msgid "\tDetails:\n"
+msgstr ""
+
+#: ../console/checklibdeps.cpp:133
+#, c-format
+msgid "\tLibrary errors: %d\n"
+msgstr ""
+
 #: installpkg-ng2.cpp:703 installpkg-ng2.cpp:707 installpkg-ng2.cpp:727
 #: installpkg-ng2.cpp:862 installpkg-ng2.cpp:915 installpkg-ng2.cpp:985
 #: installpkg-ng2.cpp:1049 installpkg-ng2.cpp:1059 installpkg-ng2.cpp:1061
@@ -839,6 +849,11 @@ msgstr "\tПакет не має жодного файлу\n"
 #: ../lib/menu.cpp:852 ../lib/menu.cpp:791
 msgid "\tPackage is not installed\n"
 msgstr "\tПакет не встановлений\n"
+
+#: ../console/checklibdeps.cpp:129
+#, c-format
+msgid "\tSymbol errors: %d\n"
+msgstr ""
 
 #: installpkg-ng2.cpp:1087
 #, c-format
@@ -3238,6 +3253,11 @@ msgstr "%s-%s\n"
 #, c-format
 msgid "%s-%s doesn't present in the system\n"
 msgstr "%s-%s відсутній в системі\n"
+
+#: ../console/checklibdeps.cpp:124
+#, c-format
+msgid "%s-%s: %d errors\n"
+msgstr ""
 
 #: installpkg-ng2.cpp:375 installpkg-ng2.cpp:390 installpkg-ng2.cpp:378
 #: installpkg-ng2.cpp:393 installpkg-ng2.cpp:399 installpkg-ng2.cpp:414
@@ -11405,6 +11425,11 @@ msgstr ""
 #, c-format
 msgid "Total: %d packages\n"
 msgstr "Всього: %d пакетів\n"
+
+#: ../console/checklibdeps.cpp:111
+#, c-format
+msgid "Total: %d possibly broken packages\n"
+msgstr ""
 
 #: ../lib/menu.cpp:305
 #, c-format
