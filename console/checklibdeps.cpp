@@ -7,7 +7,7 @@ int print_usage() {
 	printf(_("Running mpkg-checklibdeps without parameters will check whole system.\n"));
 	printf(_("Available options:"));
 	printf(_("\t-h\t--help\tShow this help\n"));
-	printf(_("\t-f\t--help\tFast mode: skip directories which rarely contains anything that does make sence\n"));
+	printf(_("\t-f\t--fast\tFast mode: skip directories which rarely contains anything that does make sence\n"));
 	printf(_("\t-l\t--filter-lib=LIBRARY\tFilter errors for specified library. Example: -l libgmp.so.1\n"));
 	printf(_("\t-s\t--filter-sym=SYMBOL\tFilter errors for specified symbol. Example: -s PythonUnicode_UCS2_FromLatin1\n"));
 	printf(_("\t-c\t--compact\tCompact mode: makes output more machine-readable\n"));
@@ -106,9 +106,9 @@ int main(int argc, char **argv) {
 	map<const PACKAGE *, PkgScanResults> scanResults = checkRevDeps(pkgList, fast);
 
 	// NOTE: due to STL map implementation, it's size may increase with read-only operations, so please use errorCount variable if you wanna know initial count of packages affected by troubles.
-	size_t errorCount = scanResults.size();
+	size_t errorCount = scanResults.filteredSize();
 
-	if (!compact) printf("Total: %d possibly broken packages\n", (int) errorCount);
+	if (!compact) printf(_("Total: %d possibly broken packages\n"), (int) errorCount);
 
 	if (get_xml) {
 	}
@@ -121,22 +121,22 @@ int main(int argc, char **argv) {
 			if (!symFilter.empty() || !libFilter.empty()) {
 				if (res.filteredSize(symFilter, libFilter)==0) continue;
 			}
-			if (!compact) printf("%s-%s: %d errors\n", pkgList[i].get_name().c_str(), pkgList[i].get_fullversion().c_str(), (int) res.size());
+			if (!compact) printf(_("%s-%s: %d errors\n"), pkgList[i].get_name().c_str(), pkgList[i].get_fullversion().c_str(), (int) res.size());
 			else printf("%s\n", pkgList[i].get_name().c_str());
 			if (verbose_level>0 && !compact) {
 				vector<string> sE = res.getLostSymbols(symFilter);
 				vector<string> lE = res.getLostLibs(libFilter);
-				printf("\tSymbol errors: %d\n", (int) sE.size());
+				printf(_("\tSymbol errors: %d\n"), (int) sE.size());
 				for (size_t t=0; t<sE.size(); ++t) {
 					cout << "\t\t" << sE[t] << endl;
 				}
-				printf("\tLibrary errors: %d\n", (int) lE.size());
+				printf(_("\tLibrary errors: %d\n"), (int) lE.size());
 				for (size_t t=0; t<lE.size(); ++t) {
 					cout << "\t\t" << lE[t] << endl;
 				}
 			}
 			if (verbose_level>1) {
-				if (!compact) printf("\tDetails:\n");
+				if (!compact) printf(_("\tDetails:\n"));
 				for (size_t t=0; t<res.symbolErrors.size(); ++t) {
 					cout << "\t\tUNRESOLVED: " << res.symbolErrors[t].symbol << " (" << res.symbolErrors[t].filename << ")" << endl;
 				}
