@@ -43,8 +43,10 @@ fi
 
 if [ "$ARCH" = "x86" ] ; then
 	BITS=32
+	LIBDIRSUFFIX=
 else
 	BITS=64
+	LIBDIRSUFFIX=64
 fi
 if [ "$REPO" = "" ] ; then
 	if [ "$ARCH" = "x86" ] ; then
@@ -200,7 +202,7 @@ cat $CWD/isolinux.cfg | sed s/@ARCH@/$BITS/g | sed "s/@ISO_TITLE@/${iso_title}/g
 
 # ISOLINUX binaries
 for i in linux.c32 vesamenu.c32 vesainfo.c32 isolinux.bin ; do
-	cp /usr/lib${BITS}/syslinux/$i $LIVE_ROOT/isolinux/
+	cp /usr/lib${LIBDIRSUFFIX}/syslinux/$i $LIVE_ROOT/isolinux/
 done
 
 # Creating ISO
