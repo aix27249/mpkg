@@ -1416,11 +1416,11 @@ int print_usage(FILE* stream, int exit_code)
 	fprintf(stream,_("\nDebug options:\n"));
 	fprintf(stream,_("\ttest                      Executes unit test\n"));
 #endif
-	fprintf(stream,_("\nExtra options for command \"build\" (should be specified _before_ package name):\n"));
+/*	fprintf(stream,_("\nExtra options for command \"build\" (should be specified _before_ package name):\n"));
 	fprintf(stream,_("\tmarch=                    CPU architecture\n"));
 	fprintf(stream,_("\tmtune=                    CPU tuning\n"));
 	fprintf(stream,_("\tolevel=                   Optimization level\n"));
-	fprintf(stream,_("Example: mpkg build march=i686 mtune=prescott olevel=O3\n"));
+	fprintf(stream,_("Example: mpkg build march=i686 mtune=prescott olevel=O3\n"));*/
 	fprintf(stream, "\n");
 
 
@@ -1438,7 +1438,7 @@ int list_rep(mpkg *core)
 	}
 	for (unsigned int i=0; i<dlist.size(); i++)
 	{
-		cout << " [" << i+rlist.size()+1 << "] " << dlist[i] << " (" << _("DISABLED") << ")\n" << endl;
+		cout << " [" << i+rlist.size()+1 << "] " << dlist[i] << " (" << _("DISABLED") << ")" << endl;
 	}
 	
 	return 0;
