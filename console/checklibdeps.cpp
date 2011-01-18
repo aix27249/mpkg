@@ -106,9 +106,9 @@ int main(int argc, char **argv) {
 	map<const PACKAGE *, PkgScanResults> scanResults = checkRevDeps(pkgList, fast);
 
 	// NOTE: due to STL map implementation, it's size may increase with read-only operations, so please use errorCount variable if you wanna know initial count of packages affected by troubles.
-	size_t errorCount = scanResults.filteredSize();
+	size_t errorCount = scanResults.size();
 
-	if (!compact) printf(_("Total: %d possibly broken packages\n"), (int) errorCount);
+	if (!compact) printf(_("Scanned: %d packages\n"), (int) errorCount);
 
 	if (get_xml) {
 	}
