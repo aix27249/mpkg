@@ -1150,9 +1150,9 @@ void SetupThread::setupNetwork() {
 
 void SetupThread::copyMPKGConfig() {
 #ifdef X86_64
-	system("cp /usr/local/share/setup/mpkg-x86_64.xml /tmp/new_sysroot/etc/mpkg.xml");
+	system("cp /usr/share/setup/mpkg-x86_64.xml /tmp/new_sysroot/etc/mpkg.xml");
 #else
-	system("cp /usr/local/share/setup/mpkg-x86.xml /tmp/new_sysroot/etc/mpkg.xml");
+	system("cp /usr/share/setup/mpkg-x86.xml /tmp/new_sysroot/etc/mpkg.xml");
 #endif
 	system("mv /tmp/packages.db /tmp/new_sysroot/var/mpkg/packages.db");
 }

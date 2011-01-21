@@ -7,5 +7,5 @@ while [ "`ps ax | grep -v grep | grep guisetup_exec | head -n 1`" != "" ] ; do
 done
 
 echo "Setup complete, rebooting"
-reboot
+/sbin/reboot
 
