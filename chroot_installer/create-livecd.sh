@@ -107,6 +107,7 @@ fi
 
 # Cache has to be removed anyway.
 rm -rf $NODE/var/mpkg/cache
+mkdir -p ${NODE}/var/mpkg/cache
 
 # Copy root stuff. Login as agilia with no password.
 # cat $CWD/shadow > $NODE/etc/shadow

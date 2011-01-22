@@ -1,0 +1,2 @@
+echo "$user_name ALL=(ALL) NOPASSWD: /usr/bin/guisetup" >> ${NODE}/etc/sudoers
+echo "$user_name ALL=(ALL) NOPASSWD: /usr/bin/guisetup_exec" >> ${NODE}/etc/sudoers

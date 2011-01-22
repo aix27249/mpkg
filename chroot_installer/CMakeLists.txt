@@ -38,6 +38,7 @@ INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mklivecd.conf" DESTINATION etc)
 # Plugins
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/plugins/remove_extra_locales" DESTINATION share/mklivecd/scripts/plugins)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/plugins/sudo_nopasswd" DESTINATION share/mklivecd/scripts/plugins)
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/plugins/sudo_installer" DESTINATION share/mklivecd/scripts/plugins)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/plugins/gdm-autologin" DESTINATION share/mklivecd/scripts/plugins)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/plugins/kdm-autologin" DESTINATION share/mklivecd/scripts/plugins)
 
