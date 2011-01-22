@@ -706,13 +706,13 @@ void show_package_info(mpkg *core, string name, string version, string build, bo
 	say(_("%sVersion:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_version().c_str());
 	say(_("%sArch:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_arch().c_str());
 	say(_("%sBuild:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_build().c_str());
-	say(_("%sProvides:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_provides().c_str());
-	say(_("%sConflicts:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_conflicts().c_str());
-	say(_("%sBranch:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_repository_tags().c_str());
+	if (!pkg->get_provides().empty()) say(_("%sProvides:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_provides().c_str());
+	if (!pkg->get_conflicts().empty()) say(_("%sConflicts:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_conflicts().c_str());
+	say(_("%sBranch:%s %s\n"), CL_GREEN, CL_WHITE, pkg->package_distro_version.c_str());
 	say(_("%sPackage size:%s %s\n"), CL_GREEN, CL_WHITE, humanizeSize(atoi(pkg->get_compressed_size().c_str())).c_str());
 	say(_("%sInstalled size:%s %s\n"), CL_GREEN, CL_WHITE, humanizeSize(atoi(pkg->get_installed_size().c_str())).c_str());
-	say(_("%sMaintainer:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_packager().c_str());
-	say(_("%sMaintainer e-mail:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_packager_email().c_str());
+	say(_("%sBuilt by:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_packager().c_str());
+	say(_("%sBuilder e-mail:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_packager_email().c_str());
 	say(_("%sStatus:%s %s\n"), CL_GREEN, CL_WHITE, vstatus.c_str());
 	say(_("%sMD5:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_md5().c_str());
 	say(_("%sFilename:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_filename().c_str());
@@ -732,7 +732,7 @@ void show_package_info(mpkg *core, string name, string version, string build, bo
 			say("\t\t    %s (%s)\n", pkg->deltaSources[t].dup_url.c_str(), humanizeSize(pkg->deltaSources[t].dup_size).c_str());
 		}
 	}
-	else say(_("%sDelta patches:%s %s\n"), CL_GREEN, CL_WHITE, _("none"));
+	//else say(_("%sDelta patches:%s %s\n"), CL_GREEN, CL_WHITE, _("none"));
 	if (!pkg->abuild_url.empty()) {
 		say(_("%sABUILD:%s %s\n"), CL_GREEN, CL_WHITE, pkg->abuild_url.c_str());
 	}

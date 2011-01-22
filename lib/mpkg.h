@@ -123,10 +123,6 @@ class mpkgDatabase
 		~mpkgDatabase();
 };
 
-bool tryGetDelta(PACKAGE *p, const string workingDir="/var/mpkg/cache/");
-long double guessDeltaSize(const PACKAGE& p, const string workingDir="/var/mpkg/cache/");
-int applyXZPatch(const string& orig, const string& dest, const string& patchname, const string workingDir="/var/mpkg/cache/");
-int emerge_package(string file_url, string *package_name, string march="", string mtune="", string olevel="", string *builddir_name_ret=NULL); // Assembly from source
 #include "local_package.h"
 #include "core.h"
 #include "dependencies.h"

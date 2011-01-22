@@ -14,6 +14,7 @@
 #include "local_package.h"
 #include "debug.h"
 #include "mpkg.h"
+#include "spkgsupport.h"
 #include "repository.h"
 #include "actions.h"
 #include "converter.h"

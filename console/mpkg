@@ -1,4 +1,5 @@
 # Autocompletion for mpkg
+# Full query
 _mpkg () {
     local cur
     COMPREPLY=()
@@ -12,12 +13,13 @@ _mpkg () {
 complete -F _mpkg -o filenames mpkg-filesearch mpkg-gui-installer \
                   mpkg-install \
                   mpkg-search mpkg-searchdescription \
-                  mpkg-whodepend mpkgeditor mpkg-show \
+                  mpkg-whodepend mpkg-show mpkg-rollback \
 
+# Installed query
 _mpkg_r () {
         COMPREPLY=($(mpkg-quicklist -i $2 2> /dev/null))
 }
 
-
-complete -F _mpkg_r mpkg-purge mpkg-reinstall mpkg-remove mpkg-update mpkg-upgrade mpkg-check
+# List for installed queries
+complete -F _mpkg_r mpkg-purge mpkg-reinstall mpkg-remove mpkg-upgrade mpkg-check mpkg-checklibdeps
 

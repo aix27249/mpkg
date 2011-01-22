@@ -1,3 +1,5 @@
+#ifndef MPKG_TERMINAL_H__
+#define MPKG_TERMINAL_H__
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <stdio.h>
@@ -33,3 +35,5 @@ class ProgressDisplay {
 		void setProgressNow(int now);
 		void showPercentMode(int pMode=PMODE_AUTO);
 };
+
+#endif

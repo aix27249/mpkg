@@ -4,6 +4,7 @@
  * ******************************************************************/
 
 #include "libmpkg.h"
+#include "deltas.h"
 #include "terminal.h"
 #include <iostream>
 
