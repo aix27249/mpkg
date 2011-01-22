@@ -436,8 +436,6 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 	}
 
 	for (unsigned int i = 0; i < list.size(); i++ ) {
-//process:
-		
 		item = &(list.at(i));
 		*itemname = item->name;
 		currentItemID=item->itemID;
