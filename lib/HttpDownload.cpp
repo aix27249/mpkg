@@ -375,6 +375,12 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 	bool volfound = false;
 	bool isCdromSourced = false;
 	string tmp_volname;
+	if (downloadProgressData->size()==0) {
+		for (size_t i=0; i<list.size(); ++i) {
+			list[i].itemID = downloadProgressData->addItem(list[i].name, list[i].expectedSize, ITEMSTATE_WAIT);
+		}
+	}
+
 	for (unsigned int i=0; i<list.size(); ++i) {
 		PPACTIONCHECKABORT
 		tmp_item = &(list.at(i));
@@ -498,7 +504,7 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 							downloadProgressData->setItemState(item->itemID,ITEMSTATE_INPROGRESS);
 							downloadProgressData->setItemChanged(item->itemID);
 						}
-						else printf("Empty download pData\n");
+						//else printf("Empty download pData\n");
 						string dl_tool = mConfig.getValue("download_tool");
 						if (dl_tool=="aria2" || dl_tool=="aria2c") {
 							string opts;
