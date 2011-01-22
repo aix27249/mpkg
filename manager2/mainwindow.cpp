@@ -379,7 +379,7 @@ void MainWindow::commitFinished() {
 	disconnect(commitActionsThread, SIGNAL(done()));
 	commitActionsThread->wait();
 	delete commitActionsThread;
-	
+	_abortActions = false;
 	loadPackageList();
 }
 void MainWindow::loadPackageList() {

@@ -466,11 +466,6 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 						unlink(string(item->file+".part").c_str());
 					}
 
-					/*if (downloadProgressData->size()>0) {
-						downloadProgressData->setItemCurrentAction(item->itemID, "Creating symlink");
-						downloadProgressData->setItemState(item->itemID,ITEMSTATE_INPROGRESS);
-					}*/
-
 					if (item->url_list.at(j).find("local://")==0) {
 						if (fileLinker(item->url_list.at(j).substr(strlen("local://")), item->file)==0) {
 							if (item->usedSource!=NULL) *item->usedSource = item->url_list.at(j);
@@ -501,7 +496,9 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 							downloadProgressData->downloadAction=true;
 							downloadProgressData->setItemCurrentAction(item->itemID, _("Downloading"));
 							downloadProgressData->setItemState(item->itemID,ITEMSTATE_INPROGRESS);
+							downloadProgressData->setItemChanged(item->itemID);
 						}
+						else printf("Empty download pData\n");
 						string dl_tool = mConfig.getValue("download_tool");
 						if (dl_tool=="aria2" || dl_tool=="aria2c") {
 							string opts;
