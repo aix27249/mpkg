@@ -22,7 +22,7 @@ public:
 //	DownloadResults getFile(string url, string file, string cdromDevice = CDROM_DEVICE, string cdromMountPoint = CDROM_MOUNTPOINT);
 //	DownloadResults getFile(DownloadsList &list, string *itemname, string cdromDevice = CDROM_DEVICE, string cdromMountPoint = CDROM_MOUNTPOINT, ActionBus *aaBus = &actionBus, ProgressData *prData = &pData);
 	DownloadResults getFile(string url, string file, string cdromDevice = "", string cdromMountPoint = "");
-	DownloadResults getFile(DownloadsList &list, string *itemname, string cdromDevice = "", string cdromMountPoint = "", ActionBus *aaBus = &actionBus, ProgressData *prData = &pData);
+	DownloadResults getFile(DownloadsList &list, string *itemname, string cdromDevice = "", string cdromMountPoint = "");
 
 
 private:

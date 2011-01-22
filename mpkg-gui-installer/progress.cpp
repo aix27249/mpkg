@@ -10,9 +10,9 @@ ProgressWindow::~ProgressWindow() {
 }
 
 void ProgressWindow::readData() {
-	setProgressMaximum((int) actionBus.progressMaximum());
+	setProgressMaximum((int) pData.getTotalProgressMax());
 	QString text = QString::fromStdString(currentStatus) + ": " + QString::fromStdString(currentItem);
-	setData(text, (int) actionBus.progress());
+	setData(text, (int) pData.getTotalProgress());
 }
 
 void ProgressWindow::setData(const QString &text, int progress) {

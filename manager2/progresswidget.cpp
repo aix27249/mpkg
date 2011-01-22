@@ -10,7 +10,6 @@ void updateProgressData(ItemState a) {
 ProgressWidget::ProgressWidget(QWidget *parent): QWidget(parent), ui(new Ui::ProgressWidgetClass) {
 	ui->setupUi(this);
 	ui->totalProgressBar->setMaximum(100);
-	ui->currentProgressBar->setMaximum(100);
 	qRegisterMetaType<ItemState>("ItemState");
 	connect(this, SIGNAL(callUpdateData(const ItemState &)), this, SLOT(updateDataProcessing(const ItemState &)));
 	connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancelActions()));
@@ -25,12 +24,12 @@ void ProgressWidget::updateData(const ItemState& a) {
 
 void ProgressWidget::updateDataProcessing(const ItemState &a) {
 	ui->label->setText(QString::fromStdString(a.name + ": " + a.currentAction));
-	if (a.progress>=0 && a.progress<=100) ui->currentProgressBar->setValue(a.progress);
 	if (a.totalProgress>=0 && a.totalProgress<=100) ui->totalProgressBar->setValue(a.totalProgress);
+	else if (a.totalProgress<0) ui->totalProgressBar->setValue(0);
 }
 
 void ProgressWidget::cancelActions() {
 	if (QMessageBox::warning(this, tr("Please confirm abort"), tr("Are you sure you want to abort current operations?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No)==QMessageBox::Yes) {
-		actionBus.abortActions();
+		_abortActions = true;
 	}
 }

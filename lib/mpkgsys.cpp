@@ -93,9 +93,6 @@ int mpkgSys::build_package(string out_directory, bool source)
 }
 int mpkgSys::update_repository_data(mpkgDatabase *db)//, DependencyTracker *DepTracker)
 {
-	actionBus.clear();
-	actionBus.addAction(ACTIONID_DBUPDATE);
-	actionBus.setActionProgressMaximum(ACTIONID_DBUPDATE, REPOSITORY_LIST.size());
 	// Функция, с которой начинается обновление данных.
 	
 	Repository *rep = new Repository;		// Объект репозиториев
@@ -119,24 +116,27 @@ int mpkgSys::update_repository_data(mpkgDatabase *db)//, DependencyTracker *DepT
 	}
 	int total_packages=0; // Счетчик полученных пакетов.
 
-	actionBus.setCurrentAction(ACTIONID_DBUPDATE);
 	// Поехали! Запрашиваем каждый репозиторий через функцию get_index()
 	unsigned int cnt=1;
-	for (unsigned int i=0; i<REPOSITORY_LIST.size(); i++)
-	{
+	pData.clear();
+	for (size_t i=0; i<REPOSITORY_LIST.size(); ++i) {
+		pData.addItem(REPOSITORY_LIST[i], 1, ITEMSTATE_INPROGRESS);
+		pData.setItemCurrentAction(i, _("retrieving index"));
+	}
+	for (size_t i=0; i<REPOSITORY_LIST.size(); ++i) {
 		delete tmpPackages;
 		tmpPackages = new PACKAGE_LIST;					//Очищаем временный список.
+		pData.setItemChanged(i);
 		rep->get_index(REPOSITORY_LIST[i], tmpPackages);	// Получаем список пакетов.
-		actionBus.setActionProgress(ACTIONID_DBUPDATE, cnt);
+		pData.increaseItemProgress(i);
+		pData.setItemState(i, ITEMSTATE_FINISHED);
 		cnt++;
 		if (!tmpPackages->IsEmpty())				// Если мы таки получили что-то, добавляем это в список.
 		{
 			total_packages+=tmpPackages->size();		// Увеличим счетчик
 			availablePackages->add_list(*tmpPackages);	// Прибавляем данные к общему списку.
 		}
-		actionBus.setActionProgress(ACTIONID_DBUPDATE, cnt);
 		cnt++;
-
 	}
 	delete rep;
 	delete tmpPackages;
@@ -148,8 +148,7 @@ int mpkgSys::update_repository_data(mpkgDatabase *db)//, DependencyTracker *DepT
 		printHtml("Package data update complete");
 		printHtmlRedirect();
 	}
-
-	actionBus.setActionState(ACTIONID_DBUPDATE);
+	pData.clear();
 	return ret;
 }
 // V1 comments

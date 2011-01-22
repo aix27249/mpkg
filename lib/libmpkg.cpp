@@ -1407,8 +1407,6 @@ int mpkg::syncronize_repositories(string sync_map) {
 		}
 	}
 	// Reading data from all repositories and syncronize by pair
-	actionBus.addAction(ACTIONID_DBUPDATE);
-	actionBus.setActionProgressMaximum(ACTIONID_DBUPDATE, serverUrl.size());
 
 	bool found = false;
 	for (size_t i=0; i<serverUrl.size(); ++i) {
@@ -1572,9 +1570,7 @@ int mpkg::syncronize_repositories(string sync_map) {
 		downloadQueue = new DownloadsList;
 
 
-		actionBus.addAction(ACTIONID_DOWNLOAD);
-		actionBus.setActionProgressMaximum(ACTIONID_DOWNLOAD, query.size());
-		for (unsigned int q=0; q<query.size(); q++) {
+		for (size_t q=0; q<query.size(); ++q) {
 			itemLocations.clear();
 			
 			tmpDownloadItem.expectedSize=strtod(query[q]->get_compressed_size().c_str(), NULL);

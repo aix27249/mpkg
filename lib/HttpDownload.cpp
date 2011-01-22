@@ -39,9 +39,8 @@ double *extDlTotal;
 double *extItemTotal;
 double *extItemNow;
 double resumePos=0;
-ProgressData *ppData;
-ActionBus *ppActionBus;
 int currentItemID;
+ProgressData *downloadProgressData = &pData;
 double i_dlnow=0, i_dltotal=0;
 bool max_set = false;
 int skip = 0;
@@ -62,8 +61,8 @@ static int downloadCallback(void *clientp,
 	double speed=-1;
 	curl_easy_getinfo(chPtr, CURLINFO_SPEED_DOWNLOAD, &speed);
 	if (__httpDownloadTableSkipCounter==__httpDownloadSkipFactor) {
-		ppData->setItemProgress(currentItemID, resumePos+dlnow);
-		ppData->setItemCurrentAction(currentItemID, _("Downloading: ") + IntToStr((unsigned int) round((resumePos+dlnow)/((resumePos+dltotal)/100)))+"% (" \
+		downloadProgressData->setItemProgress(currentItemID, resumePos+dlnow);
+		downloadProgressData->setItemCurrentAction(currentItemID, _("Downloading: ") + IntToStr((unsigned int) round((resumePos+dlnow)/((resumePos+dltotal)/100)))+"% (" \
 			+ IntToStr( (unsigned int) (resumePos+dlnow)/1024) + _(" of ") \
 			+ IntToStr( (unsigned int) (resumePos+dltotal)/1024) + _(" kbytes)") \
 			+ " [" + humanizeSize(speed) + _("/sec]"));
@@ -73,7 +72,7 @@ static int downloadCallback(void *clientp,
 		prevDlValue=dlnow;
 		downloadTimeout=0;
 	}
-	if (ppActionBus->_abortActions)
+	if (_abortActions)
 	{
 		return -2;
 	}
@@ -343,24 +342,25 @@ DownloadResults HttpDownload::getFile(std::string url, std::string file, std::st
 	dlItem.name = url;
 	dlItem.status = DL_STATUS_WAIT;
 	dlItem.priority = 0;
-	ProgressData z;
 	string name;
 	dlItem.itemID=0;
 	dlList.push_back(dlItem);
 	unlink(file.c_str()); // Let's download from scratch
-	return this->getFile(dlList, &name, cdromDevice, cdromMountPoint, &actionBus, &z);
+	ProgressData detachedProgressData;
+	downloadProgressData = &detachedProgressData;
+	DownloadResults ret = this->getFile(dlList, &name, cdromDevice, cdromMountPoint);
+	downloadProgressData = &pData;
+	return ret;
 }
-#define PPACTIONCHECKABORT if (ppActionBus->_abortActions) { ppActionBus->_abortComplete=true; return DOWNLOAD_OK; }
+#define PPACTIONCHECKABORT if (_abortActions) { return DOWNLOAD_OK; }
 
-DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname, std::string cdromDevice, std::string cdromMountPoint,  ActionBus *aaBus, ProgressData *prData) {
+DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname, std::string cdromDevice, std::string cdromMountPoint) {
 	_cmdOptions["cdrom_permanent_fail"]="";
 	//ncInterface.showMsgBox("GETFILE: " + IntToStr(list.size()));
 	if (cdromDevice.empty()) cdromDevice = CDROM_DEVICE;
 	if (cdromMountPoint.empty()) cdromMountPoint = CDROM_MOUNTPOINT;
 
 	if (dialogMode) ncInterface.setSubtitle(_("Downloading files"));
-	ppActionBus=aaBus;
-	ppData=prData;
 	if (list.empty()) return DOWNLOAD_OK; // Return OK if nothing to download
 	
 	long connTimeout = atoi(mConfig.getValue("connection_timeout").c_str());
@@ -432,7 +432,7 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 	bool is_have_error = false;
 	string dir;
 	for (unsigned int i=0; i<list.size(); i++) {
-		prData->setItemProgressMaximum(list.at(i).itemID, list.at(i).expectedSize);
+		downloadProgressData->setItemProgressMaximum(list.at(i).itemID, list.at(i).expectedSize);
 	}
 
 	for (unsigned int i = 0; i < list.size(); i++ ) {
@@ -458,17 +458,17 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 							if (S_ISREG(fStat.st_mode)) size = fStat.st_size;
 							else unlink(item->file.c_str());
 						}
-						prData->setItemProgress(item->itemID, (double) size);
+						downloadProgressData->setItemProgress(item->itemID, (double) size);
 					}
 					else { // Unlinking destination file before any sort of downloading
-						prData->setItemProgress(item->itemID, 0);
+						downloadProgressData->setItemProgress(item->itemID, 0);
 						unlink(item->file.c_str());
 						unlink(string(item->file+".part").c_str());
 					}
 
-					/*if (prData->size()>0) {
-						prData->setItemCurrentAction(item->itemID, "Creating symlink");
-						prData->setItemState(item->itemID,ITEMSTATE_INPROGRESS);
+					/*if (downloadProgressData->size()>0) {
+						downloadProgressData->setItemCurrentAction(item->itemID, "Creating symlink");
+						downloadProgressData->setItemState(item->itemID,ITEMSTATE_INPROGRESS);
 					}*/
 
 					if (item->url_list.at(j).find("local://")==0) {
@@ -490,17 +490,17 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 						if (cdromFetch(item->url_list.at(j).substr(strlen("cdrom://")), item->file, false)==0) {
 							if (item->usedSource!=NULL) *item->usedSource = item->url_list.at(j);
 							result=CURLE_OK;
-							//prData->setItemProgress(item->itemID, prData->getItemProgressMaximum(item->itemID));
-							//prData->setItemState(item->itemID, ITEMSTATE_FINISHED);
+							//downloadProgressData->setItemProgress(item->itemID, downloadProgressData->getItemProgressMaximum(item->itemID));
+							//downloadProgressData->setItemState(item->itemID, ITEMSTATE_FINISHED);
 						}
 						else result=CURLE_READ_ERROR;
 					}
 
 					else if (item->url_list.at(j).find("file://")!=0 && item->url_list.at(j).find("cdrom://")!=0) {
-						if (prData->size()>0) {
-							prData->downloadAction=true;
-							prData->setItemCurrentAction(item->itemID, _("Downloading"));
-							prData->setItemState(item->itemID,ITEMSTATE_INPROGRESS);
+						if (downloadProgressData->size()>0) {
+							downloadProgressData->downloadAction=true;
+							downloadProgressData->setItemCurrentAction(item->itemID, _("Downloading"));
+							downloadProgressData->setItemState(item->itemID,ITEMSTATE_INPROGRESS);
 						}
 						string dl_tool = mConfig.getValue("download_tool");
 						if (dl_tool=="aria2" || dl_tool=="aria2c") {
@@ -595,8 +595,7 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 						}
 					}
 	    				if ( result == CURLE_OK  ) {
-						if (ppActionBus->_abortActions) {
-							ppActionBus->_abortComplete=true;
+						if (_abortActions) {
 #ifdef DL_CLEANUP
 							curl_easy_cleanup(ch);
 #endif
@@ -604,22 +603,21 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 							return DOWNLOAD_OK;
 						}
 						item->status = DL_STATUS_OK;
-						if (prData->size()>0) {
-							//prData->setItemCurrentAction(item->itemID, _("Downloading finished"));
-							if (!setupMode) prData->setItemState(item->itemID, ITEMSTATE_FINISHED);
+						if (downloadProgressData->size()>0) {
+							//downloadProgressData->setItemCurrentAction(item->itemID, _("Downloading finished"));
+							if (!setupMode) downloadProgressData->setItemState(item->itemID, ITEMSTATE_FINISHED);
 						}
     						break;
 					}
 					else {
 						mError(_("\nDownload error: ") + (string) curl_easy_strerror(result));
-						if (ppActionBus->_abortActions)	{
-							ppActionBus->_abortComplete=true;
+						if (_abortActions)	{
 #ifdef DL_CLEANUP
 							curl_easy_cleanup(ch);
 #endif
 							return DOWNLOAD_ERROR;
 						}
-						if (!setupMode && prData->size()>0) prData->setItemState(item->itemID, ITEMSTATE_FAILED);
+						if (!setupMode && downloadProgressData->size()>0) downloadProgressData->setItemState(item->itemID, ITEMSTATE_FAILED);
 
 						mError(_("Downloading ") + item->name + _(" is failed: error while downloading"));
     			    			is_have_error = true;
@@ -629,7 +627,7 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
     			
         	}
 
-		if (ppActionBus->currentProcessingID()==ACTIONID_DOWNLOAD) ppActionBus->setActionProgress(ACTIONID_DOWNLOAD, i);
+		//if (ppActionBus->currentProcessingID()==ACTIONID_DOWNLOAD) ppActionBus->setActionProgress(ACTIONID_DOWNLOAD, i);
 
     	}
 	if (!is_have_error) {

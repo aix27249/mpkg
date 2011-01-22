@@ -507,41 +507,11 @@ int mpkgDatabase::commit_actions()
 		}
 		return 0;
 	}
-
 	
-	// Building action list
-	actionBus.clear();
-	if (install_list.size()>0)
-	{
-		actionBus.addAction(ACTIONID_CACHECHECK);
-		actionBus.setSkippable(ACTIONID_CACHECHECK, true);
-		actionBus.setActionProgressMaximum(ACTIONID_CACHECHECK, install_list.size());
-		actionBus.addAction(ACTIONID_DOWNLOAD);
-		actionBus.setActionProgressMaximum(ACTIONID_DOWNLOAD, install_list.size());
-		actionBus.addAction(ACTIONID_MD5CHECK);
-		actionBus.setSkippable(ACTIONID_MD5CHECK, true);
-		actionBus.setActionProgressMaximum(ACTIONID_MD5CHECK, install_list.size());
-	}
-	if (remove_list.size()>0)
-	{
-		actionBus.addAction(ACTIONID_REMOVE);
-		actionBus.setActionProgressMaximum(ACTIONID_REMOVE, remove_list.size());
-	}
-	if (install_list.size()>0)
-	{
-		actionBus.addAction(ACTIONID_INSTALL);
-		actionBus.setActionProgressMaximum(ACTIONID_INSTALL, install_list.size());
-
-	}
-	// Done
-
-	//system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S` GOING TO INSTALL: " + IntToStr(install_list.size()) + ", TO REMOVE: " + IntToStr(remove_list.size()) + " >> /var/log/mpkg-installation.log");
 	int transaction_id = startTransaction(install_list, remove_list, getSqlDb());
 	msay(_("Looking for install queue"));
 	vector<bool> needFullDownload(install_list.size());
-	if (install_list.size()>0)
-	{
-		actionBus.setCurrentAction(ACTIONID_CACHECHECK);
+	if (install_list.size()>0) {
 		// Building download queue
 		msay(_("Looking for package locations"));
 		DownloadsList downloadQueue;
@@ -561,16 +531,9 @@ int mpkgDatabase::commit_actions()
 			}
 			delete_tmp_files();
 
-			actionBus.setActionProgress(ACTIONID_CACHECHECK, i);
-			if (actionBus._abortActions)
-			{
+			if (_abortActions) {
 				sqlFlush();
-				actionBus._abortComplete=true;
 				return MPKGERROR_ABORTED;
-			}
-			if (actionBus.skipped(ACTIONID_CACHECHECK))
-			{
-				skip=true;
 			}
 
 			// Clear broken symlinks
@@ -610,8 +573,6 @@ int mpkgDatabase::commit_actions()
 			}
 		}
 		ncInterface.setProgress(0);
-		actionBus.setActionState(ACTIONID_CACHECHECK);
-		actionBus.setCurrentAction(ACTIONID_DOWNLOAD);
 		bool do_download = true;
 	
 		pData.resetItems(_("waiting"), 0, 1, ITEMSTATE_WAIT);
@@ -624,14 +585,13 @@ download_process:
 			if (CommonGetFileEx(downloadQueue, &currentItem) == DOWNLOAD_ERROR)
 			{
 				mError(_("Failed to download one or more files, process stopped"));
-				if (!actionBus._abortActions) {
+				if (!_abortActions) {
 					return MPKGERROR_ABORTED;
 				}
 					
 			}
 		
 		}
-		actionBus.setActionState(ACTIONID_DOWNLOAD);
 		pData.downloadAction=false;
 		if (download_only) {
 			say(_("Downloaded packages are stored in %s\n"), SYS_CACHE.c_str());
@@ -641,7 +601,6 @@ download_process:
 // installProcess:
 	
 
-		actionBus.setCurrentAction(ACTIONID_MD5CHECK);
 		pData.resetItems(_("waiting"), 0, 1, ITEMSTATE_WAIT);
 	
 		skip=false;
@@ -655,15 +614,11 @@ download_process:
 		if (dialogMode) ncInterface.setProgressMax(install_list.size());
 		for(size_t i=0; i<install_list.size(); i++)
 		{
-			actionBus.setActionProgress(ACTIONID_MD5CHECK, i);
-			if (actionBus._abortActions)
-			{
+			if (_abortActions) {
 				sqlFlush();
-				actionBus._abortComplete=true;
-				actionBus.setActionState(ACTIONID_MD5CHECK, ITEMSTATE_ABORTED);
 				return MPKGERROR_ABORTED;
 			}
-			if (actionBus.skipped(ACTIONID_MD5CHECK) || forceSkipLinkMD5Checks) break;
+			if (forceSkipLinkMD5Checks) break;
 
 			if (dialogMode)
 			{
@@ -704,13 +659,9 @@ download_process:
 			ncInterface.setProgress(0);
 			//dialogItem.closeGauge();
 		}
-		actionBus.setActionState(ACTIONID_MD5CHECK);
 	}
 
-	if (remove_list.size()>0)
-	{
-		actionBus.setCurrentAction(ACTIONID_REMOVE);
-
+	if (remove_list.size()>0) {
 		msay(_("Looking for remove queue"));
 		msay(_("Removing ") + IntToStr(remove_list.size()) + _(" packages"));
 		pData.setCurrentAction(_("Removing packages"));
@@ -742,11 +693,8 @@ download_process:
 			       	ncInterface.setProgress((unsigned int) round((double)(i)/(double)((double)(remove_list.size())/(double) (100))));
 			}
 			delete_tmp_files();
-			actionBus.setActionProgress(ACTIONID_REMOVE,i);
-			if (actionBus._abortActions) {
+			if (_abortActions) {
 				sqlFlush();
-				actionBus._abortComplete=true;
-				actionBus.setActionState(ACTIONID_REMOVE, ITEMSTATE_ABORTED);
 				return MPKGERROR_ABORTED;
 			}
 			pData.setItemState(remove_list[i].itemID, ITEMSTATE_INPROGRESS);
@@ -766,11 +714,9 @@ download_process:
 		sqlSearch.clear();
 
 		clean_backup_directory();
-		actionBus.setActionState(ACTIONID_REMOVE);
 	} // Done removing packages
 
-	if (install_list.size()>0)
-	{	
+	if (install_list.size()>0) {	
 		// Actually installing
 
 		pData.setCurrentAction(_("Installing packages"));
@@ -778,7 +724,6 @@ download_process:
 		for(size_t i=0; i<install_list.size(); i++) {
 			sz += (uint64_t) atol(install_list[i].get_installed_size().c_str());
 		}
-		actionBus.setCurrentAction(ACTIONID_INSTALL);
 		pData.resetItems(_("waiting"), 0, 8, ITEMSTATE_WAIT);
 	
 
@@ -797,12 +742,8 @@ download_process:
 
 			pkgInstallStartTime=time(NULL); // TIMER 1: mark package installation start
 			
-			actionBus.setActionProgress(ACTIONID_INSTALL, i);
-			if (actionBus._abortActions)
-			{
+			if (_abortActions) {
 				sqlFlush();
-				actionBus._abortComplete=true;
-				actionBus.setActionState(ACTIONID_INSTALL, ITEMSTATE_ABORTED);
 				return MPKGERROR_ABORTED;
 			}
 			pData.setItemCurrentAction(install_list[i].itemID, string("installing [") + humanizeSize(IntToStr(pkgInstallSpeed)) + _("/s, ETA: ") + IntToStr(ETA_Time/60) + _(" min") + string("]"));
@@ -856,12 +797,10 @@ download_process:
 
 		}
 		msay(_("Installation complete."), SAYMODE_INLINE_END);
-		actionBus.setActionState(ACTIONID_INSTALL);
 	}
 
 	pData.setCurrentAction(_("Updating system files"));
 	if (removeFailures!=0 && installFailures!=0) return MPKGERROR_COMMITERROR;
-	actionBus.clear();
 	sqlFlush(); // Teh fuckin' trouble place
 	
 	// NEW 25.08.08: cleanup db for local packages
@@ -947,7 +886,7 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 	}
 	//if (!setupMode) pData.setItemCurrentAction(package->itemID, _("installing"));
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": initialization"), SAYMODE_INLINE_START);
-	string statusHeader = "["+IntToStr((int) actionBus.progress())+"/"+IntToStr((int)actionBus.progressMaximum())+"] "+_("Installing package ") + package->get_name()+": ";
+	string statusHeader = _("Installing package ") + package->get_name()+": ";
 	currentStatus = statusHeader + _("initialization");
 	
 	// NEW (04.10.2007): Check if package is source, and build if needed. Also, import to database the output binary package and prepare to install it.
@@ -1004,11 +943,9 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 
 
 	int purge_id=0;
-	if (actionBus._abortActions)
+	if (_abortActions)
 	{
 		sqlFlush();
-		actionBus._abortComplete=true;
-		actionBus.setActionState(ACTIONID_INSTALL, ITEMSTATE_ABORTED);
 		return MPKGERROR_ABORTED;
 	}
 	
@@ -1024,11 +961,8 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 	if (dialogMode) ncInterface.setProgressText(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + "\n" + index_hole + _("extracting file list"));
 	else msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": extracting file list"));
 	pData.increaseItemProgress(package->itemID);
-	if (actionBus._abortActions)
-	{
+	if (_abortActions) {
 		sqlFlush();
-		actionBus._abortComplete=true;
-		actionBus.setActionState(ACTIONID_INSTALL, ITEMSTATE_ABORTED);
 		return MPKGERROR_ABORTED;
 	}
 #ifndef INSTALL_DEBUG
@@ -1299,7 +1233,7 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 	pData.setItemCurrentAction(package->itemID, action_str);
 	msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str, SAYMODE_INLINE_START);
 
-	string statusHeader = "["+IntToStr((int)actionBus.progress())+"/"+IntToStr((int)actionBus.progressMaximum()) + "] " + _("Removing package ") + package->get_name()+": ";
+	string statusHeader = _("Removing package ") + package->get_name()+": ";
 	currentStatus = statusHeader + _("initialization");
 	
 	printHtmlProgress();

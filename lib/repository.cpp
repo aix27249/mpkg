@@ -685,14 +685,8 @@ int Repository::build_index(string path, bool make_filelist)
 }
 
 // Add other such functions for other repository types.
-int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned int type)
-{
-	if (actionBus._abortActions)
-	{
-		actionBus._abortComplete=true;
-		actionBus.setActionState(ACTIONID_DBUPDATE, ITEMSTATE_ABORTED);
-		return MPKGERROR_ABORTED;
-	}
+int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned int type) {
+	if (_abortActions) return MPKGERROR_ABORTED;
 
 	currentStatus = _("Updating data from ")+ server_url+"...";
 	if (htmlMode) {
@@ -710,10 +704,7 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 	string md5sums_filename = get_tmp_file();
 	string cm = "gunzip -f "+index_filename+".gz >/dev/null 2>/dev/null";
 	bool mpkgDownloadOk = false;
-	if (type == TYPE_MPKG || type == TYPE_AUTO)
-	{
-		actionBus.getActionState(0);
-		//mDebug("trying MPKG, type = "+ IntToStr(type));
+	if (type == TYPE_MPKG || type == TYPE_AUTO) {
 	       	if (CommonGetFile(server_url + "packages.xml.xz", index_filename+".xz")==DOWNLOAD_OK) {
 		       cm = "xz -df " + index_filename + ".xz > /dev/null 2>/dev/null";
 		       mpkgDownloadOk = true;
@@ -722,8 +713,6 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 			mpkgDownloadOk = true;
 		}
 		if (mpkgDownloadOk) {
-			actionBus.getActionState(0);
-			//mDebug("download ok, validating contents...");
 			if (system(cm.c_str())==0 && \
 					ReadFile(index_filename).find("<?xml version=\"1.0\"")!=std::string::npos && ReadFile(index_filename).find("<repository")!=std::string::npos)
 			{
@@ -732,84 +721,48 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 			}
 		}
 	}
-	if (actionBus._abortActions)
-	{
-		actionBus._abortComplete=true;
-		actionBus.setActionState(ACTIONID_DBUPDATE, ITEMSTATE_ABORTED);
-		return MPKGERROR_ABORTED;
-	}
+	if (_abortActions) return MPKGERROR_ABORTED;
 
-	if (type == TYPE_SLACK || type == TYPE_AUTO)
-	{
-		
-		//mDebug("trying SLACK, type = "+ IntToStr(type));
-		if (CommonGetFile(server_url + "PACKAGES.TXT", index_filename)==DOWNLOAD_OK)
-		{
-			//mDebug("download ok, validating contents...");
-			if (ReadFile(index_filename).find("PACKAGE NAME:  ")!=std::string::npos)
-			{
+	if (type == TYPE_SLACK || type == TYPE_AUTO) {
+		if (CommonGetFile(server_url + "PACKAGES.TXT", index_filename)==DOWNLOAD_OK) {
+			if (ReadFile(index_filename).find("PACKAGE NAME:  ")!=std::string::npos) {
 				currentStatus = _("Detected legacy Slackware repository");
-				if (CommonGetFile(server_url + "CHECKSUMS.md5", md5sums_filename) == DOWNLOAD_OK)
-				{
+				if (CommonGetFile(server_url + "CHECKSUMS.md5", md5sums_filename) == DOWNLOAD_OK) {
 					type = TYPE_SLACK;
 				}
-				else 
-				{
+				else {
 					mError(_("Error downloading checksums"));
 					return -1; // Download failed: no checksums or checksums download error
 				}
 			}
 		}
 	}
-	if (actionBus._abortActions)
-	{
-		actionBus._abortComplete=true;
-		actionBus.setActionState(ACTIONID_DBUPDATE, ITEMSTATE_ABORTED);
-		return MPKGERROR_ABORTED;
-	}
+	if (_abortActions) return MPKGERROR_ABORTED;
 
-	if (type == TYPE_DEBIAN || type == TYPE_AUTO)
-	{
-		if(CommonGetFile(server_url + "Packages.gz", index_filename+".gz")==DOWNLOAD_OK)
-		{
-			type = TYPE_DEBIAN;
-		}
-	}
-
-	if (type != TYPE_MPKG && type != TYPE_SLACK && type!=TYPE_DEBIAN)
-	{
+	if (type != TYPE_MPKG && type != TYPE_SLACK) {
 		currentStatus = _("Error updating data from ") +server_url+_(": download error or unsupported type");
 		mError(_("Error downloading package index: download error, or unsupported repository type"));
 		return -1;
 	}
-	//mDebug("Starting to parse index");
+
 	PACKAGE *pkg = new PACKAGE;
 	string xml_name=index_filename;
-//	XMLNode *repository_root = new XMLNode;
 	
 	xmlDocPtr indexDoc;
 	xmlNodePtr indexRootNode;
 	
-//	int pkg_count;
 	int ret=0;
 	currentStatus = "["+server_url+_("] Importing data...");
 
-	if (actionBus._abortActions)
-	{
-		actionBus._abortComplete=true;
-		actionBus.setActionState(ACTIONID_DBUPDATE, ITEMSTATE_ABORTED);
-		return MPKGERROR_ABORTED;
-	}
-	string *pList = new string;
-	string *mList = new string;
-	//XMLNode *tmp = new XMLNode;
-	//xmlDocPtr indexDoc;
-	//xmlNodePtr indexRootNode;
+	if (_abortActions) return MPKGERROR_ABORTED;
+
+	string *pList;
+	string *mList;
 	string xmlData;
 	size_t xmlStart;
 	PACKAGE_LIST tempPkgList;
-	switch(type)
-	{
+
+	switch(type) {
 		case TYPE_MPKG:
 			xmlData = ReadFile(xml_name.c_str());
 			xmlStart = xmlData.find("<?xml");
@@ -843,12 +796,13 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 			}
 			
 			msay((string) CL_5 + _("Index update:") + (string) CL_WHITE +" ["+server_url+"]: " + (string) CL_GREEN + _("done") + (string) CL_WHITE + _(" (total: ") + IntToStr(tempPkgList.size()) + _(" packages, accepted: ") + IntToStr(packages->size()) + ")", SAYMODE_INLINE_END);
-			//if (_cmdOptions["index_cache"]!="yes") {
-				xmlCleanupMemory();
-				xmlCleanupParser();
-			//}
+			xmlCleanupMemory();
+			xmlCleanupParser();
 			break;
+
 		case TYPE_SLACK:
+			pList = new string;
+			mList = new string;
 			*pList = ReadFile(index_filename);
 			*mList = ReadFile(md5sums_filename);
 
@@ -857,17 +811,10 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 			if (mList!=NULL) delete mList;
 			break;
 
-		case TYPE_DEBIAN:
-			break;
 		default:
 			break;
 	}
 	delete pkg;
-	if (htmlMode) {
-		printHtml("Готово! <img src=\"ok.png\"><br>\n", true);
-	}
 	return ret;
 }
-
-
 

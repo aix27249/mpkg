@@ -85,6 +85,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 MainWindow::~MainWindow() {
 	saveSettings();
+	pData.unregisterEventHandler();
 	delete ui;
 	delete core;
 	unlockDatabase();
@@ -292,7 +293,6 @@ void MainWindow::updateRepositoryData() {
 	ui->statusbar->showMessage(tr("Updating repository data"));
 	updateRepositoryDataThread = new LoadUpdateRepositoryData(core);
 	connect(updateRepositoryDataThread, SIGNAL(done()), this, SLOT(doneUpdateRepositoryData()));
-	actionBus.registerEventHandler(&updateProgressData);
 	progressWidgetPtr->show();
 	updateRepositoryDataThread->start();
 }
@@ -300,7 +300,6 @@ void MainWindow::doneUpdateRepositoryData() {
 	updateRepositoryDataThread->wait();
 	delete updateRepositoryDataThread;
 	progressWidgetPtr->hide();
-	actionBus.unregisterEventHandler();
 	loadPackageList();
 }
 
