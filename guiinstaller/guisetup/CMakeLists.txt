@@ -82,6 +82,7 @@ INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/icon/48/guisetup.png" DESTINATION sha
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/icon/64/guisetup.png" DESTINATION share/icons/hicolor/apps/64)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/icon/72/guisetup.png" DESTINATION share/icons/hicolor/apps/72)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/icon/128/guisetup.png" DESTINATION share/icons/hicolor/apps/128)
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/guisetup.svg" DESTINATION share/pixmaps)
 
 # Help system now goes from another SVN.
 #FILE(GLOB helpfiles_ru "${CMAKE_CURRENT_SOURCE_DIR}/help/ru/*.html")

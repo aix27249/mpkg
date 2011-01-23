@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 			for (int i=1; i<argc; ++i) {
 				args += string(argv[i]) + " ";
 			}
-			if (system("[\"`sudo -l | grep " + string(argv[0]) + " | grep NOPASSWD`\" = \"\" ]")) return system("sudo " + string(argv[0]) + " " + args);
+			if (system("[ \"`sudo -l | grep " + string(argv[0]) + " | grep NOPASSWD`\" = \"\" ]")) return system("sudo " + string(argv[0]) + " " + args);
 			else return system("xdg-su -c \"" + string(argv[0]) + " " + args + "\"");
 		}
 	}

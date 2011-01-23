@@ -25,7 +25,7 @@ void SetupThread::receiveErrorResponce(MpkgErrorReturn ret) {
 void SetupThread::updateData(const ItemState& a) {
 	emit setDetailsText(QString::fromStdString(a.name + ": " + a.currentAction));
 	//if (a.progress>=0 && a.progress<=100) ui->currentProgressBar->setValue(a.progress);
-	/*if (a.totalProgress>=0 && a.totalProgress<=100)*/ emit setProgress(a.totalProgress);
+	if (a.totalProgress>=0 && a.totalProgress<=100) emit setProgress(a.totalProgress);
 }
 void SetupThread::getCustomSetupVariants(const vector<string>& rep_list) {
 	emit setSummaryText(tr("Retrieving setup variants"));
@@ -1024,7 +1024,6 @@ bool SetupThread::postInstallActions() {
 void SetupThread::run() {
 	verbose=true;
 	progressWidgetPtr = this;
-	pData.registerEventHandler(&updateProgressData);
 	string errors;
 	setupMode = true;
 
@@ -1042,15 +1041,26 @@ void SetupThread::run() {
 
 	emit setProgress(0);
 	if (!fillPartConfigs()) return;
+	emit setProgress(1);
 	if (!validateConfig()) return;
+	emit setProgress(5);
 	if (!setMpkgConfig()) return;
+	emit setProgress(10);
 	if (!getRepositoryData()) return;
+	emit setProgress(25);
 	if (!prepareInstallQueue()) return;
+	emit setProgress(50);
 	if (!validateQueue()) return;
+	emit setProgress(60);
 	if (!formatPartitions()) return;
+	emit setProgress(70);
 	if (!mountPartitions()) return;
+	emit setProgress(85);
 	if (!moveDatabase()) return;
+	emit setProgress(99);
 	if (!createBaselayout()) return;
+
+	pData.registerEventHandler(&updateProgressData);
 	if (!processInstall()) return;
 	if (!postInstallActions()) return;
 	delete settings;
