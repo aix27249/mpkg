@@ -108,6 +108,10 @@ fi
 # Move packages if requested
 if [ "$include_used_packages" = "1" ] ; then
 	mv ${NODE}/var/mpkg/cache ${LIVE_ROOT}/repository
+	mkdir -p ${LIVE_ROOT}/repository/setup_variants
+	cat ${LIST} > ${LIVE_ROOT}/repository/setup_variants/LIVE.list
+	echo "desc: Live system" > ${LIVE_ROOT}/repository/setup_variants/LIVE.desc
+	echo "full: Install system like this LiveCD" >> ${LIVE_ROOT}/repository/setup_variants/LIVE.desc
 	echo "/repository/" > ${LIVE_ROOT}/.repository
 	echo "AGILIA_LIVE" > ${LIVE_ROOT}/.volume_id
 	mpkg-index ${LIVE_ROOT}/repository
