@@ -214,7 +214,7 @@ mkdir -p $LIVE_ROOT/isolinux
 cat $CWD/isolinux.cfg | sed s/@ARCH@/$BITS/g | sed "s/@ISO_TITLE@/${iso_title}/g" > $LIVE_ROOT/isolinux/isolinux.cfg
 
 # ISOLINUX binaries
-for i in linux.c32 vesamenu.c32 vesainfo.c32 isolinux.bin ; do
+for i in vesamenu.c32 vesainfo.c32 isolinux.bin ; do
 	cp /usr/lib${LIBDIRSUFFIX}/syslinux/$i $LIVE_ROOT/isolinux/
 done
 
