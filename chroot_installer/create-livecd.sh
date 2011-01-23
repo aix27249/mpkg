@@ -105,6 +105,14 @@ if [ "$remove_devel" = "1" -o "$do_minimize" = "1" ] ; then
 	fi
 fi
 
+# Move packages if requested
+if [ "$include_used_packages" = "1" ] ; then
+	mv ${NODE}/var/mpkg/cache ${LIVE_ROOT}/repository
+	echo "/repository/" > ${LIVE_ROOT}/.repository
+	echo "AGILIA_LIVE" > ${LIVE_ROOT}/.volume_id
+	mpkg-index ${LIVE_ROOT}/repository
+fi
+
 # Cache has to be removed anyway.
 rm -rf $NODE/var/mpkg/cache
 mkdir -p ${NODE}/var/mpkg/cache
