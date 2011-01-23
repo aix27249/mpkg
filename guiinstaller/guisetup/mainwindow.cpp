@@ -917,6 +917,7 @@ void MainWindow::saveRootPassword() {
 
 void MainWindow::saveUsers() {
 	settings->beginGroup("users");
+	settings->remove("");
 	settings->setValue(ui->usernameEdit->text(), ui->userPasswordEdit->text());
 	settings->endGroup();
 }

@@ -39,6 +39,7 @@ void MainWindow::ok() {
 	
 	settings.setValue("language", clang);
 	settings.sync();
-	system(std::string("LC_ALL=" + clang.toStdString() + " nohup guisetup 2>&1 >/var/log/guisetup.log &").c_str());
+	this->hide();
+	system(std::string("LC_ALL=" + clang.toStdString() + " guisetup").c_str());
 	qApp->quit();
 }
