@@ -25,7 +25,7 @@ void SetupThread::receiveErrorResponce(MpkgErrorReturn ret) {
 void SetupThread::updateData(const ItemState& a) {
 	emit setDetailsText(QString::fromStdString(a.name + ": " + a.currentAction));
 	//if (a.progress>=0 && a.progress<=100) ui->currentProgressBar->setValue(a.progress);
-	if (a.totalProgress>=0 && a.totalProgress<=100) emit setProgress(a.totalProgress);
+	/*if (a.totalProgress>=0 && a.totalProgress<=100)*/ emit setProgress(a.totalProgress);
 }
 void SetupThread::getCustomSetupVariants(const vector<string>& rep_list) {
 	emit setSummaryText(tr("Retrieving setup variants"));

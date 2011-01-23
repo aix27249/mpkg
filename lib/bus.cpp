@@ -43,8 +43,9 @@ void ProgressData::callEvent() {
 	}
 	
 	// This stuff is useful for debug: counts and shows events
-	//eventCounter++;
+	eventCounter++;
 	//fprintf(stderr, "[%d] callEvent: %s, queue size: %Ld, total mem: %Ld (%s)\n", eventCounter, a.currentAction.c_str(), itemName.size(), totalMem, humanizeSize(totalMem).c_str());
+	//fprintf(stderr, "[%d] callEvent: %s/%s, progress: %d, totalProgress: %d, max: %f\n", eventCounter, a.name.c_str(), a.currentAction.c_str(), a.progress, a.totalProgress, getTotalProgressMax());
 	(*eventHandler) (a);
 }
 int ProgressData::addItem(string iName, double maxProgress, int iState)
@@ -138,6 +139,7 @@ void ProgressData::setItemProgressMaximum(int itemID, double progress)
 void ProgressData::setItemState(int itemID, int state)
 {
 	if (itemState.size()>(unsigned int)itemID) itemState.at(itemID)=state;
+	if (state==ITEMSTATE_FINISHED || state == ITEMSTATE_FAILED) setItemProgress(itemID, getItemProgressMaximum(itemID));
 	//setItemChanged(itemID);
 }
 

@@ -375,9 +375,10 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 	bool volfound = false;
 	bool isCdromSourced = false;
 	string tmp_volname;
+
 	if (downloadProgressData->size()==0) {
 		for (size_t i=0; i<list.size(); ++i) {
-			list[i].itemID = downloadProgressData->addItem(list[i].name, list[i].expectedSize, ITEMSTATE_WAIT);
+			list[i].itemID = downloadProgressData->addItem(list[i].name, 1, ITEMSTATE_WAIT);
 		}
 	}
 
@@ -438,7 +439,7 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 	bool is_have_error = false;
 	string dir;
 	for (unsigned int i=0; i<list.size(); i++) {
-		downloadProgressData->setItemProgressMaximum(list.at(i).itemID, list.at(i).expectedSize);
+		if (list.at(i).expectedSize>0) downloadProgressData->setItemProgressMaximum(list.at(i).itemID, list.at(i).expectedSize);
 	}
 
 	for (unsigned int i = 0; i < list.size(); i++ ) {
@@ -608,7 +609,7 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 						item->status = DL_STATUS_OK;
 						if (downloadProgressData->size()>0) {
 							//downloadProgressData->setItemCurrentAction(item->itemID, _("Downloading finished"));
-							if (!setupMode) downloadProgressData->setItemState(item->itemID, ITEMSTATE_FINISHED);
+							downloadProgressData->setItemState(item->itemID, ITEMSTATE_FINISHED);
 						}
     						break;
 					}
