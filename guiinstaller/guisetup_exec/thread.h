@@ -5,41 +5,6 @@
 #include <mpkg/libmpkg.h>
 
 #include <mpkg/errorhandler.h>
-/*struct SysConfig
-{
-	string swapPartition;
-	string rootPartition;
-	string rootPartitionType;
-	bool rootPartitionFormat;
-	vector<TagPair>otherMounts;
-	vector<string>otherMountFSTypes;
-	vector<string>oldOtherFSTypes;
-	vector<string>otherMountSizes;
-	vector<bool>otherMountFormat;
-	string rootMountPoint;
-	string cdromDevice;
-	string sourceName;
-	unsigned int totalQueuedPackages, totalDependantPackages;
-	unsigned long long totalDownloadSize, totalInstallSize;
-	string setupMode;
-	int setupModeI;
-	string totalRequiredSpace;
-	vector<TagPair> tmpMounts;
-	string lang;
-	bool tryPrelink;
-	string kernelversion;
-	bool tmpfs_tmp;
-};
-
-struct BootConfig
-{
-	string kernelOptions;
-	string bootDevice;
-	string videoModeName;
-	unsigned int videoModeNumber;
-	string rootFs;
-	string loaderType;
-};*/
 struct OsRecord
 {
 	string label;
@@ -117,7 +82,6 @@ class SetupThread: public QThread {
 		bool postInstallActions();
 		void updateData(const ItemState& a);
 
-		void xorgSetLangHALEx();
 		void xorgSetLangConf();
 		void generateIssue();
 		void writeFstab();

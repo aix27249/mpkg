@@ -483,47 +483,14 @@ Section \"InputClass\"\n\
 \tOption      \"XkbRules\"    \"xorg\"\n\
 \tOption      \"XkbModel\"    \"pc105\"\n\
 \tOption      \"XkbLayout\"   \"" + lang + "\"\n\
-\tOption      \"XkbOptions\"  \"grp:ctrl_shift_toggle,grp_led:scroll\"\n\
+\tOption      \"XkbOptions\"  \"grp:alt_shift_toggle,grp_led:scroll\"\n\
 EndSection\n";
 
 	system("mkdir -p /tmp/new_sysroot/etc/X11/xorg.conf.d");
 	WriteFile("/tmp/new_sysroot/etc/X11/xorg.conf.d/10-keymap.conf", keymap);
 
 }
-void SetupThread::xorgSetLangHALEx() {
-	string lang, varstr;
-	vector<MenuItem> langmenu;
-	langmenu.push_back(MenuItem("us", "", "", true));
-	sysconf_lang = "en_US.UTF-8";
-	if (settings->value("language").toString()=="ru_RU.UTF-8") {
-	       langmenu.push_back(MenuItem("ru", "", "", true));
-	       sysconf_lang = "ru_RU.UTF-8";
-	}
-	if (settings->value("language").toString()=="uk_UA.UTF-8") {
-		langmenu.push_back(MenuItem("ua", "", "", true));
-		sysconf_lang = "uk_UA.UTF-8";
-	}
-	size_t cnt=0;
-	for (size_t i=0; i<langmenu.size(); ++i) {
-		if (!langmenu[i].flag) continue;
-		if (cnt!=0) {
-			lang += ",";
-			varstr+=",";
-		}
-		lang += langmenu[i].tag;
-		varstr += langmenu[i].description;
-		cnt++;
-	}
-	string variant = "<merge key=\"input.xkb.variant\" type=\"string\">" + varstr + "</merge>\n";
-	
-	string fdi = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><!-- -*- SGML -*- -->\n\
-<match key=\"info.capabilities\" contains=\"input.keyboard\">\n\
-  <merge key=\"input.xkb.layout\" type=\"string\">" + lang + "</merge>\n" + variant + \
-"  <merge key=\"input.xkb.options\" type=\"string\">terminate:ctrl_alt_bksp,grp:ctrl_shift_toggle,grp_led:scroll</merge>\n\
-</match>\n";
-	system("mkdir -p /tmp/new_sysroot/etc/hal/fdi/policy ");
-	WriteFile("/tmp/new_sysroot/etc/hal/fdi/policy/10-x11-input.fdi", fdi);
-}
+
 
 void SetupThread::generateIssue() {
 	if (!FileExists("/tmp/new_sysroot/etc/issue_" + sysconf_lang)) {
@@ -972,7 +939,6 @@ bool SetupThread::postInstallActions() {
 	// Copy skel to root directory
 	system("rsync -arvh /tmp/new_sysroot/etc/skel/ /tmp/new_sysroot/root/");
 	system("chown -R root:root /tmp/new_sysroot/root");
-	//xorgSetLangHALEx();
 	xorgSetLangConf();
 	generateIssue();
 	writeFstab();
