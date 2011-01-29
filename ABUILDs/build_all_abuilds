@@ -1,5 +1,5 @@
 #!/bin/sh
-MODULES="mpkgsupport nwidgets mpkg-core mpkg-console mpkg-manager2 mpkg-i18n mpkg-parted"
+MODULES="mpkgsupport nwidgets mpkg-core mpkg-console mpkg-manager2 mpkg-i18n mpkg-parted mklivecd"
 set -e
 for i in $MODULES ; do
 	( cd $i && mkpkg -si )
