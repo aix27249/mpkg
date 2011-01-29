@@ -217,6 +217,7 @@ cat $CWD/isolinux.cfg | sed s/@ARCH@/$BITS/g | sed "s/@ISO_TITLE@/${iso_title}/g
 for i in linux.c32 vesamenu.c32 vesainfo.c32 isolinux.bin ; do
 	cp /usr/lib${LIBDIRSUFFIX}/syslinux/$i $LIVE_ROOT/isolinux/
 done
+cp $CWD/grub640.png $LIVE_ROOT/isolinux/
 
 # Creating ISO
 mkdir -p $ISO_OUTPUT
