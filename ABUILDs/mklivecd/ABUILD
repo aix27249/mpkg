@@ -15,7 +15,7 @@ source=("svn:svn://agilialinux.ru/mpkg/mpkg/trunk/chroot_installer")
 tags="xapps sys-apps"
 
 # Many additional dependencies which are used indirectly during setup process.
-adddep="bash>=4.0 wget rsync syslinux>=4.0 cdrtools fakeroot fakechroot mpkg-console>=0.16_svn290 squashfs-tools"
+adddep="bash>=4.0 wget rsync syslinux>=4.0 cdrtools fakeroot fakechroot mpkg-console>=0.16_svn290 squashfs-tools>=4.1"
 
 # Build system
 BUILD_SYSTEM="cmake"
