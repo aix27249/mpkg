@@ -82,6 +82,7 @@ options:  -l, --linkadd y|n (moves symlinks into doinst.sh: recommended)
                          programs in the doinst.sh script)
           -c, --chown y|n (resets all permissions to root:root 755
                            - not generally recommended)
+	  -q, --quiet (do not display compression messages)
 
 If these options are not set, makepkg will prompt as appropriate.
 EOF
@@ -114,6 +115,9 @@ while [ 0 ]; do
     shift 2
   elif [ "$1" = "-p" -o "$1" = "--prepend" ]; then
     PREPEND=y
+    shift 1
+  elif [ "$1" = "-q" -o "$1" = "--quiet" ]; then
+    QUIET=y
     shift 1
   elif [ "$1" = "-h" -o "$1" = "-H" -o "$1" = "--help" -o $# = 0 ]; then
     usage
@@ -190,7 +194,7 @@ case $EXTENSION in
 esac
 
 echo
-echo "AgiliaLinux package maker, version 3.15."
+echo "AgiliaLinux package maker, version 3.16."
 echo
 
 INST=$(mktemp $TMP/makepkg.XXXXXX)
@@ -286,30 +290,36 @@ fi
 echo "Creating AgiliaLinux package:  ${TARGET_NAME}/${TAR_NAME}.${EXTENSION}"
 echo
 rm -f ${TARGET_NAME}/${TAR_NAME}.${EXTENSION}
+if [ "$QUIET" = "y" ] ; then
+	TAR_ARGS=cf
+else
+	TAR_ARGS=cvf
+fi
+
 case $EXTENSION in
 'tgz' | 'tar.gz' )
-  $TAR cvf - . | gzip -9c > ${TARGET_NAME}/${TAR_NAME}.${EXTENSION}
+  $TAR $TAR_ARGS - . | gzip -9c > ${TARGET_NAME}/${TAR_NAME}.${EXTENSION}
   ERRCODE=$?
   if [ ! $? = 0 ]; then
     echo "ERROR:  gzip returned error code $? -- makepkg failed."
   fi
   ;;
 'tbz' | 'tar.bz2' )
-  $TAR cvf - . | bzip2 -9c > ${TARGET_NAME}/${TAR_NAME}.${EXTENSION}
+  $TAR $TAR_ARGS - . | bzip2 -9c > ${TARGET_NAME}/${TAR_NAME}.${EXTENSION}
   ERRCODE=$?
   if [ ! $ERRCODE = 0 ]; then
     echo "ERROR:  bzip2 returned error code $ERRCODE -- makepkg failed."
   fi
   ;;
 'tlz' | 'tar.lzma' )
-  $TAR cvf - . | lzma -c > ${TARGET_NAME}/${TAR_NAME}.${EXTENSION}
+  $TAR $TAR_ARGS - . | lzma -c > ${TARGET_NAME}/${TAR_NAME}.${EXTENSION}
   ERRCODE=$?
   if [ ! $ERRCODE = 0 ]; then
     echo "ERROR:  lzma returned error code $ERRCODE -- makepkg failed."
   fi
   ;;
 'txz' | 'tar.xz' )
-  $TAR cvf - . | xz -c > ${TARGET_NAME}/${TAR_NAME}.${EXTENSION}
+  $TAR $TAR_ARGS - . | xz -c > ${TARGET_NAME}/${TAR_NAME}.${EXTENSION}
   ERRCODE=$?
   if [ ! $ERRCODE = 0 ]; then
     echo "ERROR:  xz returned error code $ERRCODE -- makepkg failed."
