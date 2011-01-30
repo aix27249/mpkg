@@ -1138,6 +1138,7 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 		if (goodPkg) minimalPkgList.add(*goodPkg);
 		else {
 		       	cout << _("FATAL: No good package found for item [") << i << "] " << tmp << _(", it means that you have some libs that are not packaged.\n") << endl;
+			cout << _("Note: if you are building 32-bit binary for 64-bit system, you should add x86 tag to prevent this.") << endl;
 			abort();
 		}
 		if (verbose) printf("%s found in %s package\n", results.getValue(i, fFile_name).c_str(), goodPkg->get_name().c_str());
