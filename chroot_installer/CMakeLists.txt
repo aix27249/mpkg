@@ -17,9 +17,9 @@ FILE(GLOB conftemplate "${CMAKE_CURRENT_SOURCE_DIR}/mpkg.xml*")
 FILE(GLOB dbtemplate "${CMAKE_CURRENT_SOURCE_DIR}/packages.db")
 
 # Live elements: lots of stuff, but needed
-
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/isolinux.cfg" DESTINATION share/mklivecd/scripts/live-elements)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/init" DESTINATION share/mklivecd/scripts/live-elements )
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/grub640.png" DESTINATION share/mklivecd/scripts/live-elements)
 
 # Default templates, seems to be ok for most of LiveCDs
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/passwd" DESTINATION share/mklivecd/scripts/live-elements)
@@ -30,6 +30,7 @@ INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/10-keymap.conf" DESTINA
 # Initrd template
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/initrd64.img" DESTINATION share/mklivecd/scripts/live-elements)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/initrd32.img" DESTINATION share/mklivecd/scripts/live-elements)
+
 
 # Configuration file and ISOBUILD example
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/ISOBUILD.example" DESTINATION share/mklivecd)
