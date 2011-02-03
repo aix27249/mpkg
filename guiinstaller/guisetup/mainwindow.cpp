@@ -121,7 +121,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(ui->mountNoFormatRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterNoFormat(bool)));
 
 
-	ui->progressBar->setMaximum(ui->stackedWidget->count());
+	ui->progressBar->setMaximum(ui->stackedWidget->count()+1);
 	// Just in case...
 	system("mkdir -p /var/log/mount");
 

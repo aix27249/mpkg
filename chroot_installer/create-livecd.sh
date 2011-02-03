@@ -25,6 +25,14 @@ plugindir=${scriptdir}/plugins
 
 # Defining variables
 ARCH=$arch
+if [ "$arch" = "" -o "$arch" = "auto" ] ; then
+	if [ "`uname -m`" = "x86_64" ] ; then
+		ARCH=x86_64
+	else
+		ARCH=x86
+	fi
+fi
+
 NODE="${BUILD_ROOT}/${iso_name}-${ARCH}"
 INITRD_ROOT="${NODE}/boot/initrd-tree"
 LIVE_ROOT="${LIVE_BUILD_ROOT}/${iso_name}-${ARCH}"

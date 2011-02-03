@@ -28,6 +28,29 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>LoadSetupVariantsThread</name>
+    <message>
+        <location filename="thread.cpp" line="36"/>
+        <source>Mounting media</source>
+        <translation>Монтирование диска</translation>
+    </message>
+    <message>
+        <location filename="thread.cpp" line="41"/>
+        <source>Receiving repository data</source>
+        <translation>Получение данных из репозитория</translation>
+    </message>
+    <message>
+        <location filename="thread.cpp" line="251"/>
+        <source>Receiving setup variants</source>
+        <translation>Получение вариантов установки</translation>
+    </message>
+    <message>
+        <location filename="thread.cpp" line="285"/>
+        <source>Processing setup variants</source>
+        <translation>Обработка вариантов установки</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.cpp" line="43"/>
@@ -291,118 +314,118 @@ This is fatal, and we have to exit.</source>
         <translation>&lt;p&gt;&lt;b&gt;Источник пакетов:&lt;/b&gt; %1&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Тип установки:&lt;/b&gt; %2&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Разделы, которые будут ОТФОРМАТИРОВАНЫ:&lt;/b&gt;&lt;ul&gt;%3&lt;/ul&gt;&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Разделы, которые используются но НЕ БУДУТ ОТФОРМАТИРОВАНЫ:&lt;/b&gt;&lt;ul&gt;%4&lt;/ul&gt;&lt;/p&gt;				&lt;p&gt;&lt;b&gt;Загрузчик будет установлен в:&lt;/b&gt; %5&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="926"/>
-        <location filename="mainwindow.cpp" line="957"/>
+        <location filename="mainwindow.cpp" line="927"/>
+        <location filename="mainwindow.cpp" line="958"/>
         <source>Verification failed</source>
         <translation>Пароли не совпадают</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="926"/>
-        <location filename="mainwindow.cpp" line="957"/>
+        <location filename="mainwindow.cpp" line="927"/>
+        <location filename="mainwindow.cpp" line="958"/>
         <source>Passwords doesn&apos;t match. Please enter it more carefully.</source>
         <translation>Введенные пароли не совпадают. Пожалуйста, введите их аккуратней.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="932"/>
-        <location filename="mainwindow.cpp" line="963"/>
+        <location filename="mainwindow.cpp" line="933"/>
+        <location filename="mainwindow.cpp" line="964"/>
         <source>Empty password</source>
         <translation>Пустой пароль</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="932"/>
+        <location filename="mainwindow.cpp" line="933"/>
         <source>Root password cannot be empty, it is very insecure!</source>
         <translation>Пароль root не может быть пустым, это очень небезопасно!</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="941"/>
+        <location filename="mainwindow.cpp" line="942"/>
         <source>Username not specified</source>
         <translation>Не указано имя пользователя</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="941"/>
+        <location filename="mainwindow.cpp" line="942"/>
         <source>Please, enter username</source>
         <translation>Пожалуйста, укажите имя пользователя</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="945"/>
-        <location filename="mainwindow.cpp" line="949"/>
-        <location filename="mainwindow.cpp" line="953"/>
+        <location filename="mainwindow.cpp" line="946"/>
+        <location filename="mainwindow.cpp" line="950"/>
+        <location filename="mainwindow.cpp" line="954"/>
         <source>Invalid username</source>
         <translation>Некорректное имя пользователя</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="945"/>
+        <location filename="mainwindow.cpp" line="946"/>
         <source>Username cannot start from number. Please specify correct username.</source>
         <translation>Имя пользователя не может начинаться с цифры. Пожалуйста, укажите корректное имя пользователя.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="949"/>
+        <location filename="mainwindow.cpp" line="950"/>
         <source>User root is an administrative account and already exists, please specify another name</source>
         <translation>Пользователь root - административный аккаунт и уже существует, пожалуйста укажите другое имя</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="953"/>
+        <location filename="mainwindow.cpp" line="954"/>
         <source>Username contain invalid characters. Please specify correct username.</source>
         <translation>Имя пользователя содержит недопустимые символы. Укажите корректное имя пользователя.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="963"/>
+        <location filename="mainwindow.cpp" line="964"/>
         <source>You cannot create user with no password. If you still want this, you can change password after installation.</source>
         <translation>Вы не можете создать пользователя с пустым паролем. Если вы по прежнему хотите пустой пароль, вы сможете сделать это после установки.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="992"/>
-        <location filename="mainwindow.cpp" line="996"/>
+        <location filename="mainwindow.cpp" line="993"/>
+        <location filename="mainwindow.cpp" line="997"/>
         <source>Invalid mount point</source>
         <translation>Некорректная точка монтирования</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="992"/>
+        <location filename="mainwindow.cpp" line="993"/>
         <source>Mount point &apos;%1&apos; is invalid: it should be an absolute path. For more information, see help.</source>
         <translation>Точка монтирования &apos;%1&apos; некорректна: это должен быть абсолютный путь. Для дополнительной информации смотрите справку.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="996"/>
+        <location filename="mainwindow.cpp" line="997"/>
         <source>Mount point &apos;%1&apos; contains invalid characters. For more information, see help.</source>
         <translation>Точка монтирования &apos;%1&apos; содержит недопустимые символы. Для дополнительной информации смотрите справку.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1008"/>
+        <location filename="mainwindow.cpp" line="1009"/>
         <source>Unformatted filesystem mount</source>
         <translation>Неотформатированная файловая система</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1008"/>
+        <location filename="mainwindow.cpp" line="1009"/>
         <source>You are attempting to mount an unformatted partition to &apos;%1&apos;. It is impossible, please mark it to format or leave unused.</source>
         <translation>Вы пытаетесь подключить неотформатированный раздел в &apos;%1&apos;. Это невозможно: либо назначьте форматирование этого раздела, либо не используйте его.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1026"/>
+        <location filename="mainwindow.cpp" line="1027"/>
         <source>No swap partition</source>
         <translation>Отсутствует раздел подкачки</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1026"/>
+        <location filename="mainwindow.cpp" line="1027"/>
         <source>You didn&apos;t specified swap partition. It is OK for systems with lots of RAM (2Gb or more), but you will be unable to use suspend-to-disk. Are you sure?</source>
         <translation>Вы не указали раздел подкачки (swap). Это допустимо для систем с большим количеством оперативной памяти (2Gb или более), в противном случае вы рискуете столкнуться с нехваткой памяти. В любом случае вы лишитесь возможности использовать засыпание на диск (suspend-to-disk). Вы уверены?</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1028"/>
+        <location filename="mainwindow.cpp" line="1029"/>
         <source>No root partition</source>
         <translation>Отсутствует корневой раздел</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1028"/>
+        <location filename="mainwindow.cpp" line="1029"/>
         <source>You didn&apos;t specified root partition. Without this, system cannot be installed.</source>
         <translation>Вы не указали корневой раздел. Без него система не может быть установлена.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1033"/>
+        <location filename="mainwindow.cpp" line="1034"/>
         <source>Unsupported root filesystem</source>
         <translation>Неподдерживаемая корневая файловая система</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1033"/>
+        <location filename="mainwindow.cpp" line="1034"/>
         <source>Unfortunately, GRUB boot loader cannot be installed on %1 filesystem.
 You can ignore this warning if you really know what are you going to do. 
 Do you want to make your system bootable without red-eye horror?</source>
@@ -411,22 +434,22 @@ Do you want to make your system bootable without red-eye horror?</source>
 Вы хотите сделать свою систему загружаемой?</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1043"/>
+        <location filename="mainwindow.cpp" line="1044"/>
         <source>Duplicate mount points found</source>
         <translation>Обнаружены совпадающие точки монтирования</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1043"/>
+        <location filename="mainwindow.cpp" line="1044"/>
         <source>Duplicate mount points found: %1</source>
         <translation>Обнаружены совпадающие точки монтирования: %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1055"/>
+        <location filename="mainwindow.cpp" line="1056"/>
         <source>Not enough space</source>
         <translation>Недостаточно места на диске</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1055"/>
+        <location filename="mainwindow.cpp" line="1056"/>
         <source>Size of root filesystem may be not enough for this installation type. You need to have at least %1 of space. Note that this check doesn&apos;t respect complex partitioning schemes such as separate /usr, so you can ignore this warning if you sure.
 
 Do you want to re-check your partitioning scheme?</source>
@@ -435,28 +458,28 @@ Do you want to re-check your partitioning scheme?</source>
 Вы хотите исправить схему использования диска?</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1065"/>
-        <location filename="mainwindow.cpp" line="1070"/>
+        <location filename="mainwindow.cpp" line="1066"/>
+        <location filename="mainwindow.cpp" line="1071"/>
         <source>Network settings error</source>
         <translation>Ошибка в сетевых настройках</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1065"/>
+        <location filename="mainwindow.cpp" line="1066"/>
         <source>Please specify hostname</source>
         <translation>Пожалуйста, укажите имя хоста</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1070"/>
+        <location filename="mainwindow.cpp" line="1071"/>
         <source>Please specify network name</source>
         <translation>Пожалуйста, укажите имя сети</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1123"/>
+        <location filename="mainwindow.cpp" line="1124"/>
         <source>Show release notes</source>
         <translation>Показать заметки о выпуске</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1127"/>
+        <location filename="mainwindow.cpp" line="1128"/>
         <source>Hide release notes</source>
         <translation>Скрыть заметки о выпуске</translation>
     </message>
@@ -678,6 +701,24 @@ p, li { white-space: pre-wrap; }
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 8.0 Beta2 Release Notes&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;Welcome to AgiliaLinux! This tool will install the system to your computer. If you need help, please visit our forum: http://forum.agilialinux.ru/ or join jabber conference: agilialinux@conference.jabber.ru. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;This installer is running inside a live system. It contains a working environment with web browser, IM client and other useful things, which you can use to get assistance at installation time.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-weight:600;&quot;&gt;TINY DISCLAIMER&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;This is a second beta. Please report bugs to http://trac.agilialinux.ru/.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;It is known that it contain some bugs (and some of them are unknown), it may even fail to install. It can eat your cat, make your eyes red and glowing, cause permanent insomnia and make other bad things.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;But we hope you find it useful and we don&apos;t waste our time :)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;For more information, see official site: http://www.agilialinux.ru/&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <oldsource>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Tahoma&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 8.0 Beta1 Release Notes&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
@@ -692,8 +733,25 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;But we hope you find it useful and we don&apos;t waste our time :)&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;For more information, see official site: http://www.agilialinux.ru/&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;For more information, see official site: http://www.agilialinux.ru/&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 8.0 Beta2&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;Добро пожаловать в AgiliaLinux! Данная программа установит систему на ваш компьютер. Если вам понадобится помощь, посетите наш форум: http://forum.agilialinux.ru/ или заходите в jabber-конференцию: agilialinux@conference.jabber.ru. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;Данный инсталлятор работает в live-системе. Она представляет из себя полноценное окружение, содержащее веб-браузер, jabber-клиент и другие полезные вещи, которые могут пригодиться в процессе установки.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-weight:600;&quot;&gt;TINY DISCLAIMER&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;This is a second beta. Please report bugs to http://trac.agilialinux.ru/.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;It is known that it contain some bugs (and some of them are unknown), it may even fail to install. It can eat your cat, make your eyes red and glowing, cause permanent insomnia and make other bad things.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;But we hope you find it useful and we don&apos;t waste our time :)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;For more information, see official site: http://www.agilialinux.ru/&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="284"/>
@@ -791,7 +849,14 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;For more information, see help.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;Select partition and edit settings below:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Tahoma&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;Необходимо указать точки монтирования различных разделов.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;Для дополнительной информации, смотрите справку.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;Выберите раздел и измените настройки:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1377"/>
@@ -971,8 +1036,9 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="mainwindow.ui" line="1807"/>
-        <source>Enable boot delay [deprecated, should be autodetected by initrd scripts]</source>
-        <translation>Включить задержку при загрузке [устарело, должно автоматически определяться initrd-скриптами]</translation>
+        <source>Enable boot delay (required for booting from USB drives)</source>
+        <oldsource>Enable boot delay [deprecated, should be autodetected by initrd scripts]</oldsource>
+        <translation>Включить задержку при загрузке (необходимо для загрузки с USB-дисков)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1816"/>
@@ -989,9 +1055,14 @@ p, li { white-space: pre-wrap; }
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Tahoma&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <oldsource>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Tahoma&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1793"/>

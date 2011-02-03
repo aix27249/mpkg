@@ -33,12 +33,12 @@ void LoadSetupVariantsThread::run() {
 	core->set_repositorylist(rList, dlist);
 
 	if (pkgsource=="dvd" || pkgsource.toStdString().find("iso:///")) {
-		emit sendLoadText("Mounting media");
+		emit sendLoadText(tr("Mounting media"));
 		emit sendLoadProgress(5);
 		mountDVD();
 	}
 
-	emit sendLoadText("Receiving repository data");
+	emit sendLoadText(tr("Receiving repository data"));
 	emit sendLoadProgress(10);
 
 	core->update_repository_data();
@@ -248,7 +248,7 @@ void LoadSetupVariantsThread::getCustomSetupVariants(const vector<string>& rep_l
 	string itemname;
 
 	for (size_t z=0; z<rep_list.size(); ++z) {
-		emit sendLoadText("Receiving setup variants");
+		emit sendLoadText(tr("Receiving setup variants"));
 		emit sendLoadProgress(5+z*3);
 
 		downloadQueue.clear();
@@ -282,7 +282,7 @@ void LoadSetupVariantsThread::getCustomSetupVariants(const vector<string>& rep_l
 
 		printf("Starting importing package lists\n");
 		for (size_t i=0; i<list.size(); ++i) {
-			emit sendLoadText("Processing setup variants");
+			emit sendLoadText(tr("Processing setup variants"));
 			emit sendLoadProgress(10+(z+1)*3+( (double)((100-(10+(z+1)*3))/(double) list.size())*(i+1) ));
 
 			printf("Processing %d of %d\n", (int) i+1, (int) list.size());
