@@ -577,7 +577,7 @@ void MainWindow::loadBootloaderTree() {
 		ui->bootPartitionComboBox->addItem(QString("%1 (%2)").arg(QString::fromStdString(partitions[i].devname)).arg(QString::fromStdString(partitions[i].size + " Mb")));
 	}
 
-	ui->bootLoaderComboBox->addItem(tr("No bootloader"));
+	//ui->bootLoaderComboBox->addItem(tr("No bootloader"));
 }
 
 bool MainWindow::validateBootloaderSettings() {
@@ -592,13 +592,13 @@ void MainWindow::saveBootloaderSettings() {
 	QString fbmode = "text";
 	if (ui->bootDeviceRadioButton->isChecked()) {
 		if (ui->bootLoaderComboBox->currentIndex()<0) return;
-		if (ui->bootLoaderComboBox->currentIndex()==ui->bootLoaderComboBox->count()-1) settings->setValue("bootloader", "NONE");
 		else settings->setValue("bootloader", drives[ui->bootLoaderComboBox->currentIndex()].tag.c_str());
 	}
-	else {
+	else if (ui->bootPartitionRadioButton->isChecked()) {
 		if (ui->bootPartitionComboBox->currentIndex()<0) return;
 		settings->setValue("bootloader", partitions[ui->bootPartitionComboBox->currentIndex()].devname.c_str());
 	}
+	else if (ui->noBootLoaderRadioButton->isChecked()) settings->setValue("bootloader", "NONE");
 	settings->setValue("fbmode", fbmode);
 	settings->setValue("initrd_delay", ui->initrdDelayCheckBox->isChecked());
 	settings->setValue("kernel_options", ui->kernelOptionsLineEdit->text());
