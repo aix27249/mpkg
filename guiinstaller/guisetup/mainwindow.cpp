@@ -680,10 +680,25 @@ void MainWindow::savePkgsourceSettings() {
 		settings->setValue("pkgsource", coreRepo);
 	}
 	// Advanced stuff
+
 	QStringList advancedRepos;
 	if (ui->autoUpdateCheckBox->isChecked()) advancedRepos << coreRepo;
 	if (ui->includeTestingCheckBox->isChecked()) advancedRepos << testingRepo;
 	if (ui->includeUserlandCheckBox->isChecked()) advancedRepos << userlandRepo;
+	
+	vector<string> userRepos = MakeStrings(ui->additionalRepositoriesTextEdit->toPlainText().toStdString());
+
+	for (size_t i=0; i<userRepos.size(); ++i) {
+		if (cutSpaces(userRepos[i]).empty()) continue;
+		advancedRepos << QString::fromStdString(cutSpaces(userRepos[i]));
+	}
+
+	settings->beginWriteArray("additional_repositories");
+	for (int i=0; i<advancedRepos.size(); ++i) {
+		settings->setArrayIndex(i);
+		settings->setValue("url", advancedRepos[i]);
+	}
+	settings->endArray();
 }
 
 
