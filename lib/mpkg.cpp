@@ -43,34 +43,31 @@ void pkgConfigInstall(const PACKAGE &package) {
 		// Проверяется, есть ли копия предыдущего оригинального конфига в var/mpkg/configs/$pkgname/$conf_path/$conf_file
 		orig_exists = FileExists(orig_name);
  
-		// Если системный конфиг существует, а так же существует оригинальный конфиг, и они совпадают - то старый системный конфиг перезаписывается новым:
-		if ((sysconf_exists && ((orig_exists && get_file_md5(sysconf_name) == get_file_md5(orig_name)) || get_file_md5(sysconf_name)==get_file_md5(sysconf_name+".new")))|| !orig_exists) {
-			system("mv " + sysconf_name + ".new " + sysconf_name);
-			//printf("\nUnmodified config: moving %s.new to %s\n", sysconf_name.c_str(), sysconf_name.c_str());
-		}
- 
-		// Если системный конфиг существует, а так же существует оригинальный конфиг, но они НЕ совпадают, или же оригинального конфига нет - то:
-		if ((sysconf_exists && orig_exists && get_file_md5(sysconf_name) != get_file_md5(orig_name)) || !orig_exists) {
-			printf(_("\nExisting configuration file %s was modified by user: "), sysconf_name.c_str());
+		// Create a copy of new conf
+		system("mkdir -p " + getDirectory(orig_name));
+		system("cp " + sysconf_name + ".new " + orig_name); // Creating backup copy
 
-			system("mkdir -p " + getDirectory(orig_name));
-			// Если конфиг имеет флаг force_new, то старый системный конфиг копируется в var/mpkg/configs/$pkgname/$conf_path/$conf_file.old, а на его место записывается новый конфиг:
-			if (package.config_files[i].hasAttribute("force_new", "true")) {
-				printf(_("marked as force_new, moving %s.new to %s and creating backup in %s\n"), sysconf_name.c_str(), sysconf_name.c_str(), old_name.c_str());
-				system("cp " + sysconf_name + " " + old_name);
-				system("mv " + sysconf_name + ".new " + sysconf_name);
-			}
- 
-			// После всего этого, в /var/mpkg/configs/$pkgname/$conf_path/$conf_file кладется копия оригинального конфига из пакета
-			if (FileExists(sysconf_name + ".new")) {
-				system("cp " + sysconf_name + ".new " + orig_name); // Creating backup copy
-				printf(_("check %s.new for changes!\n"), sysconf_name.c_str());
-			}
-			else {
-				//printf("\nCreating backup copy of config file %s\n", sysconf_name.c_str());
-				system("cp " + sysconf_name + " " + orig_name);
-			}
+		// If an existing config is identical with new, remove new
+		if (sysconf_exists && get_file_md5(sysconf_name) == get_file_md5(sysconf_name + ".new")) {
+			unlink(string(sysconf_name + ".new").c_str());
 		}
+
+		// If no old config, or has force_new flag, move new to sysconf_name
+		if (!sysconf_exists) {
+			system("mv " + sysconf_name + ".new " + sysconf_name);
+		}
+
+		// In case of force_new, force overwrite AND copy to old_name previous variant
+		if (package.config_files[i].hasAttribute("force_new", "true")) {
+			system("cp " + sysconf_name + " " + old_name);
+			system("mv " + sysconf_name + ".new " + sysconf_name);
+			printf(_("\n%s: Note: %s has forced to be new, old config backed up\n"), package.get_name().c_str(), sysconf_name.c_str());
+		}
+
+		// Note user if a .new file still exists.
+		if (FileExists(sysconf_name + ".new")) printf(_("\n%s: Note: %s.new exists, check for changes\n"), package.get_name().c_str(), sysconf_name.c_str());
+		
+		// What to do with a .new one if it has to be leaved there? Let's leave it alone, until decided otherwise.
 	}
 }
 
@@ -96,8 +93,8 @@ void pkgConfigRemove(const PACKAGE &package) {
 			unlink(sysconf_name.c_str());
 			unlink(orig_name.c_str());
 		}
-		else if (sysconf_exists) printf("Leaving modified config file %s in place\n", sysconf_name.c_str());
-		else printf("Config file %s was wanished: perhaps it was removed by someone else.\n", sysconf_name.c_str());
+		else if (sysconf_exists) printf(_("Modified config: %s, leaving in place\n"), sysconf_name.c_str());
+		else printf(_("Config file %s wanished: perhaps it was removed by someone else.\n"), sysconf_name.c_str());
 	}
 
 	
