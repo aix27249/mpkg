@@ -1,7 +1,5 @@
-#
-# MOPSLinux packaging system
-#
-#
+# AgiliaLinux GUI installer: lang setup
+
 cmake_minimum_required(VERSION 2.6)
     if(COMMAND cmake_policy)
       cmake_policy(SET CMP0003 NEW)
@@ -12,9 +10,6 @@ PROJECT(GUISETUP)
 
 # Enabling building of shared libs
 SET(BUILD_SHARED_LIBS ON)
-# If you want to build a standalone server app, set SERVERAPP to ON
-SET(SERVERAPP OFF)
-SET(MAXSTATIC OFF)
 # Check 64 bit
 if (CMAKE_SIZEOF_VOID_P EQUAL 4)
 	SET(X86_64 OFF)

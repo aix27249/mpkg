@@ -1,0 +1,27 @@
+#include <nwidgets/ncurses_if.h>
+
+int main(int argc, char **argv) {
+	setlocale(LC_ALL, "");
+	ncInterface.setStrings();
+	dialogMode = true;
+
+	ncInterface.setTitle("AgiliaLinux installer");
+	ncInterface.setSubtitle("Language selection");
+
+	vector<MenuItem> menuItems;
+	menuItems.push_back(MenuItem("ru", "Русский"));
+	menuItems.push_back(MenuItem("uk", "Украинский"));
+	menuItems.push_back(MenuItem("en", "English"));
+
+	string lang = ncInterface.showMenu("Please, select installation language:\nПожалуйста, выберите язык для установки:", menuItems);
+
+	if (lang.empty()) return 1;
+
+	string lc_locale;
+	if (lang=="ru") lc_locale = "ru_RU.UTF-8";
+	else if (lang=="uk") lc_locale = "uk_UA.UTF-8";
+	else lc_locale = "en_US.UTF-8";
+
+	ncInterface.uninit();
+	return system(string("LC_ALL=" + lc_locale + " textinstaller").c_str());
+}

@@ -1,6 +1,5 @@
 /****************************************************
- * AgiliaLinux: system setup (new generation)
- * $Id: setup.cpp,v 1.55 2007/11/20 00:41:50 i27249 Exp $
+ * AgiliaLinux: text installer
  *
  * Required libraries:
  * libparted
@@ -15,228 +14,15 @@
  *
  * *************************************************/
 #define NTFS3G // We want to use NTFS-3G to handle NTFS volumes
-//#define ALPHA // Alpha mode installer
 
 #include "setup.h"
-//#include "composite_setup.h"
 #include <mpkg-parted/mpkg-parted.h>
 #include <mpkg-parted/raidtool.h>
 #include <mpkg-parted/lvmtool.h>
 #include "raidtool.h"
-/*
-#define PKGSET_MINIMAL 1
-#define PKGSET_SERVER 2
-#define PKGSET_FULL 3
-#define PKGSET_EXPERT 4
-#define PKGSET_FILE 5
-#define PKGSET_XFCE 6
-*/
-#define USE_X11_HAL 
 
-vector<CustomPkgSet> customPkgSetList;
-
-bool enable_addons = false;
-bool enable_contrib = false;
-bool askForKDE = false;
-string i_menuHead = _("AgiliaLinux ") + (string) string(DISTRO_VERSION);// + " installation";// + " [mpkg  v." + mpkgVersion + " build " + mpkgBuild + "]";
-bool licenseAccepted = false;
-bool unattended = false;
-SysConfig systemConfig;
-BootConfig bootConfig;
-bool enable_setup_debug=false;
-bool use_initrd = true;
-PACKAGE_LIST i_availablePackages;
-vector<string> i_tagList;
+// MPKG core handler
 mpkg *core=NULL;
-bool realtimeTrackingEnabled=true;
-bool onlineDeps=true;
-string kde_branch;
-string rootdev_wait = "1";
-bool ext4_supported=false;
-void generateLangSh(string dir="/mnt/etc/profile.d/") {
-	string lang_sh="#!/bin/sh\n\
-export LANG=$L\n\
-export LC_CTYPE=$L\n\
-export LC_NUMERIC=$L\n\
-export LC_TIME=$L\n\
-export LC_COLLATE=C\n\
-export LC_MONETARY=$L\n\
-export LC_MESSAGES=$L\n\
-export LC_PAPER=$L\n\
-export LC_NAME=$L\n\
-export LC_ADDRESS=$L\n\
-export LC_TELEPHONE=$L\n\
-export LC_MEASUREMENT=$L\n\
-export LC_IDENTIFICATION=$L\n\
-export LESSCHARSET=UTF-8\n";
-	strReplace(&lang_sh, "$L", systemConfig.lang);
-	WriteFile(dir+"lang.sh", lang_sh);
-	strReplace(&lang_sh, "export", "setenv");
-	strReplace(&lang_sh, "/bin/sh", "/bin/csh");
-	WriteFile(dir+"lang.csh", lang_sh);
-}
-vector<MenuItem> getAvailableXkbLayouts() {
-	vector<MenuItem> ret;
-	ret.push_back(MenuItem("us", _("English"), ""));
-	ret.push_back(MenuItem("ru", _("Russian"), "winkeys"));
-	ret.push_back(MenuItem("ru", _("Russian (UNIX)"), ""));
-	ret.push_back(MenuItem("ua", _("Ukrainian"), "winkeys"));
-	ret.push_back(MenuItem("ua", _("Ukrainian (UNIX)"), ""));
-	ret.push_back(MenuItem("il", _("Hebrew"), ""));
-	ret.push_back(MenuItem("il", _("Hebrew (phonetic)"), "phonetic"));
-	return ret;
-}
-vector<MenuItem> askXkbLayout() {
-	vector<MenuItem> al = getAvailableXkbLayouts();
-	for (size_t i=0; i<al.size(); ++i) {
-		if (al[i].tag=="us") al[i].flag = true;
-		if (al[i].tag=="ru" && al[i].description=="winkeys" && systemConfig.lang.find("ru")==0) al[i].flag=true;
-		if (al[i].tag=="ua" && al[i].description=="winkeys" && systemConfig.lang.find("uk")==0) al[i].flag=true;
-	}
-	ncInterface.showExMenu(_("Select X11 keyboard layouts. If not sure, leave this as is"), al);
-	return al;
-	
-
-}
-void xorgSetLang() {
-	string lang;
-	if (systemConfig.lang.find("ru")==0) lang="us,ru(winkeys)";
-	if (systemConfig.lang.find("uk")==0) lang="us,uk(winkeys)";
-	if (systemConfig.lang.find("en")==0) lang="us";
-	string data = ReadFile(systemConfig.rootMountPoint + "/etc/X11/xorg.original");
-	strReplace(&data, "us,ru(winkeys)", lang);
-	WriteFile(systemConfig.rootMountPoint + "/etc/X11/xorg.original", data);
-}
-
-void xorgSetLangHALEx() {
-	string lang, varstr;
-	vector<MenuItem> langmenu = askXkbLayout();
-	size_t cnt=0;
-	for (size_t i=0; i<langmenu.size(); ++i) {
-		if (!langmenu[i].flag) continue;
-		if (cnt!=0) {
-			lang += ",";
-			varstr+=",";
-		}
-		lang += langmenu[i].tag;
-		varstr += langmenu[i].description;
-		cnt++;
-	}
-	string variant = "<merge key=\"input.xkb.variant\" type=\"string\">" + varstr + "</merge>\n";
-	
-	string fdi = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><!-- -*- SGML -*- -->\n\
-<match key=\"info.capabilities\" contains=\"input.keyboard\">\n\
-  <merge key=\"input.xkb.layout\" type=\"string\">" + lang + "</merge>\n" + variant + \
-"  <merge key=\"input.xkb.options\" type=\"string\">terminate:ctrl_alt_bksp,grp:ctrl_shift_toggle,grp_led:scroll</merge>\n\
-</match>\n";
-	system("mkdir -p " + systemConfig.rootMountPoint + "/etc/hal/fdi/policy 2>/dev/null >/dev/null");
-	WriteFile(systemConfig.rootMountPoint + "/etc/hal/fdi/policy/10-x11-input.fdi", fdi);
-}
-
-bool setupListCheck(const PACKAGE_LIST& pkgList) {
-	vector<string> corenames;
-	string corename;
-	bool found;
-	vector<MenuItem> dupes;
-	for (size_t i=0; i<pkgList.size(); ++i) {
-		if (pkgList[i].action()!=ST_INSTALL) continue;
-		corename = pkgList[i].get_corename();
-		found = false;
-		for (size_t z=0; z<corenames.size(); ++z) {
-			if (corenames[z]==corename) {
-				found = true;
-				break;
-			}
-		}
-		if (!found) corenames.push_back(corename);
-		else dupes.push_back(MenuItem(pkgList[i].get_name(), "corename: " + pkgList[i].get_corename() + " (" + pkgList[i].get_fullversion() + ")"));
-	}
-	if (dupes.empty()) {
-		ncInterface.showMsgBox("List OK");
-		return true;
-	}
-	else {
-		ncInterface.showMenu("Dupes found:", dupes);
-		return false;
-	}
-}
-
-void xorgSetLangHAL() {
-	string lang;
-	string variant = "<merge key=\"input.xkb.variant\" type=\"string\">,winkeys</merge>\n";
-	
-	if (systemConfig.lang.find("ru")==0) lang="us,ru";
-	if (systemConfig.lang.find("uk")==0) lang="us,uk";
-	if (systemConfig.lang.find("en")==0) lang="us";
-	
-	
-
-
-	string fdi = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><!-- -*- SGML -*- -->\n\
-<match key=\"info.capabilities\" contains=\"input.keyboard\">\n\
-  <merge key=\"input.xkb.layout\" type=\"string\">" + lang + "</merge>\n" + variant + \
-"  <merge key=\"input.xkb.options\" type=\"string\">terminate:ctrl_alt_bksp,grp:ctrl_shift_toggle,grp_led:scroll</merge>\n\
-</match>\n";
-	system("mkdir -p " + systemConfig.rootMountPoint + "/etc/hal/fdi/policy 2>/dev/null >/dev/null");
-	WriteFile(systemConfig.rootMountPoint + "/etc/hal/fdi/policy/10-x11-input.fdi", fdi);
-}
-void generateIssue(string dir="/mnt/etc/") {
-	if (!FileExists(dir+"issue_" + systemConfig.lang)) {
-		return;
-	}
-	system("(cd " + dir + " 2>/dev/tty4 >/dev/null ; rm issue > /dev/null 2>/dev/tty4 ; ln -s issue_" + systemConfig.lang + " issue > /dev/null 2>/dev/tty4 )");
-}
-bool checkForExt4() {
-	// We need two conditions: kernel support and mkfs.ext4
-	string kver = get_tmp_file();
-	system("uname -r > " + kver);
-	if (strverscmp("2.6.29", ReadFile(kver).c_str())>0) {
-		unlink(kver.c_str());
-		return false;
-	}
-	string mkfs = get_tmp_file();
-	system("which mkfs.ext4 2>/dev/null >" + mkfs);
-	if (ReadFile(mkfs).empty()) {
-		unlink(kver.c_str());
-		unlink(mkfs.c_str());
-		return false;
-	}
-	unlink(kver.c_str());
-	unlink(mkfs.c_str());
-	return true;
-}
-
-
-void setDefaultRunlevel(const string& lvl) {
-	// Can change runlevels 3 and 4 to lvl
-	//
-	string data = ReadFile(systemConfig.rootMountPoint + "/etc/inittab");
-	strReplace(&data, "id:4:initdefault", "id:" + lvl + ":initdefault");
-	strReplace(&data, "id:3:initdefault", "id:" + lvl + ":initdefault");
-	WriteFile(systemConfig.rootMountPoint + "/etc/inittab", data);
-	if (lvl=="4") {
-		if (FileExists("/mnt/etc/rc.d/init.d/kdm")) system("chroot /mnt rc-update add kdm default");
-		else if (FileExists("/mnt/etc/rc.d/init.d/gdm")) system("chroot /mnt rc-update add gdm default");
-		else if (FileExists("/mnt/etc/rc.d/init.d/lxdm")) system("chroot /mnt rc-update add lxdm default");
-		else if (FileExists("/mnt/etc/rc.d/init.d/slim")) system("chroot /mnt rc-update add slim default");
-		else if (FileExists("/mnt/etc/rc.d/init.d/xdm")) system("chroot /mnt rc-update add xdm default");
-	}
-}
-string getUUID(const string& dev) {
-	string tmp_file = get_tmp_file();
-	system("blkid -s UUID " + dev + " > " + tmp_file);
-	string data = ReadFile(tmp_file);
-	size_t a = data.find_first_of("\"");
-	if (a==std::string::npos || a==data.size()-1) return "";
-	data.erase(data.begin(), data.begin()+a+1);
-	a = data.find_first_of("\"");
-	if (a==std::string::npos || a==0) return "";
-	return data.substr(0, a);
-}
-
-// Repository list
-vector<string> rep_locations;
-bool list_initialized=false;
 void createCore() {
 	if (core==NULL) core=new mpkg;
 }
@@ -247,6 +33,28 @@ void deleteCore() {
 		core=NULL;
 	}
 }
+
+// Unknown crappy stuff
+
+vector<CustomPkgSet> customPkgSetList;
+
+string i_menuHead = _("AgiliaLinux ") + (string) string(DISTRO_VERSION);// + " installation";// + " [mpkg  v." + mpkgVersion + " build " + mpkgBuild + "]";
+bool licenseAccepted = false;
+bool unattended = false;
+SysConfig systemConfig;
+BootConfig bootConfig;
+bool enable_setup_debug=false;
+bool use_initrd = true;
+PACKAGE_LIST i_availablePackages;
+vector<string> i_tagList;
+bool realtimeTrackingEnabled=true;
+bool onlineDeps=true;
+string rootdev_wait = "1";
+
+
+// Repository list
+vector<string> rep_locations;
+bool list_initialized=false;
 
 void showGreeting() {
 	ncInterface.setSubtitle(_("Welcome!"));
@@ -320,30 +128,6 @@ selectSwapPartition:
 	return 0;
 }
 
-int activateSwapSpace()
-{
-	// activates the swap space
-	if (!systemConfig.swapPartition.empty())
-	{
-		string swapoff="swapoff " + systemConfig.swapPartition + " 2>/dev/null >/dev/null";
-		system(swapoff);
-		string swapMake = "mkswap " + systemConfig.swapPartition + " 2>/var/log/mpkg-lasterror.log >/dev/null";
-		if (system(swapMake)!=0) {
-			mDebug("error creating swap on " + systemConfig.swapPartition + ", reason: " + getLastError());
-			ncInterface.showMsgBox(_("An error occured while creating swap: ") + getLastError());
-			return -1;
-		}
-		else {
-			mDebug("swap created on " + systemConfig.swapPartition);
-			swapMake = "swapon " + systemConfig.swapPartition + " 2>/dev/null >/dev/null";
-			if (system(swapMake)!=0)
-			{
-				ncInterface.showMsgBox(_("An error occured while enabling swap space: ") + ReadFile("/var/log/mpkg-lasterror.log"));
-			}
-		}
-	}
-	return 0;
-}
 
 
 int setRootPartition(string predefined, string predefinedFormat, bool simple)
@@ -388,7 +172,7 @@ int setRootPartition(string predefined, string predefinedFormat, bool simple)
 	}
 	mDebug("selecting FS type");
 	vector<MenuItem> formatOptions;
-	if (ext4_supported) formatOptions.push_back(MenuItem("ext4", _("4th version of standard linux filesystem"), _("New version of EXT, developed to superseed EXT3. The fastest journaling filesystem in most cases.")));
+	formatOptions.push_back(MenuItem("ext4", _("4th version of standard linux filesystem"), _("New version of EXT, developed to superseed EXT3. The fastest journaling filesystem in most cases.")));
 	formatOptions.push_back(MenuItem("ext3", _("Standard journaling Linux filesystem"), _("Seems to be a best balance between reliability and performance")));
 	formatOptions.push_back(MenuItem("ext2", _("Standard Linux filesystem (without journaling)."), _("Old, stable, very fast (it doesn't use jounal), but less reliable")));
 	formatOptions.push_back(MenuItem("xfs", _("Fast filesystem developed by SGI"), _("The best choise to store data (especially large files). Supports online defragmentation and other advanced features. Not recommended to use as root FS or /home")));
@@ -475,7 +259,7 @@ int setOtherOptions(string devName)
 	string fstype_ret;
 	string mountpoint_ret;
 	vector<MenuItem> formatOptions;
-	if (ext4_supported) formatOptions.push_back(MenuItem("ext4", _("4th version of standard linux filesystem"), _("New version of EXT, developed to superseed EXT3. The fastest journaling filesystem in most cases.")));
+	formatOptions.push_back(MenuItem("ext4", _("4th version of standard linux filesystem"), _("New version of EXT, developed to superseed EXT3. The fastest journaling filesystem in most cases.")));
 	formatOptions.push_back(MenuItem("ext3", _("Standard journaling Linux filesystem"), _("Seems to be a best balance between reliability and performance")));
 	formatOptions.push_back(MenuItem("ext2", _("Standard Linux filesystem (without journaling)."), _("Old, stable, very fast (it doesn't use jounal), but less reliable")));
 	formatOptions.push_back(MenuItem("xfs", _("Fast filesystem developed by SGI"), _("The best choise to store data (especially large files). Supports online defragmentation and other advanced features. Not recommended to use as root FS or /home")));
@@ -586,20 +370,6 @@ string getLastError()
 {
 	string ret = ReadFile("/var/log/mpkg-lasterror.log");
 	return ret;
-}
-bool formatPartition(string devname, string fstype)
-{
-	string fs_options;
-	if (fstype=="jfs") fs_options="-q";
-	if (fstype=="xfs") fs_options="-f -q";
-	if (fstype=="reiserfs") fs_options="-q";
-	if (!simulate)
-	{
-		string cmd = "umount -l " + devname +  " 2>/var/log/mpkg-lasterror.log ; mkfs -t " + fstype + " " + fs_options + " " + devname + " 2>> /var/log/mpkg-lasterror.log 1>>/var/log/mkfs.log";
-		if (system(cmd)==0) return true;
-		else return false;
-	}
-	return true;
 }
 int formatPartitions()
 {
@@ -984,109 +754,8 @@ add_new_user:
 		}
 	}
 	return true;
-	
 }
-void installPatchedATI(const string& f) {
-	ncInterface.showMsgBox(_("After installing this driver, you will see an error message due to incompatibility with newer kernels. Ignore this, and setup will apply patch automatically after driver installation"));
-	system("chroot /mnt sh /usr/src/drivers/" + f);
-	system("cp -R /var/log/mount/drivers/ati/ati-patch /mnt/usr/src/drivers/");
-	system("chroot /mnt sh /usr/src/drivers/ati-patch/install_patch.sh");
-}
-void installAdditionalDrivers() {
-	// First, detect hardware for which we have to install drivers.
-	string tmp_hw = get_tmp_file();
-	system("lspci > " + tmp_hw);
-	vector<string> hw = ReadFileStrings(tmp_hw);
-	// Check for VirtualBox
-	bool hasVirtualBox=false;
-	//int hasNvidia=-1;
-	int hasRadeon=-1;
-	for(size_t i=0; i<hw.size(); ++i) {
-		if (hw[i].find("VirtualBox")!=std::string::npos) hasVirtualBox = true;
-	//	if (hw[i].find("VGA compatible controller")!=std::string::npos && hw[i].find("nVidia")!=std::string::npos) hasNvidia = i;
-		if (hw[i].find("VGA compatible controller")!=std::string::npos && hw[i].find("Radeon")!=std::string::npos) hasRadeon = i;
-	}
-	string driverDir = "/var/log/mount/drivers/";
-	ncInterface.setSubtitle(_("Installing additional drivers"));
-	if (hasVirtualBox /* || hasNvidia!=-1 */ || hasRadeon!=-1) {
-		system("mount /dev/cdrom /var/log/mount  2>/dev/null >/dev/null");
-		//bool tryFoundDrivers = true;
-		if (!FileExists(driverDir)) return;
-		/*while (!FileExists(driverDir) && tryFoundDrivers) {
-			string text;
-		        if (hasVirtualBox) text = _("You are using VirtualBox, but guest additions not found in '") + driverDir + _("' . Do you want to specify directory manually?");
-			else text = _("Next hardware detected:\n");
-//			if (hasNvidia!=-1) text += hw[hasNvidia] + "\n";
-			if (hasRadeon!=-1) text += hw[hasRadeon] + "\n";
-			text += _("but no drivers detected in '") + driverDir + _("' . Do you want to specify directory manually?");
-			if (ncInterface.showYesNo(text)) driverDir = ncGetOpenDir(driverDir);
-			else tryFoundDrivers = false;
-		}*/
-	}
-	if (hasVirtualBox) {
-		ncInterface.uninit();
-#ifndef X86_64
-		system("mkdir -p /mnt/usr/src/drivers && cp /var/log/mount/drivers/VBoxLinuxAdditions-x86.run /mnt/usr/src/drivers");
-#else
-		system("mkdir -p /mnt/usr/src/drivers && cp /var/log/mount/drivers/VBoxLinuxAdditions-amd64.run /mnt/usr/src/drivers");
-#endif
 
-		system("chroot /mnt mount -t proc none /proc");
-
-#ifndef X86_64
-		system("chroot /mnt sh /usr/src/drivers/VBoxLinuxAdditions-x86.run");
-#else
-		system("chroot /mnt sh /usr/src/drivers/VBoxLinuxAdditions-amd64.run");
-#endif
-	}
-/*	if (hasNvidia!=-1) {
-		system("mount /dev/cdrom /var/log/mount 2>/dev/null >/dev/null");
-		vector<string> nvlist = getDirectoryList("/var/log/mount/drivers/nvidia/");
-		vector<MenuItem> menuItems;
-		for (size_t i=0; i<nvlist.size(); ++i) {
-#ifndef X86_64
-			if (nvlist[i].find("NVIDIA-Linux-x86-")==std::string::npos) continue;
-#else
-			if (nvlist[i].find("NVIDIA-Linux-x86_64")==std::string::npos) continue;
-#endif
-
-			menuItems.push_back(MenuItem(IntToStr(i), nvlist[i]));
-		}
-		menuItems.push_back(MenuItem(_("Skip"), _("Do not install driver")));
-		string ret = ncInterface.showMenu2(_("Videocard detected: ") + hw[hasNvidia] + _("\nChoose driver for it:\n185.хх and 190.xx - GeForce 6 and newer\n173.xx - GeForce FX\n96.xx - GeForce 2MX, 3, 4, 4MX\n7х - GeForce2 and older"), menuItems);
-		if (!ret.empty() && ret != _("Skip")) {
-			ncInterface.uninit();
-			system("mkdir -p /mnt/usr/src/drivers && cp /var/log/mount/drivers/nvidia/" + nvlist[atoi(ret.c_str())] + " /mnt/usr/src/drivers/");
-		       	system("chroot /mnt mount -t proc none /mnt");
-		      	system("chroot /mnt sh /usr/src/drivers/" + nvlist[atoi(ret.c_str())] + " -qNX --no-runlevel-check");
-		}
-	}
-*/
-	// We disable ATI proprietary driver installation, because this piece of crap doesn't work with xorg-server >= 1.7.x
-	/*if (hasRadeon!=-1) {
-		system("mount /dev/cdrom /var/log/mount 2>/dev/null >/dev/null");
-		vector<string> rvlist = getDirectoryList("/var/log/mount/drivers/ati/");
-		vector<MenuItem> menuItems;
-		for (size_t i=0; i<rvlist.size(); ++i) {
-			if (rvlist[i].find("ati-driver-installer-")==std::string::npos) continue;
-			menuItems.push_back(MenuItem(IntToStr(i), rvlist[i]));
-		}
-		if (!rvlist.empty()) {
-			menuItems.push_back(MenuItem(_("Skip"), _("Do not install driver")));
-			string ret = ncInterface.showMenu2("Videocard detected: " + hw[hasRadeon] + _("\nChoose driver: for cards based prior to R600 (9xxx, X300, X550, X600, X700, X1xxx, Xpress, X2100), select 9-3, for newer cards - select latest version:"), menuItems);
-			if (!ret.empty() && ret != _("Skip")) {
-				//system("mount /dev/cdrom /var/log/mount");
-				ncInterface.uninit();
-				system("mkdir -p /mnt/usr/src/drivers && cp /var/log/mount/drivers/ati/" + rvlist[atoi(ret.c_str())] + " /mnt/usr/src/drivers/");
-				system("chroot /mnt mount -t proc none /mnt");
-				// If we have a driver version prior 9-3, apply special installation procedure
-				if (rvlist[atoi(ret.c_str())].find("9-3")!=std::string::npos) installPatchedATI(rvlist[atoi(ret.c_str())]);
-				else system("chroot /mnt sh /usr/src/drivers/" + rvlist[atoi(ret.c_str())]);
-			}
-		}
-	}*/
-
-}
 bool setHostname() {
 	string hostname = ncInterface.showInputBox(_("Enter hostname (for example, agilia):"));
 	if (hostname.empty()) return false;
@@ -1131,12 +800,7 @@ int performConfig(bool simple)
 {
 	ncInterface.setSubtitle(_("Initial system configuration"));
 	generateLangSh();
-#ifdef USE_X11_HAL
-	//xorgSetLangHAL();
-	xorgSetLangHALEx();
-#else
 	xorgSetLang();
-#endif
 	generateIssue();
 	writeFstab();
 	buildInitrd();
@@ -1298,12 +962,6 @@ try_install_boot:
 	setRootPassword();
 	addNewUsers();
 	installAdditionalDrivers();
-#ifndef USE_X11_HAL
-	enableComposite("/mnt/etc/X11/xorg.conf");
-#endif
-	/*if (systemConfig.setupModeI==PKGSET_XFCE) {
-		system("( cd /mnt/etc/X11/xinit ; rm xinitrc ; ln -s xinitrc.xfce xinitrc )");
-	}*/
 	if (FileExists(systemConfig.rootMountPoint + "/usr/bin/X")) {
 		if (FileExists(systemConfig.rootMountPoint + "/usr/bin/kdm") ||
 		    FileExists(systemConfig.rootMountPoint + "/usr/bin/xdm") ||
@@ -1828,7 +1486,6 @@ int commit(bool simple)
 	deleteCore();*/
 
 	
-	//setupListCheck(commitList);
 
 	summary += _("Packages source: ") + systemConfig.sourceName + "\n" + \
 		    _("Setup mode: ") + systemConfig.setupMode + "\n" + \
@@ -1972,18 +1629,7 @@ int setCDSource(string predefined)
 	if (predefined =="dvd") ncInterface.setSubtitle(_("Installation from DVD"));
 	else if (predefined.find("iso")!=std::string::npos) ncInterface.setSubtitle(_("Installation from ISO image"));
 	else ncInterface.setSubtitle("Installation from CD/DVD");
-	vector<MenuItem> kdeOptions;
-	kdeOptions.push_back(MenuItem("kde3", "KDE 3.5.10", _("Very old and very stable. If you need \"Just works\" - it's your choice")));
-	kdeOptions.push_back(MenuItem("kde4", "KDE 4.2.x", _("Current version of KDE. Good choice if you have a modern computer with good videocard and want to go forward with new technologies")));
-	string kde_version;
-       	if (askForKDE) kde_version = ncInterface.showMenu2(_("Please, choose KDE branch which you prefer. Both of them are stable enough today in most cases. If you wish to use another desktop environment (XFCE, Fluxbox, etc) - your choice should be based on programs which you will use from these environments\n"), kdeOptions);
-	else kde_version = "kde4";
-	if (kde_version.empty()) kde_version = "kde3";
-	kde_branch = kde_version;
 
-#ifdef ENABLE_ADDONS_QUESTION
-	enable_addons=ncInterface.showYesNo(_("Enable addons?"));
-#endif
 	if (predefined.find("/")!=std::string::npos) {
 		if (FileExists(predefined)) systemConfig.cdromDevice = predefined;
 		predefined = "iso";
@@ -2026,7 +1672,6 @@ int setCDSource(string predefined)
 		}
 
 		volname = getCdromVolname(&rep_location);
-		if (rep_location.find("$KDEBRANCH")!=std::string::npos) strReplace(&rep_location, "$KDEBRANCH", kde_version);
 		if (!volname.empty() && !rep_location.empty())
 		{
 			ncInterface.showInfoBox(_("Loading data from disc ") + volname + _("\nData path: ") + rep_location);
@@ -2034,24 +1679,6 @@ int setCDSource(string predefined)
 			{
 				if (cacheCdromIndex(volname, rep_location))
 				{
-					if (enable_addons && FileExists("/var/log/mount/.addons")) {
-						string addons_rep = cutSpaces(ReadFile("/var/log/mount/.addons"));
-						strReplace(&addons_rep, "$KDEBRANCH", kde_version);
-						cacheCdromIndex(volname, addons_rep);
-						mDebug("Caching addons ok");
-						rList.push_back("cdrom://" + volname + "/" + addons_rep);
-						rep_locations.push_back(addons_rep);
-					}
-					if (enable_contrib && FileExists("/var/log/mount/.contrib")) {
-						string contrib_rep = cutSpaces(ReadFile("/var/log/mount/.contrib"));
-						strReplace(&contrib_rep, "$KDEBRANCH", kde_version);
-						cacheCdromIndex(volname, contrib_rep);
-						mDebug("Caching contrib ok");
-						rList.push_back("cdrom://" + volname + "/" + contrib_rep);
-						rep_locations.push_back(contrib_rep);
-					}
-
-
 					mDebug("Caching OK");
 					rList.push_back("cdrom://"+volname+"/"+rep_location);
 					rep_locations.push_back(rep_location);
@@ -2498,7 +2125,6 @@ int switchAlternativesMenu() {
 	WriteFileStrings("/tmp/i_availablePackages3.log", depLog);
 	// enddebug
 
-	//setupListCheck(i_availablePackages);
 	// Let's show what we did selected:
 	string altList;
 	for (size_t i=0; i<i_availablePackages.size(); ++i) {
@@ -2687,18 +2313,8 @@ int main(int argc, char *argv[])
 				valid_opt = true;
 				unattended = true;
 			}
-			if (strcmp(argv[i], "--enable-addons")==0) {
-				enable_addons=true;
-				valid_opt = true;
-			}
 			if (strcmp(argv[i], "--enable-debug")==0) {
 				enable_setup_debug=true;
-				valid_opt = true;
-			}
-
-
-			if (strcmp(argv[i], "--enable-contrib")==0) {
-				enable_contrib=true;
 				valid_opt = true;
 			}
 
@@ -2707,11 +2323,6 @@ int main(int argc, char *argv[])
 				valid_opt=true;
 				i++;
 			}
-			if (strcmp(argv[i], "--ask-for-kdeversion")==0) {
-				askForKDE = true;
-				valid_opt = true;
-			}
-
 			if (strcmp(argv[i], "--skip-doc")==0) {
 				_cmdOptions["skip_doc_installation"]="true";
 				valid_opt=true;
@@ -2777,7 +2388,6 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
-	ext4_supported=checkForExt4();
 	dialogMode=true;
 	if (systemConfig.lang.empty()) {
 		setlocale(LC_ALL, "");
@@ -3546,37 +3156,4 @@ int buildInitrd() {
 	system("chroot /mnt mkinitrd -c -r " + rootdev + " -f " + systemConfig.rootPartitionType + " -w " + rootdev_wait + " -k " + kernelversion + " " + " " + use_swap + " " + use_raid + " " + use_lvm + " " + additional_modules + " 2>/dev/tty4 >/dev/tty4");
 	return 0;
 }
-/*
-int buildInitrd() {
-	// RAID, LVM, LuKS encrypted volumes, USB drives and so on - all this will be supported now!
-	//ncInterface.uninit();
-	if (ncInterface.showYesNo(_("Do you need a delay to initialize your boot disk?\nIf you're installing system on USB drive, say [YES], otherwise you have a chance to get unbootable system.\n\nIf unsure - say YES, in worst case it just will boot 10 seconds longer."))) rootdev_wait = "10";
 
-	system("chroot /mnt mount -t proc none /proc 2>/dev/null >/dev/null");
-	string rootdev;
-        if (systemConfig.rootPartitionType!="btrfs") rootdev = "UUID=" + getUUID(systemConfig.rootPartition);
-	else rootdev = systemConfig.rootPartition; // Mounting by UUID doesn't work with btrfs, I don't know why.
-	string use_swap, use_raid, use_lvm;
-	if (!systemConfig.swapPartition.empty()) use_swap = "-h " + systemConfig.swapPartition;
-	if (systemConfig.rootPartition.find("/dev/md")==0) use_raid = " -R ";
-	if (systemConfig.rootPartition.find("/dev/vg")==0) use_lvm = " -L ";
-	string kernelversion = systemConfig.kernelversion;
-	bool retry = false;
-	string additional_modules;
-	do {
-		retry = false;
-		additional_modules = ncInterface.showInputBox(_("If you need additional modules to boot, specify it here separating by semicolon (':'), otherwise leave this field blank."));
-		if (!additional_modules.empty()) {
-			if (additional_modules.find_first_of(" <>|\n\t'\"`#")!=std::string::npos) {
-				if (ncInterface.showYesNo(_("Incorrect characters in input, retry?"))) retry = true;
-			}
-			else additional_modules = " -m " + additional_modules;
-		}
-	} while (retry);
-
-	ncInterface.showInfoBox(_("Creating initrd..."));
-	system("chroot /mnt mkinitrd -c -r " + rootdev + " -f " + systemConfig.rootPartitionType + " -w " + rootdev_wait + " -k " + kernelversion + " " + " " + use_swap + " " + use_raid + " " + use_lvm + " " + additional_modules + " 2>/dev/tty4 >/dev/tty4");
-	
-	return 0;
-}
-*/

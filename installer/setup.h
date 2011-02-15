@@ -2,11 +2,9 @@
 #define SETUP_H_INCL
 
 #include <mpkg/libmpkg.h>
-//#include <mpkg/dialog.h>
 #include <sys/mount.h>
 #include <mpkg/colors.h>
 #include <mpkg/menu.h>
-//#include "parted_tools.h"
 
 struct SysConfig
 {
@@ -98,7 +96,6 @@ bool liloconfig();
 bool grubconfig();
 bool grub2config();
 bool msdosconfig(string device = "");
-//int partitioningTool(); // TODO: фича на будущее
 vector<OsRecord> getOsList();
 StringMap getDeviceMap(string mapFile="/boot/grub/device.map");
 int netConfig();
