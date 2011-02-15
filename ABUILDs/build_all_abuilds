@@ -7,3 +7,4 @@ done
 
 # Installer has not to be installed
 ( cd agilia-gui-installer && mkpkg )
+( cd agilia-text-installer && mkpkg )
