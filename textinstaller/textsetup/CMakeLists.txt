@@ -1,4 +1,4 @@
-# AgiliaLinux text installer: lang setup
+# AgiliaLinux text installer: textsetup
 
 cmake_minimum_required(VERSION 2.6)
 if(COMMAND cmake_policy)
@@ -20,8 +20,8 @@ ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DLARGEFILE64_SOURCE 
 ADD_DEFINITIONS(-DINSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
 
 ADD_DEFINITIONS(${CXXFLAGS})
-ADD_EXECUTABLE(setup langselect )
-TARGET_LINK_LIBRARIES(setup nwidgets)
+ADD_EXECUTABLE(setup_config textsetup main )
+TARGET_LINK_LIBRARIES(setup_config mpkg iniparser.a)
 
-INSTALL(TARGETS setup DESTINATION bin)
+INSTALL(TARGETS setup_config DESTINATION bin)
 
