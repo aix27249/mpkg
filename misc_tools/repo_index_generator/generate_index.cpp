@@ -225,6 +225,7 @@ int main(int argc, char **argv) {
 		exit(2);
 
 	}
+	mysql_set_character_set(&conn, "utf8");
 	
 	
 	
