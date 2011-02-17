@@ -1,7 +1,7 @@
 #!/bin/sh
 # This script builds all components and installs it into system (because of building requirements).
 # Do not use this for package build
-TARGETS="mpkgsupport nwidgets lib console i18n manager2 mpkg-gui-installer packagebuilder mparted mbuilder installer mpkg-parted installer2 guiinstaller/guisetup guiinstaller/guisetup_exec guiinstaller/langselect"
+TARGETS="mpkgsupport nwidgets lib console i18n manager2 mpkg-gui-installer mpkg-parted guiinstaller textinstaller"
 set -e
 CWD=`pwd`
 for i in $TARGETS ; do

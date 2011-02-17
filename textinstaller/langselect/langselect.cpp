@@ -1,6 +1,8 @@
 #include <nwidgets/ncurses_if.h>
+#include <cstdlib>
 
-int main(int argc, char **argv) {
+int main() {
+	CursesInterface ncInterface;
 	setlocale(LC_ALL, "");
 	ncInterface.setStrings();
 	dialogMode = true;
@@ -13,7 +15,7 @@ int main(int argc, char **argv) {
 	menuItems.push_back(MenuItem("uk", "Украинский"));
 	menuItems.push_back(MenuItem("en", "English"));
 
-	string lang = ncInterface.showMenu("Please, select installation language:\nПожалуйста, выберите язык для установки:", menuItems);
+	string lang = ncInterface.showMenu2("Please, select installation language:\nПожалуйста, выберите язык для установки:", menuItems);
 
 	if (lang.empty()) return 1;
 
@@ -23,5 +25,5 @@ int main(int argc, char **argv) {
 	else lc_locale = "en_US.UTF-8";
 
 	ncInterface.uninit();
-	return system(string("LC_ALL=" + lc_locale + " textinstaller").c_str());
+	return system(string("LC_ALL=" + lc_locale + " setup_config").c_str());
 }
