@@ -65,7 +65,7 @@ void pkgConfigInstall(const PACKAGE &package) {
 		}
 
 		// Note user if a .new file still exists.
-		if (FileExists(sysconf_name + ".new")) printf(_("\n%s: Note: %s.new exists, check for changes\n"), package.get_name().c_str(), sysconf_name.c_str());
+		if (FileExists(sysconf_name + ".new")) printf(_("\n%s: Note: %s%s.new%s exists, %scheck for changes%s\n"), package.get_name().c_str(), CL_GREEN, sysconf_name.c_str(), CL_WHITE, CL_RED, CL_WHITE);
 		
 		// What to do with a .new one if it has to be leaved there? Let's leave it alone, until decided otherwise.
 	}
@@ -345,10 +345,14 @@ int mpkgDatabase::commit_actions()
 				installCount++;
 				if (install_list[i].get_type()==PKGTYPE_SOURCE || _cmdOptions["abuild_links_only"]=="yes") pkgTypeStr=_("(source)");
 				else pkgTypeStr=_("(binary)");
-				if (!dialogMode) say("  [%d] %s %s %s %s %s\n", installCount, \
+				if (!dialogMode) {
+					say("  [%d] %s %s %s %s %s\n", installCount, \
 						install_list[i].get_name().c_str(), \
 						install_list[i].get_fullversion().c_str(), branch.c_str(), pkgTypeStr.c_str(), reason.c_str());
+						if (!checkAcceptedArch(install_list.get_package_ptr(i))) mWarning(string(CL_RED) + _("ARCHITECTURE WARNING: ") + string(CL_WHITE) + _("Package ") + install_list[i].get_name() + "-" + install_list[i].get_version() + "-" + install_list[i].get_arch() + "-" + install_list[i].get_build() + _(" has non-native architecture (") + install_list[i].get_arch() + _("), are you sure it is what you wanted?"));
+				}
 				else dialogMsg += "  [" + IntToStr(installCount) + "] " + install_list[i].get_name() + " " + install_list[i].get_fullversion() + branch + "\n";
+
 			}
 		}
 		// Remove
@@ -406,10 +410,14 @@ int mpkgDatabase::commit_actions()
 					else dialogMsg += _("Will be updated:\n");
 				}
 				updateCount++;
-				if (!dialogMode) say("  [%d] %s %s%s%s%s%s%s%s %s%s %s\n", updateCount, \
+				if (!dialogMode) {
+					say("  [%d] %s %s%s%s%s%s%s%s %s%s %s\n", updateCount, \
 						remove_list[i].get_name().c_str(), \
 						CL_6, remove_list[i].get_fullversion().c_str(), CL_WHITE, _(" ==> "), 
 						CL_GREEN, remove_list[i].updatingBy->get_fullversion().c_str(), CL_BLUE, branch.c_str(), CL_WHITE, reason.c_str());
+
+					if (!checkAcceptedArch(install_list.get_package_ptr(i))) mWarning(string(CL_RED) + _("ARCHITECTURE WARNING: ") + string(CL_WHITE) + _("Package ") + install_list[i].get_name() + "-" + install_list[i].get_version() + "-" + install_list[i].get_arch() + "-" + install_list[i].get_build() + _(" has non-native architecture (") + install_list[i].get_arch() + _("), are you sure it is what you wanted?"));
+				}
 				else dialogMsg += "  [" + IntToStr(updateCount) + "] " + \
 						remove_list[i].get_name() + " " + \
 						remove_list[i].get_fullversion() + " ==> " + \

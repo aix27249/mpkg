@@ -20,6 +20,8 @@
 #define EQ_LIKE 0x01
 #define EQ_EQUAL 0x02
 #define EQ_CUSTOMLIKE 0x03
+
+bool checkAcceptedArch(const PACKAGE *pkg);
 typedef struct
 {
 	string fieldname;
