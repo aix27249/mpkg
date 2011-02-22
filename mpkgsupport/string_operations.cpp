@@ -336,13 +336,13 @@ void mstring::operator += (const mstring& str2)
 
 bool mstring::operator == (const string& str2)
 {
-	if (str==str2) return true;
+	if (strcmp(str.c_str(), str2.c_str())==0) return true;
 	return false;
 }
 
 bool mstring::operator == (const char *str2)
 {
-	if (str==(string) str2) return true;
+	if (strcmp(str.c_str(), str2)==0) return true;
 	return false;
 }
 
@@ -358,7 +358,7 @@ void mstring::operator = (const char *str2)
 
 bool mstring::operator != (const string& str2)
 {
-	if (str!=str2) return true;
+	if (strcmp(str.c_str(), str2.c_str())!=0) return true;
 	return false;
 }
 void mstring::operator = (const mstring& str2)
@@ -367,7 +367,7 @@ void mstring::operator = (const mstring& str2)
 }
 bool mstring::operator != (const char *str2)
 {
-	if (str!=(string) str2) return true;
+	if (strcmp(str.c_str(), str2)!=0) return true;
 	return false;
 }
 

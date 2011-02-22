@@ -22,7 +22,7 @@ DEPENDENCY parseDependency(xmlDocPtr doc, xmlNodePtr cur) {
 			if (!xmlStrcmp(cur->name, (const xmlChar *) "condition")) dep.set_condition(IntToStr(condition2int(cutSpaces(key))));
 			if (!xmlStrcmp(cur->name, (const xmlChar *) "version")) dep.set_package_version(cutSpaces(key));
 			if (!xmlStrcmp(cur->name, (const xmlChar *) "build_only")) {
-				if (cutSpaces(key)=="true") dep.setBuildOnly(true);
+				if (strcmp(key, "true")==0) dep.setBuildOnly(true);
 				else dep.setBuildOnly(false);
 			}
 			dep.set_type("DEPENDENCY");

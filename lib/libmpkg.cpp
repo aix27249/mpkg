@@ -1647,7 +1647,7 @@ void mpkg::get_queue(PACKAGE_LIST *pkgList, int filter) {
 	get_packagelist(sqlSearch, pkgList, true);
 }
 
-vector<string> mpkg::getLatestUpdates(PACKAGE_LIST *pkgList, PACKAGE_LIST *uninstList, bool fast) {
+vector<string> mpkg::getLatestUpdates(PACKAGE_LIST *pkgList, PACKAGE_LIST *uninstList, bool fast, bool needDescriptions) {
 	// Yet another new algorithm
 	if (dialogMode) ncInterface.showInfoBox(_("Searching for updates..."));
 	else msay(_("Searching for updates..."));
@@ -1659,7 +1659,7 @@ vector<string> mpkg::getLatestUpdates(PACKAGE_LIST *pkgList, PACKAGE_LIST *unins
 	// 2. Requesting database by search array
 	PACKAGE_LIST pCache;
 	//printf("SLOW=%d GET_PACKAGELIST CALL: %s %d\n", fast, __func__, __LINE__);
-	int query_ret = get_packagelist(sqlSearch, &pCache, fast);
+	int query_ret = get_packagelist(sqlSearch, &pCache, fast, needDescriptions);
 
 	vector<string> blackList = ReadFileStrings("/etc/mpkg-update-blacklist");
 	if (query_ret != 0) {

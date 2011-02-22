@@ -18,24 +18,9 @@ bool validateRepStr(const string& r) {
 }
 
 
-//XMLNode _root; 
 xmlNodePtr _rootNode;
 xmlDocPtr __doc;
-//XMLNode _rootFList;
-void xmlClearAllNodesNamedBy(const std::string& name, xmlNodePtr xmlNode) {
-	xmlNodePtr cur_node = NULL;
-	vector<xmlNodePtr> trash;
-	for (cur_node = xmlNode->children; cur_node; cur_node = cur_node->next) {
-		if (cur_node->type != XML_ELEMENT_NODE) continue;
-		if (string((const char *) cur_node->name) != name) {
-			continue;
-		}
-		trash.push_back(cur_node);
-	}
-	for (unsigned int i=0; i<trash.size(); ++i) {
-		xmlUnlinkNode(trash[i]);
-	}
-}
+
 int slackpackages2list (string *p, string *m, PACKAGE_LIST *pkgList, string server_url) {
 	pkgList->clear();
 	//printf("making strings\n");

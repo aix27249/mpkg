@@ -1698,6 +1698,7 @@ bool compareLocations(const vector<LOCATION>& location1, const vector<LOCATION>&
 
 int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 {
+	if (verbose) printf("Update...\n");
 	// Одна из самых страшных функций в этой программе.
 	// Попытаемся применить принципиально новый алгоритм.
 	// 
@@ -1716,6 +1717,8 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 	// ////////////////////////////////////////////////
 	//"Retrieving current package list, clearing tables"
 	// Стираем locations и servers
+	
+	if (verbose) printf("Pre-cleanup...\n");
 	db.clear_table("locations");
 	db.clear_table("deltas");
 	db.clear_table("abuilds");
@@ -1728,20 +1731,21 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 	}
 	
 
+	if (verbose) printf("Data load...\n");
 	// Забираем текущий список пакетов
 	PACKAGE_LIST *pkgList = new PACKAGE_LIST;
 	SQLRecord sqlSearch;
 	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
 	get_packagelist(sqlSearch, pkgList, false, true);
 	
+	if (verbose) printf("Scanning for changes...\n");
 	//say("Merging data\n");
 	// Ищем соответствия // TODO: надо б тут что-нить прооптимизировать
 	int pkgNumber;
 	size_t new_pkgs=0;
 	vector<bool> needUpdateRepositoryTags;
 	vector<bool> needUpdateDistroVersion;
-	for(size_t i=0; i<newPackages->size(); i++)
-	{
+	for(size_t i=0; i<newPackages->size(); ++i) {
 		pkgNumber = pkgList->getPackageNumberByMD5(newPackages->at(i).get_md5());
 		
 		if (pkgNumber!=-1)	// Если соответствие найдено...
@@ -1756,7 +1760,7 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 			}
 			else needUpdateRepositoryTags.push_back(false);
 			
-			if (pkgList->get_package_ptr(pkgNumber)->package_distro_version==newPackages->at(i).package_distro_version) {
+			if (strcmp(pkgList->get_package_ptr(pkgNumber)->package_distro_version.c_str(), newPackages->at(i).package_distro_version.c_str())==0) {
 				pkgList->get_package_ptr(pkgNumber)->package_distro_version = newPackages->at(i).package_distro_version;
 				needUpdateDistroVersion.push_back(true);
 			}
@@ -1786,6 +1790,7 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 }
 int mpkgDatabase::syncronize_data(PACKAGE_LIST *pkgList, vector<bool> needUpdateRepositoryTags, vector<bool> needUpdateDistroVersion)
 {
+	if (verbose) printf("Sync...\n");
 	// Идея:
 	// Добавить в базу пакеты, у которых флаг newPackage
 	// Добавить locations к тем пакетам, которые такого флага не имеют
@@ -1822,8 +1827,10 @@ int mpkgDatabase::syncronize_data(PACKAGE_LIST *pkgList, vector<bool> needUpdate
 	}
 	delete pkgList;
 
+	if (verbose) printf("Cleanup...\n");
 	// Дополнение от 10 мая 2007 года: сносим нафиг все недоступные пакеты, которые не установлены. Нечего им болтаться в базе.
 	clear_unreachable_packages();
+	if (verbose) printf("Done.\n");
 	return 0;
 
 }

@@ -55,8 +55,8 @@ int loopCount=0;
 // Comparsion
 bool LOCATION::equalTo(const LOCATION &location) const
 {
-	if (server_url!=location.get_server_url()) return false;
-	if (location_path!=location.get_path()) return false;
+	if (strcmp(server_url.c_str(), location.get_server_url().c_str())!=0) return false;
+	if (strcmp(location_path.c_str(), location.get_path().c_str())!=0) return false;
 	return true;
 }
 
@@ -146,10 +146,10 @@ const bool& DEPENDENCY::isBuildOnly() const {
 }
 // Comparsion
 bool DEPENDENCY::equalTo(const DEPENDENCY& dependency) const {
-	if (dependency_package_name!=dependency.get_package_name()) return false;
-	if (version_data.version!=dependency.get_package_version()) return false;
-	if (version_data.condition!=dependency.get_condition()) return false;
-	if (dependency_type!=dependency.get_type()) return false;
+	if (strcmp(dependency_package_name.c_str(), dependency.get_package_name().c_str())!=0) return false;
+	if (strcmp(version_data.version.c_str(), dependency.get_package_version().c_str())!=0) return false;
+	if (strcmp(version_data.condition.c_str(), dependency.get_condition().c_str())!=0) return false;
+	if (strcmp(dependency_type.c_str(), dependency.get_type().c_str())!=0) return false;
 	if (dependency_broken!=dependency.get_broken()) return false;
 	return true;
 }
@@ -240,7 +240,7 @@ void DEPENDENCY::set_broken(const int& broken) {
 }
 
 bool DEPENDENCY::isResolvableBy(const PACKAGE &p) const {
-	if (dependency_package_name!=p.get_corename()) return false; // Name does not match - false
+	if (strcmp(dependency_package_name.c_str(), p.get_corename().c_str())!=0) return false; // Name does not match - false
 	if (meetVersion(get_version_data(), p.get_version())) return true;
 	return false;
 }
@@ -272,60 +272,7 @@ DEPENDENCY::DEPENDENCY() {
 DEPENDENCY::~DEPENDENCY(){
 }
 
-/*
 // FILE_EXTENDED_DATA class
-
-// Comparsion
-bool FILES::equalTo(const FILES& file) const {
-	if (file_name!=file.get_name()) return false;
-	else return true;
-}
-
-// Data retriveal
-const int& FILES::get_id() const {
-	return file_id;
-}
-
-const string& FILES::get_name() const {
-	return file_name;
-}
-
-const int& FILES::get_type() const {
-	return file_type;
-}
-
-const string& FILES::get_backup_file() const {
-	return backup_file;
-}
-
-bool FILES::config() const {
-	if (file_type==FTYPE_CONFIG) return true;
-	else return false;
-}
-
-
-// Data writing
-void FILES::set_id(const int& id) {
-	file_id=id;
-}
-
-void FILES::set_name(const string& name) {
-	file_name=name;
-}
-
-void FILES::set_type(const int& type) {
-	file_type=type;
-}
-
-void FILES::set_backup_file(const string& fname) {
-	backup_file=fname;
-}
-
-// Empty, clear
-bool FILES::IsEmpty() const {
-	return file_name.empty();
-}
-*/
 void FILE_EXTENDED_DATA::clear() {
 	file_id=0;
 	filename = NULL;
@@ -1529,15 +1476,14 @@ double PACKAGE_LIST::totalInstalledSizeByAction(int select_action) const {
 
 
 int PACKAGE_LIST::getPackageNumberByMD5(const string& md5) const {
-	for (unsigned int i=0; i<packages.size(); i++)
-	{
-		if (packages[i].get_md5()==md5) return i;
+	for (size_t i=0; i<packages.size(); ++i) {
+		if (strcmp(packages[i].get_md5().c_str(), md5.c_str())==0) return i;
 	}
 	return -1;
 }
 void PACKAGE_LIST::clearVersioning()
 {
-	for (unsigned int i=0; i<packages.size(); i++)
+	for (size_t i=0; i<packages.size(); i++)
 	{
 		packages[i].clearVersioning();
 	}
@@ -1722,7 +1668,7 @@ PACKAGE* PACKAGE_LIST::findMaxVersion()
 	string max_version, max_build;
 	int id=0;
 	string tmp_ver, tmp_build;
-	for (unsigned int i=0;i<packages.size();i++)
+	for (size_t i=0;i<packages.size();i++)
 	{
 		tmp_ver = packages[i].get_version();
 		tmp_build = packages[i].get_build();
@@ -1738,8 +1684,8 @@ PACKAGE* PACKAGE_LIST::findMaxVersion()
 
 int PACKAGE_LIST::getMaxVersionID(const string& package_name) const {
 	if (!versioningInitialized) mWarning("Versioning unitialized!");
-	for (unsigned int i=0; i<packages.size(); i++) {
-		if (packages[i].get_name() == package_name && packages[i].hasMaxVersion) {
+	for (size_t i=0; i<packages.size(); ++i) {
+		if (packages[i].hasMaxVersion && strcmp(packages[i].get_name().c_str(), package_name.c_str())==0) {
 			return packages[i].get_id();
 		}
 	}
@@ -1748,18 +1694,14 @@ int PACKAGE_LIST::getMaxVersionID(const string& package_name) const {
 
 int PACKAGE_LIST::getMaxVersionNumber(const string& package_name) const {
 	if (!versioningInitialized) mWarning("Versioning unitialized!");
-	for (unsigned int i=0; i<packages.size(); i++)
-	{
-		if (packages[i].get_name() == package_name && packages[i].hasMaxVersion)
-		{
-			return i;
-		}
+	for (size_t i=0; i<packages.size(); ++i) {
+		if (packages[i].hasMaxVersion && strcmp(packages[i].get_name().c_str(), package_name.c_str())==0) return i;
 	}
 	return MPKGERROR_NOPACKAGE;
 }
 int PACKAGE_LIST::getInstalledVersionNumber(const string& package_name) const {
-	for (unsigned int i=0; i<packages.size(); ++i) {
-		if (packages[i].get_name()==package_name && packages[i].installed()) return i;
+	for (size_t i=0; i<packages.size(); ++i) {
+		if (packages[i].installed() && strcmp(packages[i].get_name().c_str(), package_name.c_str())==0) return i;
 	}
 	return MPKGERROR_NOPACKAGE;
 }
@@ -1783,226 +1725,6 @@ PACKAGE_LIST::~PACKAGE_LIST()
 	_objC.deleteObject();
 #endif
 }
-
-/*
-int DESCRIPTION::set_id(int id)
-{
-	description_id=id;
-	return 0;
-}
-
-int DESCRIPTION::set_language(string language)
-{
-	description_language=language;
-	return 0;
-}
-
-int DESCRIPTION::set_text(string text)
-{
-	description_text=text;
-	return 0;
-}
-
-int DESCRIPTION::set_shorttext(string shorttext)
-{
-	short_description_text=shorttext;
-	return 0;
-}
-
-
-int DESCRIPTION::get_id()
-{
-	return description_id;
-}
-
-string DESCRIPTION::get_language()
-{
-	return description_language;
-}
-
-string DESCRIPTION::get_text( bool sql)
-{
-	if (sql) return PrepareSql(description_text);
-	else return description_text;
-}
-
-string DESCRIPTION::get_shorttext( bool sql)
-{
-	if (sql) return PrepareSql(short_description_text);
-	else return short_description_text;
-}
-
-void DESCRIPTION::clear()
-{
-	description_id=0;
-	description_language.clear();
-	description_text.clear();
-}
-
-DESCRIPTION::DESCRIPTION(){}
-DESCRIPTION::~DESCRIPTION()
-{
-	description_id=0;
-}
-
-DESCRIPTION * DESCRIPTION_LIST::get_description(unsigned int num)
-{
-	if (num>=0 && num <descriptions.size())
-	{
-		return &descriptions[num];
-	}
-	else
-	{
-		mError("DESCRIPTION_LIST: Error in range!");
-		abort();
-	}
-}
-
-int DESCRIPTION_LIST::set_description(unsigned int num, DESCRIPTION description)
-{
-	if (num>=0 && num < descriptions.size())
-	{
-		descriptions[num]=description;
-		return 0;
-	}
-	else return -1;
-}
-
-int DESCRIPTION_LIST::add(DESCRIPTION description)
-{
-	descriptions.push_back(description);
-	return 0;
-}
-
-unsigned int DESCRIPTION_LIST::size()
-{
-	return descriptions.size();
-}
-
-bool DESCRIPTION_LIST::empty()
-{
-	return descriptions.empty();
-}
-
-void DESCRIPTION_LIST::clear()
-{
-	descriptions.clear();
-}
-
-DESCRIPTION_LIST::DESCRIPTION_LIST(){}
-DESCRIPTION_LIST::~DESCRIPTION_LIST(){}
-
-cloneList::cloneList(){
-initialized = false;
-}
-*/
-
-//------------------------ bkp ---------------------
-/*
-void PACKAGE_LIST::initVersioning()
-{
-	// TODO: ввести beta fields
-	// Что надо определить:
-	// Для каждого пакета - список номеров того же пакета других версий (НЕ ВКЛЮЧАЯ этот же пакет)
-	// Максимально доступную версию
-	// Версию установленного пакета
-	// Флаг максимальности версии (если таковых пакетов несколько, ставится у одного любого)
-	//
-	// Делаем пока не оптимально но надежно
-	// Шаг первый. Список альтернативных версий
-	
-	int pkgSize = packages.size();
-	for (int i=0; i<pkgSize; i++)
-	{
-
-		packages[i].clearVersioning();
-		for (int j=0; j<pkgSize; j++)
-		{
-			// Если это не тот же пакет и имена совпадают - добавляем номер в список
-			if (i!=j && packages[i].get_name()==packages[j].get_name())
-			{
-				if (packages[j].reachable()) packages[i].alternateVersions.push_back(j);
-			}
-		}
-	}
-
-	// Шаг второй. Для каждого пакета ищем максимальную версию
-	string max_version, max_build; // Переменная содержащая максимальную версию
-	int max_version_id; // номер пакета содержавшего максимальную версию
-	string this_version, this_build;
-	string installed_version, installed_build;
-	for (size_t i=0; i<packages.size(); ++i)
-	{
-		//mDebug("initVersioning [stage 2]: step "+IntToStr(i));
-		max_version.clear();
-		max_version_id=-1;
-		this_version.clear();
-		installed_version.clear();
-		if (packages[i].installed())
-		{
-			installed_version = packages[i].get_version();
-			installed_build = packages[i].get_build();
-		}
-
-		// Если у пакета нет других версий - значит максимальную версию имеет он
-		
-		if (packages[i].alternateVersions.empty())
-		{
-			max_version = packages[i].get_version();
-			max_build = packages[i].get_build();
-			packages[i].hasMaxVersion=true;
-			max_version_id = i;
-		}
-		else
-		{
-			for (unsigned int j=0; j<packages[i].alternateVersions.size(); j++)
-			{
-				this_version = packages[packages[i].alternateVersions[j]].get_version();
-				this_build = packages[packages[i].alternateVersions[j]].get_build();
-				if (packages[packages[i].alternateVersions[j]].installed())
-				{
-					installed_version = packages[packages[i].alternateVersions[j]].get_version();
-					installed_build = packages[packages[i].alternateVersions[j]].get_build();
-				}
-				if (compareVersions(this_version, this_build, max_version, max_build)>0)
-				{
-					max_version = this_version;
-					max_build = this_build;
-					max_version_id = packages[i].alternateVersions[j];
-				}
-			}
-			if (max_version.empty()) // Если максимальной версии так и не нашлось (все пакеты - одинаковой версии) - то ставим максимум текущему
-			{
-				max_version = packages[i].get_version();
-				max_build = packages[i].get_build();
-				max_version_id = i;
-			}
-			else
-			{
-				// Проверим - а вдруг именно этот пакет имеет максимальную версию?
-				this_version = packages[i].get_version();
-				this_build = packages[i].get_build();
-				if (compareVersions(this_version, this_build, max_version, max_build)>0)
-				{
-					max_version = this_version;
-					max_build = this_build;
-					max_version_id = i;
-				}
-				// Устанавливаем найденному пакету нужные флаги
-			}
-		}
-		// Запишем установленную версию
-		packages[i].hasMaxVersion=false;
-		packages[max_version_id].hasMaxVersion=true;
-		packages[i].maxVersion=max_version;
-		packages[i].maxBuild = max_build;
-		packages[i].installedVersion = installed_version;
-		packages[i].installedBuild = installed_build;
-	}
-	versioningInitialized=true;
-}
-*/
-
 
 void PACKAGE_LIST::initVersioning()
 {
@@ -2048,12 +1770,13 @@ void PACKAGE_LIST::initVersioning()
 		}
 		packages[i].maxVersion = maxv;
 		packages[i].maxBuild = maxb;
-		if (maxv==packages[i].get_version() && maxb == packages[i].get_build()) packages[i].hasMaxVersion = true;
+		if (strcmp(maxv.c_str(), packages[i].get_version().c_str())==0 && strcmp(maxb.c_str(), packages[i].get_build().c_str())==0) packages[i].hasMaxVersion = true;
 		for (size_t t=0; t<packages[i].alternateVersions.size(); ++t) {
 			packages[packages[i].alternateVersions[t]].maxVersion = maxv;
 			packages[packages[i].alternateVersions[t]].maxBuild = maxb;
-			if (maxv == packages[packages[i].alternateVersions[t]].get_version() && maxb == packages[packages[i].alternateVersions[t]].get_build()) 
+			if (strcmp(maxv.c_str(), packages[packages[i].alternateVersions[t]].get_version().c_str())==0 && strcmp(maxb.c_str(), packages[packages[i].alternateVersions[t]].get_build().c_str())==0) {
 				packages[packages[i].alternateVersions[t]].hasMaxVersion = true;
+			}
 		}
 	}
 	// Seems that here is all. Compact code, isn't it? :)
@@ -2105,15 +1828,14 @@ bool meetVersion(const versionData &condition, const string& packageVersion)
 vector<unsigned int> checkedPackages;
 bool notTested(unsigned int num)
 {
-	for (unsigned int i=0; i<checkedPackages.size(); i++)
-	{
+	for (size_t i=0; i<checkedPackages.size(); i++) {
 		if (checkedPackages[i]==num) return false;
 	}
 	return true;
 }
 int PACKAGE_LIST::getPackageNumberByName(const string& name) const {
-	for (unsigned int i=0; i<packages.size(); ++i) {
-		if (packages[i].get_name()==name) return i;
+	for (size_t i=0; i<packages.size(); ++i) {
+		if (strcmp(packages[i].get_name().c_str(), name.c_str())==0) return i;
 	}
 	mDebug("No such package " + name);
 	return -1;

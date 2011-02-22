@@ -214,7 +214,7 @@ class mpkg
 #define QUEUEFILTER_REPAIR 5
 #define QUEUEFILTER_UPDATE 6
 		void get_queue(PACKAGE_LIST *, int filter=QUEUEFILTER_NONE);
-		vector<string> getLatestUpdates(PACKAGE_LIST *resultList, PACKAGE_LIST *uninstList, bool fast=false);
+		vector<string> getLatestUpdates(PACKAGE_LIST *resultList, PACKAGE_LIST *uninstList, bool fast=false, bool needDescriptions = true);
 		vector<string> getExportInstalled(bool include_versions);
 
 
