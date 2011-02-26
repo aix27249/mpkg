@@ -26,10 +26,14 @@ void report_failure(int line) {
 	fprintf(stderr, "EPIC FAIL at line %d\n", line);
 	abort();
 }
-string getFancyDistro(string drepo, string darch, string dbranch) {
-	if (drepo=="core" || drepo=="userland" || drepo=="testing") return drepo + "-" + darch;
-	else if (drepo=="deprecated/core" || drepo=="deprecated/userland" || drepo=="deprecated/testing") return drepo + "-" + darch + " (deprecated)";
-	else return darch;
+string getFancyDistro(const char *drepo, const char *darch, const char * dbranch) {
+	string repo, arch, branch;
+	if (drepo) repo = drepo;
+	if (darch) arch = darch;
+	if (dbranch) branch = dbranch;
+	if (repo=="core" || repo=="userland" || repo=="testing") return repo + "-" + arch;
+	else if (repo=="deprecated/core" || repo=="deprecated/userland" || repo=="deprecated/testing") return repo + "-" + arch + " (deprecated)";
+	else return arch;
 }
 
 string getLocation(vector<string> drepo, vector<string> darch, vector<string> dbranch, const char *arch, const char *distro, const char *repo, string relative) {
@@ -58,6 +62,10 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 	string search_subquery;
 
 	if (index_path.empty()) index_path = getIndexPath(drepo, darch, dbranch);
+#ifdef DEBUG
+	printf("%s\n", index_path.c_str());
+	return;
+#endif
 
 
 	if (dbranch.size()>0) {
@@ -93,20 +101,20 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 	printf("Generating index for %s\n", index_path.c_str());
 	MYSQL_RES *packages;
 	int res;
-	res = mysql_query(&conn, string("SELECT packages.*, locations.location_path FROM packages, locations WHERE packages.package_id=locations.packages_package_id " + search_subquery + " GROUP BY packages.package_id").c_str());
+	res = mysql_query(&conn, string("SELECT packages.*, locations.location_path, locations.distro_arch, locations.distro_version, locations.server_url FROM packages, locations WHERE packages.package_id=locations.packages_package_id " + search_subquery + " GROUP BY packages.package_id").c_str());
 
 	if (res) report_failure(__LINE__);
 
-	printf("Count: %d\n", mysql_field_count(&conn));
+	//printf("Count: %d\n", mysql_field_count(&conn));
 	packages = mysql_store_result(&conn);
 
-	printf("Checking out ABUILD list...\n");
+	//printf("Checking out ABUILD list...\n");
 	MYSQL_RES *abuilds;
 	res = mysql_query(&conn, "SELECT package_id, filename FROM abuilds;");
 	if (res) report_failure(__LINE__);
 
 	abuilds = mysql_store_result(&conn);
-	printf("Found: %d packages, starting to generate index\n", mysql_num_rows(packages));
+	printf("Found: %d packages, starting to generate index in %s\n", mysql_num_rows(packages), index_path.c_str());
 	
 	FILE *xml = fopen(string(index_path + "/packages.xml").c_str(), "w");
 	if (!xml) {
@@ -151,7 +159,7 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 		fprintf(xml, "\t\t<email>%s</email>\n", row[11]);
 		fprintf(xml, "\t</maintainer>\n");
 		
-		fprintf(xml, "\t<location>%s</location>\n", getLocation(drepo, darch, dbranch, row[30], row[28], row[29], row[27]).c_str());
+		fprintf(xml, "\t<location>%s</location>\n", getLocation(drepo, darch, dbranch, row[28], row[29], row[30], row[27]).c_str());
 		fprintf(xml, "\t<filename>%s</filename>\n", row[16]);
 		
 		// Deps... :)
@@ -212,7 +220,7 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 		mysql_data_seek(abuilds, 0);
 		while (abuild = mysql_fetch_row(abuilds)) {
 			if (atoi(abuild[0])!=atoi(row[0])) continue;
-			fprintf(xml, "\t<abuild>%s</abuild>\n", getLocation(drepo, darch, dbranch, row[30], row[28], row[29], abuild[1]).c_str());
+			fprintf(xml, "\t<abuild>%s</abuild>\n", getLocation(drepo, darch, dbranch, row[28], row[29], row[30], abuild[1]).c_str());
 			break;
 		}
 		fprintf(xml, "</package>\n\n");
@@ -227,7 +235,7 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 
 	system("cat " + index_path + "/packages.xml | gzip -9 > " + index_path + "/packages.xml.gz.tmp");
 	system("mv " + index_path + "/packages.xml.gz.tmp " + index_path + "/packages.xml.gz");
-	system("cat " + index_path + "/packages.xml | xz -e > " + index_path + "/packages.xml.xz.tmp");
+	system("cat " + index_path + "/packages.xml | xz -c > " + index_path + "/packages.xml.xz.tmp");
 	system("mv " + index_path + "/packages.xml.xz.tmp " + index_path + "/packages.xml.xz");
 
 	
@@ -287,19 +295,19 @@ int main(int argc, char **argv) {
 	vector<string> drepo, darch, dbranch, tmp_branch, tmp_arch, tmp_repo;
 
 	MYSQL_ROW row;
+	bool found;
 	while (row = mysql_fetch_row(available_repos)) {
-		for (size_t i=0; i<drepo.size(); ++i) {
-			if (drepo[i]==row[0]) continue;
-			drepo.push_back(row[0]);
-		}
-		for (size_t i=0; i<darch.size(); ++i) {
-			if (darch[i]==row[1]) continue;
-			darch.push_back(row[1]);
-		}
-		for (size_t i=0; i<dbranch.size(); ++i) {
-			if (dbranch[i]==row[2]) continue;
-			dbranch.push_back(row[2]);
-		}
+		found = false;
+		for (size_t i=0; !found && i<drepo.size(); ++i) if (drepo[i]==cutSpaces(row[0])) found = true;
+		if (!found) drepo.push_back(cutSpaces(row[0]));
+
+		found = false;
+		for (size_t i=0; !found && i<darch.size(); ++i) if (darch[i]==cutSpaces(row[1])) found = true;
+		if (!found) darch.push_back(cutSpaces(row[1]));
+
+		found = false;
+		for (size_t i=0; !found && i<dbranch.size(); ++i) if (dbranch[i]==cutSpaces(row[2])) found = true;
+		if (!found) dbranch.push_back(cutSpaces(row[2]));
 	}
 
 	// So, we need indexes: 
