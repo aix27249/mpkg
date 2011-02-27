@@ -31,18 +31,16 @@ string getFancyDistro(const char *drepo, const char *darch, const char * dbranch
 	if (drepo) repo = drepo;
 	if (darch) arch = darch;
 	if (dbranch) branch = dbranch;
-	if (repo=="core" || repo=="userland" || repo=="testing") return repo + "-" + arch;
-	else if (repo=="deprecated/core" || repo=="deprecated/userland" || repo=="deprecated/testing") return repo + "-" + arch + " (deprecated)";
-	else return arch;
+	 return repo + "-" + branch + "-" + arch;
 }
 
 string getLocation(vector<string> drepo, vector<string> darch, vector<string> dbranch, const char *arch, const char *distro, const char *repo, string relative) {
 	string ret;
 	// Note: ORDER MATTERS HERE! Otherwise, return value will be incorrect.
 	if (darch.size()==1) ret = "";
-	else if (drepo.size()==1) ret = "/" + string(arch) + "/repository";
-	else if (dbranch.size()==1) ret = "/" + string(repo) + "/" + string(arch) + "/repository";
-	else ret = "/" + string(distro) + "/" + string(repo) + "/" + string(arch) + "/repository";
+	else if (dbranch.size()==1) ret = "/" + string(arch) + "/repository";
+	else if (drepo.size()==1) ret = "/" + string(distro) + "/" + string(arch) + "/repository";
+	else ret = "/" + string(repo) + "/" + string(distro) + "/" + string(arch) + "/repository";
 
 	if (relative.size()>1 && relative[0]=='.' && relative[1]=='/') relative = relative.substr(2);
 
@@ -51,8 +49,8 @@ string getLocation(vector<string> drepo, vector<string> darch, vector<string> db
 
 string getIndexPath( vector<string> drepo, vector<string> darch, vector<string> dbranch) {
 	string index_path = "package_tree"; // Repository root, you may specify another one
-	if (dbranch.size()==1) index_path += "/" + dbranch[0];
 	if (drepo.size()==1) index_path += "/" + drepo[0];
+	if (dbranch.size()==1) index_path += "/" + dbranch[0];
 	if (darch.size()==1) index_path += "/" + darch[0] + "/repository";
 	return index_path;
 }
@@ -71,7 +69,8 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 	if (dbranch.size()>0) {
 		search_subquery += " AND locations.distro_version IN (";
 		for (size_t i=0; i<dbranch.size(); ++i) {
-			search_subquery += "'" + dbranch[i] + "','" + dbranch[i] + "_deprecated'";
+			search_subquery += "'" + dbranch[i] + "'";
+			//search_subquery += "'" + dbranch[i] + "','" + dbranch[i] + "_deprecated'";
 			if (i<dbranch.size()-1) search_subquery += ",";
 			else search_subquery += ")";
 		}
@@ -306,7 +305,10 @@ int main(int argc, char **argv) {
 
 		found = false;
 		for (size_t i=0; !found && i<dbranch.size(); ++i) if (dbranch[i]==cutSpaces(row[2])) found = true;
-		if (!found) dbranch.push_back(cutSpaces(row[2]));
+		if (!found) {
+			dbranch.push_back(cutSpaces(row[2]));
+			dbranch.push_back(cutSpaces(row[2]) + "_deprecated");
+		}
 	}
 
 	// So, we need indexes: 
@@ -318,22 +320,22 @@ int main(int argc, char **argv) {
 	// Global index: /
 	generateIndex2(conn, tmp_repo, tmp_arch, tmp_branch);
 	
-	for (size_t i=0; i<dbranch.size(); ++i) {
-		// Index: /$branch/
+	for (size_t i=0; i<drepo.size(); ++i) {
+		// Index: /$repo/
 		tmp_branch.clear();
 		tmp_arch.clear();
 		tmp_repo.clear();
 		
-		tmp_branch.push_back(dbranch[0]);
+		tmp_repo.push_back(drepo[i]);
 		generateIndex2(conn, tmp_repo, tmp_arch, tmp_branch);
-		for (size_t t=0; t<drepo.size(); ++t) {
-			// Index: /$branch/$repo/
-			tmp_repo.clear();
+		for (size_t t=0; t<dbranch.size(); ++t) {
+			// Index: /$repo/$branch/
+			tmp_branch.clear();
 			tmp_arch.clear();
-			tmp_repo.push_back(drepo[t]);
+			tmp_branch.push_back(dbranch[t]);
 			generateIndex2(conn, tmp_repo, tmp_arch, tmp_branch);
 			for (size_t z=0; z<darch.size(); ++z) {
-				// Index: /$branch/$repo/$arch/repository/
+				// Index: /$repo/$branch/$arch/repository/
 				tmp_arch.clear();
 				tmp_arch.push_back(darch[z]);
 				generateIndex2(conn, tmp_repo, tmp_arch, tmp_branch);
