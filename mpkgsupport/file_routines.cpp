@@ -323,6 +323,20 @@ string ReadFile(const string& filename) // Reads the text file
 	//sbuffer[size]=0;
 	return sbuffer.c_str();
 }
+
+// Read function from another test
+std::string read_whole_file_stat(const char *fname) {
+    std::ifstream file(fname, std::ios::binary);
+    struct stat st;
+    stat(fname, &st);
+
+    std::string result(static_cast<size_t>(st.st_size), 0);
+    file.read(&result[0], static_cast<size_t>(st.st_size));
+
+    return result;
+}
+
+
 /*
 string ReadFile(const string& filename) // Reads the text file
 {

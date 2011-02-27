@@ -993,11 +993,7 @@ void actSearchByDescription(mpkg &core, const vector<string> &query, bool showOn
 void actGetRepositorylist(string url) {
 	string out = get_tmp_file();
 	if (url.empty()) {
-#ifdef X86_64
-		url = "http://www.agilialinux.ru/x86_64-7.0.rlist";
-#else
-		url = "http://www.agilialinux.ru/x86-7.0.rlist";
-#endif
+		url = "http://packages.agilialinux.ru/get_repository_list.php";
 	}
 	if (CommonGetFile(url, out)==DOWNLOAD_OK) {
 		vector<string> draftList = ReadFileStrings(out);

@@ -65,13 +65,16 @@
 	</build_pkg_type>
 	<repository_list>
 		<repository>
-			http://core64.agilialinux.ru/
+			http://core.agilialinux.ru/8.0/
 		</repository>
 		<repository>
-			http://userland64.agilialinux.ru/
+			http://userland.agilialinux.ru/8.0/
+		</repository>
+		<repository>
+			http://games.agilialinux.ru/8.0/
 		</repository>
 		<disabled_repository>
-			http://testing64.agilialinux.ru/
+			http://testing.agilialinux.ru/8.0/
 		</disabled_repository>
 
 	</repository_list>

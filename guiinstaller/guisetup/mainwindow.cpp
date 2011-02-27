@@ -647,22 +647,16 @@ bool MainWindow::validatePkgSources() {
 		printf("Got HDD dir in %s\n", hddpath.toStdString().c_str());
 	}
 	else if (ui->pkgSourceCustomRadioButton->isChecked()) {
-		urlpath = QInputDialog::getText(this, tr("Specify repository URL"), tr("Please, enter repository URL, for example, http://core32.agilialinux.ru/"));
+		urlpath = QInputDialog::getText(this, tr("Specify repository URL"), tr("Please, enter repository URL, for example, http://core.agilialinux.ru/8.0/"));
 		if (urlpath.isEmpty()) return false;
 	}
 
 	return true;
 }
 void MainWindow::savePkgsourceSettings() {
-#ifdef X86_64
-	QString coreRepo = "http://core64.agilialinux.ru/";
-	QString userlandRepo = "http://userland64.agilialinux.ru/";
-	QString testingRepo = "http://testing64.agilialinux.ru/";
-#else
-	QString coreRepo = "http://core32.agilialinux.ru/";
-	QString userlandRepo = "http://userland32.agilialinux.ru/";
-	QString testingRepo = "http://testing32.agilialinux.ru/";
-#endif
+	QString coreRepo = "http://core.agilialinux.ru/8.0/";
+	QString userlandRepo = "http://userland.agilialinux.ru/8.0/";
+	QString testingRepo = "http://testing.agilialinux.ru/8.0/";
 
 	if (ui->pkgSourceDVDRadioButton->isChecked()) {
 		settings->setValue("pkgsource", "dvd");
