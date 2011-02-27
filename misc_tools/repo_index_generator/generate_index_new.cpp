@@ -62,8 +62,8 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 	string search_subquery;
 
 	if (index_path.empty()) index_path = getIndexPath(drepo, darch, dbranch);
+	printf("IDXPATH: %s\n", index_path.c_str());
 #ifdef DEBUG
-	printf("%s\n", index_path.c_str());
 	return;
 #endif
 
@@ -71,7 +71,7 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 	if (dbranch.size()>0) {
 		search_subquery += " AND locations.distro_version IN (";
 		for (size_t i=0; i<dbranch.size(); ++i) {
-			search_subquery += "'" + dbranch[i] + "'";
+			search_subquery += "'" + dbranch[i] + "','" + dbranch[i] + "_deprecated'";
 			if (i<dbranch.size()-1) search_subquery += ",";
 			else search_subquery += ")";
 		}
@@ -233,10 +233,9 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 	fclose(package_list);
 
 
-	system("cat " + index_path + "/packages.xml | gzip -9 > " + index_path + "/packages.xml.gz.tmp");
-	system("mv " + index_path + "/packages.xml.gz.tmp " + index_path + "/packages.xml.gz");
-	system("cat " + index_path + "/packages.xml | xz -c > " + index_path + "/packages.xml.xz.tmp");
-	system("mv " + index_path + "/packages.xml.xz.tmp " + index_path + "/packages.xml.xz");
+	printf("\tXML complete, compressing...\n");
+	system("( cat " + index_path + "/packages.xml | gzip -9 > " + index_path + "/packages.xml.gz.tmp && mv " + index_path + "/packages.xml.gz.tmp " + index_path + "/packages.xml.gz ) &");
+	system("( cat " + index_path + "/packages.xml | xz -c > " + index_path + "/packages.xml.xz.tmp && mv " + index_path + "/packages.xml.xz.tmp " + index_path + "/packages.xml.xz ) &");
 
 	
 	// Also, we need setup variants index here.
@@ -330,6 +329,7 @@ int main(int argc, char **argv) {
 		for (size_t t=0; t<drepo.size(); ++t) {
 			// Index: /$branch/$repo/
 			tmp_repo.clear();
+			tmp_arch.clear();
 			tmp_repo.push_back(drepo[t]);
 			generateIndex2(conn, tmp_repo, tmp_arch, tmp_branch);
 			for (size_t z=0; z<darch.size(); ++z) {
