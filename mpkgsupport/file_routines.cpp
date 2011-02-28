@@ -324,7 +324,8 @@ string ReadFile(const string& filename) // Reads the text file
 	return sbuffer.c_str();
 }
 
-// Read function from another test
+// Read function from another test. Maybe works better than ReadFile, but time will show. Leaved here for future tests and commented out temporarily.
+/*
 std::string read_whole_file_stat(const char *fname) {
     std::ifstream file(fname, std::ios::binary);
     struct stat st;
@@ -333,40 +334,10 @@ std::string read_whole_file_stat(const char *fname) {
     std::string result(static_cast<size_t>(st.st_size), 0);
     file.read(&result[0], static_cast<size_t>(st.st_size));
 
-    return result;
-}
+    return result.c_str();
+}*/
 
 
-/*
-string ReadFile(const string& filename) // Reads the text file
-{
-	ifstream filestr;
-	long size;
-	filebuf *pbuf;
-	string sbuffer;
-	filestr.open(filename.c_str());
-	if (!filestr.is_open()) return "";
-	pbuf=filestr.rdbuf();
-	size=pbuf->pubseekoff(0,ios::end,ios::in);
-	pbuf->pubseekpos(0,ios::in);
-	sbuffer.resize(size+1);
-	//char *zbuffer = (char *) malloc(size);
-	//memset(zbuffer, 0, size);
-	filestr.get(&sbuffer[0], size, 0);
-	sbuffer.resize(sbuffer.size()-1);
-//	for (size_t i=0; i<size; ++i) {
-//		zbuffer[i]=filestr.get();
-//	}
-	
-//	sbuffer = string(zbuffer);
-	//free(zbuffer);
-	filestr.close();
-	
-	// Terminating the string
-	//sbuffer[size]=0;
-	return sbuffer;
-}
-*/
 int WriteFileStrings(const string& filename, const vector<string>& data) {
 	ofstream filestr;
 	filestr.open(filename.c_str());
@@ -380,56 +351,11 @@ int WriteFileStrings(const string& filename, const vector<string>& data) {
 	return 0;
 
 }
-// FIXME: None of these functions works properly. FIX IT!!!!!!!
-// THIS IS PRIORITY CRITICAL.
-//
-/*vector<string> ReadFileStrings(const string& filename) {
-	string data = ReadFile(filename);
-	vector<string> ret;
-	if (data.empty()) return ret;
-	size_t next_pos=0, prev_pos = 0;
-	strReplace(&data, "\r\n", "\n");
-	next_pos = data.find_first_of("\n");
-	if (next_pos == std::string::npos) {
-		ret.push_back(data);
-		return ret;
-	}
-	do {
-		ret.push_back(data.substr(prev_pos, next_pos));
-		prev_pos += next_pos+1;
-		if (prev_pos >= data.size()) next_pos = data.substr(prev_pos).find_first_of("\n");
-		else return ret;
-		if (next_pos==std::string::npos) {
-			ret.push_back(data.substr(prev_pos));
-			return ret;
-		}
-	} while (true);
-	return ret;
-}*/
 
 vector<string> ReadFileStrings(const string& filename) {
 	return MakeStrings(ReadFile(filename));
 }
-/*
-vector<string> ReadFileStrings(const string& filename) {
-	printf("EEEEEE\n");
-	string data = ReadFile(filename);
-	vector<string> ret;
-	vector<size_t> n_pos;
-	size_t next_pos=0;
-	n_pos.push_back(-1);
-	strReplace(&data, "\r\n", "\n");
-	for (size_t i=0; i<data.size(); i++) {
-		if (data[i]=='\n') n_pos.push_back(i);
-	}
-	for (size_t i=0; i<n_pos.size()-1; i++) {
-		if (i!=n_pos.size()-2) next_pos = n_pos[i+1]-n_pos[i]-1;
-		else next_pos = data.size()-n_pos[i]-2;
-		//printf("n_pos[i]=%d\n", n_pos[i]);
-		ret.push_back(data.substr(n_pos[i]+1, next_pos));
-	}
-	return ret;
-}*/
+
 int extractFiles(const string& filename, const string& files_to_extract, const string& output_dir, string file_type)
 {
 	if (!FileExists(output_dir)) {
