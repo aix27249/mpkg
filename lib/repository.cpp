@@ -437,6 +437,7 @@ int ProcessPackage(const char *filename, const struct stat *file_status, int fil
 			errCode = 0;
 			lp.data = __pkgCache->at(pkgCacheIndex);
 		}
+		/* I think we will drop deltas support.
 		const vector<DeltaSource> *deltaCache = NULL;
 		if (pkgCacheIndex != -1) deltaCache = &__pkgCache->at(pkgCacheIndex).deltaSources;
 		vector<DeltaSource> deltas=detectFileDeltas(filename, _cmdOptions["deltapath"], _cmdOptions["oldpkgpath"], deltaCache);
@@ -444,6 +445,7 @@ int ProcessPackage(const char *filename, const struct stat *file_status, int fil
 		else setXmlDeltaSources(deltas, __xmlCache->nodeTab[pkgCacheIndex]);
 		//printf("Delta set\n");
 		//if (!errCode) lp.create_signature(); // DISABLED BCOZ NOT NEEDED
+		*/
 		if (log)
 		{
 			if (errCode==0)
@@ -469,6 +471,7 @@ int ProcessPackage(const char *filename, const struct stat *file_status, int fil
 			xmlAddChild(_rootNode, __packagesRootNode);
 		}
 		else {
+			// Bug #1286: need to be rewritten via metaframe. See http://trac.agilialinux.ru/ticket/1286
 			xmlAddChild(_rootNode, __xmlCache->nodeTab[pkgCacheIndex]);
 		}
 		// Make file list. Don't regenerate this if using cache
@@ -611,7 +614,14 @@ int Repository::build_index(string path, bool make_filelist)
 	ftw(path.c_str(), countPackage,11);
 	PACKAGE_LIST indexCachePkgList;
 	__pkgCache = &indexCachePkgList;
-	if (_cmdOptions["index_cache"]=="yes") importIndexCache(path);
+
+	// Due to bug 1286, index caching now disabled. It will be re-enabled when this bug will be fixed.
+	if (_cmdOptions["index_cache"]=="yes") {
+		mWarning("Due to bug #1286, index caching disabled for now. Running non-cached indexing.");
+		//importIndexCache(path);
+	}
+	
+	
 	ftw(path.c_str(), ProcessPackage, 11);
 	// Finally, write our XML tree to file
 	string xmlFile = path + "/packages.xml";

@@ -84,6 +84,10 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 			else search_subquery += ")";
 		}
 	}
+	else {
+		// Blacklist badversions repo from global index
+		search_subquery += " AND locations.server_url!='badversions' ";
+	}
 
 
 

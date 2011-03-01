@@ -250,11 +250,16 @@ int slack2xml(string filename, string xml_output)
 
 
 
-LocalPackage::LocalPackage(string _f, string _path_shift)
-{
+LocalPackage::LocalPackage(string _f, string _path_shift) {
 	path_shift = _path_shift;
 	internal=false;
 	this->filename=_f;
+	
+	// Reset pointers
+	__doc = NULL;
+	_packageXMLNode = NULL;
+	_packageFListNode = NULL;
+	
 }
 
 LocalPackage::~LocalPackage(){}
@@ -357,12 +362,6 @@ int LocalPackage::get_xml()
 	xmlFree(membuff);
 	_packageXMLNode = xmlDocGetRootElement(__doc);
 
-
-	if (__doc == NULL) {
-		//mDebug("[get_xml] xml document == NULL");
-	} else {
-		//mDebug("[get_xml] xml docuemtn != NULL");
-	}
 	xml2package(p.getXMLDoc(), p.getXMLNode(), &data);
 	//mDebug("get_xml end");
 	delete_tmp_files();
@@ -725,6 +724,7 @@ xmlNode LocalPackage::getPackageXMLNode()
 xmlChar * LocalPackage::getPackageXMLNodeXPtr(int * bufsize)
 {
 	xmlChar *membuf;
+	if (!__doc) fprintf(stderr, "OOPS: NULL __doc in getPackageXMLNodeXPtr\n");
 	xmlDocDumpMemory(this->__doc, &membuf, bufsize);
 	return membuf;
 }
