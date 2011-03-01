@@ -1,4 +1,6 @@
 #include "textsetup.h"
+#include "mediachecker.h"
+#include "mechanics.h"
 
 TextSetup::TextSetup() {
 }
@@ -28,6 +30,22 @@ int TextSetup::run() {
 }
 
 int TextSetup::setPackageSource() {
+	vector<MenuItem> m;
+	m.push_back(MenuItem("Disc", _("Install from installation DVD or USB flash")));
+	m.push_back(MenuItem("Network", _("Install from official network repository")));
+	m.push_back(MenuItem("ISO", _("Install from ISO image")));
+	m.push_back(MenuItem("HDD", _("Install from directory on local hard drive")));
+	m.push_back(MenuItem("Custom", _("Specify custom repository set")));
+	
+	settings["pkgsource"] = ncInterface.showMenu2(_("Please, choose package source from a list below:"), m, settings["pkgsource"]);
+	if (settings["pkgsource"].empty()) return 1;
+
+	customPkgSetList = mech.getCustomPkgSetList(settings["pkgsource"]);
+	
+	if (customPkgSetList.empty()) {
+		if (ncInterface.showYesNo(_("Failed to retrieve required data from specified repository. Select another one?"))) return setPackageSource();
+		else return 2;
+	}
 	return 0;
 }
 
