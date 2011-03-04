@@ -8,7 +8,9 @@ class TextSetupMechanics {
 		TextSetupMechanics();
 		~TextSetupMechanics();
 
-		vector<CustomPkgSet> getCustomPkgSetList(const string &pkgsource);
+		vector<CustomPkgSet> getCustomPkgSetList(const string &pkgsource, string *result_pkgsource, string *volname, string *rep_location);
+
+		bool checkNvidiaLoad();
 
 };
 

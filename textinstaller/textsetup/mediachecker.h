@@ -9,7 +9,7 @@ class MediaChecker {
 		MediaChecker();
 		~MediaChecker();
 
-		vector<CustomPkgSet> getCustomPkgSetList(const string &pkgsource, char *locale);
+		vector<CustomPkgSet> getCustomPkgSetList(const string &_pkgsource, char *locale, string *result_pkgsource, string *r_volname, string *r_rep_location);
 
 	private:
 		// Media detection and pkglist retriveal

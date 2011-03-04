@@ -8,7 +8,7 @@
 
 class TextSetup {
 	public: 
-		TextSetup();
+		TextSetup(string _distro_version="8.0");
 		~TextSetup();
 
 		mpkg *core;
@@ -33,6 +33,8 @@ class TextSetup {
 		vector<CustomPkgSet> customPkgSetList;
 
 		TextSetupMechanics mech;
+
+		string distro_version;
 
 };
 

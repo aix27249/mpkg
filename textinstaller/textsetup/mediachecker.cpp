@@ -5,7 +5,7 @@ MediaChecker::MediaChecker() {
 MediaChecker::~MediaChecker() {
 }
 
-vector<CustomPkgSet> MediaChecker::getCustomPkgSetList(const string &_pkgsource, char *_locale) {
+vector<CustomPkgSet> MediaChecker::getCustomPkgSetList(const string &_pkgsource, char *_locale, string *result_pkgsource, string *r_volname, string *r_rep_location) {
 	pkgsource = _pkgsource;
 	if (_locale) locale = (string) _locale;
 
@@ -15,8 +15,7 @@ vector<CustomPkgSet> MediaChecker::getCustomPkgSetList(const string &_pkgsource,
 	if (pkgsource=="dvd" && FileExists("/bootmedia/.volume_id")) {
 	       rList.push_back("file:///bootmedia/repository/");
 	       pkgsource="file:///bootmedia/repository/";
-	}
-	
+	}	
 	else if (pkgsource=="dvd" || pkgsource.find("iso:///")==0) {
 		if (pkgsource.find("iso:///")==0) {
 			printf("Checking for ISO\n");
@@ -62,6 +61,10 @@ vector<CustomPkgSet> MediaChecker::getCustomPkgSetList(const string &_pkgsource,
 	if (pkgsource=="dvd" || pkgsource.find("iso:///")) {
 		system("umount /var/log/mount");
 	}
+	// Returning pkgsource, which may be modified during DVD detection. Note that all previous returns in this function means fail, so we don't need to return this stuff earlier.
+	*result_pkgsource = pkgsource;
+	*r_volname = volname;
+	*r_rep_location = rep_location;
 	
 	printf("Repo detecting complete, sending %d items in pkgSetList\n", (int) customPkgSetList.size());
 	return customPkgSetList;
