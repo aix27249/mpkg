@@ -32,3 +32,39 @@ bool TextSetupMechanics::checkNvidiaLoad() {
 	return hasNvidia > 0;
 }
 
+void TextSetupMechanics::updatePartitionLists() {
+	// Let's go setuid. At least, let's try.
+	uid_t uid = getuid();
+	if (uid) {
+		perror("Failed to obtain root privileges to read disk partition table");
+		ncInterface.showMsgBox(_("This program should have suid bit, or be run from root. Otherwise, it could not get drive information.\nThis is fatal, and we have to exit."));
+		exit(1);
+		return;
+	}
+	drives = getDevList();
+	partitions = getPartitionList();
+	lvm_groups = getLVM_VGList();
+
+	// Since fslabel in libparted means completely other thing, let's get this from blkid
+	for (size_t i=0; i<partitions.size(); ++i) {
+		partitions[i].fslabel = getLABEL(partitions[i].devname).c_str();
+	}
+}
+
+string TextSetupMechanics::getLABEL(const string& dev) {
+	string tmp_file = get_tmp_file();
+	string data;
+	int try_count = 0;
+	while (try_count<2 && data.empty()) {
+		system("blkid -s LABEL " + dev + " > " + tmp_file);
+		data = ReadFile(tmp_file);
+		try_count++;
+	}
+	if (data.empty()) return "";
+	size_t a = data.find_first_of("\"");
+	if (a==std::string::npos || a==data.size()-1) return "";
+	data.erase(data.begin(), data.begin()+a+1);
+	a = data.find_first_of("\"");
+	if (a==std::string::npos || a==0) return "";
+	return data.substr(0, a);
+}

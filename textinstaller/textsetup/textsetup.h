@@ -23,6 +23,12 @@ class TextSetup {
 		int setNetworkSettings();
 		int setTimezone();
 
+		int saveSettings();
+
+		string getISORepoPath();
+		string getHDDRepoPath();
+		string getCustomRepoPath();
+
 		int run();
 
 	private:
