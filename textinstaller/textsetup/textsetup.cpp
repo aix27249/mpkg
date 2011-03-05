@@ -118,6 +118,7 @@ int TextSetup::setNvidiaDriver() {
 }
 
 int TextSetup::setPartitionEditor() {
+	if (mech.drives.empty()) mech.updatePartitionLists();
 	vector<MenuItem> m;
 	m.push_back(MenuItem("cfdisk", _("NCurses-based partition editor. MBR only.")));
 	m.push_back(MenuItem("fdisk", _("Command-line partition editor. MBR only.")));
@@ -132,12 +133,13 @@ int TextSetup::setPartitionEditor() {
 	vector<MenuItem> d;
 	for (size_t i=0; i<mech.drives.size(); ++i) {
 		d.push_back(MenuItem(mech.drives[i].tag, mech.drives[i].value));
-		d.push_back(MenuItem("CONTINUE", _("Continue to next step")));
 	}
+	d.push_back(MenuItem("CONTINUE", _("Continue to next step")));
 	string drive;
 	do {
 		drive = ncInterface.showMenu2(_("Select drive to edit:"), d, drive);
 		if (drive.empty() || drive=="CONTINUE") break;
+		ncInterface.uninit();
 		system(p_editor + " " + drive);
 	} while (drive!="CONTINUE" && !drive.empty());
 
@@ -146,10 +148,30 @@ int TextSetup::setPartitionEditor() {
 	return 0;
 }
 
+vector<MenuItem> TextSetup::getKnownFilesystems() {
+	vector<MenuItem> formatOptions;
+	formatOptions.push_back(MenuItem("ext4", _("4th version of standard linux filesystem"), _("New version of EXT, developed to superseed EXT3. The fastest journaling filesystem in most cases.")));
+	formatOptions.push_back(MenuItem("ext3", _("Standard journaling Linux filesystem"), _("Seems to be a best balance between reliability and performance")));
+	formatOptions.push_back(MenuItem("ext2", _("Standard Linux filesystem (without journaling)."), _("Old, stable, very fast (it doesn't use jounal), but less reliable")));
+	formatOptions.push_back(MenuItem("xfs", _("Fast filesystem developed by SGI"), _("The best choise to store data (especially large files). Supports online defragmentation and other advanced features. Not recommended to use as root FS or /home")));
+	formatOptions.push_back(MenuItem("jfs", _("Journaling filesystem by IBM"), _("Another good filesystem for general use.")));
+	formatOptions.push_back(MenuItem("reiserfs", _("Journaling filesystem developed by Hans Reiser"), _("ReiserFS is a general-purpose, journaled computer file system designed and implemented by a team at Namesys led by Hans Reiser. ReiserFS is currently supported on Linux. Introduced in version 2.4.1 of the Linux kernel, it was the first journaling file system to be included in the standard kernel")));
+	formatOptions.push_back(MenuItem("btrfs", _("B-Tree FS, new EXPERIMENTAL filesystem similar to ZFS. Separate /boot partition required to use it as root filesystem.")));
+	formatOptions.push_back(MenuItem("nilfs2", _("NILFS2, new EXPERIMENTAL snapshot-based filesystem. Separate /boot partition required to use it as root filesystem.")));
+
+	formatOptions.push_back(MenuItem("NONE", _("Do not format (use as is and keep data)")));
+	return formatOptions;
+
+}
 
 
 int TextSetup::setMountPoints() {
-	vector<MenuItem> m, fs;
+	mech.updatePartitionLists();
+	vector<MenuItem> m, fs = getKnownFilesystems();
+	
+
+
+
 	string fslabel;
 	for (size_t i=0; i<mech.partitions.size(); ++i) {
 		if (mech.partitions[i].fslabel.empty()) fslabel = _(", no label");
@@ -209,6 +231,7 @@ int TextSetup::setBootLoader() {
 		}
 
 		settings["bootloader"] = ncInterface.showMenu2(_("Select disk for bootloader. Note for GPT users: you need a hybrid partition table to use GRUB on it."), m);
+		if (settings["bootloader"].empty()) return setBootLoader();
 	}
 	else if (b_type=="Partition") {
 		for (size_t i=0; i<mech.partitions.size(); ++i) {
@@ -221,7 +244,9 @@ int TextSetup::setBootLoader() {
 			m.push_back(MenuItem(mech.partitions[i].devname, humanizeSize((int64_t) atol(mech.partitions[i].size.c_str())*(int64_t) 1048576) + ", " + fstype + " " + mapSettings[mech.partitions[i].devname]["mountpoint"]));
 		}
 		settings["bootloader"] = ncInterface.showMenu2(_("Select partition for bootloader. Note: not all partitions listed here are suitable for keeping bootloader on it."), m);
+		if (settings["bootloader"].empty()) return setBootLoader();
 	}
+	else return 1;
 	
 	return 0;
 }
@@ -324,9 +349,12 @@ int TextSetup::saveSettings() {
 		conf.push_back(it->first + "=" + it->second);
 	}
 
+	conf.push_back("");
+	conf.push_back("# Partitioning layout");
 	for (mapit=mapSettings.begin(); mapit!=mapSettings.end(); mapit++) {
+		conf.push_back("");
+		conf.push_back("[" + mapit->first + "]");
 		for (mit=mapSettings[mapit->first].begin(); mit!=mapSettings[mapit->first].end(); mit++) {
-			conf.push_back("[" + mapit->first + "]");
 			conf.push_back(mit->first + "=" + mit->second);
 		}
 	}

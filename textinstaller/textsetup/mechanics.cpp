@@ -33,6 +33,7 @@ bool TextSetupMechanics::checkNvidiaLoad() {
 }
 
 void TextSetupMechanics::updatePartitionLists() {
+	ncInterface.showInfoBox(_("Updating lists of available drives and partitions, please wait"));
 	// Let's go setuid. At least, let's try.
 	uid_t uid = getuid();
 	if (uid) {

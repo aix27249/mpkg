@@ -37,7 +37,7 @@ class TextSetup {
 		map<string, map<string, string> > mapSettings;
 
 		vector<CustomPkgSet> customPkgSetList;
-
+		vector<MenuItem> getKnownFilesystems();
 		TextSetupMechanics mech;
 
 		string distro_version;
