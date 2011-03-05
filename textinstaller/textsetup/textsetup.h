@@ -1,7 +1,7 @@
 #ifndef TEXTSETUP_H__
 #define TEXTSETUP_H__
 
-#include <iniparser.h>
+//#include <iniparser.h>
 #include <mpkg/libmpkg.h>
 #include "custompkgset.h"
 #include "mechanics.h"
