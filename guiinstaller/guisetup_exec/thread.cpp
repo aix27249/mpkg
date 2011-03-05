@@ -582,7 +582,9 @@ void SetupThread::buildInitrd() {
 	else rootUUID="UUID=" + rootUUID;
 	string use_swap, use_raid, use_lvm;
 	if (!swapPartition.empty()) use_swap = "-h " + swapPartition;
-	if (rootPartition.find("/dev/md")==0) use_raid = " -R ";
+	// Temporary (or permanent?) workaround: always add RAID modules to initrd, since we don't know how to detect it in case of RAID+LVM. See bug http://trac.agilialinux.ru/ticket/1292 for details.
+	use_raid = " -R ";
+	// Maybe it is ok to force LVM too, but I leave it alone for a while.
 	if (rootPartition.size()>strlen("/dev/") && rootPartition.substr(strlen("/dev/")).find("/")!=std::string::npos) use_lvm = " -L ";
 
 	if (rootPartitionType!="btrfs" && use_lvm.empty()) rootdev = rootUUID;
