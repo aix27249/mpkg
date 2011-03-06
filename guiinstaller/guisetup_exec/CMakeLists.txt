@@ -53,7 +53,7 @@ QT4_WRAP_UI(guisetup_UI_HDR ${guisetup_UI})
 QT4_WRAP_CPP(guisetup_MOC_SRC ${guisetup_MOC_HDR})
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 ADD_EXECUTABLE(guisetup_exec ${guisetup_SRC} ${guisetup_MOC_SRC} ${guisetup_UI_HDR} ${guisetup_RCC_SRCS})
-TARGET_LINK_LIBRARIES(guisetup_exec ${QT_LIBRARIES} mpkg mpkg-parted)
+TARGET_LINK_LIBRARIES(guisetup_exec ${QT_LIBRARIES} mpkg mpkg-parted agiliasetup)
 
 FILE(GLOB icons "${CMAKE_CURRENT_SOURCE_DIR}/icons/*.png")
 FILE(GLOB l10n "${CMAKE_CURRENT_SOURCE_DIR}/*.qm")

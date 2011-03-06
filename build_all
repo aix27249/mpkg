@@ -1,7 +1,7 @@
 #!/bin/sh
 # This script builds all components and installs it into system (because of building requirements).
 # Do not use this for package build
-TARGETS="mpkgsupport nwidgets lib console i18n mpkg-parted manager2 mpkg-gui-installer guiinstaller textinstaller"
+TARGETS="mpkgsupport nwidgets lib console i18n mpkg-parted manager2 mpkg-gui-installer libagiliasetup guiinstaller textinstaller"
 set -e
 CWD=`pwd`
 if [ `uname -m` = "i686" ] ; then

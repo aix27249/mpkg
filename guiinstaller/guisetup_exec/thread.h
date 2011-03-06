@@ -3,6 +3,7 @@
 #include <QtGui>
 #include <QThread>
 #include <mpkg/libmpkg.h>
+#include <agiliasetup.h>
 
 #include <mpkg/errorhandler.h>
 struct OsRecord
@@ -14,24 +15,19 @@ struct OsRecord
 	string root;
 };
 
-struct CustomPkgSet {
-	string name, desc, full;
-};
 
-struct PartConfig {
-	string partition, mountpoint, fs, mount_options;
-	bool format;
-};
 
-class SetupThread: public QThread {
+
+class SetupThread: public QThread, public StatusNotifier {
 	Q_OBJECT
 	public:
 		void run();
+		void setDetailsTextCallback(const string& msg);
+		void sendReportError(const string& text);
 	private:
 		// Core
 		mpkg *core;
 		QSettings *settings;
-		vector<CustomPkgSet> customPkgSetList;
 		bool formatPartition(PartConfig pConfig);
 		bool makeSwap(PartConfig pConfig);
 		bool activateSwap(PartConfig pConfig);
@@ -43,6 +39,8 @@ class SetupThread: public QThread {
 		QString rootPassword;
 		vector<TagPair> users;
 		MpkgErrorReturn errCode;
+		AgiliaSetup agiliaSetup;
+
 
 	signals:
 		void setSummaryText(const QString &);
@@ -67,7 +65,6 @@ class SetupThread: public QThread {
 		void setDefaultRunlevels();
 		void setDefaultXDM();
 		void getCustomSetupVariants(const vector<string>& rep_list);
-		CustomPkgSet getCustomPkgSet(const string& name);
 		bool fillPartConfigs();
 		bool validateConfig();
 		bool setMpkgConfig();
@@ -89,7 +86,6 @@ class SetupThread: public QThread {
 		bool grub2_install();
 		bool grub2config();
 		bool grub2_mkconfig();
-		bool setHostname();
 		void setDefaultRunlevel(const string &);
 		void enablePlymouth(bool);
 		void generateFontIndex();

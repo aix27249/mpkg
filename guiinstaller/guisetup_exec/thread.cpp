@@ -27,77 +27,28 @@ void SetupThread::updateData(const ItemState& a) {
 	//if (a.progress>=0 && a.progress<=100) ui->currentProgressBar->setValue(a.progress);
 	if (a.totalProgress>=0 && a.totalProgress<=100) emit setProgress(a.totalProgress);
 }
+
+void SetupThread::setDetailsTextCallback(const string& msg) {
+	emit setDetailsText(QString::fromStdString(msg));
+}
+
+void SetupThread::sendReportError(const string& text) {
+	emit reportError(QString::fromStdString(text));
+}
+
+
 void SetupThread::getCustomSetupVariants(const vector<string>& rep_list) {
 	emit setSummaryText(tr("Retrieving setup variants"));
 	emit setDetailsText(tr("Retrieving list..."));
-	string tmpfile = get_tmp_file();
-	system("rm -rf /tmp/setup_variants");
-	system("mkdir -p /tmp/setup_variants");
-	string path;
-	customPkgSetList.clear();
-
-	DownloadsList downloadQueue;
-	DownloadItem tmpDownloadItem;
-	vector<string> itemLocations;
-	tmpDownloadItem.priority = 0;
-	tmpDownloadItem.status = DL_STATUS_WAIT;
-	string itemname;
-
-	for (size_t z=0; z<rep_list.size(); ++z) {
-		downloadQueue.clear();
-		path = rep_list[z];
-		CommonGetFile(path + "/setup_variants.list", tmpfile);
-		vector<string> list = ReadFileStrings(tmpfile);
-		printf("Received %d setup variants\n", (int) list.size());
-		vector<CustomPkgSet> ret;
-		for (size_t i=0; i<list.size(); ++i) {
-			itemLocations.clear();
-			tmpDownloadItem.name=list[i];
-			tmpDownloadItem.file="/tmp/setup_variants/" + list[i] + ".desc";
-			itemLocations.push_back(path + "/setup_variants/" + list[i] + ".desc");
-			tmpDownloadItem.url_list = itemLocations;
-			downloadQueue.push_back(tmpDownloadItem);
-
-			itemLocations.clear();
-			tmpDownloadItem.name=list[i];
-			tmpDownloadItem.file="/tmp/setup_variants/" + list[i] + ".list";
-			itemLocations.push_back(path + "/setup_variants/" + list[i] + ".list");
-			tmpDownloadItem.url_list = itemLocations;
-			downloadQueue.push_back(tmpDownloadItem);
-		}
-		CommonGetFileEx(downloadQueue, &itemname);
-
-		for (size_t i=0; i<list.size(); ++i) {
-			emit setDetailsText(tr("Importing %1 of %2: %3").arg(i+1).arg(list.size()).arg(list[i].c_str()));
-			printf("Importing package list: %d/%d\n", (int) i+1, (int) list.size());
-			customPkgSetList.push_back(getCustomPkgSet(list[i]));
-		}
-	}
+	agiliaSetup.getCustomSetupVariants(rep_list, this);
 }
 
 void SetupThread::skipMD5() {
-	forceSkipLinkMD5Checks=true;
+	forceSkipLinkMD5Checks = true;
 	forceInInstallMD5Check = false;
 	emit enableMD5Button(false);
 }
-CustomPkgSet SetupThread::getCustomPkgSet(const string& name) {
-	vector<string> data = ReadFileStrings("/tmp/setup_variants/" + name + ".desc");
-	CustomPkgSet ret;
-	ret.name = name;
-	string locale = settings->value("language").toString().toStdString();
-	if (locale.size()>2) locale = "[" + locale.substr(0,2) + "]";
-	else locale = "";
-	string gendesc, genfull;
-	for (size_t i=0; i<data.size(); ++i) {
-		if (data[i].find("desc" + locale + ": ")==0) ret.desc = getParseValue("desc" + locale + ": ", data[i], true);
-		if (data[i].find("desc: ")==0) gendesc = getParseValue("desc: ", data[i], true);
-		if (data[i].find("full" + locale + ": ")==0) ret.full = getParseValue("full" + locale + ": ", data[i], true);
-		if (data[i].find("full: ")==0) genfull = getParseValue("full: ", data[i], true);
-	}
-	if (ret.desc.empty()) ret.desc = gendesc;
-	if (ret.full.empty()) ret.full = genfull;
-	return ret;
-}
+
 
 bool SetupThread::validateConfig() {
 
@@ -137,168 +88,47 @@ bool SetupThread::validateConfig() {
 bool SetupThread::setMpkgConfig() {
 	emit setSummaryText(tr("Setting MPKG config"));
 	emit setDetailsText("");
-	// Should set repository URLs
-	vector<string> rList, dlist;
 
-	if (settings->value("pkgsource").toString()=="dvd") {
-		if (FileExists("/bootmedia/.volume_id")) {
-		       rList.push_back("file:///bootmedia/repository/");
-		       settings->setValue("pkgsource", "file:///bootmedia/repository/");
-		}
-		else rList.push_back("cdrom://"+settings->value("volname").toString().toStdString()+"/"+settings->value("rep_location").toString().toStdString());
-	}
-	else if (settings->value("pkgsource").toString().toStdString().find("iso:///")==0) {
-		system("mount -o loop " + settings->value("pkgsource").toString().toStdString().substr(6) + " /var/log/mount");
-		rList.push_back("cdrom://"+settings->value("volname").toString().toStdString()+"/"+settings->value("rep_location").toString().toStdString());
-	}
-	else rList.push_back(settings->value("pkgsource").toString().toStdString());
-
-	// Now, alternate package sources: for updates and so on
+	vector<string> additional_repositories;
 	int add_url_size = settings->beginReadArray("additional_repositories");
 	for (int i=0; i<add_url_size; ++i) {
 		settings->setArrayIndex(i);
-		rList.push_back(settings->value("url").toString().toStdString());
+		additional_repositories.push_back(settings->value("url").toString().toStdString());
 	}
 	settings->endArray();
 
-	core = new mpkg;
-	core->set_repositorylist(rList, dlist);
-	delete core;
+	agiliaSetup.setMpkgConfig(settings->value("pkgsource").toString().toStdString(), settings->value("volname").toString().toStdString(), settings->value("rep_location").toString().toStdString(), additional_repositories);
 	return true;
 }
 
 bool SetupThread::getRepositoryData() {
 	emit setSummaryText(tr("Updating repository data"));
 	emit setDetailsText(tr("Retrieving indices from repository"));
-	core = new mpkg;
-	if (core->update_repository_data()!=0) {
-		emit reportError(tr("Failed to retreive repository data, cannot continue"));
-		delete core;
-		return false;
-	}
-	emit setDetailsText(tr("Caching setup variants"));
-	getCustomSetupVariants(core->get_repositorylist());
-	delete core;
-	return true;
+	return agiliaSetup.getRepositoryData(this);
 }
 
 bool SetupThread::prepareInstallQueue() {
 	emit setSummaryText(tr("Preparing install queue"));
 	emit setDetailsText("");
-	string installset_filename = "/tmp/setup_variants/" + settings->value("setup_variant").toString().toStdString() + ".list";
-
-	vector<string> installset_contains;
-	if (!installset_filename.empty() && FileExists(installset_filename)) {
-		vector<string> versionz; // It'll be lost after, but we can't carry about it here: only one version is available.
-		vector<string> pkgListStrings = ReadFileStrings(installset_filename);
-		if (settings->value("netman")=="networkmanager") pkgListStrings.push_back("NetworkManager");
-		else if (settings->value("netman")=="wicd") pkgListStrings.push_back("wicd");
-		parseInstallList(pkgListStrings, installset_contains, versionz);
-		pkgListStrings.clear();
-		if (installset_contains.empty()) {
-			reportError(tr("Package set contains no packages, installation failed."));
-			return false;
-		}
-	}
-	vector<string> errorList;
-	core = new mpkg;
-	core->install(installset_contains, NULL, NULL, &errorList);
-	core->commit(true);
-	PACKAGE_LIST commitList;
-	SQLRecord sqlSearch;
-	core->get_packagelist(sqlSearch, &commitList);
-	vector<string> queryLog;
-	for (size_t i=0; i<commitList.size(); ++i) {
-		queryLog.push_back(commitList[i].get_name() + " " + commitList[i].get_fullversion() + " " + boolToStr(commitList[i].action()==ST_INSTALL));
-	}
-	WriteFileStrings("/var/log/comlist_before_alterswitch.log", queryLog);
-	queryLog.clear();
-
-	vector<string> alternatives;
-	if (settings->value("alternatives/bfs").toBool()) alternatives.push_back("bfs");
-	if (settings->value("alternatives/cleartype").toBool()) alternatives.push_back("cleartype");
-	
-	if (settings->value("nvidia-driver")=="latest" || settings->value("nvidia-driver")=="173" || settings->value("nvidia-driver")=="96") {
-		alternatives.push_back("nvidia");
-		for (size_t i=0; i<commitList.size(); ++i) {
-			if (commitList[i].get_name()=="nvidia-driver" || commitList[i].get_name()=="nvidia-kernel") commitList.get_package_ptr(i)->set_action(ST_INSTALL, "nvidia-select");
-		}
-	}
-	if (settings->value("nvidia-driver")=="173") {
-		alternatives.push_back("legacy173");
-	}
-	if (settings->value("nvidia-driver")=="96") {
-		alternatives.push_back("legacy96");
-	}
-	for (size_t i=0; i<alternatives.size(); ++i) {
-		printf("USED ALT: %s\n", alternatives[i].c_str());
-	}
-	commitList.switchAlternatives(alternatives);
-	for (size_t i=0; i<commitList.size(); ++i) {
-		queryLog.push_back(commitList[i].get_name() + " " + commitList[i].get_fullversion()+ " " + boolToStr(commitList[i].action()==ST_INSTALL));
-	}
-	WriteFileStrings("/var/log/comlist_after_alterswitch.log", queryLog);
-	queryLog.clear();
-
-	PACKAGE_LIST commitListFinal;
-	for (size_t i=0; i<commitList.size(); ++i) {
-		if (commitList[i].action()==ST_INSTALL) {
-			commitListFinal.add(commitList[i]);
-			queryLog.push_back(commitList[i].get_name() + " " + commitList[i].get_fullversion());
-		}
-
-	}
-	WriteFileStrings("/var/log/final_setup_query.log", queryLog);
-	core->clean_queue();
-	core->install(&commitListFinal);
-	core->commit(true);
-	delete core;
-	return true;
-
+	return agiliaSetup.prepareInstallQueue(settings->value("setup_variant").toString().toStdString(), settings->value("netman").toString().toStdString(),settings->value("nvidia-driver").toString().toStdString(), this);
 }
 
 bool SetupThread::validateQueue() {
 	emit setSummaryText(tr("Validating queue"));
 	emit setDetailsText("");
-	core = new mpkg;
-	PACKAGE_LIST queue;
-	SQLRecord sqlSearch;
-	sqlSearch.addField("package_action", ST_INSTALL);
-	core->get_packagelist(sqlSearch, &queue);
-	delete core;
-	if (queue.IsEmpty()) {
-		emit reportError(tr("Commit failed: probably dependency errors"));
-		return false;
-	}
-	return true;
+	return agiliaSetup.validateQueue(this);
 }
 
 bool SetupThread::formatPartition(PartConfig pConfig) {
-
-	emit setDetailsText(tr("Formatting /dev/%2").arg(pConfig.partition.c_str()));
-	printf("Formatting /dev/%s\n", pConfig.partition.c_str());
-	string fs_options;
-	if (pConfig.fs=="jfs") fs_options="-q";
-	else if (pConfig.fs=="xfs") fs_options="-f -q";
-	else if (pConfig.fs=="reiserfs") fs_options="-q";
-	if (system("umount -l /dev/" + pConfig.partition +  " ; mkfs -t " + pConfig.fs + " " + fs_options + " /dev/" + pConfig.partition)==0) return true;
-	else return false;
+	return agiliaSetup.formatPartition(pConfig, this);
 }
 
 bool SetupThread::makeSwap(PartConfig pConfig) {
-	emit setSummaryText(tr("Creating swapspace"));
-	emit setDetailsText(tr("Creating swap in %1").arg(pConfig.partition.c_str()));
-	system("swapoff /dev/" + pConfig.partition);
-	if (system("mkswap /dev/" + pConfig.partition)==0) return false;
-	return true;
+	return agiliaSetup.makeSwap(pConfig, this);
 }
 
 bool SetupThread::activateSwap(PartConfig pConfig) {
-
-	emit setSummaryText(tr("Activating swap"));
-	emit setDetailsText(tr("Activating swap in %1").arg(pConfig.partition.c_str()));
-	if (system("swapon /dev/" + pConfig.partition)!=0) return false;
-	return true;
+	return agiliaSetup.activateSwap(pConfig);
 }
 bool SetupThread::fillPartConfigs() {
 	PartConfig *pConfig;
@@ -815,19 +645,7 @@ menuentry \"" + string(_("AgiliaLinux ") + string(DISTRO_VERSION) + _(" on ")) +
 
 	return true;
 }
-bool SetupThread::setHostname() {
-	string hostname = settings->value("hostname").toString().toStdString();
-	if (hostname.empty()) return false;
-	string netname = settings->value("netname").toString().toStdString();
-	if (netname.empty()) netname = "example.net";
-	WriteFile("/tmp/new_sysroot/etc/HOSTNAME", hostname + "." + netname + "\n");
-	string hosts = ReadFile("/tmp/new_sysroot/etc/hosts");
-	strReplace(&hosts, "darkstar", hostname);
-	strReplace(&hosts, "example.net", netname);
-	WriteFile("/tmp/new_sysroot/etc/hosts", hosts);
 
-	return true;
-}
 void SetupThread::setDefaultRunlevel(const string& lvl) {
 	// Can change runlevels 3 and 4 to lvl
 	string data = ReadFile("/tmp/new_sysroot/etc/inittab");
@@ -996,6 +814,7 @@ void SetupThread::run() {
 	setupMode = true;
 
 	settings = new QSettings("guiinstaller");
+	agiliaSetup.setLocale(settings->value("language").toString().toStdString());
 	rootPassword = settings->value("rootpasswd").toString();
 	settings->beginGroup("users");
 
@@ -1036,129 +855,39 @@ void SetupThread::run() {
 	emit reportFinish();
 }
 bool SetupThread::createBaselayout() {
-	system("mkdir -p /tmp/new_sysroot/{dev,etc,home,media,mnt,proc,root,sys,tmp}");
-	system("chmod 710 /root");
-	system("chmod 1777 /tmp");
-	
-	// Some programs except generic directories in some very weird places.
-	// For example, KDE assumes that /var/tmp is a symlink to /tmp. I'm too lazy to patch this out, so I'll just create this symlink.
-	system("ln -sf ../tmp /tmp/new_sysroot/var/tmp");
-	return true;
+	return agiliaSetup.createBaselayout();
 }
-bool setPasswd(string username, string passwd) {
-	string tmp_file = "/tmp/new_sysroot/tmp/wtf";
-	string data = passwd + "\n" + passwd + "\n";
-	WriteFile(tmp_file, data);
-	string passwd_cmd = "#!/bin/sh\ncat /tmp/wtf | passwd " + username+" \n";
-	WriteFile("/tmp/new_sysroot/tmp/run_passwd", passwd_cmd);
-	int ret = system("chroot /tmp/new_sysroot sh /tmp/run_passwd");
-	for (size_t i=0; i<data.size(); i++) {
-		data[i]=' ';
-	}
-	WriteFile(tmp_file, data);
-	unlink(tmp_file.c_str());
-	unlink("/tmp/new_sysroot/tmp/run_passwd");
-	if (ret == 0) return true;
-	return false;
-}
-
-bool addUser(string username) {
-	printf("Adding user %s\n", username.c_str());
-	//string extgroup="audio,cdrom,disk,floppy,lp,scanner,video,wheel"; // Old default groups
-	string extgroup="audio,cdrom,floppy,video,netdev,plugdev,power"; // New default groups, which conforms current guidelines
-	system("chroot /tmp/new_sysroot /usr/sbin/useradd -d /home/" + username + " -m -g users -G " + extgroup + " -s /bin/bash " + username);
-	system("chroot /tmp/new_sysroot chown -R " + username+":users /home/"+username);
-	system("chmod 700 /tmp/new_sysroot/home/" + username);
-	return true;
-}
-
 
 void SetupThread::setRootPassword() {
-	setPasswd("root", rootPassword.toStdString());
+	agiliaSetup.setRootPassword(rootPassword.toStdString());
 }
 
 void SetupThread::createUsers() {
-	for (size_t i=0; i<users.size(); ++i) {
-		addUser(users[i].tag);
-		setPasswd(users[i].tag, users[i].value);
-	}
+	agiliaSetup.createUsers(users);
 }
 
 void SetupThread::umountFilesystems() {
 	emit setSummaryText(tr("Finishing..."));
 	emit setDetailsText(tr("Unmounting filesystems and syncing disks"));
-	system("chroot /tmp/new_sysroot umount /proc");
-	system("chroot /tmp/new_sysroot umount /sys");
-	system("chroot /tmp/new_sysroot umount -a");
-	system("sync");
-
+	agiliaSetup.umountFilesystems();
 }
 
 void SetupThread::setTimezone() {
-	if (settings->value("time_utc").toBool()) {
-		WriteFile("/tmp/new_sysroot/etc/hardwareclock", "# Tells how the hardware clock time is stored\n#\nUTC\n");
-		WriteFile("/tmp/new_sysroot/etc/conf.d/hwclock", "# Set clock to \"UTC\" if your hardware clock stores time in GMT, or \"local\" if your clock stores local time.\n\nclock=\"UTC\"\n#If you want to sync hardware clock with your system clock at shutdown, set clock_synctohc to YES.\nclock_synctohc=\"YES\"\n\n# You can specify special arguments to hwclock during bootup\nclock_args=\"\"\n");
-	}
-	else {
-		WriteFile("/tmp/new_sysroot/etc/hardwareclock", "# Tells how the hardware clock time is stored\n#\nlocaltime\n");
-		WriteFile("/tmp/new_sysroot/etc/conf.d/hwclock", "# Set clock to \"UTC\" if your hardware clock stores time in GMT, or \"local\" if your clock stores local time.\n\nclock=\"local\"\n#If you want to sync hardware clock with your system clock at shutdown, set clock_synctohc to YES.\nclock_synctohc=\"YES\"\n\n# You can specify special arguments to hwclock during bootup\nclock_args=\"\"\n");
-	}
-
-	if (!settings->value("timezone").toString().isEmpty()) {
-		system("( cd /tmp/new_sysroot/etc ; ln -sf /usr/share/zoneinfo/" + settings->value("timezone").toString().toStdString() + " localtime-copied-from )");
-		unlink("/tmp/new_sysroot/etc/localtime");
-		system("chroot /tmp/new_sysroot cp etc/localtime-copied-from etc/localtime");
-	}
+	agiliaSetup.setTimezone(settings->value("time_utc").toBool(), settings->value("timezone").toString().toStdString());
 }
 
 void SetupThread::setupNetwork() {
-	setHostname();
-	if (settings->value("netman").toString()=="wicd") {
-		system("chroot /tmp/new_sysroot rc-update add wicd default");
-	}
-	else if (settings->value("netman").toString()=="networkmanager") {
-		system("chroot /tmp/new_sysroot rc-update add networkmanager default");
-	}
-	else if (settings->value("netman").toString()=="netconfig") {
-		system("chroot /tmp/new_sysroot rc-update add network default");
-		// This requires manual network configuration. Left to user.
-	}
-
+	agiliaSetup.setupNetwork(settings->value("netman").toString().toStdString(), settings->value("hostname").toString().toStdString(), settings->value("netname").toString().toStdString());
 }
 
 void SetupThread::copyMPKGConfig() {
-#ifdef X86_64
-	system("cp /usr/share/setup/mpkg-x86_64.xml /tmp/new_sysroot/etc/mpkg.xml");
-#else
-	system("cp /usr/share/setup/mpkg-x86.xml /tmp/new_sysroot/etc/mpkg.xml");
-#endif
-	system("mv /tmp/packages.db /tmp/new_sysroot/var/mpkg/packages.db");
+	agiliaSetup.copyMPKGConfig();
 }
 
 void SetupThread::setDefaultRunlevels() {
-// We don't know which of them are in system in real, but let's try them all
-
-	system("chroot /tmp/new_sysroot rc-update add mdadm boot");
-	system("chroot /tmp/new_sysroot rc-update add lvm boot");
-	system("chroot /tmp/new_sysroot rc-update add sysfs sysinit");
-	system("chroot /tmp/new_sysroot rc-update add udev sysinit");
-	system("chroot /tmp/new_sysroot rc-update add consolefont default");
-	system("chroot /tmp/new_sysroot rc-update add hald default");
-	system("chroot /tmp/new_sysroot rc-update add sysklogd default");
-	system("chroot /tmp/new_sysroot rc-update add dbus default");
-	system("chroot /tmp/new_sysroot rc-update add sshd default");
-	system("chroot /tmp/new_sysroot rc-update add alsasound default");
-	system("chroot /tmp/new_sysroot rc-update add acpid default");
-	system("chroot /tmp/new_sysroot rc-update add cupsd default");
-	system("chroot /tmp/new_sysroot rc-update add cron default");
-
-	
+	agiliaSetup.setDefaultRunlevels();
 }
 
 void SetupThread::setDefaultXDM() {
-	if (FileExists("/tmp/new_sysroot/etc/init.d/kdm")) system("chroot /tmp/new_sysroot rc-update add kdm X11");
-	else if (FileExists("/tmp/new_sysroot/etc/init.d/gdm")) system("chroot /tmp/new_sysroot rc-update add gdm X11");
-	else if (FileExists("/tmp/new_sysroot/etc/init.d/lxdm")) system("chroot /tmp/new_sysroot rc-update add lxdm X11");
-	else if (FileExists("/tmp/new_sysroot/etc/init.d/slim")) system("chroot /tmp/new_sysroot rc-update add slim X11");
-	else if (FileExists("/tmp/new_sysroot/etc/init.d/xdm")) system("chroot /tmp/new_sysroot rc-update add xdm X11");
+	agiliaSetup.setDefaultXDM();
 }
