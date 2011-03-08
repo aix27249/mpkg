@@ -14,7 +14,6 @@
 
 #define _(string) gettext(string)
 using namespace std;
-
 const string IntToStr(long long num);
 const string getAbsolutePath(const string& directory);
 void PrepareSql(string& str);
@@ -52,21 +51,23 @@ string getHostFromUrl(string url);
 bool strToBool(string data);
 string boolToStr(bool value);
 string toHtml(string data);
+
+// TODO: get rid of this. We should use std::map instead.
 class StringMap {
 	public:
 		StringMap();
 		~StringMap();
-		size_t size();
+		size_t size() const;
 		string _empty;
-		bool deleteKey(string keyName);
-		bool empty();
+		bool deleteKey(const string& keyName);
+		bool empty() const;
 		void clear();
 		bool deleteKey(size_t i);
 		const string& getValue(const string& keyName) const;
 		const string& getValue(size_t i) const;
 		const string& getKeyName(size_t i) const;
 		int keyNum(const string& keyName) const;
-		void setValue(const string& keyName, string keyValue);
+		void setValue(const string& keyName, const string& keyValue);
 		bool setValue(const string& keyName, string *keyValue); // More complex function, returns false if key not found
 		
 

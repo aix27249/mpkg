@@ -4,6 +4,9 @@
  * ********************************************************/
 
 #include "string_operations.h"
+#include <cmath>
+#include <algorithm>
+#include <limits>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -89,19 +92,18 @@ StringMap::~StringMap() {}
 
 const string& StringMap::getValue(const string& keyName) const {
 	for (size_t i=0; i<key.size(); i++) {
-		if (key[i]==keyName) return value[i];
+		if (strcmp(key[i].c_str(), keyName.c_str())==0) return value[i];
 	}
 	return _empty;
 }
 const string& StringMap::getValue(size_t i) const {
 	return value[i];
 }
-size_t StringMap::size()
-{
+size_t StringMap::size() const {
 	return key.size();
 }
 
-bool StringMap::empty() {
+bool StringMap::empty() const {
 	return key.empty();
 }
 bool StringMap::deleteKey(size_t i) {
@@ -118,10 +120,10 @@ void StringMap::clear() {
 	key.clear();
 	value.clear();
 }
-bool StringMap::deleteKey(string keyName) {
+bool StringMap::deleteKey(const string& keyName) {
 	vector<string>::iterator a;
 	for (size_t i=0; i<key.size(); i++) {
-		if (key[i]==keyName) {
+		if (strcmp(key[i].c_str(), keyName.c_str())==0) {
 			a = key.begin();
 			a += i;
 			key.erase(a);
@@ -139,13 +141,13 @@ const string& StringMap::getKeyName(size_t i) const {
 
 int StringMap::keyNum(const string& keyName) const {
 	for (size_t i=0; i<key.size(); i++) {
-		if (key[i]==keyName) return i;
+		if (strcmp(key[i].c_str(), keyName.c_str())==0) return i;
 	}
 	return -1;
 }
 bool StringMap::setValue(const string& keyName, string *keyValue) {
 	for (size_t i=0; i<key.size(); i++) {
-		if (key[i]==keyName) {
+		if (strcmp(key[i].c_str(), keyName.c_str())==0) {
 			*keyValue = value[i];
 			return true;
 		}
@@ -154,9 +156,9 @@ bool StringMap::setValue(const string& keyName, string *keyValue) {
 	return false;
 }
 
-void StringMap::setValue(const string& keyName, string keyValue) {
+void StringMap::setValue(const string& keyName, const string& keyValue) {
 	for (size_t i=0; i<key.size(); i++) {
-		if (key[i]==keyName) {
+		if (strcmp(key[i].c_str(), keyName.c_str())==0) {
 			value[i]=keyValue;
 			return;
 		}
@@ -422,7 +424,7 @@ const string humanizeSize(double size)
 	long double new_size;
 	string ret;
 	string tmp;
-	if (size < 1024) return IntToStr(size) + _(" bytes");
+	if (size < 1024) return IntToStr((long long) size) + _(" bytes");
 
 	if (size >= 1024 && size < 1048576)
 	{
@@ -832,22 +834,22 @@ int strverscmp2(const string& v1, const string& v2) {
 		strReplace(&s2, "-", "");
 		for (size_t k=0; k<s1.size(); ++k) s1[k] = tolower(s1[k]);
 		for (size_t k=0; k<s2.size(); ++k) s2[k] = tolower(s2[k]);
-		if (s1==s2) continue;
+		if (strcmp(s1.c_str(), s2.c_str())==0) continue;
 
-		if (s1=="rc") i1=-1;
-		else if (s1=="pre") i1=-2;
-		else if (s1=="beta") i1=-3;
-		else if (s1=="alpha") i1=-4;
-		else if (s1=="prealpha") i1=-5;
-		else if (s1=="git" || s1=="svn" || s1=="hg" || s1=="r" || s1=="rev" || s1=="cvs") i1=-6;
+		if (strcmp(s1.c_str(), "rc")==0) i1=-1;
+		else if (strcmp(s1.c_str(), "pre")==0) i1=-2;
+		else if (strcmp(s1.c_str(), "beta")==0) i1=-3;
+		else if (strcmp(s1.c_str(), "alpha")==0) i1=-4;
+		else if (strcmp(s1.c_str(), "prealpha")==0) i1=-5;
+		else if (strcmp(s1.c_str(), "git")==0 || strcmp(s1.c_str(), "svn")==0 || strcmp(s1.c_str(), "hg")==0 || strcmp(s1.c_str(), "r")==0 || strcmp(s1.c_str(), "rev")==0 || strcmp(s1.c_str(), "cvs")==0) i1=-6;
 		else i1=atoi(s1.c_str());
 
-		if (s2=="rc") i2=-1;
-		else if (s2=="pre") i2=-2;
-		else if (s2=="beta") i2=-3;
-		else if (s2=="alpha") i2=-4;
-		else if (s2=="prealpha") i2=-5;
-		else if (s2=="git" || s2=="svn" || s2=="hg" || s2=="r" || s2=="rev" || s2=="cvs") i2=-6;
+		if (strcmp(s2.c_str(), "rc")==0) i2=-1;
+		else if (strcmp(s2.c_str(), "pre")==0) i2=-2;
+		else if (strcmp(s2.c_str(), "beta")==0) i2=-3;
+		else if (strcmp(s2.c_str(), "alpha")==0) i2=-4;
+		else if (strcmp(s2.c_str(), "prealpha")==0) i2=-5;
+		else if (strcmp(s2.c_str(), "git")==0 || strcmp(s2.c_str(), "svn")==0 || strcmp(s2.c_str(), "hg")==0 || strcmp(s2.c_str(), "r")==0 || strcmp(s2.c_str(), "rev")==0 || strcmp(s2.c_str(), "cvs")==0) i2=-6;
 		else i2=atoi(s2.c_str());
 		if (i1<i2) {
 		       //fprintf(stderr, "INPUT: %s %s, returning -1 as %s (as %d) < %s (as %d)\n", v1.c_str(), v2.c_str(), s1.c_str(), i1, s2.c_str(), i2);

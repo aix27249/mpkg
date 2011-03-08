@@ -356,7 +356,7 @@ int mpkgDatabase::commit_actions()
 			}
 		}
 		// Remove
-		for (unsigned int i=0; i<remove_list.size(); i++) {
+		for (size_t i=0; i<remove_list.size(); i++) {
 			branch=remove_list[i].get_repository_tags();
 			distro = remove_list[i].package_distro_version;
 			if (branch=="0") branch.clear();
@@ -377,7 +377,7 @@ int mpkgDatabase::commit_actions()
 			}
 		}
 		// Purge
-		for (unsigned int i=0; i<remove_list.size(); i++) {
+		for (size_t i=0; i<remove_list.size(); i++) {
 			branch=remove_list[i].get_repository_tags();
 			if (branch=="0") branch.clear();
 			if (distro == "0") distro.clear();
@@ -397,7 +397,7 @@ int mpkgDatabase::commit_actions()
 			}
 		}
 		// Update
-		for (unsigned int i=0; i<remove_list.size(); i++) {
+		for (size_t i=0; i<remove_list.size(); i++) {
 			if (remove_list[i].action()==ST_UPDATE) {
 				branch=remove_list[i].updatingBy->get_repository_tags();
 				if (branch=="0") branch.clear();
@@ -416,7 +416,17 @@ int mpkgDatabase::commit_actions()
 						CL_6, remove_list[i].get_fullversion().c_str(), CL_WHITE, _(" ==> "), 
 						CL_GREEN, remove_list[i].updatingBy->get_fullversion().c_str(), CL_BLUE, branch.c_str(), CL_WHITE, reason.c_str());
 
-					if (!checkAcceptedArch(install_list.get_package_ptr(i))) mWarning(string(CL_RED) + _("ARCHITECTURE WARNING: ") + string(CL_WHITE) + _("Package ") + install_list[i].get_name() + "-" + install_list[i].get_version() + "-" + install_list[i].get_arch() + "-" + install_list[i].get_build() + _(" has non-native architecture (") + install_list[i].get_arch() + _("), are you sure it is what you wanted?"));
+					if (!checkAcceptedArch(remove_list.get_package_ptr(i))) mWarning(string(CL_RED) + \
+							_("ARCHITECTURE WARNING: ") + \
+							string(CL_WHITE) + \
+							_("Package ") + \
+							remove_list[i].get_name() + "-" + \
+							remove_list[i].get_version() + "-" + \
+							remove_list[i].get_arch() + "-" + \
+							remove_list[i].get_build() + \
+							_(" has non-native architecture (") + \
+							remove_list[i].get_arch() + \
+							_("), are you sure it is what you wanted?"));
 				}
 				else dialogMsg += "  [" + IntToStr(updateCount) + "] " + \
 						remove_list[i].get_name() + " " + \
@@ -425,7 +435,7 @@ int mpkgDatabase::commit_actions()
 			}
 		}
 		// Repair
-		for (unsigned int i=0; i<install_list.size(); i++) {
+		for (size_t i=0; i<install_list.size(); i++) {
 			if (install_list[i].action()==ST_REPAIR) {
 				if (repairCount==0) {
 					if (!dialogMode) msay(_("Will be repaired:\n"));

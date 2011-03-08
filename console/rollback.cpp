@@ -25,7 +25,8 @@ int main(int argc, char **argv) {
 	bool verbose = false;
 	int rollback_to = 0;
 	for (int i=1; i<argc; ++i) {
-		if (string(argv[i])=="-v" || string(argv[i])=="--verbose") verbose = true;
+		if (string(argv[i])=="-z" || string(argv[i])=="--no-dep") ignoreDeps = true;
+		else if (string(argv[i])=="-v" || string(argv[i])=="--verbose") verbose = true;
 		else if (atoi(argv[i])>0) {
 			rollback_to = atoi(argv[i]);
 		}
