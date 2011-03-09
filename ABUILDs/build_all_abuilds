@@ -1,10 +1,9 @@
 #!/bin/sh
-MODULES="mpkgsupport nwidgets mpkg-core mpkg-console mpkg-manager2 mpkg-i18n mpkg-parted mklivecd"
+MODULES="mpkgsupport nwidgets mpkg-core mpkg-console mpkg-manager2 mpkg-i18n mpkg-parted mklivecd libagiliasetup agilia-gui-installer agilia-text-installer"
+
 set -e
 for i in $MODULES ; do
 	( cd $i && mkpkg -si )
 done
+set +e
 
-# Installer has not to be installed
-( cd agilia-gui-installer && mkpkg )
-( cd agilia-text-installer && mkpkg )
