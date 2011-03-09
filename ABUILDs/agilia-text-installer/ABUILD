@@ -9,13 +9,11 @@ shortdesc=("AgiliaLinux ncurses-based text mode system installer")
 longdesc=("This is text version of AgiliaLinux installer.")
 
 # Source URL
-source=("svn:svn://agilialinux.ru/mpkg/mpkg/trunk/installer")
+source=("svn:svn://agilialinux.ru/mpkg/mpkg/trunk/textinstaller")
 
 # Tags
 tags="xapps sys-apps"
 # Many additional dependencies which are used indirectly during setup process.
-adddep="bash>=4.0 wget e2fsprogs xfsprogs reiserfsprogs jfsutils btrfs-progs rsync"
-builddeps="iniparser mpkg-core parted"
 
 # Build system
 BUILD_SYSTEM="cmake"
