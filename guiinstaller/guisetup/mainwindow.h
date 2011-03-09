@@ -7,7 +7,6 @@
 #include <mpkg-parted/raidtool.h>
 #include <mpkg-parted/lvmtool.h>
 #include "thread.h"
-#include "custompkgset.h"
 class QListWidgetItem;
 class QTranslator;
 namespace Ui {

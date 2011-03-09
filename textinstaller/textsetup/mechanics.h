@@ -1,7 +1,6 @@
 #ifndef MECHANICS_H__
 #define MECHANICS_H__
 #include <mpkg/libmpkg.h>
-#include "custompkgset.h"
 #include <mpkg-parted/mpkg-parted.h>
 #include <mpkg-parted/raidtool.h>
 #include <mpkg-parted/lvmtool.h>

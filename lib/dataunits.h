@@ -12,7 +12,18 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <stdint.h>
 using namespace std;
+
+struct CustomPkgSet {
+	string name, desc, full, hw;
+	uint64_t csize, isize;
+	size_t count;
+	bool hasX11;
+	bool hasDM;
+};
+
+
 
 // Server type definitions
 // Note: the definition order is important. Set this to comply the sorting order (less value comes first)

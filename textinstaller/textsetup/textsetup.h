@@ -3,7 +3,6 @@
 
 //#include <iniparser.h>
 #include <mpkg/libmpkg.h>
-#include "custompkgset.h"
 #include "mechanics.h"
 
 class TextSetup {
@@ -33,7 +32,6 @@ class TextSetup {
 
 	private:
 		map<string, string> settings;
-		map<string, vector<string> > vectorSettings;
 		map<string, map<string, string> > mapSettings;
 
 		vector<CustomPkgSet> customPkgSetList;

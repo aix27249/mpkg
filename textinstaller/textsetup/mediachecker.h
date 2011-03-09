@@ -2,7 +2,6 @@
 #define MEDIACHECKER_H__
 
 #include <mpkg/libmpkg.h>
-#include "custompkgset.h"
 
 class MediaChecker {
 	public:

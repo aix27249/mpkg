@@ -2,9 +2,7 @@
 #define LIBAGILIASETUP_H__
 
 #include <mpkg/libmpkg.h>
-struct CustomPkgSet {
-	string name, desc, full;
-};
+
 struct PartConfig {
 	string partition, mountpoint, fs, mount_options;
 	bool format;
@@ -24,6 +22,7 @@ class StatusNotifier {
 		virtual void setDetailsTextCall(const string& text) = 0;
 		virtual void setSummaryTextCall(const string& text) = 0;
 		virtual void sendReportError(const string& text) = 0;
+		virtual void setProgressCall(int progress) = 0;
 };
 
 class AgiliaSetup {
@@ -101,8 +100,11 @@ class AgiliaSetup {
 	
 		string rootPassword;
 		vector<TagPair> users;
+		vector<string> additional_repositories;
 
-
+		void run(const map<string, string>& _settings, const vector<TagPair> &_users, const vector<PartConfig> &_partConfigs, const vector<string> &_additional_repositories, void (*updateProgressData) (ItemState));
+		
+		bool validateConfig();
 
 	private:
 		bool setHostname(const string& hostname, const string& netname = "example.net");
@@ -115,6 +117,10 @@ class AgiliaSetup {
 
 		string locale;
 		string sysconf_lang;
+		map<string, string> settings;
+
+
+		
 
 };
 

@@ -1,6 +1,5 @@
 #include <QThread>
 #include <mpkg/libmpkg.h>
-#include "custompkgset.h"
 
 class LoadSetupVariantsThread: public QThread {
 	Q_OBJECT

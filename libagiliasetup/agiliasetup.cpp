@@ -235,6 +235,9 @@ void AgiliaSetup::setLocale(const string& lang) {
 }
 
 void AgiliaSetup::setMpkgConfig(string pkgsource, const string& volname, const string& rep_location, const vector<string> additional_repositories) {
+	if (notifier) notifier->setSummaryTextCall(_("Setting MPKG config"));
+	if (notifier) notifier->setDetailsTextCall("");
+
 	vector<string> rList, dlist;
 
 	// First, primary repository
@@ -262,6 +265,9 @@ void AgiliaSetup::setMpkgConfig(string pkgsource, const string& volname, const s
 }
 
 bool AgiliaSetup::getRepositoryData() {
+	if (notifier) notifier->setSummaryTextCall(_("Updating repository data"));
+	if (notifier) notifier->setDetailsTextCall(_("Retrieving indices from repository"));
+
 	mpkg *core = new mpkg;
 	if (core->update_repository_data()!=0) {
 		if (notifier) notifier->sendReportError(_("Failed to retreive repository data, cannot continue"));
@@ -277,6 +283,9 @@ bool AgiliaSetup::getRepositoryData() {
 
 
 bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string& netman, const string& nvidia_driver) {
+	if (notifier) notifier->setSummaryTextCall(_("Preparing install queue"));
+	if (notifier) notifier->setDetailsTextCall("");
+
 	string installset_filename = "/tmp/setup_variants/" + setup_variant + ".list";
 
 	vector<string> installset_contains;
@@ -351,6 +360,9 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 }
 
 bool AgiliaSetup::validateQueue() {
+	if (notifier) notifier->setSummaryTextCall(_("Validating queue"));
+	if (notifier) notifier->setDetailsTextCall("");
+
 	mpkg *core = new mpkg;
 	PACKAGE_LIST queue;
 	SQLRecord sqlSearch;
@@ -390,6 +402,9 @@ bool AgiliaSetup::activateSwap(PartConfig pConfig) {
 
 
 bool AgiliaSetup::formatPartitions() {
+	if (notifier) notifier->setSummaryTextCall(_("Formatting partitions"));
+	if (notifier) notifier->setDetailsTextCall("");
+
 	for (size_t i=0; i<partConfigs.size(); ++i) {
 		if (partConfigs[i].format) {
 			formatPartition(partConfigs[i]);
@@ -403,6 +418,9 @@ bool AgiliaSetup::formatPartitions() {
 }
 
 bool AgiliaSetup::mountPartitions() {
+	if (notifier) notifier->setSummaryTextCall(_("Mounting partitions"));
+	if (notifier) notifier->setDetailsTextCall("");
+
 	for (size_t i=0; i<partConfigs.size(); ++i) {
 		if (partConfigs[i].mountpoint=="/") {
 			rootPartition = "/dev/" + partConfigs[i].partition;
@@ -482,6 +500,9 @@ void AgiliaSetup::setPartConfigs(const vector<PartConfig> &_partConfigs) {
 	partConfigs = _partConfigs;
 }
 bool AgiliaSetup::moveDatabase() {
+	if (notifier) notifier->setSummaryTextCall(_("Moving database"));
+	if (notifier) notifier->setDetailsTextCall("");
+
 	system("mkdir -p /tmp/new_sysroot/var/mpkg/cache");
 	system("mkdir -p /tmp/new_sysroot/var/log");
 	return true;
@@ -489,6 +510,9 @@ bool AgiliaSetup::moveDatabase() {
 }
 
 bool AgiliaSetup::processInstall(const string &pkgsource) {
+	if (notifier) notifier->setSummaryTextCall(_("Installing packages"));
+	if (notifier) notifier->setDetailsTextCall(_("Preparing to installation"));
+
 	mpkg *core = new mpkg;
 	if ((pkgsource=="dvd" || pkgsource.find("iso://")==0) && FileExists("/var/log/mount/cache")) {
 		system("ln -sf /var/log/mount/cache /tmp/new_sysroot/var/mpkg/cache/.fcache");
@@ -1027,3 +1051,76 @@ void AgiliaSetup::setConsoleKeymap(const string& lang) {
 	}
 
 }
+
+bool AgiliaSetup::validateConfig() {
+	if (notifier) notifier->setSummaryTextCall(_("Validating config"));
+	if (notifier) notifier->setDetailsTextCall("");
+	if (settings["bootloader"].empty()) {
+		if (notifier) notifier->sendReportError(_("Bootloader partition not specified, how you wish to boot, Luke?"));
+		return false;
+	}
+	if (settings["setup_variant"].empty()) {
+		if (notifier) notifier->sendReportError(_("No setup variant selected, cannot continue"));
+		return false;
+	}
+	if (settings["pkgsource"].empty()) {
+		if (notifier) notifier->sendReportError(_("No package source specified, cannot continue"));
+		return false;
+	}
+	else {
+		if (settings["pkgsource"]=="dvd") {
+			if (settings["volname"].empty()) {
+				if (notifier) notifier->sendReportError(_("No volume name specified, cannot continue"));
+				return false;
+			}
+			if (settings["rep_location"].empty()) {
+				if (notifier) notifier->sendReportError(_("Repository location not specified, cannot continue"));
+				return false;
+			}
+		}
+	}
+	if (settings["timezone"].empty()) {
+		if (notifier) notifier->sendReportError(_("No timezone specified, cannot continue"));
+		return false;
+	}
+	return true;
+}
+
+
+
+void AgiliaSetup::run(const map<string, string>& _settings, const vector<TagPair> &_users, const vector<PartConfig> &_partConfigs, const vector<string> &_additional_repositories, void (*updateProgressData) (ItemState)) {
+	setupMode = true;
+
+	settings = _settings;
+	users = _users;
+	partConfigs = _partConfigs;
+	additional_repositories = _additional_repositories;
+
+	setLocale(settings["language"]);
+	rootPassword = settings["rootpasswd"];
+
+	if (notifier) notifier->setProgressCall(1);
+	if (!validateConfig()) return;
+	if (notifier) notifier->setProgressCall(5);
+	setMpkgConfig(settings["pkgsource"], settings["volname"], settings["rep_location"], additional_repositories);
+	if (notifier) notifier->setProgressCall(10);
+	if (!getRepositoryData()) return;
+	if (notifier) notifier->setProgressCall(25);
+	if (!prepareInstallQueue(settings["setup_variant"], settings["netman"], settings["nvidia-driver"])) return;
+	if (notifier) notifier->setProgressCall(50);
+	if (!validateQueue()) return;
+	if (notifier) notifier->setProgressCall(60);
+	if (!formatPartitions()) return;
+	if (notifier) notifier->setProgressCall(70);
+	if (!mountPartitions()) return;
+	if (notifier) notifier->setProgressCall(85);
+	if (!moveDatabase()) return;
+	if (notifier) notifier->setProgressCall(99);
+	if (!createBaselayout()) return;
+
+	pData.registerEventHandler(updateProgressData);
+	if (!processInstall(settings["pkgsource"])) return;
+	if (!postInstallActions(settings["language"], settings["setup_variant"], strToBool(settings["tmpfs_tmp"]), strToBool(settings["initrd_delay"]), settings["initrd_modules"], settings["bootloader"], settings["fbmode"], settings["kernel_options"], settings["netman"], settings["hostname"], settings["netname"], strToBool(settings["time_utc"]), settings["timezone"], settings["nvidia-driver"])) return;
+	pData.unregisterEventHandler();
+}
+

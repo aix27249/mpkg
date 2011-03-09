@@ -16,15 +16,21 @@ class SetupThread: public QThread, public StatusNotifier {
 		void run();
 		void setDetailsTextCall(const string& msg);
 		void setSummaryTextCall(const string& msg);
+		void setProgressCall(int progress);
 		void sendReportError(const string& text);
+
+	public slots:
+		void skipMD5();
+
+		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);
+		void receiveErrorResponce(MpkgErrorReturn);
+
+		void updateData(const ItemState& a);
+
 	private:
-		// Core
-		mpkg *core;
-		QSettings *settings;
-
-
 		MpkgErrorReturn errCode;
 		AgiliaSetup agiliaSetup;
+		void parseConfig(map<string, string> *_strSettings, vector<TagPair> *_users, vector<PartConfig> *_partConfigs, vector<string> *_additional_repositories);
 
 
 	signals:
@@ -40,25 +46,6 @@ class SetupThread: public QThread, public StatusNotifier {
 		void enableMD5Button(bool);
 		void sendErrorHandler(ErrorDescription, const QString &);
 
-	public slots:
-		void skipMD5();
-
-		MpkgErrorReturn errorHandler(ErrorDescription err, const string& details);
-		void receiveErrorResponce(MpkgErrorReturn);
-
-		bool fillPartConfigs();
-		bool validateConfig();
-		bool setMpkgConfig();
-		bool getRepositoryData();
-		bool prepareInstallQueue();
-		bool validateQueue();
-		bool formatPartitions();
-		bool mountPartitions();
-		bool moveDatabase();
-		bool createBaselayout();
-		bool processInstall();
-		bool postInstallActions();
-		void updateData(const ItemState& a);
 
 
 };

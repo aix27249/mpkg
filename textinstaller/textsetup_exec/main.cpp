@@ -1,9 +1,13 @@
-#include <mpkg/libmpkg.h>
-#include "custompkgset.h"
-#include <mpkg-parted/mpkg-parted.h>
-#include <mpkg-parted/raidtool.h>
-#include <mpkg-parted/lvmtool.h>
+#include "eventhandler.h"
+TextEventHandler *eventHandler;
+void updateProgressData(ItemState a) {
+	eventHandler->setDetailsTextCall(a.name + ": " + a.currentAction);
+	if (a.totalProgress>=0 && a.totalProgress<=100) eventHandler->setProgressCall(a.totalProgress);
+}
 
+void parseConfig(map<string, string> *_strSettings, vector<TagPair> *_users, vector<PartConfig> *_partConfigs, vector<string> *_additional_repositories) {
+	// TODO: implement parser
+}
 
 int main(int argc, char **argv) {
 	setlocale(LC_ALL, "");
@@ -29,5 +33,18 @@ int main(int argc, char **argv) {
 
 	ncInterface.setStrings();
 	dialogMode = true;
+	
+	map<string, string> strSettings;
+	vector<PartConfig> partConfigs;
+	vector<TagPair> users;
+	vector<string> additional_repositories;
+
+	parseConfig(&strSettings, &users, &partConfigs, &additional_repositories); // TO BE IMPLEMENTED!
+	eventHandler = new TextEventHandler;
+	AgiliaSetup agiliaSetup;
+	agiliaSetup.registerStatusNotifier(eventHandler);
+	agiliaSetup.run(strSettings, users, partConfigs, additional_repositories, &updateProgressData);
+	ncInterface.showMsgBox(_("Installation finished!"));
+	delete eventHandler;
 	
 }

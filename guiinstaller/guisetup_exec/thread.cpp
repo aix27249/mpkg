@@ -34,6 +34,10 @@ void SetupThread::setDetailsTextCall(const string& msg) {
 void SetupThread::setSummaryTextCall(const string& msg) {
 	emit setSummaryText(QString::fromStdString(msg));
 }
+
+void SetupThread::setProgressCall(int progress) {
+	emit setProgress(progress);
+}
 void SetupThread::sendReportError(const string& text) {
 	emit reportError(QString::fromStdString(text));
 }
@@ -45,82 +49,42 @@ void SetupThread::skipMD5() {
 	emit enableMD5Button(false);
 }
 
-
-bool SetupThread::validateConfig() {
-
-	emit setSummaryText(tr("Validating config"));
-	emit setDetailsText("");
-	if (settings->value("bootloader").toString().isEmpty()) {
-		emit reportError(tr("Bootloader partition not specified, how you wish to boot, Luke?"));
-		return false;
-	}
-	if (settings->value("setup_variant").toString().isEmpty()) {
-		emit reportError(tr("No setup variant selected, cannot continue"));
-		return false;
-	}
-	if (settings->value("pkgsource").toString().isEmpty()) {
-		emit reportError(tr("No package source specified, cannot continue"));
-		return false;
-	}
-	else {
-		if (settings->value("pkgsource").toString()=="dvd") {
-			if (settings->value("volname").toString().isEmpty()) {
-				emit reportError(tr("No volume name specified, cannot continue"));
-				return false;
-			}
-			if (settings->value("rep_location").toString().isEmpty()) {
-				emit reportError(tr("Repository location not specified, cannot continue"));
-				return false;
-			}
-		}
-	}
-	if (settings->value("timezone").toString().isEmpty()) {
-		emit reportError(tr("No timezone specified, cannot continue"));
-		return false;
-	}
-	return true;
-}
-
-bool SetupThread::setMpkgConfig() {
-	emit setSummaryText(tr("Setting MPKG config"));
-	emit setDetailsText("");
-
-	vector<string> additional_repositories;
-	int add_url_size = settings->beginReadArray("additional_repositories");
-	for (int i=0; i<add_url_size; ++i) {
-		settings->setArrayIndex(i);
-		additional_repositories.push_back(settings->value("url").toString().toStdString());
-	}
-	settings->endArray();
-
-	agiliaSetup.setMpkgConfig(settings->value("pkgsource").toString().toStdString(), settings->value("volname").toString().toStdString(), settings->value("rep_location").toString().toStdString(), additional_repositories);
-	return true;
-}
-
-bool SetupThread::getRepositoryData() {
-	emit setSummaryText(tr("Updating repository data"));
-	emit setDetailsText(tr("Retrieving indices from repository"));
-	return agiliaSetup.getRepositoryData();
-}
-
-bool SetupThread::prepareInstallQueue() {
-	emit setSummaryText(tr("Preparing install queue"));
-	emit setDetailsText("");
-	return agiliaSetup.prepareInstallQueue(settings->value("setup_variant").toString().toStdString(), settings->value("netman").toString().toStdString(),settings->value("nvidia-driver").toString().toStdString());
-}
-
-bool SetupThread::validateQueue() {
-	emit setSummaryText(tr("Validating queue"));
-	emit setDetailsText("");
-	return agiliaSetup.validateQueue();
-}
-
-
-
-bool SetupThread::fillPartConfigs() {
-	// Parser-dependant. In general, this is bad idea, so maybe we should move to some generic parser instead of QSettings.
-	PartConfig *pConfig;
+void SetupThread::run() {
+	progressWidgetPtr = this;
+	map<string, string> strSettings;
 	vector<PartConfig> partConfigs;
+	vector<TagPair> users;
+	vector<string> additional_repositories;
+
+	parseConfig(&strSettings, &users, &partConfigs, &additional_repositories);
+
+	agiliaSetup.registerStatusNotifier(this);
+	agiliaSetup.run(strSettings, users, partConfigs, additional_repositories, &updateProgressData);
+	emit reportFinish();
+}
+
+void SetupThread::parseConfig(map<string, string> *_strSettings, vector<TagPair> *_users, vector<PartConfig> *_partConfigs, vector<string> *_additional_repositories) {
+	map<string, string> strSettings;
+	vector<PartConfig> partConfigs;
+	vector<TagPair> users;
+	vector<string> additional_repositories;
+	
+	QSettings *settings = new QSettings("guiinstaller");
+
+	// Generic pairs
+	QStringList params = settings->childKeys();
+	for (int i=0; i<params.size(); ++i) {
+		strSettings[params[i].toStdString()]=settings->value(params[i]).toString().toStdString();
+	}
+
+	// Users
+	settings->beginGroup("users");
+	QStringList usernames = settings->childKeys();
+	for (int i=0; i<usernames.size(); ++i) {
+		agiliaSetup.users.push_back(TagPair(usernames[i].toStdString(), settings->value(usernames[i]).toString().toStdString()));
+	}
+	settings->endGroup();
+
 	settings->beginGroup("mount_options");
 	QStringList partitions = settings->childGroups();
 	QStringList subgroups;
@@ -135,6 +99,7 @@ bool SetupThread::fillPartConfigs() {
 		}
 		settings->endGroup();
 	}
+	PartConfig *pConfig;
 	for (int i=0; i<partitions.size(); ++i) {
 		printf("Found config for partition %s\n", partitions[i].toStdString().c_str());
 		settings->beginGroup(partitions[i]);
@@ -149,92 +114,20 @@ bool SetupThread::fillPartConfigs() {
 		delete pConfig;
 	}
 	settings->endGroup();
-	agiliaSetup.setPartConfigs(partConfigs);
-	if (partConfigs.empty()) return false;
-	return true;
-}
-bool SetupThread::formatPartitions() {
-	emit setSummaryText(tr("Formatting partitions"));
-	emit setDetailsText("");
-	return agiliaSetup.formatPartitions();
-}
 
-bool SetupThread::mountPartitions() {
-	emit setSummaryText(tr("Mounting partitions"));
-	emit setDetailsText("");
-	return agiliaSetup.mountPartitions();
-}
-
-bool SetupThread::moveDatabase() {
-	emit setSummaryText(tr("Moving database"));
-	emit setDetailsText("");
-	return agiliaSetup.moveDatabase();
-
-}
-
-bool SetupThread::processInstall() {
-	emit setSummaryText(tr("Installing packages"));
-	emit setDetailsText(tr("Preparing to installation"));
-	return agiliaSetup.processInstall(settings->value("pkgsource").toString().toStdString());
-}
-
-
-bool SetupThread::postInstallActions() {
-	return agiliaSetup.postInstallActions(settings->value("language").toString().toStdString(), settings->value("setup_variant").toString().toStdString(), settings->value("tmpfs_tmp").toBool(), settings->value("initrd_delay").toBool(), settings->value("initrd_modules").toString().toStdString(), settings->value("bootloader").toString().toStdString(), settings->value("fbmode").toString().toStdString(), settings->value("kernel_options").toString().toStdString(), settings->value("netman").toString().toStdString(), settings->value("hostname").toString().toStdString(), settings->value("netname").toString().toStdString(), settings->value("time_utc").toBool(), settings->value("timezone").toString().toStdString(), settings->value("nvidia-driver").toString().toStdString());
-}
-
-
-void SetupThread::run() {
-	verbose=true;
-	progressWidgetPtr = this;
-	string errors;
-	setupMode = true;
-
-	settings = new QSettings("guiinstaller");
-	agiliaSetup.setLocale(settings->value("language").toString().toStdString());
-	agiliaSetup.registerStatusNotifier(this);
-	agiliaSetup.rootPassword = settings->value("rootpasswd").toString().toStdString();
-	settings->beginGroup("users");
-
-	QStringList usernames = settings->childKeys();
-	for (int i=0; i<usernames.size(); ++i) {
-		agiliaSetup.users.push_back(TagPair(usernames[i].toStdString(), settings->value(usernames[i]).toString().toStdString()));
+	// Repos
+	int add_url_size = settings->beginReadArray("additional_repositories");
+	for (int i=0; i<add_url_size; ++i) {
+		settings->setArrayIndex(i);
+		additional_repositories.push_back(settings->value("url").toString().toStdString());
 	}
-	settings->endGroup();
-	settings->sync();
+	settings->endArray();
 
 
-	emit setProgress(0);
-	if (!fillPartConfigs()) return;
-	emit setProgress(1);
-	if (!validateConfig()) return;
-	emit setProgress(5);
-	if (!setMpkgConfig()) return;
-	emit setProgress(10);
-	if (!getRepositoryData()) return;
-	emit setProgress(25);
-	if (!prepareInstallQueue()) return;
-	emit setProgress(50);
-	if (!validateQueue()) return;
-	emit setProgress(60);
-	if (!formatPartitions()) return;
-	emit setProgress(70);
-	if (!mountPartitions()) return;
-	emit setProgress(85);
-	if (!moveDatabase()) return;
-	emit setProgress(99);
-	if (!createBaselayout()) return;
+	// Save
+	*_strSettings = strSettings;
+	*_users = users;
+	*_partConfigs = partConfigs;
+	*_additional_repositories = additional_repositories;
 
-	pData.registerEventHandler(&updateProgressData);
-	if (!processInstall()) return;
-	if (!postInstallActions()) return;
-	delete settings;
-	pData.unregisterEventHandler();
-	emit reportFinish();
 }
-bool SetupThread::createBaselayout() {
-	return agiliaSetup.createBaselayout();
-}
-
-
-
