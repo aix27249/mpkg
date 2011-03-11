@@ -19,6 +19,10 @@ void printWarning(string type, string name, string ver, string build) {
 }
 int main(int argc, char **argv) {
 	interactive_mode=true;
+	setlocale(LC_ALL, "");
+	bindtextdomain( "mpkg", "/usr/share/locale");
+	textdomain("mpkg");
+
 
 	if (argc<1) return print_usage();
 	string rollback_package;
