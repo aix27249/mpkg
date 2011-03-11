@@ -36,6 +36,8 @@ int main(int argc, char **argv) {
 	int fConflict_backup_file = conflictResults.getFieldIndex("backup_file");
 	int fConflict_package_id = conflictResults.getFieldIndex("conflicted_package_id");
 	string over_name;
+	if (conflictResults.size()>0) fprintf(stderr, _("Package %s overwrites these files:\n"), package_name.c_str());
+	else fprintf(stderr, _("Package didn't overwrite any other's files.\n"));
 	for (size_t i=0; i<conflictResults.size(); ++i) {
 		over_name = conflictResults.getValue(i, fConflict_backup_file);
 		over_name = over_name.substr(0, over_name.find_first_of("/"));
