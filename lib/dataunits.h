@@ -182,7 +182,7 @@ class PACKAGE
 	string package_compressed_size;
 	string package_installed_size;
 	string package_short_description;
-	string package_description;
+	string package_description; // DEPRECATED: use only short description please
 	string package_changelog;
 	string package_packager;
 	string package_packager_email;
@@ -201,9 +201,6 @@ class PACKAGE
 	vector<DEPENDENCY> package_dependencies;
 	vector<string> package_tags;
 	string package_repository_tags;
-#ifdef ENABLE_INTERNATIONAL
-	vector<DESCRIPTION> package_descriptions;
-#endif
     public:
 	string abuild_url;
 	vector<ConfigFile> config_files;
@@ -262,7 +259,7 @@ class PACKAGE
 	const string& get_compressed_size() const;
 	const string& get_installed_size() const;
 	const string& get_short_description() const;
-	const string& get_description() const;
+	const string& get_description() const; // DEPRECATED
 	const string& get_changelog() const;
 	const string& get_packager() const;
 	const string& get_packager_email() const;
@@ -290,9 +287,6 @@ class PACKAGE
 	vector<string>* get_tags_ptr();
 	const string get_scriptdir() const;
 
-#ifdef ENABLE_INTERNATIONAL
-	const vector<DESCTIPTION>& get_descriptions() const;
-#endif
 	// UI functions
 	const string get_fullversion() const;
 	const string get_vstatus(bool color=false) const;
@@ -309,7 +303,7 @@ class PACKAGE
 	void set_compressed_size(const string& compressed_size);
 	void set_installed_size(const string& installed_size);
 	void set_short_description(const string& short_description);
-	void set_description(const string& description);
+	void set_description(const string& description); // DEPRECATED
 	void set_changelog(const string& changelog);
 	void set_packager(const string& packager);
 	void set_packager_email(const string& packager_email);

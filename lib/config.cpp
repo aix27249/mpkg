@@ -123,6 +123,7 @@ int loadGlobalConfig(string config_file)
 	if (mConfig.getValue("skip_dev_installation")=="yes") _cmdOptions["skip_dev_installation"]="true";
 	if (mConfig.getValue("skip_man_installation")=="yes") _cmdOptions["skip_man_installation"]="true";
 	if (mConfig.getValue("skip_doc_installation")=="yes") _cmdOptions["skip_doc_installation"]="true";
+	if (mConfig.getValue("warpmode")=="yes") _cmdOptions["warpmode"]="yes"; // Skips SQL buffer flushing within install or remove operations
 	if (mConfig.getValue("server_mode")=="yes") serverMode = true;
 	_cmdOptions["arch"]=mConfig.getValue("override_arch");
 #ifdef HTTP_LIB

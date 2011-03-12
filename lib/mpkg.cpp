@@ -1175,36 +1175,6 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 	return 0;
 }	//End of install_package
 
-// New optimized exportPackage function.
-/*void mpkgDatabase::exportPackage(const string& output_dir, PACKAGE& p) {
-
-	ofstream filestr;
-	filestr.open(string(output_dir+"/"+p.get_name()+"-"+p.get_version()+"-"+p.get_arch()+"-"+p.get_build()).c_str());
-	if (!filestr.is_open()) {
-		return;
-	}
-	filestr << "PACKAGE NAME:\t" << p.get_name()  << "-" << p.get_version() << "-" << p.get_arch() << "-" << p.get_build() << \
-		"\nCOMPRESSED PACKAGE SIZE:\t" << p.get_compressed_size() << \
-		"\nUNCOMPRESSED PACKAGE SIZE:\t" << p.get_installed_size() << \
-		"\nPACKAGE LOCATION:\t/var/log/mount/" << p.get_filename() << \
-		"\nPACKAGE DESCRIPTION:\n" << p.get_name() << ":  " << p.get_short_description() << \
-		"\nFILE LIST:\n";
-	
-	if (p.get_files().size()==0) get_filelist(p.get_id(), p.get_files_ptr());
-	for (size_t f=0; f<p.get_files().size(); f++) {
-		filestr << p.get_files().at(f) << "\n";
-	}
-	filestr << "\n";
-	filestr.close();
-	return;
-}*/
-
-/*void mpkgDatabase::unexportPackage(const string& output_dir, const PACKAGE& p)
-{
-	string victim = output_dir+"/"+p.get_name()+"-"+p.get_version()+"-"+p.get_arch()+"-"+p.get_build();
-	unlink(victim.c_str());
-}*/
-
 int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t packagesTotal, int transaction_id)
 {
 	//system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S`  Removing package " + package->get_name() + "-" + package->get_fullversion() + " >> /var/log/mpkg-installation.log");
@@ -1493,7 +1463,7 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 		pData.increaseItemProgress(package->itemID);
 		msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str + _(": updating database"));
 
-		sqlFlush();
+		if (_cmdOptions["warpmode"]!="yes") sqlFlush();
 		currentStatus = statusHeader + _("remove complete");
 		package->get_files_ptr()->clear();
 		//unexportPackage(SYS_ROOT+"/"+legacyPkgDir, *package);
