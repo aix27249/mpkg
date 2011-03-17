@@ -43,7 +43,10 @@ class MainWindow: public QMainWindow {
 		// Core
 		//mpkg *core;
 		LoadSetupVariantsThread *loadSetupVariantsThread;
-		QSettings *settings;
+		map<string, string> settings;
+		map<string, map<string, string> > partSettings;
+		vector<string> repositories;
+
 		bool validatePageSettings(int index);
 		bool validateBootloaderSettings();
 		bool validateRootPassword();

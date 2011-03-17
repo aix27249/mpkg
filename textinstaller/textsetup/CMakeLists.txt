@@ -21,7 +21,7 @@ ADD_DEFINITIONS(-DINSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
 
 ADD_DEFINITIONS(${CXXFLAGS})
 ADD_EXECUTABLE(setup_config textsetup mechanics mediachecker main )
-TARGET_LINK_LIBRARIES(setup_config mpkg mpkg-parted)
+TARGET_LINK_LIBRARIES(setup_config mpkg mpkg-parted agiliasetup)
 
 INSTALL(TARGETS setup_config DESTINATION bin)
 

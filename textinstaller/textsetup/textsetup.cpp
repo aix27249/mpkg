@@ -1,13 +1,17 @@
 #include "textsetup.h"
 #include "mediachecker.h"
 #include "mechanics.h"
+#include <agiliasetup.h>
 
 TextSetup::TextSetup(string _distro_version) {
 	distro_version = _distro_version;
+	string home = getenv("HOME");
+	if (!FileExists(home + "/.config")) system("mkdir -p " + home + "/.config");
+	loadSettings(home + "/.config/agilia_installer.conf", settings, repositories, partitions);
+
 }
 
 TextSetup::~TextSetup() {
-	saveSettings();
 }
 
 int TextSetup::run() {
@@ -28,6 +32,12 @@ int TextSetup::run() {
 		if (ret!=0) i=i-2;
 		if (i<0) return -1;
 	}
+	saveConfigSettings();
+	
+	string runString = "LC_ALL=" + settings["language"] + " nohup setup_exec 2>&1 >/var/log/setup_exec.log &";
+	//ncInterface.uninit();
+	//system(runString);
+
 	return 0;
 }
 
@@ -85,10 +95,27 @@ int TextSetup::setPackageSource() {
 		if (ncInterface.showYesNo(_("Failed to retrieve required data from specified repository. Select another one?"))) return setPackageSource();
 		else return 2;
 	}
+	setAdditionalRepositories();
 
 	return 0;
 }
 
+int TextSetup::setAdditionalRepositories() {
+	if (repositories.empty() && !ncInterface.showYesNo(_("Do you want to specify additional repositories?"))) return 0;
+	ncInterface.showMsgBox(_("Edit file and place each repository on separate line"));
+	string tmp_file = get_tmp_file();
+	WriteFileStrings(tmp_file, repositories);
+	ncInterface.uninit();
+	system("mcedit " + tmp_file);
+	vector<string> reps = ReadFileStrings(tmp_file);
+	for (size_t i=0; i<reps.size(); ++i) {
+		if (cutSpaces(reps[i]).empty()) continue;
+		if (cutSpaces(reps[i])[0]=='#') continue;
+		repositories.push_back(reps[i]);
+	}
+	unlink(tmp_file.c_str());
+	return 0;
+}
 int TextSetup::setInstallType() {
 	vector<MenuItem> m;
 
@@ -96,9 +123,9 @@ int TextSetup::setInstallType() {
 		m.push_back(MenuItem(customPkgSetList[i].name, customPkgSetList[i].desc));
 	}
 
-	settings["pkgset"] = ncInterface.showMenu2(_("Select installation type:"), m, settings["pkgset"]);
+	settings["setup_variant"] = ncInterface.showMenu2(_("Select installation type:"), m, settings["setup_variant"]);
 
-	if (settings["pkgset"].empty()) return 1;
+	if (settings["setup_variant"].empty()) return 1;
 
 	setNvidiaDriver();
 	return 0;
@@ -168,9 +195,7 @@ vector<MenuItem> TextSetup::getKnownFilesystems() {
 int TextSetup::setMountPoints() {
 	mech.updatePartitionLists();
 	vector<MenuItem> m, fs = getKnownFilesystems();
-	
-
-
+	string filesystem;
 
 	string fslabel;
 	for (size_t i=0; i<mech.partitions.size(); ++i) {
@@ -183,27 +208,41 @@ int TextSetup::setMountPoints() {
 
 
 	// Let's do some rock :)
-	string part, mount_point, fs_options, mount_options;
+	string part, mount_point, fs_options;
 	do {
 		part = ncInterface.showMenu2(_("Please select partition to specify it's mount point and formatting options"), m, part);
 		if (part.empty() || part=="CONTINUE") break;
 
-		mapSettings[part]["mountpoint"] = cutSpaces(ncInterface.showInputBox(_("Enter mount point for partition ") + \
+		partitions[part]["mountpoint"] = cutSpaces(ncInterface.showInputBox(_("Enter mount point for partition ") + \
 					part + _(", for example: '/boot' (without quotes). For swap partition, enter 'swap'. For root partition, enter '/'. If you wish to leave partition unused, leave this field empty."), \
-					mapSettings[part]["mountpoint"]));
+					partitions[part]["mountpoint"]));
 
-		if (mapSettings[part]["mountpoint"]!="swap") {
-			mapSettings[part]["fs"] = ncInterface.showMenu2(_("Select filesystem for partition ") + \
-					part + " (" + mapSettings[part]["mountpoint"] + _("). Select 'NONE' if you wish to keep data. NOTE: IF YOU CREATE NEW FILESYSTEM HERE, ALL DATA ON PARTITION WILL BE DESTROYED!"), \
-					fs, mapSettings[part]["fs"]);
+		if (partitions[part]["mountpoint"]!="swap") {
+			filesystem = ncInterface.showMenu2(_("Select filesystem for partition ") + \
+					part + " (" + partitions[part]["mountpoint"] + _("). Select 'NONE' if you wish to keep data. NOTE: IF YOU CREATE NEW FILESYSTEM HERE, ALL DATA ON PARTITION WILL BE DESTROYED!"), \
+					fs, partitions[part]["fs"]);
+			if (filesystem=="NONE") {
+				for (size_t i=0; i<mech.partitions.size(); ++i) {
+					if (mech.partitions[i].devname == part) {
+						partitions[part]["fs"]=mech.partitions[i].fstype;
+						break;
+					}
+				}
+				partitions[part]["format"] = "0";
+			}
+			else {
+				partitions[part]["fs"] = filesystem;
+				partitions[part]["format"] = "1";
+			}
 
-			mapSettings[part]["mount_options"] = ncInterface.showInputBox(_("Enter mount options for partition ") + \
-					part + "(" + mapSettings[part]["mountpoint"] + ", " + mapSettings[part]["fs"] + _("). If you don't know what this stuff means, it is STRONGLY RECOMMENDED to leave it empty (to use default values)."), \
-					mapSettings[part]["mount_options"]);
+			partitions[part]["options"] = ncInterface.showInputBox(_("Enter mount options for partition ") + \
+					part + "(" + partitions[part]["mountpoint"] + ", " + partitions[part]["fs"] + _("). If you don't know what this stuff means, it is STRONGLY RECOMMENDED to leave it empty (to use default values)."), \
+					partitions[part]["options"]);
 		}
 		else {
-			mapSettings[part]["fs"] = "swap";
-			mapSettings[part]["mount_options"] = "";
+			partitions[part]["fs"] = "linux-swap(v1)";
+			partitions[part]["format"] = "0";
+			partitions[part]["options"] = "";
 		}
 
 
@@ -213,12 +252,22 @@ int TextSetup::setMountPoints() {
 }
 
 int TextSetup::setBootLoader() {
+	settings["fbmode"] = "text"; // Required for compatibility
+	
+	// TODO: Stub - initrd options
+	settings["initrd_delay"] = "0";
+	settings["initrd_modules"] = "";
+	settings["kernel_options"] = "";
+	settings["tmpfs_tmp"] = "0";
+	// END OF STUB
+	
 	string fstype;
 	vector<MenuItem> m;
 	m.push_back(MenuItem("MBR", _("Install in Master Boot Record (recommended")));
 	m.push_back(MenuItem("Partition", _("Install on partition (for advanced users only)")));
 	m.push_back(MenuItem("None", _("Do not install bootloader (think twice!)")));
 
+	
 	string b_type = ncInterface.showMenu2(_("Select where to install bootloader. If in doubt, select 'MBR'. All other options requires some additional preparations, which you should do manually."), m, "MBR");
 	if (b_type=="None") {
 		settings["bootloader"]="none";
@@ -236,12 +285,12 @@ int TextSetup::setBootLoader() {
 	else if (b_type=="Partition") {
 		for (size_t i=0; i<mech.partitions.size(); ++i) {
 			// Blacklist some unbootable stuff
-			fstype = mapSettings[mech.partitions[i].devname]["fs"]=="NONE";
+			fstype = partitions[mech.partitions[i].devname]["fs"]=="NONE";
 			if (fstype=="NONE") fstype = mech.partitions[i].fstype;
-			if (mapSettings[mech.partitions[i].devname]["mountpoint"].empty()) continue;
-			if (mapSettings[mech.partitions[i].devname]["mountpoint"]=="swap") continue;
+			if (partitions[mech.partitions[i].devname]["mountpoint"].empty()) continue;
+			if (partitions[mech.partitions[i].devname]["mountpoint"]=="swap") continue;
 			if (fstype=="xfs" || fstype=="swap" || fstype=="unformatted") continue;
-			m.push_back(MenuItem(mech.partitions[i].devname, humanizeSize((int64_t) atol(mech.partitions[i].size.c_str())*(int64_t) 1048576) + ", " + fstype + " " + mapSettings[mech.partitions[i].devname]["mountpoint"]));
+			m.push_back(MenuItem(mech.partitions[i].devname, humanizeSize((int64_t) atol(mech.partitions[i].size.c_str())*(int64_t) 1048576) + ", " + fstype + " " + partitions[mech.partitions[i].devname]["mountpoint"]));
 		}
 		settings["bootloader"] = ncInterface.showMenu2(_("Select partition for bootloader. Note: not all partitions listed here are suitable for keeping bootloader on it."), m);
 		if (settings["bootloader"].empty()) return setBootLoader();
@@ -262,7 +311,7 @@ int TextSetup::setRootPassword() {
 		}
 		rootpwd2 = ncInterface.showInputBox(_("Confirm root password by entering it again."));
 		if (rootpwd1 == rootpwd2) {
-			settings["rootpassword"]=rootpwd1;
+			settings["rootpasswd"]=rootpwd1;
 			break;
 		}
 		else {
@@ -290,7 +339,7 @@ int TextSetup::setCreateUser() {
 		}
 		pwd2 = ncInterface.showInputBox(_("Confirm password by entering it again."));
 		if (pwd1 == pwd2) {
-			settings["userpassword"]=pwd1;
+			settings["userpasswd"]=pwd1;
 			break;
 		}
 		else {
@@ -306,15 +355,15 @@ int TextSetup::setNetworkSettings() {
 	settings["hostname"] = ncInterface.showInputBox(_("Enter hostname:"), "agilia-box");
 	settings["netname"] = ncInterface.showInputBox(_("Enter network name. Leave 'example.net' for intranet:"), "example.net");
 	
-	int hasNetworkManager = system("[ \"`cat /tmp/setup_variants/" + settings["pkgset"] + ".list | grep '^NetworkManager$'`\" = \"\" ]");
-	int hasWicd = system("[ \"`cat /tmp/setup_variants/" + settings["pkgset"] + ".list | grep '^wicd$'`\" = \"\" ]");
+	int hasNetworkManager = system("[ \"`cat /tmp/setup_variants/" + settings["setup_variant"] + ".list | grep '^NetworkManager$'`\" = \"\" ]");
+	int hasWicd = system("[ \"`cat /tmp/setup_variants/" + settings["setup_variant"] + ".list | grep '^wicd$'`\" = \"\" ]");
 
 	vector<MenuItem> m;
 	if (hasNetworkManager) m.push_back(MenuItem("networkmanager", "Network Manager"));
 	if (hasWicd) m.push_back(MenuItem("wicd", "Wicd"));
-	m.push_back(MenuItem("manual", "Manual configuration via /etc/conf.d/network"));
-	if (m.size()==1) settings["networkmanager"]="manual";
-	else settings["networkmanager"] = ncInterface.showMenu2(_("Select the way you wish to manage your network:"), m);
+	m.push_back(MenuItem("netconfig", "Manual configuration via /etc/conf.d/network"));
+	if (m.size()==1) settings["netman"]="netconfig";
+	else settings["netman"] = ncInterface.showMenu2(_("Select the way you wish to manage your network:"), m);
 
 	return 0;
 }
@@ -331,36 +380,15 @@ int TextSetup::setTimezone() {
 	}
 	settings["timezone"] = ncInterface.showMenu2(_("Select your timezone:"), m, "Europe/Moscow");
 
-	if (ncInterface.showYesNo(_("Does your hardware clock stores time in UTC instead of localtime?"))) settings["hwclock"]="UTC";
-	else settings["hwclock"]="local";
+	if (ncInterface.showYesNo(_("Does your hardware clock stores time in UTC instead of localtime?"))) settings["time_utc"]="1";
+	else settings["time_utc"]="0";
 
 	return 0;
 }
 
 
-int TextSetup::saveSettings() {
-	// Settings will be saved to ~/.config/textinstaller.conf
-	vector<string> conf;
-
-	map<string, string>::iterator it, mit;
-	map<string, map<string, string> >::iterator mapit;
-
-	for (it=settings.begin(); it!=settings.end(); it++) {
-		conf.push_back(it->first + "=" + it->second);
-	}
-
-	conf.push_back("");
-	conf.push_back("# Partitioning layout");
-	for (mapit=mapSettings.begin(); mapit!=mapSettings.end(); mapit++) {
-		conf.push_back("");
-		conf.push_back("[" + mapit->first + "]");
-		for (mit=mapSettings[mapit->first].begin(); mit!=mapSettings[mapit->first].end(); mit++) {
-			conf.push_back(mit->first + "=" + mit->second);
-		}
-	}
-
+int TextSetup::saveConfigSettings() {
 	string home = getenv("HOME");
 	if (!FileExists(home + "/.config")) system("mkdir -p " + home + "/.config");
-	WriteFileStrings(home + "/.config/textinstaller.conf", conf);
-	return 0;
+	return saveSettings(home + "/.config/agilia_installer.conf", settings, repositories, partitions);
 }

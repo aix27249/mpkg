@@ -23,6 +23,8 @@ ADD_DEFINITIONS(${CXXFLAGS})
 
 ADD_LIBRARY(agiliasetup SHARED agiliasetup parser)
 TARGET_LINK_LIBRARIES(agiliasetup mpkg)
+ADD_EXECUTABLE(parser-test parser-test)
+TARGET_LINK_LIBRARIES(parser-test agiliasetup)
 
 FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 INSTALL(FILES ${files} DESTINATION include)

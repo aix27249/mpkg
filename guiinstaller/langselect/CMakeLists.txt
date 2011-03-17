@@ -47,7 +47,7 @@ QT4_WRAP_CPP(guisetup_MOC_SRC ${guisetup_MOC_HDR})
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 #ADD_EXECUTABLE(guisetup ${guisetup_SRC} ${guisetup_MOC_SRC} ${guisetup_UI_HDR} ${guisetup_RCC_SRCS})
 ADD_EXECUTABLE(guisetup_lang ${guisetup_SRC} ${guisetup_MOC_SRC} ${guisetup_UI_HDR} )
-TARGET_LINK_LIBRARIES(guisetup_lang ${QT_LIBRARIES} mpkgsupport)
+TARGET_LINK_LIBRARIES(guisetup_lang ${QT_LIBRARIES} mpkgsupport agiliasetup)
 
 # Installation
  

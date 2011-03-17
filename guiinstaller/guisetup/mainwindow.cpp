@@ -2,11 +2,11 @@
 #include "ui_mainwindow.h"
 #include <QCheckBox>
 #include <QMessageBox>
-#include <QSettings>
 #include <QListWidgetItem>
 #include "help.h"
 #include "mount.h"
 #include <QLocale>
+#include <agiliasetup.h>
 MainWindow *guiObject;
 
 string getHelpPageName(int page_num) {
@@ -68,6 +68,10 @@ MountOptions::~MountOptions() {
 }
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindowClass) {
+	string home = getenv("HOME");
+	if (!FileExists(home + "/.config")) system("mkdir -p " + home + "/.config");
+	loadSettings(home + "/.config/agilia_installer.conf", settings, repositories, partSettings);
+
 	hasNvidia = -1;
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	guiObject = this;
@@ -102,7 +106,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	lockUIUpdate = false;
 	connect(ui->timezoneSearchEdit, SIGNAL(textEdited(const QString &)), this, SLOT(timezoneSearch(const QString &)));
 	ui->stackedWidget->setCurrentIndex(0);
-	settings = new QSettings("guiinstaller");
 	loadSetupVariantsThread = new LoadSetupVariantsThread;
 	qRegisterMetaType< vector<CustomPkgSet> > ("vector<CustomPkgSet>");
 	connect(loadSetupVariantsThread, SIGNAL(finished(bool, const vector<CustomPkgSet> &)), this, SLOT(receiveLoadSetupVariants(bool, const vector<CustomPkgSet> &)));
@@ -128,9 +131,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 }
 
 MainWindow::~MainWindow() {
-	delete settings;
 	delete loadSetupVariantsThread;
 }
+
 void MainWindow::closeEvent(QCloseEvent *event) {
 	if (QMessageBox::question(this, tr("Really cancel installation?"), 
 				tr("Installation is not yet complete. Do you really want to cancel?"), 
@@ -164,15 +167,21 @@ void MainWindow::runInstaller() {
 		return;
 	}
 	unlink("/var/run/guisetup.pid"); // need to unlock before starting next process
-	string runString = "LC_ALL=" + settings->value("language").toString().toStdString() + " nohup guisetup_exec 2>&1 >/var/log/guisetup_exec.log &";
-	//string runString = "LC_ALL=" + settings->value("language").toString().toStdString() + " guisetup_exec 2>&1 >/var/log/guisetup_exec.log";
-	//if (getuid()) runString = "gksu -k " + runString;
+	string home = getenv("HOME");
+	if (!FileExists(home + "/.config")) system("mkdir -p " + home + "/.config");
+	saveSettings(home + "/.config/agilia_installer.conf", settings, repositories, partSettings);
+
+	string runString = "LC_ALL=" + settings["language"] + " nohup guisetup_exec 2>&1 >/var/log/guisetup_exec.log &";
 	system(runString);
 	qApp->quit();
 }
 
 void MainWindow::saveConfigAndExit() {
-	QMessageBox::information(this, tr("Configuration saved"), tr("Setup configuration saved to /root/.config/guiinstaller.conf\nYou can store it and use in next installations."));
+	string home = getenv("HOME");
+	if (!FileExists(home + "/.config")) system("mkdir -p " + home + "/.config");
+	saveSettings(home + "/.config/agilia_installer.conf", settings, repositories, partSettings);
+
+	QMessageBox::information(this, tr("Configuration saved"), tr("Setup configuration saved to /root/.config/agilia_installer.conf\nYou can store it and use in next installations."));
 	qApp->quit();
 }
 
@@ -279,7 +288,6 @@ void MainWindow::storePageSettings(int index) {
 		default:
 			break;
 	}
-	settings->sync();
 
 }
 
@@ -318,7 +326,6 @@ void MainWindow::updatePageData(int index) {
 		default:
 			break;
 	}
-	settings->sync();
 }
 
 /*string getUUID(const string& dev) {
@@ -546,19 +553,17 @@ void MainWindow::processMountEdit(QTreeWidgetItem *item) {
 
 void MainWindow::saveMountSettings() {
 	processMountEdit(ui->mountPointsTreeWidget->currentItem());
-	settings->beginGroup("mount_options");
-	settings->remove("");
+	partSettings.clear();
+	string part;
 	for (size_t i=0; i<mountOptions.size(); ++i) {
 		if (mountOptions[i].mountpoint.isEmpty() && !mountOptions[i].format) continue;
-		settings->beginGroup(mountOptions[i].partition.toStdString().substr(5).c_str());
-		settings->setValue("mountpoint", mountOptions[i].mountpoint);
-		settings->setValue("format", mountOptions[i].format);
-		settings->setValue("options", mountOptions[i].mount_options);
-		if (mountOptions[i].format) settings->setValue("fs", mountOptions[i].newfs);
-		else settings->setValue("fs", mountOptions[i].currentfs);
-		settings->endGroup();
+		part = mountOptions[i].partition.toStdString();
+		partSettings[part]["mountpoint"] = mountOptions[i].mountpoint.toStdString();
+		partSettings[part]["format"] = IntToStr(mountOptions[i].format);
+		partSettings[part]["options"] = mountOptions[i].mount_options.toStdString();
+		if (mountOptions[i].format) partSettings[part]["fs"] = mountOptions[i].newfs.toStdString();
+		else partSettings[part]["fs"] = mountOptions[i].currentfs.toStdString();
 	}
-	settings->endGroup();
 }
 
 void MainWindow::loadBootloaderTree() {
@@ -589,21 +594,21 @@ bool MainWindow::validateBootloaderSettings() {
 }
 
 void MainWindow::saveBootloaderSettings() {
-	QString fbmode = "text";
+	string fbmode = "text";
 	if (ui->bootDeviceRadioButton->isChecked()) {
 		if (ui->bootLoaderComboBox->currentIndex()<0) return;
-		else settings->setValue("bootloader", drives[ui->bootLoaderComboBox->currentIndex()].tag.c_str());
+		else settings["bootloader"] = drives[ui->bootLoaderComboBox->currentIndex()].tag;
 	}
 	else if (ui->bootPartitionRadioButton->isChecked()) {
 		if (ui->bootPartitionComboBox->currentIndex()<0) return;
-		settings->setValue("bootloader", partitions[ui->bootPartitionComboBox->currentIndex()].devname.c_str());
+		settings["bootloader"] = partitions[ui->bootPartitionComboBox->currentIndex()].devname;
 	}
-	else if (ui->noBootLoaderRadioButton->isChecked()) settings->setValue("bootloader", "NONE");
-	settings->setValue("fbmode", fbmode);
-	settings->setValue("initrd_delay", ui->initrdDelayCheckBox->isChecked());
-	settings->setValue("kernel_options", ui->kernelOptionsLineEdit->text());
-	settings->setValue("initrd_modules", ui->initrdModulesLineEdit->text());
-	settings->setValue("tmpfs_tmp", ui->useTmpfsCheckBox->isChecked());
+	else if (ui->noBootLoaderRadioButton->isChecked()) settings["bootloader"] = "NONE";
+	settings["fbmode"] = fbmode;
+	settings["initrd_delay"] = IntToStr(ui->initrdDelayCheckBox->isChecked());
+	settings["kernel_options"] = ui->kernelOptionsLineEdit->text().toStdString();
+	settings["initrd_modules"] = ui->initrdModulesLineEdit->text().toStdString();
+	settings["tmpfs_tmp"] = IntToStr(ui->useTmpfsCheckBox->isChecked());
 	
 }
 
@@ -659,19 +664,19 @@ void MainWindow::savePkgsourceSettings() {
 	QString testingRepo = "http://testing.agilialinux.ru/8.0/";
 
 	if (ui->pkgSourceDVDRadioButton->isChecked()) {
-		settings->setValue("pkgsource", "dvd");
+		settings["pkgsource"] ="dvd";
 	}
 	else if (ui->pkgSourceISORadioButton->isChecked()) {
-		settings->setValue("pkgsource", QString("iso://%1").arg(isopath));
+		settings["pkgsource"] = "iso://" + isopath.toStdString();
 	}
 	else if (ui->pkgSourceHDDRadioButton->isChecked()) {
-		settings->setValue("pkgsource", QString("file://%1/").arg(hddpath));
+		settings["pkgsource"] = "file://" + hddpath.toStdString() + "/";
 	}
 	else if (ui->pkgSourceCustomRadioButton->isChecked()) {
-		settings->setValue("pkgsource", urlpath);
+		settings["pkgsource"] = urlpath.toStdString();
 	}
 	else if (ui->pkgSourceNetworkRadioButton->isChecked()) {
-		settings->setValue("pkgsource", coreRepo);
+		settings["pkgsource"] = coreRepo.toStdString();
 	}
 	// Advanced stuff
 
@@ -687,12 +692,11 @@ void MainWindow::savePkgsourceSettings() {
 		advancedRepos << QString::fromStdString(cutSpaces(userRepos[i]));
 	}
 
-	settings->beginWriteArray("additional_repositories");
+	// TODO!
+	repositories.clear();
 	for (int i=0; i<advancedRepos.size(); ++i) {
-		settings->setArrayIndex(i);
-		settings->setValue("url", advancedRepos[i]);
+		repositories.push_back(advancedRepos[i].toStdString());
 	}
-	settings->endArray();
 }
 
 
@@ -713,8 +717,8 @@ void MainWindow::loadSetupVariants() {
 	if (loadSetupVariantsThread->isRunning()) {
 		if (!loadSetupVariantsThread->wait(5000)) loadSetupVariantsThread->terminate();
 	}
-	loadSetupVariantsThread->pkgsource = settings->value("pkgsource").toString();
-	loadSetupVariantsThread->locale = settings->value("language").toString().toStdString();
+	loadSetupVariantsThread->pkgsource = QString::fromStdString(settings["pkgsource"]);
+	loadSetupVariantsThread->locale = settings["language"];
 	
 	loadSetupVariantsThread->start();
 	ui->nextButton->setEnabled(false);
@@ -778,7 +782,7 @@ void MainWindow::hideAllSetupVariantButtons() {
 }
 void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSet> &_pkgSet) {
 	if (!success) {
-		if (settings->value("pkgsource")=="dvd") {
+		if (settings["pkgsource"]=="dvd") {
 			if (QMessageBox::question(this, tr("DVD detection failed"), tr("Failed to detect DVD drive. Be sure you inserted installation DVD into this. Retry?"), QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes) {
 				ui->nextButton->setEnabled(true);
 				ui->backButton->setEnabled(true);
@@ -809,11 +813,11 @@ void MainWindow::receiveLoadSetupVariants(bool success, const vector<CustomPkgSe
 	}
 
 	customPkgSetList = _pkgSet;
-	settings->setValue("pkgsource", loadSetupVariantsThread->pkgsource);
+	settings["pkgsource"] = loadSetupVariantsThread->pkgsource.toStdString();
 
 	printf("Received %d items in pkgSetList\n", (int) customPkgSetList.size());
-	settings->setValue("volname", loadSetupVariantsThread->volname.c_str());
-	settings->setValue("rep_location", loadSetupVariantsThread->rep_location.c_str());
+	settings["volname"] = loadSetupVariantsThread->volname;
+	settings["rep_location"] = loadSetupVariantsThread->rep_location;
 	
 	// Smart-loading buttons
 	hideAllSetupVariantButtons();
@@ -884,13 +888,13 @@ void MainWindow::loadTimezones() {
 }
 
 void MainWindow::saveSetupVariant() {
-	settings->setValue("setup_variant", customPkgSetList[selectedSetupVariant].name.c_str());
+	settings["setup_variant"] = customPkgSetList[selectedSetupVariant].name;
 }
 
 void MainWindow::saveTimezone() {
-	settings->setValue("timezone", ui->timezoneListWidget->currentItem()->text());
-	if (ui->utcCheckBox->isChecked()) settings->setValue("time_utc", true);
-	else settings->setValue("time_utc", false);
+	settings["timezone"] = ui->timezoneListWidget->currentItem()->text().toStdString();
+	if (ui->utcCheckBox->isChecked()) settings["time_utc"] = "1";
+	else settings["time_utc"] = "0";
 }
 
 void MainWindow::loadConfirmationData() {
@@ -914,21 +918,19 @@ void MainWindow::loadConfirmationData() {
 				<p><b>Partitions that will be FORMATTED:</b><ul>%3</ul></p>\
 				<p><b>Partitions that will NOT be formatted but used:</b><ul>%4</ul></p>\
 				<p><b>Boot loader will be installed to:</b> %5</p>").\
-			arg(settings->value("pkgsource").toString()).\
-			arg(settings->value("setup_variant").toString()).\
+			arg(settings["pkgsource"].c_str()).\
+			arg(settings["setup_variant"].c_str()).\
 			arg(formatted).arg(notFormatted).\
-			arg(settings->value("bootloader").toString()));
+			arg(settings["bootloader"].c_str()));
 }
 
 void MainWindow::saveRootPassword() {
-	settings->setValue("rootpasswd", ui->rootPasswordEdit->text());
+	settings["rootpasswd"] = ui->rootPasswordEdit->text().toStdString();
 }
 
 void MainWindow::saveUsers() {
-	settings->beginGroup("users");
-	settings->remove("");
-	settings->setValue(ui->usernameEdit->text(), ui->userPasswordEdit->text());
-	settings->endGroup();
+	settings["username"] = ui->usernameEdit->text().toStdString();
+	settings["userpasswd"] = ui->userPasswordEdit->text().toStdString();
 }
 
 bool MainWindow::validateRootPassword() {
@@ -1058,7 +1060,7 @@ bool MainWindow::validateMountPoints() {
 	if (dupesFound) return false;
 
 	// Now check for enough free space
-	string setupName = settings->value("setup_variant").toString().toStdString();
+	string setupName = settings["setup_variant"];
 	for (size_t i=0; i<customPkgSetList.size(); ++i) {
 		if (customPkgSetList[i].name==setupName) {
 			if (customPkgSetList[i].isize + customPkgSetList[i].isize*0.2 > rootSize) {
@@ -1084,11 +1086,11 @@ bool MainWindow::validateNetworking() {
 }
 
 void MainWindow::saveNetworking() {
-	settings->setValue("hostname", ui->hostnameEdit->text());
-	settings->setValue("netname", ui->netnameEdit->text());
-	if (ui->netNMRadioButton->isChecked()) settings->setValue("netman", "networkmanager");
-	else if (ui->netWicdRadioButton->isChecked()) settings->setValue("netman", "wicd");
-	else if (ui->netNetconfigRadioButton->isChecked()) settings->setValue("netman", "netconfig");
+	settings["hostname"] = ui->hostnameEdit->text().toStdString();
+	settings["netname"] = ui->netnameEdit->text().toStdString();
+	if (ui->netNMRadioButton->isChecked()) settings["netman"] = "networkmanager";
+	else if (ui->netWicdRadioButton->isChecked()) settings["netman"] = "wicd";
+	else if (ui->netNetconfigRadioButton->isChecked()) settings["netman"] = "netconfig";
 }
 
 bool MainWindow::checkLoad(int page) {
@@ -1122,10 +1124,11 @@ bool MainWindow::checkNvidiaLoad() {
 }
 
 void MainWindow::saveNvidia() {
-	if (ui->nvidiaLatestRadioButton->isChecked()) settings->setValue("nvidia-driver", "latest");
-	else if (ui->nvidia173RadioButton->isChecked()) settings->setValue("nvidia-driver", "173");
-	else if (ui->nvidia96RadioButton->isChecked()) settings->setValue("nvidia-driver", "96");
-	else if (ui->nvidiaNVRadioButton->isChecked()) settings->setValue("nvidia-driver", "nouveau");
+	// TODO: Split NV and Nouveau!!!
+	if (ui->nvidiaLatestRadioButton->isChecked()) settings["nvidia-driver"] = "latest";
+	else if (ui->nvidia173RadioButton->isChecked()) settings["nvidia-driver"] = "173";
+	else if (ui->nvidia96RadioButton->isChecked()) settings["nvidia-driver"] =  "96";
+	else if (ui->nvidiaNVRadioButton->isChecked()) settings["nvidia-driver"] = "nouveau";
 }
 
 void MainWindow::showHideReleaseNotes() {
@@ -1180,8 +1183,8 @@ void MainWindow::loadNetworking() {
 	ui->hostnameEdit->setText(ui->usernameEdit->text() + "-" + machineType);
 
 	// Now let's filter out network settings variants
-	int hasNetworkManager = system("[ \"`cat /tmp/setup_variants/" + settings->value("setup_variant").toString().toStdString() + ".list | grep '^NetworkManager$'`\" = \"\" ]");
-	int hasWicd = system("[ \"`cat /tmp/setup_variants/" + settings->value("setup_variant").toString().toStdString() + ".list | grep '^wicd$'`\" = \"\" ]");
+	int hasNetworkManager = system("[ \"`cat /tmp/setup_variants/" + settings["setup_variant"]+ ".list | grep '^NetworkManager$'`\" = \"\" ]");
+	int hasWicd = system("[ \"`cat /tmp/setup_variants/" + settings["setup_variant"] + ".list | grep '^wicd$'`\" = \"\" ]");
 
 	// Now let's choose some stuff. First, select default settings
 	if (hasNetworkManager) ui->netNMRadioButton->setChecked(true);

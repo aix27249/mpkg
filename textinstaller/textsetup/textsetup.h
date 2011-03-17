@@ -12,6 +12,7 @@ class TextSetup {
 
 		mpkg *core;
 		int setPackageSource();
+		int setAdditionalRepositories();
 		int setInstallType();
 		int setNvidiaDriver();
 		int setPartitionEditor();
@@ -22,7 +23,7 @@ class TextSetup {
 		int setNetworkSettings();
 		int setTimezone();
 
-		int saveSettings();
+		int saveConfigSettings();
 
 		string getISORepoPath();
 		string getHDDRepoPath();
@@ -32,7 +33,8 @@ class TextSetup {
 
 	private:
 		map<string, string> settings;
-		map<string, map<string, string> > mapSettings;
+		map<string, map<string, string> > partitions;
+		vector<string> repositories;
 
 		vector<CustomPkgSet> customPkgSetList;
 		vector<MenuItem> getKnownFilesystems();

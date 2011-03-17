@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <mpkgsupport/mpkgsupport.h>
-#include <QSettings>
+#include <agiliasetup.h>
 MainWindow::MainWindow(QWidget *parent) : QDialog(parent), ui(new Ui::MainWindowClass) {
 	if (FileExists("/var/run/guisetup_exec.pid")) {
 		string pid_locked = ReadFile("/var/run/guisetup_exec.pid").c_str();
@@ -31,15 +31,21 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::ok() {
-	QSettings settings("guiinstaller");
-	QString clang;
+	string clang;
 	if (ui->listWidget->currentItem()->text()=="English") clang="en_US.UTF-8";
 	else if (ui->listWidget->currentItem()->text()=="Russian") clang="ru_RU.UTF-8";
 	else if (ui->listWidget->currentItem()->text()=="Ukrainian") clang="uk_UA.UTF-8";
 	
-	settings.setValue("language", clang);
-	settings.sync();
+	map<string, string> settings;
+	map<string, map<string, string> > partitions;
+	vector<string> repositories;
+	string home = getenv("HOME");
+	if (!FileExists(home + "/.config")) system("mkdir -p " + home + "/.config");
+	loadSettings(home + "/.config/agilia_installer.conf", settings, repositories, partitions);
+	settings["language"] = clang;
+	saveSettings(home + "/.config/agilia_installer.conf", settings, repositories, partitions);
+
 	this->hide();
-	system(std::string("LC_ALL=" + clang.toStdString() + " guisetup").c_str());
+	system(std::string("LC_ALL=" + clang + " guisetup").c_str());
 	qApp->quit();
 }

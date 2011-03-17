@@ -124,4 +124,7 @@ class AgiliaSetup {
 
 };
 
+// parser part
+int saveSettings(const string& filename, map<string, string> settings, vector<string> repositories, map<string, map<string, string> > partitions);
+int loadSettings(const string& filename, map<string, string> &settings, vector<string> &repositories, map<string, map<string, string> > &partitions);
 #endif
