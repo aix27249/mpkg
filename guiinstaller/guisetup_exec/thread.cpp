@@ -68,61 +68,27 @@ void SetupThread::parseConfig(map<string, string> *_strSettings, vector<TagPair>
 	vector<PartConfig> partConfigs;
 	vector<TagPair> users;
 	vector<string> additional_repositories;
+
+	map<string, map<string, string> > partitions;
+	vector<string> repositories;
+	string home = getenv("HOME");
+	loadSettings(home + "/.config/agilia_installer.conf", strSettings, repositories, partitions);
+
 	
-	QSettings *settings = new QSettings("guiinstaller");
+	agiliaSetup.users.push_back(TagPair(strSettings["username"], strSettings["password"]));
 
-	// Generic pairs
-	QStringList params = settings->childKeys();
-	for (int i=0; i<params.size(); ++i) {
-		strSettings[params[i].toStdString()]=settings->value(params[i]).toString().toStdString();
-	}
-
-	// Users
-	settings->beginGroup("users");
-	QStringList usernames = settings->childKeys();
-	for (int i=0; i<usernames.size(); ++i) {
-		agiliaSetup.users.push_back(TagPair(usernames[i].toStdString(), settings->value(usernames[i]).toString().toStdString()));
-	}
-	settings->endGroup();
-
-	settings->beginGroup("mount_options");
-	QStringList partitions = settings->childGroups();
-	QStringList subgroups;
-
-	// Searching for deep partitions (LVM, RAID, etc)
-	for (int i=0; i<partitions.size(); ++i) {
-		settings->beginGroup(partitions[i]);
-		subgroups = settings->childGroups();
-		printf("Scanning group %s, size = %d\n", partitions[i].toStdString().c_str(), subgroups.size());
-		for (int s=0; s<subgroups.size(); ++s) {
-			partitions.push_back(partitions[i]+"/"+subgroups[s]);
-		}
-		settings->endGroup();
-	}
 	PartConfig *pConfig;
-	for (int i=0; i<partitions.size(); ++i) {
-		printf("Found config for partition %s\n", partitions[i].toStdString().c_str());
-		settings->beginGroup(partitions[i]);
+	map<string, map<string, string> >::iterator mapit;
+	for (mapit=partitions.begin(); mapit!=partitions.end(); mapit++) {
 		pConfig = new PartConfig;
-		pConfig->partition = partitions[i].toStdString();
-		pConfig->mountpoint = settings->value("mountpoint").toString().toStdString();
-		pConfig->format = settings->value("format").toBool();
-		pConfig->fs = settings->value("fs").toString().toStdString();
-		pConfig->mount_options = settings->value("options").toString().toStdString();
-		settings->endGroup();
+		pConfig->partition = mapit->first;
+		pConfig->mountpoint = partitions[mapit->first]["mountpoint"];
+		pConfig->format = atoi(partitions[mapit->first]["format"].c_str());
+		pConfig->fs = partitions[mapit->first]["fs"];
+		pConfig->mount_options = partitions[mapit->first]["options"];
 		if (!pConfig->mountpoint.empty()) partConfigs.push_back(*pConfig); // Skip subvolume groups from list
 		delete pConfig;
 	}
-	settings->endGroup();
-
-	// Repos
-	int add_url_size = settings->beginReadArray("additional_repositories");
-	for (int i=0; i<add_url_size; ++i) {
-		settings->setArrayIndex(i);
-		additional_repositories.push_back(settings->value("url").toString().toStdString());
-	}
-	settings->endArray();
-
 
 	// Save
 	*_strSettings = strSettings;

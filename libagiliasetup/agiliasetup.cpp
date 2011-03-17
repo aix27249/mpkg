@@ -377,26 +377,25 @@ bool AgiliaSetup::validateQueue() {
 }
 
 bool AgiliaSetup::formatPartition(PartConfig pConfig) {
-
-	if (notifier) notifier->setDetailsTextCall(_("Formatting /dev/") + pConfig.partition);
-	printf("Formatting /dev/%s\n", pConfig.partition.c_str());
+	if (notifier) notifier->setDetailsTextCall(_("Formatting ") + pConfig.partition);
+	printf("Formatting %s\n", pConfig.partition.c_str());
 	string fs_options;
 	if (pConfig.fs=="jfs") fs_options="-q";
 	else if (pConfig.fs=="xfs") fs_options="-f -q";
 	else if (pConfig.fs=="reiserfs") fs_options="-q";
-	if (system("umount -l /dev/" + pConfig.partition +  " ; mkfs -t " + pConfig.fs + " " + fs_options + " /dev/" + pConfig.partition)==0) return true;
+	if (system("umount -l " + pConfig.partition +  " ; mkfs -t " + pConfig.fs + " " + fs_options + " " + pConfig.partition)==0) return true;
 	else return false;
 }
 
 bool AgiliaSetup::makeSwap(PartConfig pConfig) {
 	if (notifier) notifier->setDetailsTextCall(_("Creating swap in ") + pConfig.partition);
-	system("swapoff /dev/" + pConfig.partition);
-	if (system("mkswap /dev/" + pConfig.partition)==0) return false;
+	system("swapoff " + pConfig.partition);
+	if (system("mkswap " + pConfig.partition)==0) return false;
 	return true;
 }
 
 bool AgiliaSetup::activateSwap(PartConfig pConfig) {
-	if (system("swapon /dev/" + pConfig.partition)!=0) return false;
+	if (system("swapon " + pConfig.partition)!=0) return false;
 	return true;
 }
 
@@ -423,11 +422,11 @@ bool AgiliaSetup::mountPartitions() {
 
 	for (size_t i=0; i<partConfigs.size(); ++i) {
 		if (partConfigs[i].mountpoint=="/") {
-			rootPartition = "/dev/" + partConfigs[i].partition;
+			rootPartition = partConfigs[i].partition;
 			rootPartitionType = partConfigs[i].fs;
 			rootPartitionMountOptions=partConfigs[i].mount_options;
 		}
-		else if (partConfigs[i].mountpoint == "swap") swapPartition = "/dev/" + partConfigs[i].partition;
+		else if (partConfigs[i].mountpoint == "swap") swapPartition = partConfigs[i].partition;
 	}
 
 	string mount_cmd;
@@ -481,10 +480,10 @@ bool AgiliaSetup::mountPartitions() {
 		if (partConfigs[mountOrder[i]].fs=="ntfs")  {
 			if (mount_options.empty()) mount_options="-o force";
 			else mount_options+=",force";
-			mount_cmd = "ntfs-3g " + mount_options + " /dev/" + partConfigs[mountOrder[i]].partition + " /tmp/new_sysroot" + partConfigs[mountOrder[i]].mountpoint;
+			mount_cmd = "ntfs-3g " + mount_options + " " + partConfigs[mountOrder[i]].partition + " /tmp/new_sysroot" + partConfigs[mountOrder[i]].mountpoint;
 		}
-		else mount_cmd = "mount " + mount_options + " /dev/" + partConfigs[mountOrder[i]].partition + " /tmp/new_sysroot" + partConfigs[mountOrder[i]].mountpoint;
-		if (partConfigs[mountOrder[i]].fs=="jfs") mount_cmd = "fsck /dev/" + partConfigs[mountOrder[i]].partition + "  && " + mount_cmd;
+		else mount_cmd = "mount " + mount_options + " " + partConfigs[mountOrder[i]].partition + " /tmp/new_sysroot" + partConfigs[mountOrder[i]].mountpoint;
+		if (partConfigs[mountOrder[i]].fs=="jfs") mount_cmd = "fsck " + partConfigs[mountOrder[i]].partition + "  && " + mount_cmd;
 
 		printf("Mounting partition: %s\n", mount_cmd.c_str());
 		if (system(mkdir_cmd)!=0 || system(mount_cmd)!=0) {
@@ -589,7 +588,7 @@ string AgiliaSetup::getUUID(const string& dev) {
 void AgiliaSetup::writeFstab(bool tmpfs_tmp) {
 
 	for (size_t i=0; i<partConfigs.size(); ++i) {
-		if (partConfigs[i].mountpoint == "swap") swapPartition = "/dev/" + partConfigs[i].partition;
+		if (partConfigs[i].mountpoint == "swap") swapPartition = partConfigs[i].partition;
 	}
 
 	string data;
@@ -630,8 +629,8 @@ void AgiliaSetup::writeFstab(bool tmpfs_tmp) {
 			if (!partConfigs[i].mount_options.empty()) options+="," + partConfigs[i].mount_options;
 			fstype="ntfs-3g";
 		}
-		fsUUID = getUUID("/dev/" + partConfigs[i].partition);
-		if (fsUUID.empty()) fsUUID = "/dev/" + partConfigs[i].partition;
+		fsUUID = getUUID(partConfigs[i].partition);
+		if (fsUUID.empty()) fsUUID = partConfigs[i].partition;
 		else fsUUID="UUID=" + fsUUID;
 		data += "# " + partConfigs[i].partition + "\n"+ fsUUID + "\t" + partConfigs[i].mountpoint + "\t"+fstype+"\t" + options + "\t1 1\n";
 	}
@@ -839,7 +838,7 @@ bool AgiliaSetup::grub2config(const string& bootloader, const string& fbmode, co
 
 	for (size_t i=0; i<partConfigs.size(); ++i) {
 		if (partConfigs[i].mountpoint=="/boot") {
-			grubBootPartition = "/dev/" + partConfigs[i].partition;
+			grubBootPartition = partConfigs[i].partition;
 			if (initrdstring.find("/boot")!=std::string::npos) initrdstring = "initrd /initrd.gz";
 			if (kernelstring.find("/boot")==0) kernelstring = "/vmlinuz";
 			fontpath = "/grub/unifont.pf2";

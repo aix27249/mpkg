@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 #include <QCheckBox>
 #include <QMessageBox>
-#include <QSettings>
 #include <QListWidgetItem>
 #include <QTimer>
 //#include <QtSvg/QSvgWidget>
