@@ -183,7 +183,7 @@ void AgiliaSetup::getCustomSetupVariants(const vector<string>& rep_list) {
 		path = rep_list[z];
 		CommonGetFile(path + "/setup_variants.list", tmpfile);
 		vector<string> list = ReadFileStrings(tmpfile);
-		printf("Received %d setup variants\n", (int) list.size());
+		//printf("Received %d setup variants\n", (int) list.size());
 		vector<CustomPkgSet> ret;
 		for (size_t i=0; i<list.size(); ++i) {
 			itemLocations.clear();
@@ -332,7 +332,7 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 		alternatives.push_back("legacy96");
 	}
 	for (size_t i=0; i<alternatives.size(); ++i) {
-		printf("USED ALT: %s\n", alternatives[i].c_str());
+		//printf("USED ALT: %s\n", alternatives[i].c_str());
 	}
 	commitList.switchAlternatives(alternatives);
 	for (size_t i=0; i<commitList.size(); ++i) {
@@ -377,7 +377,7 @@ bool AgiliaSetup::validateQueue() {
 
 bool AgiliaSetup::formatPartition(PartConfig pConfig) {
 	if (notifier) notifier->setDetailsTextCall(_("Formatting ") + pConfig.partition);
-	printf("Formatting %s\n", pConfig.partition.c_str());
+	//printf("Formatting %s\n", pConfig.partition.c_str());
 	string fs_options;
 	if (pConfig.fs=="jfs") fs_options="-q";
 	else if (pConfig.fs=="xfs") fs_options="-f -q";
@@ -469,6 +469,7 @@ bool AgiliaSetup::mountPartitions() {
 		}
 	}
 	if (mountPriority.size()!=partConfigs.size()) {
+		if (dialogMode) ncInterface.uninit();
 		printf("Mount priority: size mismatch: %d vs %d\nTHIS IS A CRITICAL BUG, ABORTING\n", (int) mountPriority.size(), (int) partConfigs.size());
 		abort();
 	}
@@ -476,7 +477,7 @@ bool AgiliaSetup::mountPartitions() {
 	// Mounting partitions, skipping root one
 
 	for (size_t i=0; i<mountOrder.size(); i++) {
-		printf("Checking to mount: %s\n", partConfigs[mountOrder[i]].mountpoint.c_str());
+		//printf("Checking to mount: %s\n", partConfigs[mountOrder[i]].mountpoint.c_str());
 		if (partConfigs[mountOrder[i]].mountpoint=="/") continue;
 		if (partConfigs[mountOrder[i]].mountpoint=="swap") continue;
 		if (partConfigs[mountOrder[i]].mount_options.empty()) mount_options.clear();
@@ -490,7 +491,7 @@ bool AgiliaSetup::mountPartitions() {
 		else mount_cmd = "mount " + mount_options + " " + partConfigs[mountOrder[i]].partition + " /tmp/new_sysroot" + partConfigs[mountOrder[i]].mountpoint;
 		if (partConfigs[mountOrder[i]].fs=="jfs") mount_cmd = "fsck " + partConfigs[mountOrder[i]].partition + "  && " + mount_cmd;
 
-		printf("Mounting partition: %s\n", mount_cmd.c_str());
+		//printf("Mounting partition: %s\n", mount_cmd.c_str());
 		if (system(mkdir_cmd + " 2>/dev/null >/dev/null")!=0 || system(mount_cmd + "  2>/dev/null >/dev/null")!=0) {
 			if (notifier) notifier->sendReportError(_("Failed to mount partition ") + partConfigs[mountOrder[i]].partition);
 			return false;
@@ -524,13 +525,13 @@ bool AgiliaSetup::processInstall(const string &pkgsource) {
 	else if (pkgsource=="file:///bootmedia/repository/" && FileExists("/bootmedia/cache")) {
 		system("ln -sf /bootmedia/cache /tmp/new_sysroot/var/mpkg/cache/.fcache 2>/dev/null >/dev/null");
 	}
-	printf("Committing\n");
+	//printf("Committing\n");
 	if (core->commit()!=0) {
 		delete core;
-		printf("Commit failed");
+		//printf("Commit failed");
 		return false;
 	}
-	printf("\n\n\nCommit OK, going to post-install\n\n\n\n");
+	//printf("\n\n\nCommit OK, going to post-install\n\n\n\n");
 	if (notifier) notifier->setSummaryTextCall(_("Finishing installation"));
 
 	delete core;
@@ -761,7 +762,7 @@ bool AgiliaSetup::grub2_install(const string& bootloader, const string& fbmode, 
 			notifier->setDetailsTextCall(_("grub-install returned ") + IntToStr(ret) + _(", see log for details"));
 		}
 
-		printf("FATAL: Failed to install grub via grub-install!\n");
+		//printf("FATAL: Failed to install grub via grub-install!\n");
 		return false;
 	}
 	else {
@@ -769,7 +770,7 @@ bool AgiliaSetup::grub2_install(const string& bootloader, const string& fbmode, 
 			notifier->setDetailsTextCall(_("Generating GRUB2 menu"));
 		}
 
-		printf("GRUB2 installed successfully, generating config\n");
+		//printf("GRUB2 installed successfully, generating config\n");
 		bool c_ret = grub2_mkconfig(bootloader, fbmode, kernel_options);
 		if (!c_ret) c_ret = grub2config(bootloader, fbmode, kernel_options);
 		if (!c_ret) {
@@ -778,7 +779,7 @@ bool AgiliaSetup::grub2_install(const string& bootloader, const string& fbmode, 
 				notifier->setDetailsTextCall(_("You have to create config manually."));
 			}
 
-			printf("FATAL: Failed to create grub.cfg using both methods!\n");
+			//printf("FATAL: Failed to create grub.cfg using both methods!\n");
 			return false;
 		}
 		return true;
@@ -802,7 +803,7 @@ bool AgiliaSetup::grub2_mkconfig(const string& bootloader, const string& fbmode,
 		//mError("Failed to generate GRUB menu via grub-mkconfig.\n");
 		return false;
 	}
-	printf("GRUB menu successfully generated via grub-mkconfig.\n");
+	//printf("GRUB menu successfully generated via grub-mkconfig.\n");
 	return true;
 }
 

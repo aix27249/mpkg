@@ -86,6 +86,7 @@ int TextSetup::setPackageSource() {
 
 
 
+	ncInterface.showInfoBox(_("Retrieving setup variants from repository..."));
 	customPkgSetList = mech.getCustomPkgSetList(repo, &ret_repo, &volname, &rep_location);
 	settings["pkgsource"] = ret_repo;
 	settings["volname"] = volname;
