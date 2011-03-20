@@ -17,28 +17,28 @@ void AgiliaSetup::unregisterStatusNotifier() {
 }
 
 void AgiliaSetup::setDefaultXDM() {
-	if (FileExists("/tmp/new_sysroot/etc/init.d/kdm")) system("chroot /tmp/new_sysroot rc-update add kdm X11 2>&1 >/dev/null");
-	else if (FileExists("/tmp/new_sysroot/etc/init.d/gdm")) system("chroot /tmp/new_sysroot rc-update add gdm X11 2>&1 >/dev/null");
-	else if (FileExists("/tmp/new_sysroot/etc/init.d/lxdm")) system("chroot /tmp/new_sysroot rc-update add lxdm X11 2>&1 >/dev/null");
-	else if (FileExists("/tmp/new_sysroot/etc/init.d/slim")) system("chroot /tmp/new_sysroot rc-update add slim X11 2>&1 >/dev/null");
-	else if (FileExists("/tmp/new_sysroot/etc/init.d/xdm")) system("chroot /tmp/new_sysroot rc-update add xdm X11 2>&1 >/dev/null");
+	if (FileExists("/tmp/new_sysroot/etc/init.d/kdm")) system("chroot /tmp/new_sysroot rc-update add kdm X11 2>/dev/null >/dev/null");
+	else if (FileExists("/tmp/new_sysroot/etc/init.d/gdm")) system("chroot /tmp/new_sysroot rc-update add gdm X11 2>/dev/null >/dev/null");
+	else if (FileExists("/tmp/new_sysroot/etc/init.d/lxdm")) system("chroot /tmp/new_sysroot rc-update add lxdm X11 2>/dev/null >/dev/null");
+	else if (FileExists("/tmp/new_sysroot/etc/init.d/slim")) system("chroot /tmp/new_sysroot rc-update add slim X11 2>/dev/null >/dev/null");
+	else if (FileExists("/tmp/new_sysroot/etc/init.d/xdm")) system("chroot /tmp/new_sysroot rc-update add xdm X11 2>/dev/null >/dev/null");
 
 }
 
 void AgiliaSetup::setDefaultRunlevels() {
-	system("chroot /tmp/new_sysroot rc-update add mdadm boot 2>&1 >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add lvm boot 2>&1 >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add sysfs sysinit 2>&1 >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add udev sysinit 2>&1 >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add consolefont default 2>&1 >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add hald default 2>&1 >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add sysklogd default 2>&1 >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add dbus default 2>&1 >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add sshd default 2>&1 >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add alsasound default 2>&1 >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add acpid default 2>&1 >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add cupsd default 2>&1 >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add cron default 2>&1 >/dev/null");
+	system("chroot /tmp/new_sysroot rc-update add mdadm boot 2>/dev/null >/dev/null");
+	system("chroot /tmp/new_sysroot rc-update add lvm boot 2>/dev/null >/dev/null");
+	system("chroot /tmp/new_sysroot rc-update add sysfs sysinit 2>/dev/null >/dev/null");
+	system("chroot /tmp/new_sysroot rc-update add udev sysinit 2>/dev/null >/dev/null");
+	system("chroot /tmp/new_sysroot rc-update add consolefont default 2>/dev/null >/dev/null");
+	system("chroot /tmp/new_sysroot rc-update add hald default 2>/dev/null >/dev/null");
+	system("chroot /tmp/new_sysroot rc-update add sysklogd default 2>/dev/null >/dev/null");
+	system("chroot /tmp/new_sysroot rc-update add dbus default 2>/dev/null >/dev/null");
+	system("chroot /tmp/new_sysroot rc-update add sshd default 2>/dev/null >/dev/null");
+	system("chroot /tmp/new_sysroot rc-update add alsasound default 2>/dev/null >/dev/null");
+	system("chroot /tmp/new_sysroot rc-update add acpid default 2>/dev/null >/dev/null");
+	system("chroot /tmp/new_sysroot rc-update add cupsd default 2>/dev/null >/dev/null");
+	system("chroot /tmp/new_sysroot rc-update add cron default 2>/dev/null >/dev/null");
 
 }
 
@@ -67,13 +67,13 @@ bool AgiliaSetup::setHostname(const string& hostname, const string& netname) {
 void AgiliaSetup::setupNetwork(const string& netman, const string& hostname, const string& netname) {
 	setHostname(hostname, netname);
 	if (netman=="wicd") {
-		system("chroot /tmp/new_sysroot rc-update add wicd default 2>&1 >/dev/null");
+		system("chroot /tmp/new_sysroot rc-update add wicd default 2>/dev/null >/dev/null");
 	}
 	else if (netman=="networkmanager") {
-		system("chroot /tmp/new_sysroot rc-update add networkmanager default 2>&1 >/dev/null");
+		system("chroot /tmp/new_sysroot rc-update add networkmanager default 2>/dev/null >/dev/null");
 	}
 	else if (netman=="netconfig") {
-		system("chroot /tmp/new_sysroot rc-update add network default 2>&1 >/dev/null");
+		system("chroot /tmp/new_sysroot rc-update add network default 2>/dev/null >/dev/null");
 	}
 
 }
@@ -100,10 +100,10 @@ void AgiliaSetup::umountFilesystems() {
 		notifier->setSummaryTextCall(_("Finishing..."));
 		notifier->setDetailsTextCall(_("Unmounting filesystems and syncing disks"));
 	}
-	system("chroot /tmp/new_sysroot umount /proc 2>&1 >/dev/null");
-	system("chroot /tmp/new_sysroot umount /sys 2>&1 >/dev/null");
-	system("chroot /tmp/new_sysroot umount -a 2>&1 >/dev/null");
-	system("sync 2>&1 >/dev/null");
+	system("chroot /tmp/new_sysroot umount /proc 2>/dev/null >/dev/null");
+	system("chroot /tmp/new_sysroot umount /sys 2>/dev/null >/dev/null");
+	system("chroot /tmp/new_sysroot umount -a 2>/dev/null >/dev/null");
+	system("sync 2>/dev/null >/dev/null");
 
 }
 
