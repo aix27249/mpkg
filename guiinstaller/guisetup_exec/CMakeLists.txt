@@ -57,9 +57,6 @@ TARGET_LINK_LIBRARIES(guisetup_exec ${QT_LIBRARIES} mpkg mpkg-parted agiliasetup
 
 FILE(GLOB icons "${CMAKE_CURRENT_SOURCE_DIR}/icons/*.png")
 FILE(GLOB l10n "${CMAKE_CURRENT_SOURCE_DIR}/*.qm")
-FILE(GLOB scripts "${CMAKE_CURRENT_SOURCE_DIR}/*.sh")
-FILE(GLOB conftemplate "${CMAKE_CURRENT_SOURCE_DIR}/shared/mpkg*.xml")
-FILE(GLOB dbtemplate "${CMAKE_CURRENT_SOURCE_DIR}/shared/packages.db")
 # Installation
  
 INSTALL(TARGETS guisetup_exec
@@ -67,7 +64,4 @@ INSTALL(TARGETS guisetup_exec
 )
 INSTALL(FILES ${icons} DESTINATION share/setup/icons)
 INSTALL(FILES ${l10n} DESTINATION share/setup/l10n)
-INSTALL(FILES ${scripts} DESTINATION bin PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE )
-INSTALL(FILES ${conftemplate} DESTINATION share/setup)
-INSTALL(FILES ${dbtemplate} DESTINATION share/setup)
 

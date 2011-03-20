@@ -27,6 +27,12 @@ ADD_EXECUTABLE(parser-test parser-test)
 TARGET_LINK_LIBRARIES(parser-test agiliasetup)
 
 FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+FILE(GLOB scripts "${CMAKE_CURRENT_SOURCE_DIR}/support-files/*.sh")
+FILE(GLOB conftemplate "${CMAKE_CURRENT_SOURCE_DIR}/support-files/mpkg*.xml")
+FILE(GLOB dbtemplate "${CMAKE_CURRENT_SOURCE_DIR}/support-files/packages.db")
+
+
+
 INSTALL(FILES ${files} DESTINATION include)
 IF(X86_64)
 	INSTALL(TARGETS agiliasetup
@@ -41,3 +47,8 @@ ELSE(X86_64)
 		ARCHIVE DESTINATION lib
 	)
 ENDIF(X86_64)
+
+INSTALL(FILES ${scripts} DESTINATION bin PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE )
+INSTALL(FILES ${conftemplate} DESTINATION share/setup)
+INSTALL(FILES ${dbtemplate} DESTINATION share/setup)
+
