@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 # Configuration variables. I think it's names and content shows everything.
-NODE=${NODE:-/nodes/x86/gnome}
-REPO=${REPO:-file:///core32-mirror/repository/}
-ARCH=${ARCH:-x86}
-LIST=${LIST:-GNOME.list}
-
 echo Node: $NODE
-echo Repo: $REPO
+echo Repositories:
+i=0
+while [ -n "${REPO[$i]}" ] ; do
+	echo $i: ${REPO[$i]}
+	i=`expr $i + 1`
+done
 echo List: $LIST
 echo Arch: $ARCH
 echo PATH: $PATH
@@ -32,8 +32,16 @@ mkdir -p ${NODE}/etc/rc.d
 
 # Copying 
 cp ${scriptdir}/mpkg.xml.system ${NODE}/etc/mpkg.xml.system
-cat ${scriptdir}/mpkg.xml | sed -e s#NODE#$NODE#g | sed -e s#REPOSITORY#$REPO#g | sed -e s#ARCH#$ARCH#g > ${NODE}/etc/mpkg.xml
+cat ${scriptdir}/mpkg.xml | sed -e s#NODE#$NODE#g | sed -e s#ARCH#$ARCH#g > ${NODE}/etc/mpkg.xml
 cp ${scriptdir}/packages.db ${NODE}/var/mpkg/
+
+# Repository specifications
+i=0
+while [ -n "${REPO[$i]}" ] ; do
+	mpkg-add_rep --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE} ${REPO[$i]}
+	echo $i: ${REPO[$i]}
+	i=`expr $i + 1`
+done
 
 # Installing
 mpkg-update --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE}

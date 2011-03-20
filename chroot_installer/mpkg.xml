@@ -48,9 +48,4 @@
 	<build_pkg_type>
 		txz
 	</build_pkg_type>
-	<repository_list>
-		<repository>
-			REPOSITORY
-		</repository>
-	</repository_list>
 </mpkgconfig>
