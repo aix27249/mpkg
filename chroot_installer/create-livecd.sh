@@ -234,9 +234,23 @@ for i in linux.c32 vesamenu.c32 vesainfo.c32 isolinux.bin ; do
 done
 cp $CWD/grub640.png $LIVE_ROOT/isolinux/
 
+# Pre-iso cleanup
+if [ "$no_cleanup" = "" ] ; then
+	rm -rf "$NODE"
+	rm -rf "$INITRD_ROOT"
+fi
+
+
 # Creating ISO
 mkdir -p $ISO_OUTPUT
 rm -f $ISO_OUTPUT/$ISO_FILENAME
 ISO_FILE=$ISO_OUTPUT/$ISO_FILENAME ISO_ROOT=$LIVE_ROOT $CWD/makeiso.sh
+
+# Post-build cleanup
+if [ "$no_cleanup" = "" ] ; then
+	rm -rf "$LIVE_ROOT"
+fi
+
+
 set +e
 
