@@ -56,13 +56,6 @@ else
 	BITS=64
 	LIBDIRSUFFIX=64
 fi
-if [ "$REPO" = "" ] ; then
-	if [ "$ARCH" = "x86" ] ; then
-		REPO=${REPO:-http://core32.agilialinux.ru/}
-	else
-		REPO=${REPO:-http://core64.agilialinux.ru/}
-	fi
-fi
 
 LIST="${startdir}/pkglist"
 

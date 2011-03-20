@@ -36,11 +36,8 @@ cat ${scriptdir}/mpkg.xml | sed -e s#NODE#$NODE#g | sed -e s#ARCH#$ARCH#g > ${NO
 cp ${scriptdir}/packages.db ${NODE}/var/mpkg/
 
 # Repository specifications
-i=0
-while [ -n "${REPO[$i]}" ] ; do
-	mpkg-add_rep --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE} ${REPO[$i]}
-	echo $i: ${REPO[$i]}
-	i=`expr $i + 1`
+for i in ${REPO} ; do
+	mpkg-add_rep --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE} $i
 done
 
 # Installing
