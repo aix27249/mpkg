@@ -6,22 +6,6 @@
 void showMainMenu(mpkg &core) {
 	dialogMode=true;
 	vector<MenuItem> menuItems;
-	//MENUITEM("ACT_INSTALL", _("Install packages")); // TODO: Switch to local
-	//MENUITEM("ACT_REMOVE", _("Remove packages")); // TODO: Move to browse/add/remove
-	//MENUITEM("ACT_UPGRADE", _("Upgrade packages"));
-	//MENUITEM("ACT_LIST", _("Browse packages"));
-	//MENUITEM("ACT_PURGE", _("Purge packages"));
-	//MENUITEM("ACT_TEST", _("Run internal tests"));
-	//MENUITEM("ACT_SHOW", _("Show info about package"));
-	//MENUITEM("ACT_UPDATEALL", _("Update all system"));
-	//MENUITEM("ACT_LISTGROUPS", _("List package groups"));
-	//MENUITEM("ACT_ADD_REPOSITORY", _("Add repository"));
-	//MENUITEM("ACT_REMOVE_REPOSITORY", _("Remove repository"));
-	//MENUITEM("ACT_ENABLE_REPOSITORY", _("Enable repository"));
-	//MENUITEM("ACT_DISABLE_REPOSITORY", _("Disable repository"));
-	//MENUITEM("ACT_EDIT_REPOSITORY", _("Edit repository"));
-	//MENUITEM("ACT_SHOWVERSION", _("Show MPKG version"));
-	//MENUITEM("ACT_CONVERT_DIR", _("Convert directory to MPKG format")); // TODO: Deprecated, use ACT_NATIVIZE instead
 	
 	MENUITEM("ACT_PACKAGEMENU", _("Package menu")); // TODO: improve, now: OK, actPackageMenu	
 	MENUITEM("ACT_LATESTUPDATES", _("Show latest updates")); // OK
@@ -52,25 +36,6 @@ void showMainMenu(mpkg &core) {
 	MENUSPACE;
 	MENUITEM("EXIT", _("Exit")); // OK :)
 	
-
-	//MENUITEM("ACT_CLEARDEPS", _("Clear dependencies in package"));
-	//MENUITEM("ACT_CHECKLIST", _("Check repository integrity"));
-	//MENUITEM("ACT_SEARCHBYLOCATION", _("Search package by location"));
-	// MENUITEM("ACT_CHECKDAMAGE", _("Check system integrity")); // TODO: integrate ncurses in routines
-	//MENUITEM("ACT_CONFIG", _("View/edit MPKG configuration")); // DEFERRED
-	//MENUITEM("ACT_EXPORT", _("Export package database to Slackware format")); // DEFERRED
-	/*MENUITEM("ACT_INSTALLGROUP", _("Install package group"));
-	MENUITEM("ACT_LISTGROUP", _("List package group"));
-	MENUITEM("ACT_REMOVEGROUP", _("Remove package group")); */
-	//MENUITEM("ACT_REINSTALL", _("Reinstall package"));
-	//MENUITEM("ACT_BUILD", _("Build package from source"));
-	//MENUITEM("ACT_BUILDUP", _("Increase build for package"));
-	//MENUITEM("ACT_LISTUPGRADE", _("List available updates"));
-	//MENUITEM("ACT_QUERY", _("Search package database by custom query"));
-	//MENUITEM("ACT_SYNC", _("Syncronize replicated repositories"));
-	//MENUITEM("ACT_SETVER", _("Set package version"));
-	//MENUITEM("ACT_NATIVIZE", _("Search and convert legacy packages to MPKG format"));
-
 	string ret;
 	do {
 		ncInterface.setTitle(_("MPKG package system ") + (string) mpkgVersion);
@@ -159,12 +124,7 @@ void showMainMenu(mpkg &core) {
 		}
 		MENUCASE("ACT_GETONLINEREPOSITORYLIST") {
 			string url;
-#ifdef X86_64
-			url = "http://www.agilialinux.ru/x86_64-7.0.rlist";
-#else
-			url = "http://www.agilialinux.ru/x86-7.0.rlist";
-#endif
-
+			url = "http://packages.agilialinux.ru/get_repository_list.php";
 			url = ncInterface.showInputBox(_("Enter URL for repository list:"), url);
 			if (url.empty()) continue;
 			actGetRepositorylist(url);
@@ -771,8 +731,8 @@ void show_package_info(mpkg *core, string name, string version, string build, bo
 		say("\n");
 	}
 
-	say(_("%sChangelog:%s          \n%s\n"), CL_GREEN, CL_WHITE, pkg->get_changelog().c_str());
-	say(_("%sDescription:%s        \n%s\n"), CL_GREEN, CL_WHITE, pkg->get_description().c_str());
+	if (!pkg->get_changelog().empty() && pkg->get_changelog()!="0") say(_("%sChangelog:%s          \n%s\n"), CL_GREEN, CL_WHITE, pkg->get_changelog().c_str());
+	if (!pkg->get_description().empty() && pkg->get_description()!="0") say(_("%sDescription:%s        \n%s\n"), CL_GREEN, CL_WHITE, pkg->get_description().c_str());
 
 	if (showFilelist)
 	{
