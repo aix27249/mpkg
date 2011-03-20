@@ -45,11 +45,11 @@ void AgiliaSetup::setDefaultRunlevels() {
 
 void AgiliaSetup::copyMPKGConfig() {
 #ifdef X86_64
-	system("cp /usr/share/setup/mpkg-x86_64.xml /tmp/new_sysroot/etc/mpkg.xml");
+	system("cp /usr/share/setup/mpkg-x86_64.xml /tmp/new_sysroot/etc/mpkg.xml 2>/dev/null >/dev/null");
 #else
-	system("cp /usr/share/setup/mpkg-x86.xml /tmp/new_sysroot/etc/mpkg.xml");
+	system("cp /usr/share/setup/mpkg-x86.xml /tmp/new_sysroot/etc/mpkg.xml 2>/dev/null >/dev/null");
 #endif
-	system("mv /tmp/packages.db /tmp/new_sysroot/var/mpkg/packages.db");
+	system("mv /tmp/packages.db /tmp/new_sysroot/var/mpkg/packages.db 2>/dev/null >/dev/null");
 }
 
 bool AgiliaSetup::setHostname(const string& hostname, const string& netname) {
@@ -89,9 +89,9 @@ void AgiliaSetup::setTimezone(bool time_utc, const string& timezone) {
 	}
 
 	if (!timezone.empty()) {
-		system("( cd /tmp/new_sysroot/etc ; ln -sf /usr/share/zoneinfo/" + timezone + " localtime-copied-from )");
+		system("( cd /tmp/new_sysroot/etc 2>/dev/null >/dev/null ; ln -sf /usr/share/zoneinfo/" + timezone + " localtime-copied-from  2>/dev/null >/dev/null)");
 		unlink("/tmp/new_sysroot/etc/localtime");
-		system("chroot /tmp/new_sysroot cp etc/localtime-copied-from etc/localtime");
+		system("chroot /tmp/new_sysroot cp etc/localtime-copied-from etc/localtime 2>/dev/null >/dev/null");
 	}
 }
 
@@ -122,11 +122,11 @@ bool AgiliaSetup::setRootPassword(const string& rootPassword) {
 
 bool AgiliaSetup::addUser(const string &username) {
 	string extgroup="audio,cdrom,floppy,video,netdev,plugdev,power"; // New default groups, which conforms current guidelines
-	int ret = system("chroot /tmp/new_sysroot /usr/sbin/useradd -d /home/" + username + " -m -g users -G " + extgroup + " -s /bin/bash " + username);
+	int ret = system("chroot /tmp/new_sysroot /usr/sbin/useradd -d /home/" + username + " -m -g users -G " + extgroup + " -s /bin/bash " + username + " 2>/dev/null >/dev/null");
 	if (ret) return false; // Fail
 
-	system("chroot /tmp/new_sysroot chown -R " + username+":users /home/"+username);
-	system("chmod 700 /tmp/new_sysroot/home/" + username);
+	system("chroot /tmp/new_sysroot chown -R " + username+":users /home/"+username + "  2>/dev/null >/dev/null");
+	system("chmod 700 /tmp/new_sysroot/home/" + username + "  2>/dev/null >/dev/null");
 	return true;
 }
 
@@ -136,7 +136,7 @@ bool AgiliaSetup::setPasswd(const string& username, const string& passwd) {
 	WriteFile(tmp_file, data);
 	string passwd_cmd = "#!/bin/sh\ncat /tmp/wtf | passwd " + username+" \n";
 	WriteFile("/tmp/new_sysroot/tmp/run_passwd", passwd_cmd);
-	int ret = system("chroot /tmp/new_sysroot sh /tmp/run_passwd");
+	int ret = system("chroot /tmp/new_sysroot sh /tmp/run_passwd  2>/dev/null >/dev/null");
 	for (size_t i=0; i<data.size(); i++) {
 		data[i]=' ';
 	}
@@ -149,13 +149,13 @@ bool AgiliaSetup::setPasswd(const string& username, const string& passwd) {
 
 
 bool AgiliaSetup::createBaselayout() {
-	system("mkdir -p /tmp/new_sysroot/{dev,etc,home,media,mnt,proc,root,sys,tmp}");
-	system("chmod 710 /root");
-	system("chmod 1777 /tmp");
+	system("mkdir -p /tmp/new_sysroot/{dev,etc,home,media,mnt,proc,root,sys,tmp}  2>/dev/null >/dev/null");
+	system("chmod 710 /root  2>/dev/null >/dev/null");
+	system("chmod 1777 /tmp 2>/dev/null >/dev/null");
 	
 	// Some programs except generic directories in some very weird places.
 	// For example, KDE assumes that /var/tmp is a symlink to /tmp. I'm too lazy to patch this out, so I'll just create this symlink.
-	system("ln -sf ../tmp /tmp/new_sysroot/var/tmp");
+	system("ln -sf ../tmp /tmp/new_sysroot/var/tmp 2>/dev/null >/dev/null");
 	return true;
 }
 
@@ -166,8 +166,8 @@ void AgiliaSetup::getCustomSetupVariants(const vector<string>& rep_list) {
 	}
 
 	string tmpfile = get_tmp_file();
-	system("rm -rf /tmp/setup_variants");
-	system("mkdir -p /tmp/setup_variants");
+	system("rm -rf /tmp/setup_variants 2>/dev/null >/dev/null");
+	system("mkdir -p /tmp/setup_variants 2>/dev/null >/dev/null");
 	string path;
 	customPkgSetList.clear();
 
@@ -248,7 +248,7 @@ void AgiliaSetup::setMpkgConfig(string pkgsource, const string& volname, const s
 		else rList.push_back("cdrom://" + volname + "/" + rep_location);
 	}
 	else if (pkgsource.find("iso:///")==0) {
-		system("mount -o loop " + pkgsource.substr(6) + " /var/log/mount");
+		system("mount -o loop " + pkgsource.substr(6) + " /var/log/mount 2>/dev/null >/dev/null");
 		rList.push_back("cdrom://" + volname + "/" + rep_location);
 	}
 	else rList.push_back(pkgsource);
@@ -382,19 +382,25 @@ bool AgiliaSetup::formatPartition(PartConfig pConfig) {
 	if (pConfig.fs=="jfs") fs_options="-q";
 	else if (pConfig.fs=="xfs") fs_options="-f -q";
 	else if (pConfig.fs=="reiserfs") fs_options="-q";
-	if (system("umount -l " + pConfig.partition +  " ; mkfs -t " + pConfig.fs + " " + fs_options + " " + pConfig.partition)==0) return true;
+
+	string opts;
+	if (dialogMode) {
+		opts = " 2>/dev/null >/dev/null";
+	}
+
+	if (system("umount -l " + pConfig.partition +  " ; mkfs -t " + pConfig.fs + " " + fs_options + " " + pConfig.partition + " " + opts)==0) return true;
 	else return false;
 }
 
 bool AgiliaSetup::makeSwap(PartConfig pConfig) {
 	if (notifier) notifier->setDetailsTextCall(_("Creating swap in ") + pConfig.partition);
-	system("swapoff " + pConfig.partition);
-	if (system("mkswap " + pConfig.partition)==0) return false;
+	system("swapoff " + pConfig.partition + " 2>/dev/null >/dev/null");
+	if (system("mkswap " + pConfig.partition + "  2>/dev/null >/dev/null")==0) return false;
 	return true;
 }
 
 bool AgiliaSetup::activateSwap(PartConfig pConfig) {
-	if (system("swapon " + pConfig.partition)!=0) return false;
+	if (system("swapon " + pConfig.partition + "  2>/dev/null >/dev/null")!=0) return false;
 	return true;
 }
 
@@ -432,9 +438,9 @@ bool AgiliaSetup::mountPartitions() {
 	string mkdir_cmd;
 	string mount_options;
 
-	mkdir_cmd = "mkdir -p /tmp/new_sysroot";
+	mkdir_cmd = "mkdir -p /tmp/new_sysroot 2>/dev/null >/dev/null";
 	if (!rootPartitionMountOptions.empty()) mount_options = "-o " + rootPartitionMountOptions;
-	mount_cmd = "mount " + mount_options + " " + rootPartition + " /tmp/new_sysroot";
+	mount_cmd = "mount " + mount_options + " " + rootPartition + " /tmp/new_sysroot  2>/dev/null >/dev/null";
 	if (system(mkdir_cmd) !=0 || system(mount_cmd)!=0) return false;
 
 	// Sorting mount points
@@ -485,7 +491,7 @@ bool AgiliaSetup::mountPartitions() {
 		if (partConfigs[mountOrder[i]].fs=="jfs") mount_cmd = "fsck " + partConfigs[mountOrder[i]].partition + "  && " + mount_cmd;
 
 		printf("Mounting partition: %s\n", mount_cmd.c_str());
-		if (system(mkdir_cmd)!=0 || system(mount_cmd)!=0) {
+		if (system(mkdir_cmd + " 2>/dev/null >/dev/null")!=0 || system(mount_cmd + "  2>/dev/null >/dev/null")!=0) {
 			if (notifier) notifier->sendReportError(_("Failed to mount partition ") + partConfigs[mountOrder[i]].partition);
 			return false;
 		}
@@ -501,8 +507,8 @@ bool AgiliaSetup::moveDatabase() {
 	if (notifier) notifier->setSummaryTextCall(_("Moving database"));
 	if (notifier) notifier->setDetailsTextCall("");
 
-	system("mkdir -p /tmp/new_sysroot/var/mpkg/cache");
-	system("mkdir -p /tmp/new_sysroot/var/log");
+	system("mkdir -p /tmp/new_sysroot/var/mpkg/cache 2>/dev/null >/dev/null");
+	system("mkdir -p /tmp/new_sysroot/var/log 2>/dev/null >/dev/null");
 	return true;
 
 }
@@ -513,10 +519,10 @@ bool AgiliaSetup::processInstall(const string &pkgsource) {
 
 	mpkg *core = new mpkg;
 	if ((pkgsource=="dvd" || pkgsource.find("iso://")==0) && FileExists("/var/log/mount/cache")) {
-		system("ln -sf /var/log/mount/cache /tmp/new_sysroot/var/mpkg/cache/.fcache");
+		system("ln -sf /var/log/mount/cache /tmp/new_sysroot/var/mpkg/cache/.fcache 2>/dev/null >/dev/null");
 	}
 	else if (pkgsource=="file:///bootmedia/repository/" && FileExists("/bootmedia/cache")) {
-		system("ln -sf /bootmedia/cache /tmp/new_sysroot/var/mpkg/cache/.fcache");
+		system("ln -sf /bootmedia/cache /tmp/new_sysroot/var/mpkg/cache/.fcache 2>/dev/null >/dev/null");
 	}
 	printf("Committing\n");
 	if (core->commit()!=0) {
@@ -554,7 +560,7 @@ Section \"InputClass\"\n\
 \tOption      \"XkbOptions\"  \"grp:alt_shift_toggle,grp_led:scroll\"\n\
 EndSection\n";
 
-	system("mkdir -p /tmp/new_sysroot/etc/X11/xorg.conf.d");
+	system("mkdir -p /tmp/new_sysroot/etc/X11/xorg.conf.d 2>/dev/null >/dev/null");
 	WriteFile("/tmp/new_sysroot/etc/X11/xorg.conf.d/10-keymap.conf", keymap);
 
 }
@@ -563,7 +569,7 @@ void AgiliaSetup::generateIssue() {
 	if (!FileExists("/tmp/new_sysroot/etc/issue_" + sysconf_lang)) {
 		return;
 	}
-	system("( cd /tmp/new_sysroot/etc ; rm issue ; ln -s issue_" + sysconf_lang + " issue )");
+	system("( cd /tmp/new_sysroot/etc 2>/dev/null >/dev/null ; rm issue 2>/dev/null >/dev/null ; ln -s issue_" + sysconf_lang + " issue 2>/dev/null >/dev/null )");
 }
 
 string AgiliaSetup::getUUID(const string& dev) {
@@ -662,9 +668,9 @@ void AgiliaSetup::buildInitrd(bool initrd_delay, const string& initrd_modules) {
 	if (!additional_modules.empty()) additional_modules = " -m " + additional_modules;
 
 	if (notifier) notifier->setSummaryTextCall(_("Creating initrd"));
-	int ret = system("chroot /tmp/new_sysroot mkinitrd -c -r " + rootdev + " -f " + rootPartitionType + " -w " + rootdev_wait + " -k " + kernelversion + " " + " " + use_swap + " " + use_raid + " " + use_lvm + " " + additional_modules);
+	int ret = system("chroot /tmp/new_sysroot mkinitrd -c -r " + rootdev + " -f " + rootPartitionType + " -w " + rootdev_wait + " -k " + kernelversion + " " + " " + use_swap + " " + use_raid + " " + use_lvm + " " + additional_modules + "  2>/dev/null >/dev/null");
 	// In case if first run fails (happened only twice, but happened)
-	if (ret) system("chroot /tmp/new_sysroot mkinitrd");
+	if (ret) system("chroot /tmp/new_sysroot mkinitrd  2>/dev/null >/dev/null");
 }
 
 StringMap AgiliaSetup::getDeviceMap(const string& mapFile) {
@@ -792,8 +798,8 @@ bool AgiliaSetup::grub2_mkconfig(const string& bootloader, const string& fbmode,
 	grub_default.clear();
 
 	// Generating configuration:
-	if (system("chroot /tmp/new_sysroot grub-mkconfig -o /boot/grub/grub.cfg")!=0) {
-		printf("Failed to generate GRUB menu via grub-mkconfig.\n");
+	if (system("chroot /tmp/new_sysroot grub-mkconfig -o /boot/grub/grub.cfg 2>/dev/null >/dev/null")!=0) {
+		//mError("Failed to generate GRUB menu via grub-mkconfig.\n");
 		return false;
 	}
 	printf("GRUB menu successfully generated via grub-mkconfig.\n");
@@ -819,7 +825,7 @@ bool AgiliaSetup::grub2config(const string& bootloader, const string& fbmode, co
 		notifier->setDetailsTextCall("");
 	}
 	string grubcmd = "chroot /tmp/new_sysroot grub-install --no-floppy " + bootDevice;
-	system(grubcmd);
+	system(grubcmd + "  2>/dev/null >/dev/null");
 	// Get the device map
 	StringMap devMap = getDeviceMap("/tmp/new_sysroot/boot/grub/device.map");
 	remapHdd(devMap, bootDevice);
@@ -894,9 +900,9 @@ bool AgiliaSetup::postInstallActions(const string& language, const string& setup
 
 	// Binding pseudo-filesystems
 	
-	system("mount -o bind /proc /tmp/new_sysroot/proc");
-	system("mount -o bind /dev /tmp/new_sysroot/dev");
-	system("mount -o bind /sys /tmp/new_sysroot/sys");
+	system("mount -o bind /proc /tmp/new_sysroot/proc 2>/dev/null >/dev/null");
+	system("mount -o bind /dev /tmp/new_sysroot/dev 2>/dev/null >/dev/null");
+	system("mount -o bind /sys /tmp/new_sysroot/sys 2>/dev/null >/dev/null");
 
 	// Locale generation
 	if (language=="en_US.UTF-8") {
@@ -926,12 +932,12 @@ bool AgiliaSetup::postInstallActions(const string& language, const string& setup
 	createUsers(users);
 
 	// Copy skel to root directory
-	system("rsync -arvh /tmp/new_sysroot/etc/skel/ /tmp/new_sysroot/root/");
-	system("chown -R root:root /tmp/new_sysroot/root");
+	system("rsync -arvh /tmp/new_sysroot/etc/skel/ /tmp/new_sysroot/root/ 2>/dev/null >/dev/null");
+	system("chown -R root:root /tmp/new_sysroot/root 2>/dev/null >/dev/null");
 	xorgSetLangConf(language);
 	generateIssue();
 	writeFstab(tmpfs_tmp);
-	system("chroot /tmp/new_sysroot depmod -a " + kernelversion);
+	system("chroot /tmp/new_sysroot depmod -a " + kernelversion + " 2>/dev/null >/dev/null");
 	buildInitrd(initrd_delay, initrd_modules);
 	grub2_install(bootloader, fbmode, kernel_options);
 	setupNetwork(netman, hostname, netname);
@@ -966,9 +972,9 @@ bool AgiliaSetup::postInstallActions(const string& language, const string& setup
 	vector<string> cdlist_v = ReadFileStrings(cdlist);
 	unlink(cdlist.c_str());
 	if (!cdlist_v.empty()) {
-		if (!FileExists("/tmp/new_sysroot/dev/cdrom")) system("chroot /tmp/new_sysroot ln -s /dev/" + cdlist_v[0] + " /dev/cdrom");
+		if (!FileExists("/tmp/new_sysroot/dev/cdrom")) system("chroot /tmp/new_sysroot ln -s /dev/" + cdlist_v[0] + " /dev/cdrom 2>/dev/null >/dev/null");
 	}
-	if (!FileExists("/tmp/new_sysroot/dev/mouse")) system("chroot /tmp/new_sysroot ln -s /dev/psaux /dev/mouse"); // Everybody today has this mouse device, so I don't care about COM port users
+	if (!FileExists("/tmp/new_sysroot/dev/mouse")) system("chroot /tmp/new_sysroot ln -s /dev/psaux /dev/mouse 2>/dev/null >/dev/null"); // Everybody today has this mouse device, so I don't care about COM port users
 
 	umountFilesystems();
 
@@ -983,8 +989,8 @@ void AgiliaSetup::setDefaultRunlevel(const string& lvl) {
 	WriteFile("/tmp/new_sysroot/etc/inittab", data);
 }
 void AgiliaSetup::enablePlymouth(bool enable) {
-	if (enable) system("chroot /tmp/new_sysroot rc-update add plymouth default");
-	else system("chroot /tmp/new_sysroot rc-update del plymouth plymouth");
+	if (enable) system("chroot /tmp/new_sysroot rc-update add plymouth default 2>/dev/null >/dev/null");
+	else system("chroot /tmp/new_sysroot rc-update del plymouth plymouth 2>/dev/null >/dev/null");
 }
 
 void AgiliaSetup::generateFontIndex() {
@@ -993,17 +999,17 @@ void AgiliaSetup::generateFontIndex() {
 		notifier->setDetailsTextCall(_("Generating font index"));
 	}
 	if (FileExists("/tmp/new_sysroot/usr/sbin/setup_mkfontdir")) {
-		system("chroot /tmp/new_sysroot /usr/sbin/setup_mkfontdir");
+		system("chroot /tmp/new_sysroot /usr/sbin/setup_mkfontdir 2>/dev/null >/dev/null");
 	}
 	if (notifier) notifier->setDetailsTextCall(_("Generating font cache"));
 	if (FileExists("/tmp/new_sysroot/usr/sbin/setup_fontconfig")) {
-		system("chroot /tmp/new_sysroot /usr/sbin/setup_fontconfig");
+		system("chroot /tmp/new_sysroot /usr/sbin/setup_fontconfig 2>/dev/null >/dev/null");
 	}
 }
 
 void AgiliaSetup::setWM(const string& xinitrc) {
 	if (!FileExists("/tmp/new_sysroot/etc/X11/xinit")) return;
-	system("( cd /tmp/new_sysroot/etc/X11/xinit ; rm -f xinitrc ; ln -sf xinitrc." + xinitrc + " xinitrc )");
+	system("( cd /tmp/new_sysroot/etc/X11/xinit 2>/dev/null >/dev/null ; rm -f xinitrc 2>/dev/null >/dev/null ; ln -sf xinitrc." + xinitrc + " xinitrc 2>/dev/null >/dev/null )");
 }
 
 void AgiliaSetup::setXwmConfig(const string& setup_variant) {
@@ -1032,7 +1038,7 @@ export LC_TELEPHONE=$L\n\
 export LC_MEASUREMENT=$L\n\
 export LC_IDENTIFICATION=$L\n\
 export LESSCHARSET=UTF-8\n";
-	if (!FileExists(dir)) system("mkdir " + dir);
+	if (!FileExists(dir)) system("mkdir " + dir + " 2>/dev/null >/dev/null");
 	strReplace(&lang_sh, "$L", lang);
 	WriteFile(dir+"lang.sh", lang_sh);
 	strReplace(&lang_sh, "export", "setenv");
@@ -1044,7 +1050,7 @@ void AgiliaSetup::setConsoleKeymap(const string& lang) {
 	if (lang.find("ru")==0 || lang.find("uk")==0) {
 		string keymaps = ReadFile("/tmp/new_sysroot/etc/conf.d/keymaps");
 		strReplace(&keymaps, "keymap=\"us\"", "keymap=\"ru-winkeys-uni_ct_sh\"");
-		if (!FileExists("/tmp/new_sysroot/etc/conf.d")) system("mkdir /tmp/new_sysroot/etc/conf.d");
+		if (!FileExists("/tmp/new_sysroot/etc/conf.d")) system("mkdir /tmp/new_sysroot/etc/conf.d 2>/dev/null >/dev/null");
 		WriteFile("/tmp/new_sysroot/etc/conf.d/keymaps", keymaps);
 	}
 
