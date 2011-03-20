@@ -30,7 +30,6 @@ class SetupThread: public QThread, public StatusNotifier {
 	private:
 		MpkgErrorReturn errCode;
 		AgiliaSetup agiliaSetup;
-		void parseConfig(map<string, string> *_strSettings, vector<TagPair> *_users, vector<PartConfig> *_partConfigs, vector<string> *_additional_repositories);
 
 
 	signals:

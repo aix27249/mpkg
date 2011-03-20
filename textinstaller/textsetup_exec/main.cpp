@@ -5,9 +5,6 @@ void updateProgressData(ItemState a) {
 	if (a.totalProgress>=0 && a.totalProgress<=100) eventHandler->setProgressCall(a.totalProgress);
 }
 
-void parseConfig(map<string, string> *_strSettings, vector<TagPair> *_users, vector<PartConfig> *_partConfigs, vector<string> *_additional_repositories) {
-	// TODO: implement parser
-}
 
 int main(int argc, char **argv) {
 	setlocale(LC_ALL, "");

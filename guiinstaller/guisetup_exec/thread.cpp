@@ -63,37 +63,4 @@ void SetupThread::run() {
 	emit reportFinish();
 }
 
-void SetupThread::parseConfig(map<string, string> *_strSettings, vector<TagPair> *_users, vector<PartConfig> *_partConfigs, vector<string> *_additional_repositories) {
-	map<string, string> strSettings;
-	vector<PartConfig> partConfigs;
-	vector<TagPair> users;
-	vector<string> additional_repositories;
 
-	map<string, map<string, string> > partitions;
-	vector<string> repositories;
-	string home = getenv("HOME");
-	loadSettings(home + "/.config/agilia_installer.conf", strSettings, repositories, partitions);
-
-	
-	agiliaSetup.users.push_back(TagPair(strSettings["username"], strSettings["password"]));
-
-	PartConfig *pConfig;
-	map<string, map<string, string> >::iterator mapit;
-	for (mapit=partitions.begin(); mapit!=partitions.end(); mapit++) {
-		pConfig = new PartConfig;
-		pConfig->partition = mapit->first;
-		pConfig->mountpoint = partitions[mapit->first]["mountpoint"];
-		pConfig->format = atoi(partitions[mapit->first]["format"].c_str());
-		pConfig->fs = partitions[mapit->first]["fs"];
-		pConfig->mount_options = partitions[mapit->first]["options"];
-		if (!pConfig->mountpoint.empty()) partConfigs.push_back(*pConfig); // Skip subvolume groups from list
-		delete pConfig;
-	}
-
-	// Save
-	*_strSettings = strSettings;
-	*_users = users;
-	*_partConfigs = partConfigs;
-	*_additional_repositories = additional_repositories;
-
-}
