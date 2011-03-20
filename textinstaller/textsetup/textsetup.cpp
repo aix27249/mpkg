@@ -34,9 +34,9 @@ int TextSetup::run() {
 	}
 	saveConfigSettings();
 	
-	string runString = "LC_ALL=" + settings["language"] + " nohup setup_exec 2>&1 >/var/log/setup_exec.log &";
-	//ncInterface.uninit();
-	//system(runString);
+	string runString = "LC_ALL=" + settings["language"] + " setup_exec";
+	ncInterface.uninit();
+	system(runString);
 
 	return 0;
 }

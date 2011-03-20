@@ -510,7 +510,8 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 						if (dl_tool=="aria2" || dl_tool=="aria2c") {
 							string opts;
 							if (enableDownloadResume) opts = " -c ";
-							int get_result = system("aria2c \'" + item->url_list.at(j) + "\' -d \'" + getDirectory(item->file) + "\' -o \'" + getFilename(item->file) + "\' " + opts + " --check-certificate=false");
+							if (dialogMode) opts += " 2>&1 >/dev/null";
+							int get_result = system("aria2c \'" + item->url_list.at(j) + "\' -d \'" + getDirectory(item->file) + "\' -o \'" + getFilename(item->file) + "\' --check-certificate=false " + opts);
 							if (get_result) result = CURLE_READ_ERROR;
 							else result = CURLE_OK;
 						}
@@ -593,7 +594,8 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 						else { // Now default is wget
 							string opts;
 							if (enableDownloadResume) opts = " -c ";
-							int get_result = system("wget \'" + item->url_list.at(j) + "\' -O \'" + item->file + "\' " + opts + " --no-check-certificate");
+							if (dialogMode) opts += " 2>&1 >/dev/null";
+							int get_result = system("wget \'" + item->url_list.at(j) + "\' -O \'" + item->file + "\' --no-check-certificate " + opts);
 							if (get_result) result = CURLE_READ_ERROR;
 							else result = CURLE_OK;
 						}

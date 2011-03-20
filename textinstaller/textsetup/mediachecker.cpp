@@ -252,15 +252,15 @@ void MediaChecker::getCustomSetupVariants(const vector<string>& rep_list) {
 	tmpDownloadItem.priority = 0;
 	tmpDownloadItem.status = DL_STATUS_WAIT;
 	string itemname;
-
+	DownloadResults res;
 	for (size_t z=0; z<rep_list.size(); ++z) {
 
 		//ncInterface.showProgressBar(_("Processing repository"), _("Receiving setup variants"), 100, 5+z*3);
 
 		downloadQueue.clear();
 		path = rep_list[z];
-		CommonGetFile(path + "/setup_variants.list", tmpfile);
-		CommonGetFile(path + "/setup_variants.tar.xz", "/tmp/setup_variants.tar.xz");
+		if (CommonGetFile(path + "/setup_variants.list", tmpfile)!=DOWNLOAD_OK) continue;
+		if (CommonGetFile(path + "/setup_variants.tar.xz", "/tmp/setup_variants.tar.xz")!=DOWNLOAD_OK) continue;
 		vector<string> list = ReadFileStrings(tmpfile);
 		printf("Received %d setup variants\n", (int) list.size());
 		vector<CustomPkgSet> ret;
