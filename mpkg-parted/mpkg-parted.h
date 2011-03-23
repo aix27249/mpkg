@@ -23,6 +23,10 @@ vector<TagPair> getDevList();
 vector<pEntry> getPartitionList();
 vector<pEntry> getGoodPartitions(vector<string> goodFSTypes, bool includeRaidComponents=false);
 
+string getFSTypeBLKID(const string& devname);
+string getLabelBLKID(const string& devname);
+string getUUID(const string& devname);
+string getBlkidValue(const string& devname, const string& attr);
 vector<string> getCdromList();
 bool checkIfCd(string devname);
 

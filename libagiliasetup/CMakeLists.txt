@@ -22,7 +22,7 @@ ADD_DEFINITIONS(${CXXFLAGS})
 #ADD_DEFINITIONS(-O0 -DDEBUG -g)
 
 ADD_LIBRARY(agiliasetup SHARED agiliasetup parser)
-TARGET_LINK_LIBRARIES(agiliasetup mpkg)
+TARGET_LINK_LIBRARIES(agiliasetup mpkg mpkg-parted)
 ADD_EXECUTABLE(parser-test parser-test)
 TARGET_LINK_LIBRARIES(parser-test agiliasetup)
 

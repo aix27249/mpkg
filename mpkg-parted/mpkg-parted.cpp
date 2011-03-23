@@ -8,7 +8,29 @@ bool deviceCacheActual=false;
 vector<pEntry> partitionCache;
 bool partitionCacheActual=false;
 vector<string> cdromList;
+string getFSTypeBLKID(const string& devname) {
+	return getBlkidValue(devname, "TYPE");
+}
 
+string getLabelBLKID(const string& devname) {
+	return getBlkidValue(devname, "LABEL");
+}
+string getUUID(const string& devname) {
+	return getBlkidValue(devname, "UUID");
+}
+
+string getBlkidValue(const string& devname, const string& attr) {
+	string tmp_file = get_tmp_file();
+	vector<string> ret;
+	// Workaround for rare coreutils bug.
+	for (int i=0; i<2 && ret.empty(); ++i) {
+		system("blkid " + devname + " -c /dev/null -s " + attr + " -o value > " + tmp_file);
+		ret = ReadFileStrings(tmp_file);
+	}
+	unlink(tmp_file.c_str());
+	if (ret.empty()) return "";
+	else return ret[0];
+}
 vector<string> getCdromList() {
 	string cdlist = get_tmp_file();
 	system("getcdromlist.sh " + cdlist + " 2>/dev/null >/dev/null");
@@ -240,11 +262,11 @@ vector<pEntry> getGoodPartitions(vector<string> goodFSTypes, bool includeRaidCom
 
 				if (partitionList[i][t]->fs_type==NULL)
 				{
-					// Means that no filesystem is detected on partition
+					// Means that no filesystem is detected on partition. Try to detect it via blkid
 					if (!isLoop) tmpEntry.devname=(string) ped_partition_get_path(partitionList[i][t]);
 					else tmpEntry.devname = (string) devList[i]->path;
-					tmpEntry.fstype="unformatted";
-					tmpEntry.fslabel="";
+					tmpEntry.fstype=getFSTypeBLKID(tmpEntry.devname);
+					tmpEntry.fslabel=getLabelBLKID(tmpEntry.devname);
 					if (ped_partition_is_flag_available(partitionList[i][t], PED_PARTITION_RAID)) tmpEntry.raid = ped_partition_get_flag(partitionList[i][t], PED_PARTITION_RAID);
 					else tmpEntry.raid = 0;
 					tmpEntry.size=IntToStr(partitionList[i][t]->geom.length*devList[i]->sector_size/1048576);

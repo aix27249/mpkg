@@ -2,6 +2,7 @@
 #define LIBAGILIASETUP_H__
 
 #include <mpkg/libmpkg.h>
+#include <mpkg-parted/mpkg-parted.h>
 
 struct PartConfig {
 	string partition, mountpoint, fs, mount_options;
@@ -65,7 +66,6 @@ class AgiliaSetup {
 		void xorgSetLangConf(const string& language);
 		bool processInstall(const string& pkgsource);
 		void generateIssue();
-		string getUUID(const string& dev); 
 
 		void writeFstab(bool tmpfs_tmp);
 		void buildInitrd(bool initrd_delay, const string& initrd_modules);

@@ -573,23 +573,6 @@ void AgiliaSetup::generateIssue() {
 	system("( cd /tmp/new_sysroot/etc 2>/dev/null >/dev/null ; rm issue 2>/dev/null >/dev/null ; ln -s issue_" + sysconf_lang + " issue 2>/dev/null >/dev/null )");
 }
 
-string AgiliaSetup::getUUID(const string& dev) {
-	string tmp_file = get_tmp_file();
-	string data;
-	int try_count = 0;
-	while (try_count<2 && data.empty()) {
-		system("blkid -s UUID " + dev + " > " + tmp_file);
-		data = ReadFile(tmp_file);
-		try_count++;
-	}
-	if (data.empty()) return "";
-	size_t a = data.find_first_of("\"");
-	if (a==std::string::npos || a==data.size()-1) return "";
-	data.erase(data.begin(), data.begin()+a+1);
-	a = data.find_first_of("\"");
-	if (a==std::string::npos || a==0) return "";
-	return data.substr(0, a);
-}
 
 void AgiliaSetup::writeFstab(bool tmpfs_tmp) {
 
