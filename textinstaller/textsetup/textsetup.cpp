@@ -192,10 +192,95 @@ vector<MenuItem> TextSetup::getKnownFilesystems() {
 
 }
 
+int TextSetup::showPartitionMenu(const string& part) {
+	vector<MenuItem> m, fs = getKnownFilesystems();
+	string mountinfo, fsinfo, fsoptionsinfo, partinfo;
+	int ret = 0;
+	string mount_point, filesystem, fs_options;
+
+	ncInterface.setSubtitle(part + _(": options"));
+	while (ret!=3 && ret>=0) {
+		m.clear();
+	
+		for (size_t i=0; i<mech.partitions.size(); ++i) {
+			if (mech.partitions[i].devname!=part) continue;
+			partinfo = mech.partitions[i].devname + " (" + humanizeSize((int64_t) atol(mech.partitions[i].size.c_str())*(int64_t) 1048576) + ", " + mech.partitions[i].fstype;
+			if (!partitions[part]["mountpoint"].empty()) mountinfo = partitions[part]["mountpoint"];
+			else mountinfo = _("None");
+			if (partitions[part]["format"] == "1") fsinfo = partitions[part]["fs"];
+			else fsinfo = _("Keep data");
+
+			if (partitions[part]["options"] == "1") fsoptionsinfo = partitions[part]["options"];
+			else fsoptionsinfo = _("Defaults");
+			break;
+		}
+
+		m.push_back(MenuItem(_("Mount point:"), mountinfo));
+		m.push_back(MenuItem(_("Format to:"), fsinfo));
+		m.push_back(MenuItem(_("Mount options:"), fsoptionsinfo));
+		m.push_back(MenuItem(_("CONTINUE"), _("Continue")));
+
+		ret = ncInterface.showMenu(_("Select parameters for partition ") + partinfo, m, ret);
+
+
+		switch(ret) {
+			case 0:
+				partitions[part]["mountpoint"] = cutSpaces(ncInterface.showInputBox(_("Enter mount point for partition ") + \
+					part + _(", for example: '/boot' (without quotes). For swap partition, enter 'swap'. For root partition, enter '/'. If you wish to leave partition unused, leave this field empty."), \
+					partitions[part]["mountpoint"]));
+				if (partitions[part]["mountpoint"] == "swap") {
+					partitions[part]["fs"] = "linux-swap(v1)";
+					partitions[part]["format"] = "0";
+					partitions[part]["options"] = "";
+				}
+
+				break;
+			case 1:
+				if (partitions[part]["mountpoint"]=="swap") {
+					ncInterface.showMsgBox(_("Not applicable for swap partitions"));
+					break;
+				}
+				filesystem = ncInterface.showMenu2(_("Select filesystem for partition ") + \
+					part + " (" + partitions[part]["mountpoint"] + _("). Select 'NONE' if you wish to keep data. NOTE: IF YOU CREATE NEW FILESYSTEM HERE, ALL DATA ON PARTITION WILL BE DESTROYED!"), \
+					fs, partitions[part]["fs"]);
+				if (filesystem=="NONE") {
+					for (size_t i=0; i<mech.partitions.size(); ++i) {
+						if (mech.partitions[i].devname == part) {
+							partitions[part]["fs"]=mech.partitions[i].fstype;
+							break;
+						}
+					}
+					partitions[part]["format"] = "0";
+				}
+				else {
+					partitions[part]["fs"] = filesystem;
+					partitions[part]["format"] = "1";
+				}
+				break;
+			case 2:
+				if (partitions[part]["mountpoint"]=="swap") {
+					ncInterface.showMsgBox(_("Not applicable for swap partitions"));
+					break;
+				}
+
+				partitions[part]["options"] = ncInterface.showInputBox(_("Enter mount options for partition ") + \
+					part + "(" + partitions[part]["mountpoint"] + ", " + partitions[part]["fs"] + _("). If you don't know what this stuff means, it is STRONGLY RECOMMENDED to leave it empty (to use default values)."), \
+					partitions[part]["options"]);
+				break;
+			default:
+				return 0;
+
+		}
+	}
+	return 0;
+
+
+
+}
 
 int TextSetup::setMountPoints() {
 	mech.updatePartitionLists();
-	vector<MenuItem> m, fs = getKnownFilesystems();
+	vector<MenuItem> m;
 	string filesystem;
 
 	string fslabel;
@@ -213,40 +298,7 @@ int TextSetup::setMountPoints() {
 	do {
 		part = ncInterface.showMenu2(_("Please select partition to specify it's mount point and formatting options"), m, part);
 		if (part.empty() || part=="CONTINUE") break;
-
-		partitions[part]["mountpoint"] = cutSpaces(ncInterface.showInputBox(_("Enter mount point for partition ") + \
-					part + _(", for example: '/boot' (without quotes). For swap partition, enter 'swap'. For root partition, enter '/'. If you wish to leave partition unused, leave this field empty."), \
-					partitions[part]["mountpoint"]));
-
-		if (partitions[part]["mountpoint"]!="swap") {
-			filesystem = ncInterface.showMenu2(_("Select filesystem for partition ") + \
-					part + " (" + partitions[part]["mountpoint"] + _("). Select 'NONE' if you wish to keep data. NOTE: IF YOU CREATE NEW FILESYSTEM HERE, ALL DATA ON PARTITION WILL BE DESTROYED!"), \
-					fs, partitions[part]["fs"]);
-			if (filesystem=="NONE") {
-				for (size_t i=0; i<mech.partitions.size(); ++i) {
-					if (mech.partitions[i].devname == part) {
-						partitions[part]["fs"]=mech.partitions[i].fstype;
-						break;
-					}
-				}
-				partitions[part]["format"] = "0";
-			}
-			else {
-				partitions[part]["fs"] = filesystem;
-				partitions[part]["format"] = "1";
-			}
-
-			partitions[part]["options"] = ncInterface.showInputBox(_("Enter mount options for partition ") + \
-					part + "(" + partitions[part]["mountpoint"] + ", " + partitions[part]["fs"] + _("). If you don't know what this stuff means, it is STRONGLY RECOMMENDED to leave it empty (to use default values)."), \
-					partitions[part]["options"]);
-		}
-		else {
-			partitions[part]["fs"] = "linux-swap(v1)";
-			partitions[part]["format"] = "0";
-			partitions[part]["options"] = "";
-		}
-
-
+		showPartitionMenu(part);
 	} while (part!="CONTINUE" && !part.empty());
 
 	return 0;

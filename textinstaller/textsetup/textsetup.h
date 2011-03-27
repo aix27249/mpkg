@@ -28,6 +28,8 @@ class TextSetup {
 		string getISORepoPath();
 		string getHDDRepoPath();
 		string getCustomRepoPath();
+		
+		int showPartitionMenu(const string& part);
 
 		int run();
 
