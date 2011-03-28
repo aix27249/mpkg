@@ -102,8 +102,14 @@ if [ "$remove_devel" = "1" -o "$do_minimize" = "1" ] ; then
 	fi
 	rm -rf $NODE/lib/*.a
 	if [ -d $NODE/lib64 ] ; then
-		rm -rf $NODE/lib64/*.la
+		rm -rf $NODE/lib64/*.a
 	fi
+fi
+
+if [ "$remove_src" = "1" -o "$do_minimize" = "1" ] ; then
+	rm -rf $NODE/usr/src/SPKG
+	rm -rf $NODE/usr/src/BuildTrees
+	rm -rf $NODE/usr/src/SlackBuilds
 fi
 
 # Move packages if requested
