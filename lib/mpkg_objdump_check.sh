@@ -11,7 +11,7 @@ mkdir -p $OUTLDDDIR
 let i=0
 echo "ldd searching from $i"
 for index in $LDDLIST; do
-	echo OBJDUMP_CHECK: $i
+	#echo OBJDUMP_CHECK: $i
 	objdump -p $TMPDIR/$index 2>/dev/null | grep NEEDED > $OUTLDDDIR/$i
 	let i=$i+1
 done
