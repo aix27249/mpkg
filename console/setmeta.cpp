@@ -251,8 +251,9 @@ int main(int argc, char **argv) {
 					data->set_conflicts("");
 					break;
 			case 's':
-					_cmdOptions["keep_symlinks"]="true";
-					MAKEPKG_CMD = "/sbin/makepkg -l n -c n";
+					// Now these are defaults, so no need to override things that already exists
+					/*_cmdOptions["keep_symlinks"]="true";
+					MAKEPKG_CMD = "/sbin/makepkg -l n -c n";*/
 					break;
 			case 'f':
 					if (!FileExists(string(optarg))) {

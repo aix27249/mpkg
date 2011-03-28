@@ -809,7 +809,6 @@ void dumpPackage(PACKAGE *p, PackageConfig *pc, string filename)
 	node.writeToFile(filename.c_str());
 }
 void filterObjdumpOutput(vector<string>& ldd) {
-	size_t p;
 	for (size_t i=0; i<ldd.size(); ++i) {
 		strReplace(&ldd[i], "NEEDED", "");
 		ldd[i] = "/" + cutSpaces(ldd[i]);

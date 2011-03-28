@@ -33,7 +33,7 @@ string log_directory = "/var/log/";
 CursesInterface ncInterface;
 DepErrorTable depErrorTable;
 bool msayState = false;
-string MAKEPKG_CMD = "/sbin/makepkg -l y -c n";
+string MAKEPKG_CMD = "/sbin/makepkg -l n -c n";
 bool verbose=false;
 bool useBuildCache=true;
 bool enableDownloadResume=false;
@@ -110,8 +110,9 @@ void initDirectoryStructure() {
 	if (!FileExists(SCRIPTS_DIR)) system("mkdir -p " + SCRIPTS_DIR);
 }
 
-int loadGlobalConfig(string config_file)
-{
+int loadGlobalConfig(string config_file) {
+	// Forced by default now
+	_cmdOptions["keep_symlinks"]="true";
 
 	if (mConfig.getValue("gendeps_mode")=="objdump") _cmdOptions["gendeps_mode"]="objdump";
 	if (mConfig.getValue("enable_delta")=="yes") _cmdOptions["enable_delta"]="true";

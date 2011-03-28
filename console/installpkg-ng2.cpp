@@ -807,7 +807,7 @@ int main (int argc, char **argv)
 		_cmdOptions["sql_readonly"]="yes";
 		if (argc<=optind) return print_usage(stderr,1);
 		for (int i=optind; i<argc; ++i) {
-			generateDeps(argv[i], false, true);
+			system("mpkg-setmeta " + string(argv[i]) + " -Z");
 		}
 		return 0;
 	}
