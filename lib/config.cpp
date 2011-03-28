@@ -112,6 +112,8 @@ void initDirectoryStructure() {
 
 int loadGlobalConfig(string config_file)
 {
+
+	if (mConfig.getValue("gendeps_mode")=="objdump") _cmdOptions["gendeps_mode"]="objdump";
 	if (mConfig.getValue("enable_delta")=="yes") _cmdOptions["enable_delta"]="true";
 	else _cmdOptions["enable_delta"]="false";
 	if (mConfig.getValue("dont_clean_tmp")=="yes") _cmdOptions["dont_clean_tmp"]="true";

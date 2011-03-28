@@ -28,7 +28,6 @@
 #include "package.h"
 #include "metaframe.h"
 // Package working tool =)
-void generateDeps(string tgz_filename, bool updateOnly=false, bool clear=false);
 // Main class - use only this one while using the library
 class mpkg
 {

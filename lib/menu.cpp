@@ -94,7 +94,7 @@ void showMainMenu(mpkg &core) {
 			if (filename.empty()) continue;
 			ncInterface.showInfoBox(_("Generating dependencies for ") + filename);
 			ncInterface.uninit();
-			generateDeps(filename);
+			generateDeps_new(core, filename);
 		}
 		MENUCASE("ACT_FILESEARCH") {
 			string pattern = ncInterface.showInputBox(_("Enter a part of filename:"));

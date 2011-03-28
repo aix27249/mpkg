@@ -808,6 +808,16 @@ void dumpPackage(PACKAGE *p, PackageConfig *pc, string filename)
 
 	node.writeToFile(filename.c_str());
 }
+void filterObjdumpOutput(vector<string>& ldd) {
+	size_t p;
+	for (size_t i=0; i<ldd.size(); ++i) {
+		strReplace(&ldd[i], "NEEDED", "");
+		ldd[i] = "/" + cutSpaces(ldd[i]);
+		printf(">>> [%s]\n", ldd[i].c_str());
+
+	}
+
+}
 
 void filterLDDOutput(vector<string>& ldd) {
 	size_t p, e;
@@ -946,14 +956,19 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 	WriteFileStrings(tmp_file_list, filecheck);
 	
 	// Running script
-	system("/usr/libexec/mpkglddcheck.sh " + tmp_ldd_list + " " + tmp_parse_ldd_dir + " " + tmp_file_list + " " + tmp_parse_file_dir + " " + tmp_dir);
+	if (_cmdOptions["gendeps_mode"]=="objdump") {
+		system("/usr/libexec/mpkg_objdump_check.sh " + tmp_ldd_list + " " + tmp_parse_ldd_dir + " " + tmp_file_list + " " + tmp_parse_file_dir + " " + tmp_dir);
+	}
+	else {
+		system("/usr/libexec/mpkglddcheck.sh " + tmp_ldd_list + " " + tmp_parse_ldd_dir + " " + tmp_file_list + " " + tmp_parse_file_dir + " " + tmp_dir);
+	}
 	unlink(tmp_ldd_list.c_str());
 	unlink(tmp_file_list.c_str());
 	
 	// Checking for script files
 	string file_str; // temp string for file utility report
 	string this_script_dep; // temp string for dep type
-	for (unsigned int i=0; i<filecheck.size(); ++i) {
+	for (size_t i=0; i<filecheck.size(); ++i) {
 		ext = getExtension(filecheck[i]);
 		file_str=ReadFile(tmp_parse_file_dir+"/"+IntToStr(i));
 		this_script_dep.clear();
@@ -972,13 +987,26 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 
 	// Checking ldd output for queued files
 	string tmplddfilename;
-	for (unsigned int i=0; i<lddcheck.size(); ++i) {
+	for (size_t i=0; i<lddcheck.size(); ++i) {
 		// Reading ldd output for i'th file
 		ldd=ReadFileStrings(tmp_parse_ldd_dir+"/"+IntToStr(i));
 		if (ldd.size()==1 || ldd.empty()) continue;
-		filterLDDOutput(ldd); // Filtering output
+		if (_cmdOptions["gendeps_mode"]=="objdump") {
+			printf("Filtering OBJDUMP output: %d lines\n", (int) ldd.size());
+			filterObjdumpOutput(ldd);
+			for (size_t d=0; d<ldd.size(); ++d) {
+				printf("}}}} [%s]\n", ldd[d].c_str());
+			}
+		}
+		else {
+			filterLDDOutput(ldd); // Filtering output
+			for (size_t d=0; d<ldd.size(); ++d) {
+				printf("}}}} [%s]\n", ldd[d].c_str());
+			}
+
+		}
 		
-		for (unsigned int l=0; l<ldd.size(); ++l) {
+		for (size_t l=0; l<ldd.size(); ++l) {
 			// In first, check if required library is inside package (internal dependency)
 			
 			found=false;
@@ -1015,9 +1043,9 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 		so = global_ldd[i].find(".so");
 		if (so!=std::string::npos) libfind = global_ldd[i].substr(1, so+2);
 		else libfind = global_ldd[i].substr(1);
-	//	printf("Searching for library %s\n", libfind.c_str());
+		printf("Searching for library %s\n", libfind.c_str());
 		sqlSearch.addField("file_name", "%/" + getFilename(libfind) + "%");
-	//	printf("%s\n", global_ldd[i].c_str());
+		printf("global_ldd: %s\n", global_ldd[i].c_str());
 	}
 	//printf("creating query\n");
 	sqlFields.addField("packages_package_id");
@@ -1216,100 +1244,7 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 	delete_tmp_files();
 
 }
-void generateDeps(string tgz_filename, bool updateOnly, bool clear)
-{
-	if (mConfig.getValue("add_deps_in_build")=="yes") updateOnly=false;
-	if (tgz_filename.empty()) {
-		mError("No filename specified");
-		return;
-	}
-	say("Generating dependencies for %s\n",tgz_filename.c_str());
-	string current_dir = (string) get_current_dir_name();
-	// Create a temporary directory
-	string tmpdir = get_tmp_file();
-	string dep_out = get_tmp_file();
-	unlink(tmpdir.c_str());
-	system("mkdir -p " + tmpdir);
-	say("Extracting\n");
-	system("tar xf " + tgz_filename + " -C " + tmpdir);
-	PackageConfig *p = new PackageConfig(tmpdir+"/install/data.xml");
-	PACKAGE pkg;
-	if (p->parseOk) xml2package(p->getXMLDoc(), p->getXMLNode(), &pkg);
-	else {
-		mError(_("Cannot parse data.xml in package. Only MPKG packages are supported, convert it first."));
-		delete p;
-		system("rm -rf " + tmpdir);
-		return;
-	}
-	delete p;
-	
-	vector<string> data;
-	if (!clear) {
-		say("Building dependencies\n");
-		system("env LC_ALL=C requiredbuilder -n -v " + tgz_filename + " > "+ dep_out);
-       		data = ReadFileStrings(dep_out);
-		for (unsigned int i=0; i<data.size(); ++i) {
-			printf("data: %s\n", data[i].c_str());
-		}
-	}
-	else {
-		say("Clearing dependencies\n");
-		pkg.get_dependencies_ptr()->clear();
-	}
-	
-	string tmp;
-	string tail;
-	DEPENDENCY d;
-	//pkg.get_dependencies().clear();
-	string condptr;
-	for (unsigned int i=0; !clear && i<data.size(); i++)
-	{
-		tmp = data[i].substr(0,data[i].find_first_of(" "));
-		tail = data[i].substr(tmp.length()+1);
-		d.set_package_name(tmp);
 
-		tmp = tail.substr(0, tail.find_first_of(" "));
-		tail = tail.substr(tmp.length()+1);
-		condptr=IntToStr(condition2int(hcondition2xml(tmp)));
-		d.set_condition(condptr);
-
-		tmp = tail.substr(0,tail.find_first_of("-"));
-		d.set_package_version(tmp);
-		if (d.get_package_name()!=pkg.get_name()) {
-			// Checking existing dependencies
-			bool added=false;
-			for (unsigned int t=0; t<pkg.get_dependencies().size(); t++) {
-				if (d.get_package_name()==pkg.get_dependencies().at(t).get_package_name()) {
-					pkg.get_dependencies_ptr()->at(t) = d;
-					added=true;
-				}
-			}
-			if (!added) {
-				if (updateOnly) mWarning("Found (possible) missing dependencies: " + d.getDepInfo());
-				else pkg.get_dependencies_ptr()->push_back(d);
-			}
-		}
-	}
-	if (!clear) {
-		cout << _("Got ") << pkg.get_dependencies().size() << _(" dependencies") << endl;
-		for (unsigned int i=0; i<pkg.get_dependencies().size(); ++i) {
-			printf("\t%s %s %s\n", pkg.get_dependencies().at(i).get_package_name().c_str(), condition2xml(pkg.get_dependencies().at(i).get_condition()).c_str(), pkg.get_dependencies().at(i).get_package_version().c_str());
-
-		}
-	}
-	p = new PackageConfig(tmpdir+"/install/data.xml");
-	cout << "Writing " << pkg.get_dependencies().size() << " deps" << endl;
-	dumpPackage(&pkg, p, tmpdir+"/install/data.xml");
-	WriteFileStrings(tmpdir+"/install/slack-required", data);
-	delete p;
-	if (tgz_filename[0]!='/') tgz_filename = current_dir + "/"+getDirectory(tgz_filename);
-	string keeps;
-	if (_cmdOptions["keep_symlinks"]=="true") keeps = " -s ";
-
-	system ("cd " + tmpdir + "; buildpkg " + keeps + getDirectory(tgz_filename) + " >/dev/null");
-	system("rm -rf " + tmpdir);
-	delete_tmp_files();
-}
 int mpkg::syncronize_repositories(string sync_map) {
 	// So, we have:
 	// 1. List of remote repositories, which should be mapped to defined destination directories
