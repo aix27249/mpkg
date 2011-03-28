@@ -103,16 +103,11 @@ string DepErrorTable::print(int num) {
 	if (setupMode) WriteFile("/tmp/depErrTable.log", ret);
 	return ret;
 }
-void initDirectoryStructure()
-{
-	string cmd;
-	cmd = "mkdir -p " + SYS_ROOT;
-	system(cmd.c_str());
-	cmd = "mkdir -p " + SYS_CACHE;
-	system(cmd.c_str());
-	cmd = "mkdir -p " + SCRIPTS_DIR;
-	system(cmd.c_str());
-	//system("mkdir -p " + SYS_BACKUP);
+void initDirectoryStructure() {
+	if (getuid()) return;
+	if (!FileExists(SYS_ROOT)) system("mkdir -p " + SYS_ROOT);
+	if (!FileExists(SYS_CACHE)) system("mkdir -p " + SYS_CACHE);
+	if (!FileExists(SCRIPTS_DIR)) system("mkdir -p " + SCRIPTS_DIR);
 }
 
 int loadGlobalConfig(string config_file)
