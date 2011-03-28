@@ -813,7 +813,6 @@ void filterObjdumpOutput(vector<string>& ldd) {
 	for (size_t i=0; i<ldd.size(); ++i) {
 		strReplace(&ldd[i], "NEEDED", "");
 		ldd[i] = "/" + cutSpaces(ldd[i]);
-		printf(">>> [%s]\n", ldd[i].c_str());
 
 	}
 
@@ -994,15 +993,9 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 		if (_cmdOptions["gendeps_mode"]=="objdump") {
 			printf("Filtering OBJDUMP output: %d lines\n", (int) ldd.size());
 			filterObjdumpOutput(ldd);
-			for (size_t d=0; d<ldd.size(); ++d) {
-				printf("}}}} [%s]\n", ldd[d].c_str());
-			}
-		}
+					}
 		else {
 			filterLDDOutput(ldd); // Filtering output
-			for (size_t d=0; d<ldd.size(); ++d) {
-				printf("}}}} [%s]\n", ldd[d].c_str());
-			}
 
 		}
 		
@@ -1043,9 +1036,9 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 		so = global_ldd[i].find(".so");
 		if (so!=std::string::npos) libfind = global_ldd[i].substr(1, so+2);
 		else libfind = global_ldd[i].substr(1);
-		printf("Searching for library %s\n", libfind.c_str());
+		//printf("Searching for library %s\n", libfind.c_str());
 		sqlSearch.addField("file_name", "%/" + getFilename(libfind) + "%");
-		printf("global_ldd: %s\n", global_ldd[i].c_str());
+		//printf("global_ldd: %s\n", global_ldd[i].c_str());
 	}
 	//printf("creating query\n");
 	sqlFields.addField("packages_package_id");
