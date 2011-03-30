@@ -189,7 +189,9 @@ if [ "$no_user" = "" ] ; then
 fi
 
 
-
+# Runlevel: default is 4, but user may specify another one
+RUNLEVEL=${default_runlevel:-4}
+sed -i s/id:3:initdefault/id:$RUNLEVEL:initdefault/g $NODE/etc/inittab
 
 # Custom actions. May vary for different live systems
 custom_actions
