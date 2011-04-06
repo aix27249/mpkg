@@ -920,7 +920,8 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 	for (size_t i=0; i<data->get_files().size(); ++i) {
 		excludeThis=false;
 		for (size_t z=0; z<exclusionList.size(); ++z) {
-			if (exclusionList[z].find_last_of("*")!=exclusionList[z].size()-1) {
+			if (exclusionList[z].find("/")==0) exclusionList[z].erase(0, 1);
+			if (exclusionList[z].find_last_of("*")!=exclusionList[z].size()-1 && exclusionList[z].find_last_of("/")!=exclusionList[z].size()-1) {
 				if (exclusionList[z]==data->get_files().at(i)) {
 					excludeThis=true;
 					break;
@@ -953,12 +954,12 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 	WriteFileStrings(tmp_ldd_list, lddcheck); 
 	WriteFileStrings(tmp_file_list, filecheck);
 	
-	// Running script
-	if (_cmdOptions["gendeps_mode"]=="objdump") {
-		system("/usr/libexec/mpkg_objdump_check.sh " + tmp_ldd_list + " " + tmp_parse_ldd_dir + " " + tmp_file_list + " " + tmp_parse_file_dir + " " + tmp_dir);
+	// Running script. Default is objdump, unless ldd is forced
+	if (_cmdOptions["gendeps_mode"]=="ldd") {
+		system("/usr/libexec/mpkglddcheck.sh " + tmp_ldd_list + " " + tmp_parse_ldd_dir + " " + tmp_file_list + " " + tmp_parse_file_dir + " " + tmp_dir);
 	}
 	else {
-		system("/usr/libexec/mpkglddcheck.sh " + tmp_ldd_list + " " + tmp_parse_ldd_dir + " " + tmp_file_list + " " + tmp_parse_file_dir + " " + tmp_dir);
+		system("/usr/libexec/mpkg_objdump_check.sh " + tmp_ldd_list + " " + tmp_parse_ldd_dir + " " + tmp_file_list + " " + tmp_parse_file_dir + " " + tmp_dir);
 	}
 	unlink(tmp_ldd_list.c_str());
 	unlink(tmp_file_list.c_str());
