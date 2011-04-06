@@ -920,7 +920,7 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 	for (size_t i=0; i<data->get_files().size(); ++i) {
 		excludeThis=false;
 		for (size_t z=0; z<exclusionList.size(); ++z) {
-			//if (exclusionList[z].find("/")==0) exclusionList[z].erase(0, 1);
+			if (exclusionList[z].find("/")==0) exclusionList[z].erase(0, 1);
 			if (exclusionList[z].find_last_of("*")!=exclusionList[z].size()-1 && exclusionList[z].find_last_of("/")!=exclusionList[z].size()-1) {
 				if (exclusionList[z]==data->get_files().at(i)) {
 					excludeThis=true;
