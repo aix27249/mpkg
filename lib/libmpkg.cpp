@@ -1707,13 +1707,51 @@ vector<string> mpkg::getExportInstalled(bool include_versions) {
 	ret[0] += IntToStr(pkgList.size());
 	return ret;
 }
+vector<string> mergeVectors(const vector<string>& vector1, const vector<string>& vector2) {
+	vector<string> ret = vector1;
+	for (size_t i=0; i<vector2.size(); ++i) {
+		ret.push_back(vector2[i]);
+	}
+	return ret;
+}
+vector<string> preprocessInstallList(const string &filename) {
+	vector<string> filenames;
+	filenames.push_back(filename);
+	vector<string> ret;
+       	ret = ReadFileStrings(filename);
+	string include_name;
+	bool processed;
+	for (size_t i=0; i<ret.size(); ++i) {
+		if (ret[i].find("@include ")==0 && ret[i].size()>strlen("@include ")) {
+			include_name = getDirectory(filename) + "/" + ret[i].substr(strlen("@include "));
+			// Check if already processed
+			processed = false;
+			for (size_t t=0; !processed && t<filenames.size(); ++t) {
+				if (filenames[t]==include_name) processed = true;
+			}
+			if (processed) continue;
+			filenames.push_back(include_name);
+			// Missing includes should be fatal
+			if (!FileExists(include_name)) {
+				mError(_("File ") + include_name + _(", included in setup list, not found"));
+				vector<string> a;
+				return a;
+			}
+			ret = mergeVectors(ret, ReadFileStrings(include_name));
+		}
+	}
+	
+	return ret;
+}
 
 void parseInstallList(const vector<string> &data, vector<string> &installQuery, vector<string> &versionQuery) {
 	installQuery = data;
 	versionQuery.clear();
 	versionQuery.resize(installQuery.size());
-		// Filter versions and comments if exists
-	for (unsigned int i=0; i<installQuery.size(); ++i) {
+	vector<string> rm_diff;
+
+	// Filter versions and comments if exists
+	for (size_t i=0; i<installQuery.size(); ++i) {
 		while (installQuery[i].find_first_of("#")!=std::string::npos) {
 			installQuery[i] = installQuery[i].substr(0, installQuery[i].find_first_of("#"));
 		}
@@ -1735,7 +1773,24 @@ void parseInstallList(const vector<string> &data, vector<string> &installQuery, 
 			i--;
 			continue;
 		}
-		//printf(">>[%s] [%s]\n", installQuery[i].c_str(), versionQuery[i].c_str());
+		if (installQuery[i][0]=='-') {
+			rm_diff.push_back(installQuery[i]);
+			installQuery.erase(installQuery.begin()+i);
+			versionQuery.erase(versionQuery.begin()+i);
+			i--;
+			continue;
+		}
+	}
+	// Diff processing
+	for (size_t i=0; i<rm_diff.size(); ++i) {
+		for (size_t t=0; t<installQuery.size(); ++t) {
+			if (installQuery[t]==rm_diff[i]) {
+				installQuery.erase(installQuery.begin()+t);
+				versionQuery.erase(versionQuery.begin()+t);
+				t--;
+				continue;
+			}
+		}
 	}
 }
 

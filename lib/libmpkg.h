@@ -221,6 +221,7 @@ class mpkg
 
 void generateDeps_new(mpkg& core, string tgz_filename);
 
+vector<string> preprocessInstallList(const string &filename);
 void parseInstallList(const vector<string> &data, vector<string> &installQuery, vector<string> &versionQuery);
 bool checkUtility(const string &);
 bool checkUtilities();

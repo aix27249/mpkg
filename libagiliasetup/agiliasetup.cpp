@@ -281,6 +281,7 @@ bool AgiliaSetup::getRepositoryData() {
 
 
 
+
 bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string& netman, const string& nvidia_driver) {
 	if (notifier) notifier->setSummaryTextCall(_("Preparing install queue"));
 	if (notifier) notifier->setDetailsTextCall("");
@@ -290,13 +291,19 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 		if (notifier) notifier->sendReportError(_("Setup variant not specified, cannot confinue"));
 		return false;
 	}
-	else if (setup_variant.find("/")!=std::string::npos) installset_filename = setup_variant;
+	else if (setup_variant.find("/")==0) installset_filename = setup_variant;
+	else if (setup_variant.find("http://")==0 || setup_variant.find("ftp://")==0) {
+		installset_filename = get_tmp_file();
+		CommonGetFile(setup_variant, installset_filename);
+	}
 	else installset_filename = "/tmp/setup_variants/" + setup_variant + ".list";
+
+	// Check if we have online setup variant.
 
 	vector<string> installset_contains;
 	if (!installset_filename.empty() && FileExists(installset_filename)) {
 		vector<string> versionz; // It'll be lost after, but we can't carry about it here: only one version is available.
-		vector<string> pkgListStrings = ReadFileStrings(installset_filename);
+		vector<string> pkgListStrings = preprocessInstallList(installset_filename);
 		if (netman=="networkmanager") pkgListStrings.push_back("NetworkManager");
 		else if (netman=="wicd") pkgListStrings.push_back("wicd");
 		parseInstallList(pkgListStrings, installset_contains, versionz);
@@ -312,7 +319,7 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 	vector<string> errorList;
 	mpkg *core = new mpkg;
 	int i_ret = core->install(installset_contains, NULL, NULL, &errorList);
-	if (verbose) printf("Total: %d packages in list, install() returned: %d \n", installset_contains.size(), i_ret);
+	if (verbose) printf("Total: %d packages in list, install() returned: %d \n", (int) installset_contains.size(), i_ret);
 	if (i_ret!=0) {
 		string errors;
 		for (size_t i=0; i<errorList.size(); ++i) {

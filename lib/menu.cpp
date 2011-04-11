@@ -147,7 +147,7 @@ void showMainMenu(mpkg &core) {
 
 void actInstallFromList(mpkg &core, string filename, bool includeVersions, bool enqueueOnly) {
 	vector<string> installQuery, versionQuery;
-       	parseInstallList(ReadFileStrings(filename), installQuery, versionQuery);
+       	parseInstallList(preprocessInstallList(filename), installQuery, versionQuery);
 	int ret;
 	vector<string> *v_ptr = NULL;
 	if (includeVersions) v_ptr = &versionQuery;
