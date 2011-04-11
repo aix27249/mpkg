@@ -285,7 +285,13 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 	if (notifier) notifier->setSummaryTextCall(_("Preparing install queue"));
 	if (notifier) notifier->setDetailsTextCall("");
 
-	string installset_filename = "/tmp/setup_variants/" + setup_variant + ".list";
+	string installset_filename;
+       	if (setup_variant.empty()) {
+		if (notifier) notifier->sendReportError(_("Setup variant not specified, cannot confinue"));
+		return false;
+	}
+	else if (setup_variant.find("/")!=std::string::npos) installset_filename = setup_variant;
+	else installset_filename = "/tmp/setup_variants/" + setup_variant + ".list";
 
 	vector<string> installset_contains;
 	if (!installset_filename.empty() && FileExists(installset_filename)) {
@@ -300,10 +306,24 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 			return false;
 		}
 	}
+	else {
+		if (notifier) notifier->sendReportError(_("Setup list not found, cannot continue. File which we looked for: ") + installset_filename);
+	}
 	vector<string> errorList;
 	mpkg *core = new mpkg;
-	core->install(installset_contains, NULL, NULL, &errorList);
-	core->commit(true);
+	int i_ret = core->install(installset_contains, NULL, NULL, &errorList);
+	if (verbose) printf("Total: %d packages in list, install() returned: %d \n", installset_contains.size(), i_ret);
+	if (i_ret!=0) {
+		string errors;
+		for (size_t i=0; i<errorList.size(); ++i) {
+			printf("%s\n", errorList[i].c_str());
+			errors += errorList[i] + "\n";
+		}
+		if (notifier) notifier->sendReportError("Failed to do install:\n" + errors);
+		else printf("Errors during installation: \n%s\n", errors.c_str());
+	}
+	int c_ret = core->commit(true);
+	if (verbose) printf("Commit returned: %d\n", c_ret);
 	PACKAGE_LIST commitList;
 	SQLRecord sqlSearch;
 	core->get_packagelist(sqlSearch, &commitList);
@@ -369,7 +389,7 @@ bool AgiliaSetup::validateQueue() {
 	core->get_packagelist(sqlSearch, &queue);
 	delete core;
 	if (queue.IsEmpty()) {
-		if (notifier) notifier->sendReportError(_("Commit failed: probably dependency errors"));
+		if (notifier) notifier->sendReportError(_("Commit failed: got empty queue. Probably we have dependency errors"));
 		return false;
 	}
 	return true;

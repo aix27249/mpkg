@@ -19,6 +19,7 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	if (argc>1 && strcmp(argv[1], "-v")==0) verbose=1;
 	// Check for already running process
 	if (FileExists("/var/run/guisetup.pid")) {
 		string pid_locked = ReadFile("/var/run/guisetup.pid").c_str();
