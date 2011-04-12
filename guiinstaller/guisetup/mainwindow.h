@@ -88,7 +88,10 @@ class MainWindow: public QMainWindow {
 		QVector<QPushButton *> setupVariantButtons; // Technically useless, but good for code compaction
 		QMap<QPushButton *, int> setupVariantMap;
 		size_t selectedSetupVariant;
+		QString customSetupVariant;
+		bool mergeCustomSetupVariant;
 		QButtonGroup *svButtonGroup;
+		string resolveSetupVariant(const string& s_v);
 
 
 
@@ -136,6 +139,8 @@ class MainWindow: public QMainWindow {
 
 		void getLoadText(const QString &);
 		void getLoadProgress(int);
+	
+		void openCustomEdit();
 	
 };
 

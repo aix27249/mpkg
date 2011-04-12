@@ -7,6 +7,7 @@
 #include "mount.h"
 #include <QLocale>
 #include <agiliasetup.h>
+#include "customsetup.h"
 MainWindow *guiObject;
 
 string getHelpPageName(int page_num) {
@@ -72,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	if (!FileExists(home + "/.config")) system("mkdir -p " + home + "/.config");
 	loadSettings(home + "/.config/agilia_installer.conf", settings, repositories, partSettings);
 
+	mergeCustomSetupVariant = false;
 	hasNvidia = -1;
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	guiObject = this;
@@ -113,6 +115,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(loadSetupVariantsThread, SIGNAL(sendLoadProgress(int)), this, SLOT(getLoadProgress(int)));
 	//connect(ui->quitButton, SIGNAL(clicked()), this, SLOT(askQuit()));
 
+	connect(ui->customSetupVariantButton, SIGNAL(clicked()), this, SLOT(openCustomEdit()));
 	// Setup variants handling
 	//connect(ui->setupVariantsListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(showSetupVariantDescription(int)));
 
@@ -133,6 +136,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 MainWindow::~MainWindow() {
 	delete loadSetupVariantsThread;
 }
+
+
 
 void MainWindow::closeEvent(QCloseEvent *event) {
 	if (QMessageBox::question(this, tr("Really cancel installation?"), 
@@ -875,6 +880,18 @@ void MainWindow::loadSetupVariantButton(QPushButton * btn, int index) {
 	btn->show();
 
 }
+
+void MainWindow::openCustomEdit() {
+	CustomSetupWidget customSetupWidget;
+	customSetupWidget.doMerge = mergeCustomSetupVariant;
+	int dialog = customSetupWidget.exec();
+	if (dialog==0) return;
+	customSetupVariant = customSetupWidget.customURL();
+	mergeCustomSetupVariant = customSetupWidget.doMerge;
+	// Update UI
+	ui->setupVariantDescription->setText("Custom list");
+}
+
 void MainWindow::loadTimezones() {
 	string tmpfile = get_tmp_file();
 	system("( cd /usr/share/zoneinfo && find . -type f | sed -e 's/\\.\\///g') > " + tmpfile);
@@ -888,7 +905,11 @@ void MainWindow::loadTimezones() {
 }
 
 void MainWindow::saveSetupVariant() {
-	settings["setup_variant"] = customPkgSetList[selectedSetupVariant].name;
+	if (customSetupVariant.isEmpty() || mergeCustomSetupVariant) {
+		settings["setup_variant"] = customPkgSetList[selectedSetupVariant].name;
+	}
+	else settings["setup_variant"] = customSetupVariant.toStdString();
+	if (mergeCustomSetupVariant) settings["merge_setup_variant"]=customSetupVariant.toStdString();
 }
 
 void MainWindow::saveTimezone() {
@@ -1173,7 +1194,15 @@ void MainWindow::mountFilterDontUse(bool enabled) {
 	ui->mountDoFormatRadioButton->setEnabled(false);
 	ui->mountNoFormatRadioButton->setChecked(true);
 }
-
+string MainWindow::resolveSetupVariant(const string& s_v) {
+	if (s_v.find("/")==0) return s_v;
+	if (s_v.find("http://")==0 || s_v.find("ftp://")==0) {
+		string ret = get_tmp_file();
+		CommonGetFile(s_v, ret);
+		return ret;
+	}
+	return "/tmp/setup_variants/" + s_v+ ".list";
+}
 void MainWindow::loadNetworking() {
 	// Let's autogenerate hostname.
 	QString machineType;
@@ -1183,8 +1212,8 @@ void MainWindow::loadNetworking() {
 	ui->hostnameEdit->setText(ui->usernameEdit->text() + "-" + machineType);
 
 	// Now let's filter out network settings variants
-	int hasNetworkManager = system("[ \"`cat /tmp/setup_variants/" + settings["setup_variant"]+ ".list | grep '^NetworkManager$'`\" = \"\" ]");
-	int hasWicd = system("[ \"`cat /tmp/setup_variants/" + settings["setup_variant"] + ".list | grep '^wicd$'`\" = \"\" ]");
+	int hasNetworkManager = system("[ \"`cat " + resolveSetupVariant(settings["setup_variant"]) + " | grep '^NetworkManager$'`\" = \"\" ]");
+	int hasWicd = system("[ \"`cat " + resolveSetupVariant(settings["setup_variant"]) + " | grep '^wicd$'`\" = \"\" ]");
 
 	// Now let's choose some stuff. First, select default settings
 	if (hasNetworkManager) ui->netNMRadioButton->setChecked(true);
