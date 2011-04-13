@@ -4,7 +4,10 @@ int main(int argc, char **argv) {
 	setlocale(LC_ALL, "");
 	bindtextdomain( "mpkg", "/usr/share/locale");
 	textdomain("mpkg");
-
+	if (argc<2) {
+		fprintf(stderr, _("Package name not specified"));
+		return 1;
+	}
 	string package_name = argv[1];
 
 	mpkg core;
@@ -22,6 +25,7 @@ int main(int argc, char **argv) {
 
 	if (pkgSearchResults.empty()) {
 		fprintf(stderr, _("Package %s not found or not installed\n"), package_name.c_str());
+		return 1;
 	}
 
 	int package_id = atoi(pkgSearchResults.getValue(0, 0).c_str());
