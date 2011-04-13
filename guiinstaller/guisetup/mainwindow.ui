@@ -44,7 +44,7 @@
        <number>0</number>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="welcomePage">
        <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -91,7 +91,7 @@
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap resource="mainwindow.qrc">:/setupRoots/icons/agilia_installer.png</pixmap>
+             <pixmap>:/setupRoots/icons/agilia_installer.png</pixmap>
             </property>
            </widget>
           </item>
@@ -253,7 +253,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="mainwindow.qrc">:/setupRoots/icons/agilia_installer_head.png</pixmap>
+               <pixmap>:/setupRoots/icons/agilia_installer_head.png</pixmap>
               </property>
              </widget>
             </item>
@@ -296,7 +296,7 @@ p, li { white-space: pre-wrap; }
                <string>Install from disk (DVD or USB flash)</string>
               </property>
               <property name="icon">
-               <iconset resource="mainwindow.qrc">
+               <iconset>
                 <normaloff>:/setupRoots/icons/media-optical-data.png</normaloff>:/setupRoots/icons/media-optical-data.png</iconset>
               </property>
               <property name="iconSize">
@@ -322,7 +322,7 @@ p, li { white-space: pre-wrap; }
                <string>Install from internet</string>
               </property>
               <property name="icon">
-               <iconset resource="mainwindow.qrc">
+               <iconset>
                 <normaloff>:/setupRoots/icons/network-wired.png</normaloff>:/setupRoots/icons/network-wired.png</iconset>
               </property>
               <property name="iconSize">
@@ -368,7 +368,7 @@ p, li { white-space: pre-wrap; }
                <string>Install fom ISO image</string>
               </property>
               <property name="icon">
-               <iconset resource="mainwindow.qrc">
+               <iconset>
                 <normaloff>:/setupRoots/icons/application-x-cd-image.png</normaloff>:/setupRoots/icons/application-x-cd-image.png</iconset>
               </property>
               <property name="iconSize">
@@ -391,7 +391,7 @@ p, li { white-space: pre-wrap; }
                <string>Install from local directory on HDD</string>
               </property>
               <property name="icon">
-               <iconset resource="mainwindow.qrc">
+               <iconset>
                 <normaloff>:/setupRoots/icons/drive-harddisk.png</normaloff>:/setupRoots/icons/drive-harddisk.png</iconset>
               </property>
               <property name="iconSize">
@@ -417,7 +417,7 @@ p, li { white-space: pre-wrap; }
                <string>Specify custom repository URL</string>
               </property>
               <property name="icon">
-               <iconset resource="mainwindow.qrc">
+               <iconset>
                 <normaloff>:/setupRoots/icons/preferences-system.png</normaloff>:/setupRoots/icons/preferences-system.png</iconset>
               </property>
               <property name="iconSize">
@@ -532,7 +532,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="mainwindow.qrc">:/setupRoots/icons/agilia_installer_head.png</pixmap>
+               <pixmap>:/setupRoots/icons/agilia_installer_head.png</pixmap>
               </property>
              </widget>
             </item>
@@ -653,7 +653,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="mainwindow.qrc">:/setupRoots/icons/agilia_installer_head.png</pixmap>
+               <pixmap>:/setupRoots/icons/agilia_installer_head.png</pixmap>
               </property>
              </widget>
             </item>
@@ -1041,7 +1041,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="mainwindow.qrc">:/setupRoots/icons/agilia_installer_head.png</pixmap>
+               <pixmap>:/setupRoots/icons/agilia_installer_head.png</pixmap>
               </property>
              </widget>
             </item>
@@ -1179,7 +1179,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="mainwindow.qrc">:/setupRoots/icons/agilia_installer_head.png</pixmap>
+               <pixmap>:/setupRoots/icons/agilia_installer_head.png</pixmap>
               </property>
              </widget>
             </item>
@@ -1318,7 +1318,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="mainwindow.qrc">:/setupRoots/icons/agilia_installer_head.png</pixmap>
+               <pixmap>:/setupRoots/icons/agilia_installer_head.png</pixmap>
               </property>
              </widget>
             </item>
@@ -1669,7 +1669,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="mainwindow.qrc">:/setupRoots/icons/agilia_installer_head.png</pixmap>
+               <pixmap>:/setupRoots/icons/agilia_installer_head.png</pixmap>
               </property>
              </widget>
             </item>
@@ -1936,7 +1936,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="mainwindow.qrc">:/setupRoots/icons/agilia_installer_head.png</pixmap>
+               <pixmap>:/setupRoots/icons/agilia_installer_head.png</pixmap>
               </property>
              </widget>
             </item>
@@ -2082,7 +2082,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="mainwindow.qrc">:/setupRoots/icons/agilia_installer_head.png</pixmap>
+               <pixmap>:/setupRoots/icons/agilia_installer_head.png</pixmap>
               </property>
              </widget>
             </item>
@@ -2264,7 +2264,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="mainwindow.qrc">:/setupRoots/icons/agilia_installer_head.png</pixmap>
+               <pixmap>:/setupRoots/icons/agilia_installer_head.png</pixmap>
               </property>
              </widget>
             </item>
@@ -2496,7 +2496,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="mainwindow.qrc">:/setupRoots/icons/agilia_installer_head.png</pixmap>
+               <pixmap>:/setupRoots/icons/agilia_installer_head.png</pixmap>
               </property>
              </widget>
             </item>
@@ -2626,7 +2626,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="mainwindow.qrc">:/setupRoots/icons/agilia_installer_head.png</pixmap>
+               <pixmap>:/setupRoots/icons/agilia_installer_head.png</pixmap>
               </property>
              </widget>
             </item>
