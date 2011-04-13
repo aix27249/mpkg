@@ -44,7 +44,7 @@ void LoadSetupVariantsThread::run() {
 	core->update_repository_data();
 	PACKAGE_LIST pkglist;
 	SQLRecord record;
-	core->get_packagelist(record, &pkglist, true);
+	core->get_packagelist(record, &pkglist, true, false);
 	delete core;
 	if (pkglist.IsEmpty()) {
 		emit finished(false, customPkgSetList);
@@ -172,65 +172,6 @@ bool LoadSetupVariantsThread::umountDVD() {
 }
 
 
-CustomPkgSet LoadSetupVariantsThread::getCustomPkgSet(const string& name) {
-	vector<string> data = ReadFileStrings("/tmp/setup_variants/" + name + ".desc");
-	CustomPkgSet ret;
-	ret.hasX11 = false;
-	ret.hasDM = false;
-	ret.name = name;
-	printf("Processing %s\n", name.c_str());
-	string c_locale = locale;
-	if (c_locale.size()>2) c_locale = "[" + c_locale.substr(0,2) + "]";
-	else c_locale = "";
-	string gendesc, genfull;
-	for (size_t i=0; i<data.size(); ++i) {
-		if (data[i].find("desc" + c_locale + ": ")==0) ret.desc = getParseValue("desc" + c_locale + ": ", data[i], true);
-		else if (data[i].find("desc: ")==0) gendesc = getParseValue("desc: ", data[i], true);
-		else if (data[i].find("full" + c_locale + ": ")==0) ret.full = getParseValue("full" + c_locale + ": ", data[i], true);
-		else if (data[i].find("full: ")==0) genfull = getParseValue("full: ", data[i], true);
-		else if (data[i].find("hasX11")==0) ret.hasX11 = true;
-		else if (data[i].find("hasDM")==0) ret.hasDM = true;
-		else if (data[i].find("hardware" + c_locale + ": ")==0) ret.hw = getParseValue("hardware" + c_locale + ": ", data[i], true);
-		else if (data[i].find("hardware: ")==0) if (ret.hw.empty()) ret.hw = getParseValue("hardware: ", data[i], true);
-	}
-	if (ret.desc.empty()) ret.desc = gendesc;
-	if (ret.full.empty()) ret.full = genfull;
-	calculatePkgSetSize(ret);
-	return ret;
-}
-
-void LoadSetupVariantsThread::calculatePkgSetSize(CustomPkgSet &set) {
-	vector<string> list = ReadFileStrings("/tmp/setup_variants/" + set.name + ".list");
-	PACKAGE_LIST pkgList;
-	SQLRecord record;
-	mpkg *core = new mpkg;
-	core->get_packagelist(record, &pkgList, true);
-	delete core;
-	int64_t csize = 0, isize = 0;
-	size_t count = 0;
-	vector<string> was;
-	bool pkgWas;
-	for (size_t i=0; i<list.size(); ++i) {
-		if (list[i].find("#")!=std::string::npos) continue;
-		if (cutSpaces(list[i]).empty()) continue;
-		pkgWas = false;
-		for (size_t w=0; !pkgWas && w<was.size(); ++w) {
-			if (was[w]==cutSpaces(list[i])) pkgWas = true;
-		}
-		if (pkgWas) continue;
-		for (size_t t=0; t<pkgList.size(); ++t) {
-			if (pkgList[t].get_name()!=cutSpaces(list[i])) continue;
-			was.push_back(cutSpaces(list[i]));
-			csize += atol(pkgList[t].get_compressed_size().c_str());
-			isize += atol(pkgList[t].get_installed_size().c_str());
-			count++;
-		}
-	}
-	set.isize = isize;
-	set.csize = csize;
-	set.count = count;
-
-}
 
 // Get setup variants
 void LoadSetupVariantsThread::getCustomSetupVariants(const vector<string>& rep_list) {
@@ -246,6 +187,12 @@ void LoadSetupVariantsThread::getCustomSetupVariants(const vector<string>& rep_l
 	tmpDownloadItem.priority = 0;
 	tmpDownloadItem.status = DL_STATUS_WAIT;
 	string itemname;
+
+	PACKAGE_LIST pkgList;
+	SQLRecord record;
+	mpkg *core = new mpkg;
+	core->get_packagelist(record, &pkgList, true, false);
+	delete core;
 
 	for (size_t z=0; z<rep_list.size(); ++z) {
 		emit sendLoadText(tr("Receiving setup variants"));
@@ -286,7 +233,7 @@ void LoadSetupVariantsThread::getCustomSetupVariants(const vector<string>& rep_l
 			emit sendLoadProgress(10+(z+1)*3+( (double)((100-(10+(z+1)*3))/(double) list.size())*(i+1) ));
 
 			printf("Processing %d of %d\n", (int) i+1, (int) list.size());
-			customPkgSetList.push_back(getCustomPkgSet(list[i]));
+			customPkgSetList.push_back(getCustomPkgSet(list[i], locale, pkgList));
 		}
 	}
 }

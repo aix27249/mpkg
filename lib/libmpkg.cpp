@@ -1802,3 +1802,97 @@ bool checkUtility(const string& util) {
 bool checkUtilities() {
 	return checkUtility("tar") && checkUtility("gzip") && checkUtility("xz") && checkUtility("sed");
 }
+
+
+CustomPkgSet getUserCustomPkgSet(const string &path, const string& base_name, bool merge, const string& locale) {
+	CustomPkgSet ret;
+	
+	PACKAGE_LIST pkgList;
+	SQLRecord record;
+	mpkg *core = new mpkg;
+	core->get_packagelist(record, &pkgList, true, false);
+	delete core;
+
+	if (merge) ret = getCustomPkgSet(base_name, locale, pkgList);
+	else {
+		ret.name = getFilename(path);
+		ret.desc = _("Custom list");
+		ret.full = _("Custom package list from ") + path;
+		ret.hasX11 = "N/A";
+		ret.hasDM = "N/A";
+		ret.hw = "N/A";
+	}
+	
+	string finalPath;
+	if (path.find("http://")==0 || path.find("ftp://")==0) {
+		string t = get_tmp_file();
+		CommonGetFile(path, t);
+		finalPath = t;
+	}
+	else finalPath = path;
+
+	calculatePkgSetSize(ret, finalPath, pkgList, merge);
+	return ret;
+}
+
+CustomPkgSet getCustomPkgSet(const string& name, const string& locale, const PACKAGE_LIST &pkgList) {
+	vector<string> data = ReadFileStrings("/tmp/setup_variants/" + name + ".desc");
+	CustomPkgSet ret;
+	ret.hasX11 = false;
+	ret.hasDM = false;
+	ret.name = name;
+	printf("Processing %s\n", name.c_str());
+	string c_locale = locale;
+	if (c_locale.size()>2) c_locale = "[" + c_locale.substr(0,2) + "]";
+	else c_locale = "";
+	string gendesc, genfull;
+	for (size_t i=0; i<data.size(); ++i) {
+		if (data[i].find("desc" + c_locale + ": ")==0) ret.desc = getParseValue("desc" + c_locale + ": ", data[i], true);
+		else if (data[i].find("desc: ")==0) gendesc = getParseValue("desc: ", data[i], true);
+		else if (data[i].find("full" + c_locale + ": ")==0) ret.full = getParseValue("full" + c_locale + ": ", data[i], true);
+		else if (data[i].find("full: ")==0) genfull = getParseValue("full: ", data[i], true);
+		else if (data[i].find("hasX11")==0) ret.hasX11 = true;
+		else if (data[i].find("hasDM")==0) ret.hasDM = true;
+		else if (data[i].find("hardware" + c_locale + ": ")==0) ret.hw = getParseValue("hardware" + c_locale + ": ", data[i], true);
+		else if (data[i].find("hardware: ")==0) if (ret.hw.empty()) ret.hw = getParseValue("hardware: ", data[i], true);
+	}
+	if (ret.desc.empty()) ret.desc = gendesc;
+	if (ret.full.empty()) ret.full = genfull;
+	calculatePkgSetSize(ret, "/tmp/setup_variants/" + ret.name + ".list", pkgList, false);
+	return ret;
+}
+
+void calculatePkgSetSize(CustomPkgSet &set, const string& file_path, const PACKAGE_LIST &pkgList, bool merge) {
+	vector<string> list = preprocessInstallList(file_path);
+	int64_t csize = 0, isize = 0;
+	size_t count = 0;
+	vector<string> was;
+	bool pkgWas;
+	for (size_t i=0; i<list.size(); ++i) {
+		if (list[i].find("#")!=std::string::npos) continue;
+		if (cutSpaces(list[i]).empty()) continue;
+		pkgWas = false;
+		for (size_t w=0; !pkgWas && w<was.size(); ++w) {
+			if (was[w]==cutSpaces(list[i])) pkgWas = true;
+		}
+		if (pkgWas) continue;
+		for (size_t t=0; t<pkgList.size(); ++t) {
+			if (pkgList[t].get_name()!=cutSpaces(list[i])) continue;
+			was.push_back(cutSpaces(list[i]));
+			csize += atol(pkgList[t].get_compressed_size().c_str());
+			isize += atol(pkgList[t].get_installed_size().c_str());
+			count++;
+		}
+	}
+	if (!merge) {
+		set.isize = 0;
+		set.csize = 0;
+		set.count = 0;
+	}
+	set.isize += isize;
+	set.csize += csize;
+	set.count += count;
+
+}
+
+

@@ -93,6 +93,8 @@ class MainWindow: public QMainWindow {
 		QButtonGroup *svButtonGroup;
 		string resolveSetupVariant(const string& s_v);
 
+		void realShowSetupVariantDescription(const CustomPkgSet &customPkgSet);
+
 
 
 		

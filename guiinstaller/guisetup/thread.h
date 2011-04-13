@@ -13,10 +13,8 @@ class LoadSetupVariantsThread: public QThread {
 		bool umountDVD();
 		vector<CustomPkgSet> customPkgSetList;
 
-		void calculatePkgSetSize(CustomPkgSet &set);
 		void getCustomSetupVariants(const vector<string>& rep_list);
-
-		CustomPkgSet getCustomPkgSet(const string& name);
+	
 		string locale;
 
 

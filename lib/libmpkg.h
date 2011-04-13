@@ -225,5 +225,11 @@ vector<string> preprocessInstallList(const string &filename);
 void parseInstallList(const vector<string> &data, vector<string> &installQuery, vector<string> &versionQuery);
 bool checkUtility(const string &);
 bool checkUtilities();
+
+void calculatePkgSetSize(CustomPkgSet &set, const string& file_name, const PACKAGE_LIST &pkgList, bool merge);
+CustomPkgSet getCustomPkgSet(const string& name, const string& locale, const PACKAGE_LIST &pkgList);
+CustomPkgSet getUserCustomPkgSet(const string &path, const string& base_name, bool merge, const string& locale);
+
+
 #endif //LIBMPKG_H_
 

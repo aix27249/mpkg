@@ -116,8 +116,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	//connect(ui->quitButton, SIGNAL(clicked()), this, SLOT(askQuit()));
 
 	connect(ui->customSetupVariantButton, SIGNAL(clicked()), this, SLOT(openCustomEdit()));
-	// Setup variants handling
-	//connect(ui->setupVariantsListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(showSetupVariantDescription(int)));
 
 	// Mountpoints action filtering
 	connect(ui->mountDontUseRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterDontUse(bool)));
@@ -729,7 +727,6 @@ void MainWindow::loadSetupVariants() {
 	ui->nextButton->setEnabled(false);
 	ui->backButton->setEnabled(false);
 }
-
 void MainWindow::showSetupVariantDescription(QAbstractButton *btn) {
 	int index = setupVariantMap.value((QPushButton *) btn, -1);
 	if (index<0 || index>=(int) customPkgSetList.size()) {
@@ -738,28 +735,43 @@ void MainWindow::showSetupVariantDescription(QAbstractButton *btn) {
 	}
 
 	selectedSetupVariant=index;
-	ui->setupVariantInfoGroupBox->setTitle(tr("%1: detailed info").arg(customPkgSetList[index].name.c_str()));
+	customSetupVariant.clear();
+	mergeCustomSetupVariant = false;
+	realShowSetupVariantDescription(customPkgSetList[index]);
+}
+
+
+
+void MainWindow::realShowSetupVariantDescription(const CustomPkgSet &customPkgSet) {
+	ui->setupVariantInfoGroupBox->setTitle(tr("%1: detailed info").arg(customPkgSet.name.c_str()));
 	QImage *image;
-	if (FileExists("/tmp/setup_variants/" + customPkgSetList[index].name + ".png")) image = new QImage(QString("/tmp/setup_variants/%1.png").arg(customPkgSetList[index].name.c_str()));
+	if (FileExists("/tmp/setup_variants/" + customPkgSet.name + ".png")) image = new QImage(QString("/tmp/setup_variants/%1.png").arg(customPkgSet.name.c_str()));
 	else image = new QImage("/usr/share/setup/default_image.png");
 
-	ui->setupVariantDescription->setText(tr("%1").arg(customPkgSetList[index].full.c_str()));
+	ui->setupVariantDescription->setText(tr("%1").arg(customPkgSet.full.c_str()));
 	ui->setupVariantImage->setPixmap(QPixmap::fromImage(*image));
 	QString hasX11, hasDM;
-	if (customPkgSetList[index].hasX11) hasX11 = tr("<b style='color: green;'>yes</b>");
+	if (customPkgSet.hasX11) hasX11 = tr("<b style='color: green;'>yes</b>");
 	else hasX11 = tr("<span style='color: red;'>no</span>");
-	if (customPkgSetList[index].hasDM) hasDM = tr("<b style='color: green;'>yes</b>");
+	if (customPkgSet.hasDM) hasDM = tr("<b style='color: green;'>yes</b>");
 	else hasDM = tr("<span style='color: red;'>no</span>");
 
 	ui->setupVariantMetaFlags->setText(tr("<h1>%1</h1><b>GUI:</b> %2<br><b>GUI login:</b> %3<br><b>Hardware requirements:</b> %4<br><b>Packages to install:</b> %5 (%6)<br><b>Disk space required:</b> %7").\
-			arg(customPkgSetList[index].desc.c_str()).\
+			arg(customPkgSet.desc.c_str()).\
 			arg(hasX11).\
 			arg(hasDM).\
-			arg(customPkgSetList[index].hw.c_str()).\
-			arg(customPkgSetList[index].count).\
-			arg(humanizeSize(customPkgSetList[index].csize).c_str()).\
-			arg(humanizeSize(customPkgSetList[index].isize).c_str()));
+			arg(customPkgSet.hw.c_str()).\
+			arg(customPkgSet.count).\
+			arg(humanizeSize(customPkgSet.csize).c_str()).\
+			arg(humanizeSize(customPkgSet.isize).c_str()));
 	delete image;
+	QString customSetInfo;
+	if (!customSetupVariant.isEmpty()) {
+		if (mergeCustomSetupVariant) customSetInfo = tr("<b>Merged with custom list:</b> %1").arg(customSetupVariant);
+		else customSetInfo = tr("<b>Used custom list:</b> %1").arg(customSetupVariant);
+	}
+	else customSetInfo = tr("No custom list in use");
+	ui->customSetLabel->setText(customSetInfo);
 }
 void MainWindow::initSetupVariantButtons() {
 	setupVariantButtons.clear();
@@ -889,7 +901,10 @@ void MainWindow::openCustomEdit() {
 	customSetupVariant = customSetupWidget.customURL();
 	mergeCustomSetupVariant = customSetupWidget.isMerge();
 	// Update UI
-	ui->setupVariantDescription->setText("Custom list");
+	CustomPkgSet pkgSet;
+
+	pkgSet = getUserCustomPkgSet(customSetupVariant.toStdString(), customPkgSetList[selectedSetupVariant].name,  mergeCustomSetupVariant, settings["language"]);
+	realShowSetupVariantDescription(pkgSet);
 }
 
 void MainWindow::loadTimezones() {
