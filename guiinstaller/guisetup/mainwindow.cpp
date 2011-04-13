@@ -883,11 +883,11 @@ void MainWindow::loadSetupVariantButton(QPushButton * btn, int index) {
 
 void MainWindow::openCustomEdit() {
 	CustomSetupWidget customSetupWidget;
-	customSetupWidget.doMerge = mergeCustomSetupVariant;
+	customSetupWidget.setMerge(mergeCustomSetupVariant);
 	int dialog = customSetupWidget.exec();
 	if (dialog==0) return;
 	customSetupVariant = customSetupWidget.customURL();
-	mergeCustomSetupVariant = customSetupWidget.doMerge;
+	mergeCustomSetupVariant = customSetupWidget.isMerge();
 	// Update UI
 	ui->setupVariantDescription->setText("Custom list");
 }

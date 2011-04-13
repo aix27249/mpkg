@@ -911,3 +911,12 @@ vector<string> splitString(const string& data, const string& delim) {
 	} while (lastpos<data.size());
 	return ret;
 }
+
+
+vector<string> mergeVectors(const vector<string>& vector1, const vector<string>& vector2) {
+	vector<string> ret = vector1;
+	for (size_t i=0; i<vector2.size(); ++i) {
+		ret.push_back(vector2[i]);
+	}
+	return ret;
+}

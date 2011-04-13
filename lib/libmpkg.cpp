@@ -1707,13 +1707,7 @@ vector<string> mpkg::getExportInstalled(bool include_versions) {
 	ret[0] += IntToStr(pkgList.size());
 	return ret;
 }
-vector<string> mergeVectors(const vector<string>& vector1, const vector<string>& vector2) {
-	vector<string> ret = vector1;
-	for (size_t i=0; i<vector2.size(); ++i) {
-		ret.push_back(vector2[i]);
-	}
-	return ret;
-}
+
 vector<string> preprocessInstallList(const string &filename) {
 	vector<string> filenames;
 	filenames.push_back(filename);

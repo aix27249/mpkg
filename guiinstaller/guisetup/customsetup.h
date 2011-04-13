@@ -10,13 +10,14 @@ class CustomSetupWidget: public QDialog {
 	public:
 		CustomSetupWidget(QWidget *parent = 0);
 		~CustomSetupWidget();
-		bool doMerge;
 	private:
 		Ui::CustomSetupDialog *ui;
 		
 	public slots:
 		void chooseFile();
 		QString customURL();
+		bool isMerge();
+		void setMerge(bool);
 
 };
 

@@ -282,7 +282,7 @@ bool AgiliaSetup::getRepositoryData() {
 
 
 
-bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string& netman, const string& nvidia_driver) {
+bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string& merge_setup_variant, const string& netman, const string& nvidia_driver) {
 	if (notifier) notifier->setSummaryTextCall(_("Preparing install queue"));
 	if (notifier) notifier->setDetailsTextCall("");
 
@@ -304,6 +304,7 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 	if (!installset_filename.empty() && FileExists(installset_filename)) {
 		vector<string> versionz; // It'll be lost after, but we can't carry about it here: only one version is available.
 		vector<string> pkgListStrings = preprocessInstallList(installset_filename);
+		if (!merge_setup_variant.empty()) pkgListStrings = mergeVectors(pkgListStrings, preprocessInstallList(merge_setup_variant));
 		if (netman=="networkmanager") pkgListStrings.push_back("NetworkManager");
 		else if (netman=="wicd") pkgListStrings.push_back("wicd");
 		parseInstallList(pkgListStrings, installset_contains, versionz);
@@ -1121,7 +1122,7 @@ void AgiliaSetup::run(const map<string, string>& _settings, const vector<TagPair
 	if (notifier) notifier->setProgressCall(10);
 	if (!getRepositoryData()) return;
 	if (notifier) notifier->setProgressCall(25);
-	if (!prepareInstallQueue(settings["setup_variant"], settings["netman"], settings["nvidia-driver"])) return;
+	if (!prepareInstallQueue(settings["setup_variant"], settings["merge_setup_variant"], settings["netman"], settings["nvidia-driver"])) return;
 	if (notifier) notifier->setProgressCall(50);
 	if (!validateQueue()) return;
 	if (notifier) notifier->setProgressCall(60);

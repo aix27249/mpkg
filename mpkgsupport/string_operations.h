@@ -114,5 +114,6 @@ vector<string> splitString(const string& data, const string& delim);
 int strverscmp2(const string& v1, const string& v2);
 int compareVersions(const string& version1, const string& build1, const string& version2, const string& build2); // 0 == equal, 1 == v1>v2, -1 == v1<v2
 
+vector<string> mergeVectors(const vector<string>& vector1, const vector<string>& vector2);
 #endif
 
