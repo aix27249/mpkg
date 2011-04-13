@@ -555,8 +555,14 @@ int main (int argc, char **argv)
 		string name, version, build;
 		if (argc<=optind) return print_usage(stderr,1);
 		lockDatabase();
+		string http_file_tmp;
 		for (int i = optind; i < argc; i++) {
-			r_name.push_back((string) argv[i]);
+			if (string(argv[i]).find("http://")==0 || string(argv[i]).find("ftp://")==0) {
+				CommonGetFile(argv[i], SYS_CACHE + getFilename(argv[i]));
+				r_name.push_back(SYS_CACHE + getFilename(argv[i]));
+
+			}
+			else r_name.push_back((string) argv[i]);
 		}
 
 		// Check for wildcards
