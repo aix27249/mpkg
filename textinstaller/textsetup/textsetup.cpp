@@ -55,7 +55,7 @@ string TextSetup::getHDDRepoPath() {
 	string st, ret;
 	st = ncInterface.subtitle;
 	ncInterface.setSubtitle(_("Select directory which contains repository:"));
-	ret = ncInterface.ncGetOpenDir();
+	ret = "file://" + ncInterface.ncGetOpenDir();
 	ncInterface.setSubtitle(st);
 	return ret;
 }
