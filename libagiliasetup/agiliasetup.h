@@ -49,7 +49,7 @@ class AgiliaSetup {
 		bool createBaselayout();
 		void getCustomSetupVariants(const vector<string>& rep_list);
 
-		void setMpkgConfig(string pkgsource, const string& volname, const string& rep_location, const vector<string> additional_repositories);
+		bool setMpkgConfig(string pkgsource, const string& volname, const string& rep_location, const vector<string> additional_repositories);
 
 		bool getRepositoryData();
 		bool prepareInstallQueue(const string& setup_variant, const string& merge_setup_variant, const string& netman, const string& nvidia_driver);
@@ -57,9 +57,9 @@ class AgiliaSetup {
 
 		bool formatPartitions();
 		bool mountPartitions();
-		bool formatPartition(PartConfig pConfig);
-		bool makeSwap(PartConfig pConfig);
-		bool activateSwap(PartConfig pConfig);
+		bool formatPartition(PartConfig pConfig, string *logFile);
+		bool makeSwap(PartConfig pConfig, string *logFile);
+		bool activateSwap(PartConfig pConfig, string *logFile);
 
 		bool moveDatabase();
 
@@ -102,7 +102,7 @@ class AgiliaSetup {
 		vector<TagPair> users;
 		vector<string> additional_repositories;
 
-		void run(const map<string, string>& _settings, const vector<TagPair> &_users, const vector<PartConfig> &_partConfigs, const vector<string> &_additional_repositories, void (*updateProgressData) (ItemState));
+		bool run(const map<string, string>& _settings, const vector<TagPair> &_users, const vector<PartConfig> &_partConfigs, const vector<string> &_additional_repositories, void (*updateProgressData) (ItemState));
 		
 		bool validateConfig();
 

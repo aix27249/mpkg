@@ -54,7 +54,7 @@ namespace mpkgSys {
 	int _clean_symlinks(const char *filename, const struct stat *file_status, int filetype);
 
 	int clean_cache(bool symlinks_only=false);
-	int clean_queue(mpkgDatabase *db);
+	void clean_queue(mpkgDatabase *db);
 	int unqueue(int package_id, mpkgDatabase *db);
 	int convert_directory(string output_dir);
 	int nativize_directory(string input_dir);

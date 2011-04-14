@@ -37,7 +37,7 @@ class mpkg
 		~mpkg();
 
 		// Cleaning
-		int clean_queue();
+		void clean_queue();
 		int unqueue(int package_id);
 		// Error checking
 		

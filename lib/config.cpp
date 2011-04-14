@@ -394,6 +394,7 @@ write_config:
 	if (xmlConfig.writeToFile(conf_file.c_str())!=eXMLErrorNone) {
 		mError("error writing config file");
 		if (mpkgErrorHandler.callError(MPKG_SUBSYS_XMLCONFIG_WRITE_ERROR)==MPKG_RETURN_RETRY) goto write_config;
+		else return -1;
 	}
 	loadGlobalConfig();
 	return 0;

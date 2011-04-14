@@ -21,8 +21,7 @@ int mpkgSys::clean_cache(bool symlinks_only)
 	return 0;
 }
 
-int mpkgSys::clean_queue(mpkgDatabase *db)
-{
+void mpkgSys::clean_queue(mpkgDatabase *db) {
 	PACKAGE_LIST toInstall;
 	SQLRecord sqlSearch;
 	sqlSearch.setSearchMode(SEARCH_OR);
@@ -32,12 +31,10 @@ int mpkgSys::clean_queue(mpkgDatabase *db)
 	sqlSearch.addField("package_action", ST_REPAIR);
 	sqlSearch.addField("package_action", ST_UPDATE);
 	db->get_packagelist(sqlSearch, &toInstall, true);
-	for (unsigned int i=0; i<toInstall.size();i++)
-	{
+	for (size_t i=0; i<toInstall.size(); ++i) {
 		db->set_action(toInstall[i].get_id(), ST_NONE, "clean");
 	}
 	db->clear_unreachable_packages();
-	return 0;
 }
 
 int mpkgSys::unqueue(int package_id, mpkgDatabase *db)

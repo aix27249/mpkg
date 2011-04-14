@@ -91,9 +91,8 @@ string mpkg::current_status()
 	return currentStatus;
 }
 
-int mpkg::clean_queue()
-{
-	return mpkgSys::clean_queue(db);
+void mpkg::clean_queue() {
+	mpkgSys::clean_queue(db);
 }
 
 int mpkg::unqueue(int package_id)

@@ -233,7 +233,7 @@ void AgiliaSetup::setLocale(const string& lang) {
 	locale = lang;
 }
 
-void AgiliaSetup::setMpkgConfig(string pkgsource, const string& volname, const string& rep_location, const vector<string> additional_repositories) {
+bool AgiliaSetup::setMpkgConfig(string pkgsource, const string& volname, const string& rep_location, const vector<string> additional_repositories) {
 	if (notifier) notifier->setSummaryTextCall(_("Setting MPKG config"));
 	if (notifier) notifier->setDetailsTextCall("");
 
@@ -259,8 +259,13 @@ void AgiliaSetup::setMpkgConfig(string pkgsource, const string& volname, const s
 	}
 
 	mpkg *core = new mpkg;
-	core->set_repositorylist(rList, dlist);
+	if (core->set_repositorylist(rList, dlist)!=0) {
+		delete core;
+		if (notifier) notifier->sendReportError(_("Error in setMpkgConfig: failed to set repository list. Most probable reason: error writing config file"));
+		return false;
+	}
 	delete core;
+	return true;
 }
 
 bool AgiliaSetup::getRepositoryData() {
@@ -269,11 +274,12 @@ bool AgiliaSetup::getRepositoryData() {
 
 	mpkg *core = new mpkg;
 	if (core->update_repository_data()!=0) {
-		if (notifier) notifier->sendReportError(_("Failed to retreive repository data, cannot continue"));
+		if (notifier) notifier->sendReportError(_("Error in getRepositoryData: Failed to retreive repository data, cannot continue"));
 		delete core;
 		return false;
 	}
 	if (notifier) notifier->setDetailsTextCall(_("Caching setup variants"));
+	// FIXME: Should we check return value of getCustomSetupVariants, or not?
 	getCustomSetupVariants(core->get_repositorylist());
 	delete core;
 	return true;
@@ -320,7 +326,7 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 	vector<string> errorList;
 	mpkg *core = new mpkg;
 	int i_ret = core->install(installset_contains, NULL, NULL, &errorList);
-	if (verbose) printf("Total: %d packages in list, install() returned: %d \n", (int) installset_contains.size(), i_ret);
+	if (verbose && !dialogMode) printf("Total: %d packages in list, install() returned: %d \n", (int) installset_contains.size(), i_ret);
 	if (i_ret!=0) {
 		string errors;
 		for (size_t i=0; i<errorList.size(); ++i) {
@@ -329,12 +335,23 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 		}
 		if (notifier) notifier->sendReportError("Failed to do install:\n" + errors);
 		else printf("Errors during installation: \n%s\n", errors.c_str());
+		delete core;
+		return false;
 	}
 	int c_ret = core->commit(true);
-	if (verbose) printf("Commit returned: %d\n", c_ret);
+	if (c_ret!=0) {
+		if (notifier) notifier->sendReportError(_("Error in prepareInstallQueue: queue commit failed, return code: ") + IntToStr(c_ret));
+		delete core;
+		return false;
+	}
 	PACKAGE_LIST commitList;
 	SQLRecord sqlSearch;
-	core->get_packagelist(sqlSearch, &commitList);
+	c_ret = core->get_packagelist(sqlSearch, &commitList);
+       	if (c_ret!=0) {
+		if (notifier) notifier->sendReportError(_("Error getting package list: return code ") + IntToStr(c_ret));
+		delete core;
+		return false;
+	}
 	vector<string> queryLog;
 	for (size_t i=0; i<commitList.size(); ++i) {
 		queryLog.push_back(commitList[i].get_name() + " " + commitList[i].get_fullversion() + " " + boolToStr(commitList[i].action()==ST_INSTALL));
@@ -359,9 +376,7 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 	if (nvidia_driver=="96") {
 		alternatives.push_back("legacy96");
 	}
-	for (size_t i=0; i<alternatives.size(); ++i) {
-		//printf("USED ALT: %s\n", alternatives[i].c_str());
-	}
+	// No need to check return code, since it cannot fail.
 	commitList.switchAlternatives(alternatives);
 	for (size_t i=0; i<commitList.size(); ++i) {
 		queryLog.push_back(commitList[i].get_name() + " " + commitList[i].get_fullversion()+ " " + boolToStr(commitList[i].action()==ST_INSTALL));
@@ -378,9 +393,20 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 
 	}
 	WriteFileStrings("/var/log/final_setup_query.log", queryLog);
+	// No need to check return value: all errors which can occur here are fatal to DB, so it will destroy app from inside.
 	core->clean_queue();
-	core->install(&commitListFinal);
-	core->commit(true);
+	int f_ret = core->install(&commitListFinal);
+	if (f_ret!=0) {
+		if (notifier) notifier->sendReportError(_("Failed to request final installation queue: core returned ") + IntToStr(f_ret));
+		delete core;
+		return false;
+	}
+	f_ret = core->commit(true);
+	if (f_ret != 0) {
+		if (notifier) notifier->sendReportError(_("Failed to do final queue commit: return code ") + IntToStr(f_ret));
+		delete core;
+		return false;
+	}
 	delete core;
 	return true;
 
@@ -394,8 +420,12 @@ bool AgiliaSetup::validateQueue() {
 	PACKAGE_LIST queue;
 	SQLRecord sqlSearch;
 	sqlSearch.addField("package_action", ST_INSTALL);
-	core->get_packagelist(sqlSearch, &queue);
+	int c_ret = core->get_packagelist(sqlSearch, &queue);
 	delete core;
+	if (c_ret!=0) {
+		if (notifier) notifier->sendReportError(_("Failed to get package list: core error, return code ") + IntToStr(c_ret));
+		return false;
+	}
 	if (queue.IsEmpty()) {
 		if (notifier) notifier->sendReportError(_("Commit failed: got empty queue. Probably we have dependency errors"));
 		return false;
@@ -403,7 +433,7 @@ bool AgiliaSetup::validateQueue() {
 	return true;
 }
 
-bool AgiliaSetup::formatPartition(PartConfig pConfig) {
+bool AgiliaSetup::formatPartition(PartConfig pConfig, string *logFile) {
 	if (notifier) notifier->setDetailsTextCall(_("Formatting ") + pConfig.partition);
 	//printf("Formatting %s\n", pConfig.partition.c_str());
 	string fs_options;
@@ -412,7 +442,11 @@ bool AgiliaSetup::formatPartition(PartConfig pConfig) {
 	else if (pConfig.fs=="reiserfs") fs_options="-q";
 
 	string opts;
-	if (dialogMode) {
+	if (logFile) {
+		if (logFile->empty()) *logFile = get_tmp_file();
+		opts = " 2>" + *logFile + " >" + *logFile;
+	}
+	else if (dialogMode) {
 		opts = " 2>/dev/null >/dev/null";
 	}
 
@@ -420,15 +454,34 @@ bool AgiliaSetup::formatPartition(PartConfig pConfig) {
 	else return false;
 }
 
-bool AgiliaSetup::makeSwap(PartConfig pConfig) {
+bool AgiliaSetup::makeSwap(PartConfig pConfig, string *logFile) {
 	if (notifier) notifier->setDetailsTextCall(_("Creating swap in ") + pConfig.partition);
-	system("swapoff " + pConfig.partition + " 2>/dev/null >/dev/null");
-	if (system("mkswap " + pConfig.partition + "  2>/dev/null >/dev/null")==0) return false;
+
+	string opts;
+	if (logFile) {
+		if (logFile->empty()) *logFile = get_tmp_file();
+		opts = " 2>" + *logFile + " >" + *logFile;
+	}
+	else if (dialogMode) {
+		opts = " 2>/dev/null >/dev/null";
+	}
+
+	system("swapoff " + pConfig.partition + opts);
+	if (system("mkswap " + pConfig.partition + opts)==0) return false;
 	return true;
 }
 
-bool AgiliaSetup::activateSwap(PartConfig pConfig) {
-	if (system("swapon " + pConfig.partition + "  2>/dev/null >/dev/null")!=0) return false;
+bool AgiliaSetup::activateSwap(PartConfig pConfig, string *logFile) {
+	string opts;
+	if (logFile) {
+		if (logFile->empty()) *logFile = get_tmp_file();
+		opts = " 2>" + *logFile + " >" + *logFile;
+	}
+	else if (dialogMode) {
+		opts = " 2>/dev/null >/dev/null";
+	}
+
+	if (system("swapon " + pConfig.partition + opts)!=0) return false;
 	return true;
 }
 
@@ -437,13 +490,23 @@ bool AgiliaSetup::formatPartitions() {
 	if (notifier) notifier->setSummaryTextCall(_("Formatting partitions"));
 	if (notifier) notifier->setDetailsTextCall("");
 
+	string logFile = get_tmp_file();
 	for (size_t i=0; i<partConfigs.size(); ++i) {
 		if (partConfigs[i].format) {
-			formatPartition(partConfigs[i]);
+			if (!formatPartition(partConfigs[i], &logFile)) {
+				if (notifier) notifier->sendReportError(_("Error while formatting partition") + partConfigs[i].partition + _(". Error log:\n") + ReadFile(logFile));
+				return false;
+			}
 		}
 		else if (partConfigs[i].mountpoint == "swap") {
-			makeSwap(partConfigs[i]);
-			activateSwap(partConfigs[i]);
+			if (!makeSwap(partConfigs[i], &logFile)) {
+				if (notifier) notifier->sendReportError(_("Error while creating swap partition in ") + partConfigs[i].partition + _(". Error log:\n") + ReadFile(logFile));
+				return false;
+			}
+			if (!activateSwap(partConfigs[i], &logFile)) {
+				if (notifier) notifier->sendReportError(_("Error while activating swap ") + partConfigs[i].partition + _(". Error log:\n") + ReadFile(logFile));
+				return false;
+			}
 		}
 	}
 	return true;
@@ -452,6 +515,8 @@ bool AgiliaSetup::formatPartitions() {
 bool AgiliaSetup::mountPartitions() {
 	if (notifier) notifier->setSummaryTextCall(_("Mounting partitions"));
 	if (notifier) notifier->setDetailsTextCall("");
+	string logFile = get_tmp_file();
+	string opts = " 2>" + logFile + " >" + logFile;
 
 	for (size_t i=0; i<partConfigs.size(); ++i) {
 		if (partConfigs[i].mountpoint=="/") {
@@ -466,10 +531,13 @@ bool AgiliaSetup::mountPartitions() {
 	string mkdir_cmd;
 	string mount_options;
 
-	mkdir_cmd = "mkdir -p /tmp/new_sysroot 2>/dev/null >/dev/null";
+	mkdir_cmd = "mkdir -p /tmp/new_sysroot " + opts;
 	if (!rootPartitionMountOptions.empty()) mount_options = "-o " + rootPartitionMountOptions;
-	mount_cmd = "mount " + mount_options + " " + rootPartition + " /tmp/new_sysroot  2>/dev/null >/dev/null";
-	if (system(mkdir_cmd) !=0 || system(mount_cmd)!=0) return false;
+	mount_cmd = "mount " + mount_options + " " + rootPartition + " /tmp/new_sysroot  " + opts;
+	if (system(mkdir_cmd) !=0 || system(mount_cmd)!=0) {
+		if (notifier) notifier->sendReportError(_("Error mounting root partition. Error log:\n") + ReadFile(logFile));
+		return false;
+	}
 
 	// Sorting mount points
 	
@@ -520,8 +588,8 @@ bool AgiliaSetup::mountPartitions() {
 		if (partConfigs[mountOrder[i]].fs=="jfs") mount_cmd = "fsck " + partConfigs[mountOrder[i]].partition + "  && " + mount_cmd;
 
 		//printf("Mounting partition: %s\n", mount_cmd.c_str());
-		if (system(mkdir_cmd + " 2>/dev/null >/dev/null")!=0 || system(mount_cmd + "  2>/dev/null >/dev/null")!=0) {
-			if (notifier) notifier->sendReportError(_("Failed to mount partition ") + partConfigs[mountOrder[i]].partition);
+		if (system(mkdir_cmd + opts)!=0 || system(mount_cmd + opts)!=0) {
+			if (notifier) notifier->sendReportError(_("Failed to mount partition ") + partConfigs[mountOrder[i]].partition + ", error log:\n" + ReadFile(logFile));
 			return false;
 		}
 	}
@@ -1104,7 +1172,7 @@ bool AgiliaSetup::validateConfig() {
 
 
 
-void AgiliaSetup::run(const map<string, string>& _settings, const vector<TagPair> &_users, const vector<PartConfig> &_partConfigs, const vector<string> &_additional_repositories, void (*updateProgressData) (ItemState)) {
+bool AgiliaSetup::run(const map<string, string>& _settings, const vector<TagPair> &_users, const vector<PartConfig> &_partConfigs, const vector<string> &_additional_repositories, void (*updateProgressData) (ItemState)) {
 	setupMode = true;
 
 	settings = _settings;
@@ -1116,27 +1184,29 @@ void AgiliaSetup::run(const map<string, string>& _settings, const vector<TagPair
 	rootPassword = settings["rootpasswd"];
 
 	if (notifier) notifier->setProgressCall(1);
-	if (!validateConfig()) return;
+	if (!validateConfig()) return false;
 	if (notifier) notifier->setProgressCall(5);
-	setMpkgConfig(settings["pkgsource"], settings["volname"], settings["rep_location"], additional_repositories);
+	if (!setMpkgConfig(settings["pkgsource"], settings["volname"], settings["rep_location"], additional_repositories)) return false;
 	if (notifier) notifier->setProgressCall(10);
-	if (!getRepositoryData()) return;
+	if (!getRepositoryData()) return false;
 	if (notifier) notifier->setProgressCall(25);
-	if (!prepareInstallQueue(settings["setup_variant"], settings["merge_setup_variant"], settings["netman"], settings["nvidia-driver"])) return;
+	if (!prepareInstallQueue(settings["setup_variant"], settings["merge_setup_variant"], settings["netman"], settings["nvidia-driver"])) return false;
 	if (notifier) notifier->setProgressCall(50);
-	if (!validateQueue()) return;
+	if (!validateQueue()) return false;
 	if (notifier) notifier->setProgressCall(60);
-	if (!formatPartitions()) return;
+	if (!formatPartitions()) return false;
 	if (notifier) notifier->setProgressCall(70);
-	if (!mountPartitions()) return;
+	if (!mountPartitions()) return false;
 	if (notifier) notifier->setProgressCall(85);
-	if (!moveDatabase()) return;
+	// FIXME: Merge these two functions and check it's return value.
+	if (!moveDatabase()) return false;
 	if (notifier) notifier->setProgressCall(99);
-	if (!createBaselayout()) return;
+	if (!createBaselayout()) return false;
 
 	pData.registerEventHandler(updateProgressData);
-	if (!processInstall(settings["pkgsource"])) return;
-	if (!postInstallActions(settings["language"], settings["setup_variant"], strToBool(settings["tmpfs_tmp"]), strToBool(settings["initrd_delay"]), settings["initrd_modules"], settings["bootloader"], settings["fbmode"], settings["kernel_options"], settings["netman"], settings["hostname"], settings["netname"], strToBool(settings["time_utc"]), settings["timezone"], settings["nvidia-driver"])) return;
+	if (!processInstall(settings["pkgsource"])) return false;
+	if (!postInstallActions(settings["language"], settings["setup_variant"], strToBool(settings["tmpfs_tmp"]), strToBool(settings["initrd_delay"]), settings["initrd_modules"], settings["bootloader"], settings["fbmode"], settings["kernel_options"], settings["netman"], settings["hostname"], settings["netname"], strToBool(settings["time_utc"]), settings["timezone"], settings["nvidia-driver"])) return false;
 	pData.unregisterEventHandler();
+	return true;
 }
 
