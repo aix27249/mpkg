@@ -54,7 +54,7 @@ void AgiliaSetup::copyMPKGConfig() {
 
 bool AgiliaSetup::setHostname(const string& hostname, const string& netname) {
 	if (hostname.empty()) return false;
-	WriteFile("/tmp/new_sysroot/etc/conf.d/hostname", "hostname=\"hostname\"\n");
+	WriteFile("/tmp/new_sysroot/etc/conf.d/hostname", "hostname=\"" + hostname + "\"\n");
 	string hosts = ReadFile("/tmp/new_sysroot/etc/hosts");
 	strReplace(&hosts, "darkstar", hostname);
 	strReplace(&hosts, "example.net", netname);
