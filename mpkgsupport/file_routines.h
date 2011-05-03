@@ -69,6 +69,10 @@ class TempFileController {
 };
 
 bool isProcessRunning(const string& pid);
+
+string getCmdOutput(const char* cmd);
+vector<string> getCmdOutputStrings(const char* cmd);
+
 // Some advanced interface functions
 //string ncGetOpenFile(string defaultDir="/");
 //string ncGetOpenDir(string defaultDir="/");
