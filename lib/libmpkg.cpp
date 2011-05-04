@@ -811,7 +811,6 @@ void filterObjdumpOutput(vector<string>& ldd) {
 	for (size_t i=0; i<ldd.size(); ++i) {
 		strReplace(&ldd[i], "NEEDED", "");
 		ldd[i] = "/" + cutSpaces(ldd[i]);
-
 	}
 
 }
@@ -988,7 +987,7 @@ void generateDeps_new(mpkg &core, string tgz_filename) {
 	for (size_t i=0; i<lddcheck.size(); ++i) {
 		// Reading ldd output for i'th file
 		ldd=ReadFileStrings(tmp_parse_ldd_dir+"/"+IntToStr(i));
-		if (ldd.size()==1 || ldd.empty()) continue;
+		if (ldd.empty()) continue;
 		if (_cmdOptions["gendeps_mode"]=="ldd") {
 			filterLDDOutput(ldd); // Filtering output
 		}

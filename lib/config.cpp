@@ -115,6 +115,7 @@ int loadGlobalConfig(string config_file) {
 	_cmdOptions["keep_symlinks"]="true";
 
 	if (mConfig.getValue("gendeps_mode")=="objdump") _cmdOptions["gendeps_mode"]="objdump";
+	else if (mConfig.getValue("gendeps_mode")=="ldd") _cmdOptions["gendeps_mode"]="ldd";
 	if (mConfig.getValue("enable_delta")=="yes") _cmdOptions["enable_delta"]="true";
 	else _cmdOptions["enable_delta"]="false";
 	if (mConfig.getValue("dont_clean_tmp")=="yes") _cmdOptions["dont_clean_tmp"]="true";

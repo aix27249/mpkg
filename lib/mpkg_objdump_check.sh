@@ -12,6 +12,9 @@ let i=0
 echo "objdump: searching from $i"
 for index in $LDDLIST; do
 	objdump -p $TMPDIR/$index 2>/dev/null | grep NEEDED > $OUTLDDDIR/$i
+	#if [ "`cat $OUTLDDDIR/$i`" != "" ] ; then
+	#	cat $OUTLDDDIR/$i
+	#fi
 	let i=$i+1
 done
 echo "objdump: searched for $i files"
