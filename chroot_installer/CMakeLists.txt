@@ -15,6 +15,8 @@ PROJECT(MKLIVECD)
 FILE(GLOB scripts "${CMAKE_CURRENT_SOURCE_DIR}/*.sh")
 FILE(GLOB conftemplate "${CMAKE_CURRENT_SOURCE_DIR}/mpkg.xml*")
 FILE(GLOB dbtemplate "${CMAKE_CURRENT_SOURCE_DIR}/packages.db")
+FILE(GLOB keymaps "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/10-keymap.conf.*")
+FILE(GLOB videoconf "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/20-*.conf")
 
 # Live elements: lots of stuff, but needed
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/isolinux.cfg" DESTINATION share/mklivecd/scripts/live-elements)
@@ -31,10 +33,10 @@ INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/langswitch" DESTINATION
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/lang.sh" DESTINATION share/mklivecd/scripts/live-elements)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/shadow" DESTINATION share/mklivecd/scripts/live-elements)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/fstab" DESTINATION share/mklivecd/scripts/live-elements)
-INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/10-keymap.conf.*" DESTINATION share/mklivecd/scripts/live-elements)
+INSTALL(FILES ${keymaps} DESTINATION share/mklivecd/scripts/live-elements)
 
 # Configs for video drivers
-INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/20-*.conf" DESTINATION share/mklivecd/scripts/live-elements)
+INSTALL(FILES ${videoconf} DESTINATION share/mklivecd/scripts/live-elements)
 
 # Initrd template
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/initrd64.img" DESTINATION share/mklivecd/scripts/live-elements)
