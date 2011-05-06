@@ -2,6 +2,7 @@
 # This script should be run as root or fakeroot.
 set -e
 export PATH=${scriptdir}/bin:$PATH
+CWD=${scriptdir}/live-elements
 # Set alias for chroot to fakechroot. Let's see if it can work such way
 
 # Loading global config
@@ -98,7 +99,6 @@ if [ "$skip_stage1" = "" ] ; then
 fi
 
 # Rip out all documentation, includes and static libs
-CWD=${scriptdir}/live-elements
 
 if [ "$remove_docs" = "1" -o "$do_minimize" = "1" ] ; then
 	rm -rf $NODE/usr/doc
