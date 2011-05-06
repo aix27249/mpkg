@@ -138,7 +138,7 @@ cat $CWD/fstab > $NODE/etc/fstab
 # Copy X11 keymap
 mkdir -p ${NODE}/etc/X11/xorg.conf.d
 mkdir -p ${NODE}/etc/X11/xorg_lang
-for i in LANGS ; do
+for i in $LANGS ; do
 	cat $CWD/10-keymap.conf.$i > ${NODE}/etc/X11/xorg_lang/10-keymap.conf.$i
 done
 # Default symlink to russian
@@ -260,7 +260,7 @@ mkinitrd -s $INITRD_ROOT -o $LIVE_ROOT/boot/initrd$BITS.img -k $KERNEL_VER
 mkdir -p $LIVE_ROOT/isolinux
 cat $CWD/isolinux.cfg | sed s/@ARCH@/$BITS/g | sed "s/@ISO_TITLE@/${iso_title}/g" > $LIVE_ROOT/isolinux/isolinux.cfg
 # Multilanguage stuff
-for i in LANGS ; do
+for i in $LANGS ; do
 	cat $CWD/$i.cfg | sed s/@ARCH@/$BITS/g | sed "s/@ISO_TITLE@/${iso_title}/g" > $LIVE_ROOT/isolinux/$i.cfg
 done
 
