@@ -18,7 +18,7 @@ SYS_LANG=`echo $SYS_LOCALE | sed 's/_.*//g'`
 start() {
 	# Symlink some stuff
 	rm -f /etc/X11/xorg.conf.d/10-keymap.conf
-	( cd /etc/X11/xorg.conf.d ; ln -s ../xorg_lang/10-keymap.conf.$SYS_LANG 10-keymap.conf )	
+	( cd /etc/X11/xorg.conf.d ; cat ../xorg_lang/10-keymap.conf.$SYS_LANG > 10-keymap.conf )	
 	if [ -f /etc/issue_${SYS_LOCALE} ; then
 		cat /etc/issue_${SYS_LOCALE} > /etc/issue
 	fi
