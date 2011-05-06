@@ -82,6 +82,13 @@ fi
 # Installation
 if [ "$skip_stage1" = "" ] ; then
 	ARCH=$ARCH LIST="$LIST" NODE="$NODE" REPO="$REPO" ${scriptdir}/install_virtual_machine.sh
+	# Copy language file switcher to system
+	cp ${CWD}/langswitch ${NODE}/etc/init.d/
+	chmod 755 ${NODE}/etc/init.d/langswitch
+	# Copy video driver switcher to system
+	cp ${CWD}/videoswitch ${NODE}/etc/init.d/
+	chmod 755 ${NODE}/etc/init.d/videoswitch
+
 	NODE="$NODE" ${scriptdir}/add_default_services.sh
 fi
 
@@ -152,14 +159,6 @@ sed -i s/darkstar/$hostname/g ${NODE}/etc/hosts
 # Copy patched lang.sh to system
 cat ${CWD}/lang.sh > ${NODE}/etc/profile.d/lang.sh
 
-# Copy language file switcher to system
-cp ${CWD}/langswitch ${NODE}/etc/init.d/
-chmod 755 ${NODE}/etc/init.d/langswitch
-chroot ${NODE} rc-update add langswitch boot
-# Copy video driver switcher to system
-cp ${CWD}/videoswitch ${NODE}/etc/init.d/
-chmod 755 ${NODE}/etc/init.d/videoswitch
-chroot ${NODE} rc-update add videoswitch boot
 
 # Remove xinitrc if any and recreate it:
 if [ -d ${NODE}/etc/X11/xinit ] ; then

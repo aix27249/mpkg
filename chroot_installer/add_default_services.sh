@@ -1,5 +1,5 @@
 #!/bin/sh
-BOOT_SERVICE_LIST="mdadm lvm"
+BOOT_SERVICE_LIST="mdadm lvm videoswitch langswitch"
 SYS_SERVICE_LIST="sysfs udev"
 DEF_SERVICE_LIST="consolefont \
 	hald \
@@ -44,4 +44,6 @@ for i in $X11_SERVICE_LIST ; do
 		break
 	fi
 done
+
+chroot $NODE rc-update -u
 
