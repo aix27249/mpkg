@@ -467,7 +467,7 @@ bool AgiliaSetup::makeSwap(PartConfig pConfig, string *logFile) {
 	}
 
 	system("swapoff " + pConfig.partition + opts);
-	if (system("mkswap " + pConfig.partition + opts)==0) return false;
+	if (system("mkswap " + pConfig.partition + opts)!=0) return false;
 	return true;
 }
 
