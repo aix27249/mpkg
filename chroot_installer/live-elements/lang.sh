@@ -4,7 +4,7 @@ SYS_LOCALE=ru_RU.UTF-8
 
 # This can be overrided by setting kernel cmdline option LOCALE, for example, LOCALE=en_US.UTF-8
 # Please note that you should provide full locale name, including UTF-8 or whatever you want.
-OVERRIDE_LOCALE=`cat /proc/cmdline | sed 's/^.*LOCALE=//g' | sed 's/\ .*//g'`
+OVERRIDE_LOCALE=`cat /proc/cmdline | grep LOCALE= | sed 's/^.*LOCALE=//g' | sed 's/\ .*//g'`
 
 if [ "$OVERRIDE_LOCALE" != "" ] ; then
 	SYS_LOCALE=$OVERRIDE_LOCALE

@@ -4,7 +4,7 @@ depend() {
 }
 
 start() {
-	VIDEODRIVER=`cat /proc/cmdline| sed 's/^.*VIDEODRIVER=//g' | sed 's/\ .*//g'`
+	VIDEODRIVER=`cat /proc/cmdline | grep VIDEODRIVER= | sed 's/^.*VIDEODRIVER=//g' | sed 's/\ .*//g'`
 	if [ "$VIDEODRIVER" != "" ] ; then
 		cp /etc/X11/xorg_drivers/20-${VIDEODRIVER}.conf /etc/X11/xorg.conf.d/
 	fi
