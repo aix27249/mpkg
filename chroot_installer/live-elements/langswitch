@@ -1,0 +1,27 @@
+#!/sbin/runscript
+
+depend() {
+	before keymaps
+}
+SYS_LOCALE=ru_RU.UTF-8
+
+# This can be overrided by setting kernel cmdline option LOCALE, for example, LOCALE=en_US.UTF-8
+# Please note that you should provide full locale name, including UTF-8 or whatever you want.
+OVERRIDE_LOCALE=`cat /proc/cmdline | sed 's/^.*LOCALE=//g' | sed 's/\ .*//g'`
+
+if [ "$OVERRIDE_LOCALE" != "" ] ; then
+	SYS_LOCALE=$OVERRIDE_LOCALE
+fi
+
+SYS_LANG=`echo $SYS_LOCALE | sed 's/_.*//g'`
+
+start() {
+	# Symlink some stuff
+	rm -f /etc/X11/xorg.conf.d/10-keymap.conf
+	( cd /etc/X11/xorg.conf.d ; ln -s ../xorg_lang/10-keymap.conf.$SYS_LANG 10-keymap.conf )	
+	if [ -f /etc/issue_${SYS_LOCALE} ; then
+		cat /etc/issue_${SYS_LOCALE} > /etc/issue
+	fi
+}
+
+

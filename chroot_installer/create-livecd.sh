@@ -33,6 +33,8 @@ if [ "$arch" = "" -o "$arch" = "auto" ] ; then
 	fi
 fi
 
+LANGS="en ru"
+
 NODE="${BUILD_ROOT}/${iso_name}-${ARCH}"
 INITRD_ROOT="${NODE}/boot/initrd-tree"
 LIVE_ROOT="${LIVE_BUILD_ROOT}/${iso_name}-${ARCH}"
@@ -135,7 +137,29 @@ cat $CWD/fstab > $NODE/etc/fstab
 
 # Copy X11 keymap
 mkdir -p ${NODE}/etc/X11/xorg.conf.d
-cat $CWD/10-keymap.conf > ${NODE}/etc/X11/xorg.conf.d/10-keymap.conf
+mkdir -p ${NODE}/etc/X11/xorg_lang
+for i in LANGS ; do
+	cat $CWD/10-keymap.conf.$i > ${NODE}/etc/X11/xorg_lang/10-keymap.conf.$i
+done
+# Default symlink to russian
+( cd ${NODE}/etc/X11/xorg.conf.d ; ln -s ../10-keymap.conf.ru 10-keymap.conf )
+
+# Set hostname
+hostname=${hostname:-agilia}
+sed -i s/localhost/$hostname/g ${NODE}/etc/conf.d/hostname
+sed -i s/darkstar/$hostname/g ${NODE}/etc/hosts
+
+# Copy patched lang.sh to system
+cat ${CWD}/lang.sh > ${NODE}/etc/profile.d/lang.sh
+
+# Copy language file switcher to system
+cp ${CWD}/langswitch > ${NODE}/etc/init.d/
+chmod 755 ${NODE}/etc/init.d/langswitch
+chroot ${NODE} rc-update add langswitch boot
+# Copy video driver switcher to system
+cp ${CWD}/videoswitch > ${NODE}/etc/init.d/
+chmod 755 ${NODE}/etc/init.d/videoswitch
+chroot ${NODE} rc-update add videoswitch boot
 
 # Remove xinitrc if any and recreate it:
 if [ -d ${NODE}/etc/X11/xinit ] ; then
@@ -235,12 +259,17 @@ mkinitrd -s $INITRD_ROOT -o $LIVE_ROOT/boot/initrd$BITS.img -k $KERNEL_VER
 # Copying isolinux configs
 mkdir -p $LIVE_ROOT/isolinux
 cat $CWD/isolinux.cfg | sed s/@ARCH@/$BITS/g | sed "s/@ISO_TITLE@/${iso_title}/g" > $LIVE_ROOT/isolinux/isolinux.cfg
+# Multilanguage stuff
+for i in LANGS ; do
+	cat $CWD/$i.cfg | sed s/@ARCH@/$BITS/g | sed "s/@ISO_TITLE@/${iso_title}/g" > $LIVE_ROOT/isolinux/$i.cfg
+done
 
 # ISOLINUX binaries
-for i in linux.c32 vesamenu.c32 vesainfo.c32 isolinux.bin ; do
+for i in linux.c32 vesamenu.c32 vesainfo.c32 isolinux.bin chain.c32 ; do
 	cp /usr/lib${LIBDIRSUFFIX}/syslinux/$i $LIVE_ROOT/isolinux/
 done
 cp $CWD/grub640.png $LIVE_ROOT/isolinux/
+cp $CWD/koi8u_8x16.psf $LIVE_ROOT/isolinux/
 
 # Pre-iso cleanup
 if [ "$no_cleanup" = "" ] ; then
