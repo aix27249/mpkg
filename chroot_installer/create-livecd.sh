@@ -153,11 +153,11 @@ sed -i s/darkstar/$hostname/g ${NODE}/etc/hosts
 cat ${CWD}/lang.sh > ${NODE}/etc/profile.d/lang.sh
 
 # Copy language file switcher to system
-cp ${CWD}/langswitch > ${NODE}/etc/init.d/
+cp ${CWD}/langswitch ${NODE}/etc/init.d/
 chmod 755 ${NODE}/etc/init.d/langswitch
 chroot ${NODE} rc-update add langswitch boot
 # Copy video driver switcher to system
-cp ${CWD}/videoswitch > ${NODE}/etc/init.d/
+cp ${CWD}/videoswitch ${NODE}/etc/init.d/
 chmod 755 ${NODE}/etc/init.d/videoswitch
 chroot ${NODE} rc-update add videoswitch boot
 
