@@ -89,6 +89,11 @@ if [ "$skip_stage1" = "" ] ; then
 	cp ${CWD}/videoswitch ${NODE}/etc/init.d/
 	chmod 755 ${NODE}/etc/init.d/videoswitch
 
+	mkdir -p ${NODE}/etc/X11/xorg_drivers
+	for i in vesa nv nouveau ; do
+		cp ${CWD}/20-$i.conf ${NODE}/etc/X11/xorg_drivers/
+	done
+
 	NODE="$NODE" ${scriptdir}/add_default_services.sh
 fi
 
