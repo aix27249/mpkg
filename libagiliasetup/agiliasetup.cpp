@@ -1010,11 +1010,11 @@ bool AgiliaSetup::postInstallActions(const string& language, const string& setup
 
 	// Post-install configuration
 	if (!setRootPassword(rootPassword)) {
-		if (notifier) nofilter->sendReportError(_("Failed to set root password! See log for details."));
+		if (notifier) notifier->sendReportError(_("Failed to set root password! See log for details."));
 		return false;
 	}
 	if (!createUsers(users)) {
-		if (notifier) nofilter->sendReportError(_("Failed to create users! See log for details."));
+		if (notifier) notifier->sendReportError(_("Failed to create users! See log for details."));
 		return false;
 
 	}
