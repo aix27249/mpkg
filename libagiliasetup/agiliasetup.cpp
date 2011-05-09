@@ -103,7 +103,11 @@ void AgiliaSetup::umountFilesystems() {
 	system("umount /tmp/new_sysroot/proc 2>/dev/null >/dev/null");
 	system("umount /tmp/new_sysroot/sys 2>/dev/null >/dev/null");
 	system("umount /tmp/new_sysroot/dev 2>/dev/null >/dev/null");
-	system("chroot /tmp/new_sysroot umount -a 2>/dev/null >/dev/null");
+	vector<string> mountz = getCmdOutputStrings("mount | grep '/tmp/new_sysroot' | sed 's/\\ on\\ //g' | sed 's/\\ .*//g'");
+	for (size_t i=0; i<mountz.size(); ++i) {
+		system("umount " + mountz[i] + " 2>/dev/null >/dev/null");
+	}
+
 	system("sync 2>/dev/null >/dev/null");
 
 }
@@ -112,7 +116,10 @@ bool AgiliaSetup::createUsers(const vector<TagPair> &users) {
 	bool ret = true;
 	for (size_t i=0; i<users.size(); ++i) {
 		if (addUser(users[i].tag)) setPasswd(users[i].tag, users[i].value);
-		else ret = false; // Mark failure, but continue for other users
+		else {
+			if (!dialogMode) printf("Failed to create user %s\n", users[i].tag.c_str());
+			ret = false; // Mark failure, but continue for other users
+		}
 	}
 	return ret;
 }
@@ -132,11 +139,11 @@ bool AgiliaSetup::addUser(const string &username) {
 }
 
 bool AgiliaSetup::setPasswd(const string& username, const string& passwd) {
-	if (!dialogMode) printf("Setting password for user %s\n", username.c_str());
+	if (!dialogMode) printf("Setting password for user %s with password %s\n", username.c_str(), passwd.c_str());
 	string passwd_cmd = "#!/bin/sh\necho " + username + ":" + passwd + " | chpasswd\n";
 	WriteFile("/tmp/new_sysroot/tmp/run_passwd", passwd_cmd);
-	int ret = system("chroot /tmp/new_sysroot sh /tmp/run_passwd  2>/dev/null >/dev/null");
-	unlink("/tmp/new_sysroot/tmp/run_passwd");
+	int ret = system("chroot /tmp/new_sysroot sh /tmp/run_passwd ");
+	//unlink("/tmp/new_sysroot/tmp/run_passwd");
 	if (ret == 0) return true;
 	return false;
 }
@@ -1179,6 +1186,12 @@ bool AgiliaSetup::run(const map<string, string>& _settings, const vector<TagPair
 
 	settings = _settings;
 	users = _users;
+	for (size_t i=0; i<users.size(); ++i) {
+		if (users[i].value.empty()) {
+			if (notifier) notifier->sendReportError(_("FATAL: empty password for user ") + users[i].tag);
+			return false;
+		}
+	}
 	partConfigs = _partConfigs;
 	additional_repositories = _additional_repositories;
 

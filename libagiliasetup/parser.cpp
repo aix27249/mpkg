@@ -95,7 +95,7 @@ void parseConfig(map<string, string> *_strSettings, vector<TagPair> *_users, vec
 	loadSettings(home + "/.config/agilia_installer.conf", strSettings, repositories, partitions);
 
 	
-	users.push_back(TagPair(strSettings["username"], strSettings["password"]));
+	users.push_back(TagPair(strSettings["username"], strSettings["userpasswd"]));
 
 	PartConfig *pConfig;
 	map<string, map<string, string> >::iterator mapit;
