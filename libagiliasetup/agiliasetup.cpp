@@ -139,7 +139,7 @@ bool AgiliaSetup::addUser(const string &username) {
 }
 
 bool AgiliaSetup::setPasswd(const string& username, const string& passwd) {
-	if (!dialogMode) printf("Setting password for user %s with password %s\n", username.c_str(), passwd.c_str());
+	if (!dialogMode) printf("Setting password for user %s\n", username.c_str());
 	string passwd_cmd = "#!/bin/sh\necho " + username + ":" + passwd + " | chpasswd\n";
 	WriteFile("/tmp/new_sysroot/tmp/run_passwd", passwd_cmd);
 	int ret = system("chroot /tmp/new_sysroot sh /tmp/run_passwd ");
