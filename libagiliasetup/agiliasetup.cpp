@@ -100,8 +100,9 @@ void AgiliaSetup::umountFilesystems() {
 		notifier->setSummaryTextCall(_("Finishing..."));
 		notifier->setDetailsTextCall(_("Unmounting filesystems and syncing disks"));
 	}
-	system("chroot /tmp/new_sysroot umount /proc 2>/dev/null >/dev/null");
-	system("chroot /tmp/new_sysroot umount /sys 2>/dev/null >/dev/null");
+	system("umount /tmp/new_sysroot/proc 2>/dev/null >/dev/null");
+	system("umount /tmp/new_sysroot/sys 2>/dev/null >/dev/null");
+	system("umount /tmp/new_sysroot/dev 2>/dev/null >/dev/null");
 	system("chroot /tmp/new_sysroot umount -a 2>/dev/null >/dev/null");
 	system("sync 2>/dev/null >/dev/null");
 
@@ -131,17 +132,10 @@ bool AgiliaSetup::addUser(const string &username) {
 }
 
 bool AgiliaSetup::setPasswd(const string& username, const string& passwd) {
-	string tmp_file = "/tmp/new_sysroot/tmp/wtf";
-	string data = passwd + "\n" + passwd + "\n";
-	WriteFile(tmp_file, data);
-	string passwd_cmd = "#!/bin/sh\ncat /tmp/wtf | passwd " + username+" \n";
+	if (!dialogMode) printf("Setting password for user %d\n", username.c_str());
+	string passwd_cmd = "#!/bin/sh\necho " + username + ":" + passwd + " | chpasswd\n";
 	WriteFile("/tmp/new_sysroot/tmp/run_passwd", passwd_cmd);
 	int ret = system("chroot /tmp/new_sysroot sh /tmp/run_passwd  2>/dev/null >/dev/null");
-	for (size_t i=0; i<data.size(); i++) {
-		data[i]=' ';
-	}
-	WriteFile(tmp_file, data);
-	unlink(tmp_file.c_str());
 	unlink("/tmp/new_sysroot/tmp/run_passwd");
 	if (ret == 0) return true;
 	return false;
