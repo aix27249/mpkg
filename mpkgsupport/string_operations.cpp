@@ -753,7 +753,7 @@ string filter_slashes(string data) {
 	return data;
 }
 bool strToBool(string data) {
-	if (data == "true" || data == "yes") return true;
+	if (data == "true" || data == "yes" || data=="1" || data=="TRUE" || data=="YES") return true;
 	return false;
 }
 

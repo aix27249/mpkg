@@ -79,6 +79,10 @@ void AgiliaSetup::setupNetwork(const string& netman, const string& hostname, con
 }
 
 void AgiliaSetup::setTimezone(bool time_utc, const string& timezone) {
+	if (!dialogMode) {
+		if (time_utc) printf("Setting UTC clock with timezone %s\n", timezone.c_str());
+		else printf("Setting LOCAL clock with timezone %s\n", timezone.c_str());
+	}
 	if (time_utc) {
 		WriteFile("/tmp/new_sysroot/etc/hardwareclock", "# Tells how the hardware clock time is stored\n#\nUTC\n");
 		WriteFile("/tmp/new_sysroot/etc/conf.d/hwclock", "# Set clock to \"UTC\" if your hardware clock stores time in GMT, or \"local\" if your clock stores local time.\n\nclock=\"UTC\"\n#If you want to sync hardware clock with your system clock at shutdown, set clock_synctohc to YES.\nclock_synctohc=\"YES\"\n\n# You can specify special arguments to hwclock during bootup\nclock_args=\"\"\n");
@@ -326,6 +330,20 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 	}
 	vector<string> errorList;
 	mpkg *core = new mpkg;
+	
+	vector<string> alternatives;
+	if (nvidia_driver=="latest" || nvidia_driver=="173" || nvidia_driver=="96") {
+		alternatives.push_back("nvidia");
+		installset_contains.push_back("nvidia-driver");
+		installset_contains.push_back("nvidia-kernel");
+	}
+	if (nvidia_driver=="173") {
+		alternatives.push_back("legacy173");
+	}
+	if (nvidia_driver=="96") {
+		alternatives.push_back("legacy96");
+	}
+
 	int i_ret = core->install(installset_contains, NULL, NULL, &errorList);
 	if (verbose && !dialogMode) printf("Total: %d packages in list, install() returned: %d \n", (int) installset_contains.size(), i_ret);
 	if (i_ret!=0) {
@@ -345,6 +363,7 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 		delete core;
 		return false;
 	}
+	// Ping :)
 	PACKAGE_LIST commitList;
 	SQLRecord sqlSearch;
 	c_ret = core->get_packagelist(sqlSearch, &commitList);
@@ -353,61 +372,51 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 		delete core;
 		return false;
 	}
+	// Now process alternatives
+	vector<TagPair> alterPairs = commitList.getAlternatives(alternatives, false);
+	core->clean_queue();
+	
+	bool altFound;
+	for (size_t i=0; i<alterPairs.size(); ++i) {
+		altFound = false;
+		for (size_t t=0; t<installset_contains.size(); ++t) {
+			if (installset_contains[t]!=alterPairs[i].tag) continue;
+			installset_contains[t] = alterPairs[i].value;
+			altFound = true;
+		}
+		if (!altFound) installset_contains.push_back(alterPairs[i].value);
+	}
+
+	i_ret = core->install(installset_contains, NULL, NULL, &errorList);
+	if (verbose && !dialogMode) printf("ALTSWITCH: Total: %d packages in list, install() returned: %d \n", (int) installset_contains.size(), i_ret);
+	if (i_ret!=0) {
+		string errors;
+		for (size_t i=0; i<errorList.size(); ++i) {
+			printf("%s\n", errorList[i].c_str());
+			errors += errorList[i] + "\n";
+		}
+		if (notifier) notifier->sendReportError("Failed to do install:\n" + errors);
+		else printf("Errors during installation: \n%s\n", errors.c_str());
+		delete core;
+		return false;
+	}
+	c_ret = core->commit(true);
+	if (c_ret!=0) {
+		if (notifier) notifier->sendReportError(_("Error in prepareInstallQueue: queue commit failed, return code: ") + IntToStr(c_ret));
+		delete core;
+		return false;
+	}
+
+	
+
+
+
 	vector<string> queryLog;
 	for (size_t i=0; i<commitList.size(); ++i) {
 		queryLog.push_back(commitList[i].get_name() + " " + commitList[i].get_fullversion() + " " + boolToStr(commitList[i].action()==ST_INSTALL));
 	}
-	WriteFileStrings("/var/log/comlist_before_alterswitch.log", queryLog);
-	queryLog.clear();
-
-	vector<string> alternatives;
-	// This block is disabled, since it is not used anymore. But I leave it commented out rather than deleted: maybe, we get back this feature.
-/*	if (settings->value("alternatives/bfs").toBool()) alternatives.push_back("bfs");
-	if (settings->value("alternatives/cleartype").toBool()) alternatives.push_back("cleartype"); */
-	
-	if (nvidia_driver=="latest" || nvidia_driver=="173" || nvidia_driver=="96") {
-		alternatives.push_back("nvidia");
-		for (size_t i=0; i<commitList.size(); ++i) {
-			if (commitList[i].get_name()=="nvidia-driver" || commitList[i].get_name()=="nvidia-kernel") commitList.get_package_ptr(i)->set_action(ST_INSTALL, "nvidia-select");
-		}
-	}
-	if (nvidia_driver=="173") {
-		alternatives.push_back("legacy173");
-	}
-	if (nvidia_driver=="96") {
-		alternatives.push_back("legacy96");
-	}
-	// No need to check return code, since it cannot fail.
-	commitList.switchAlternatives(alternatives);
-	for (size_t i=0; i<commitList.size(); ++i) {
-		queryLog.push_back(commitList[i].get_name() + " " + commitList[i].get_fullversion()+ " " + boolToStr(commitList[i].action()==ST_INSTALL));
-	}
 	WriteFileStrings("/var/log/comlist_after_alterswitch.log", queryLog);
 	queryLog.clear();
-
-	PACKAGE_LIST commitListFinal;
-	for (size_t i=0; i<commitList.size(); ++i) {
-		if (commitList[i].action()==ST_INSTALL) {
-			commitListFinal.add(commitList[i]);
-			queryLog.push_back(commitList[i].get_name() + " " + commitList[i].get_fullversion());
-		}
-
-	}
-	WriteFileStrings("/var/log/final_setup_query.log", queryLog);
-	// No need to check return value: all errors which can occur here are fatal to DB, so it will destroy app from inside.
-	core->clean_queue();
-	int f_ret = core->install(&commitListFinal);
-	if (f_ret!=0) {
-		if (notifier) notifier->sendReportError(_("Failed to request final installation queue: core returned ") + IntToStr(f_ret));
-		delete core;
-		return false;
-	}
-	f_ret = core->commit(true);
-	if (f_ret != 0) {
-		if (notifier) notifier->sendReportError(_("Failed to do final queue commit: return code ") + IntToStr(f_ret));
-		delete core;
-		return false;
-	}
 	delete core;
 	return true;
 

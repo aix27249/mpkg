@@ -924,7 +924,12 @@ void MainWindow::saveSetupVariant() {
 		settings["setup_variant"] = customPkgSetList[selectedSetupVariant].name;
 	}
 	else settings["setup_variant"] = customSetupVariant.toStdString();
-	if (mergeCustomSetupVariant) settings["merge_setup_variant"]=customSetupVariant.toStdString();
+	if (mergeCustomSetupVariant) {
+		settings["merge_setup_variant"]=customSetupVariant.toStdString();
+	}
+	else {
+		settings["merge_setup_variant"]="";
+	}
 }
 
 void MainWindow::saveTimezone() {

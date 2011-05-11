@@ -13,6 +13,7 @@
 #include <vector>
 #include <map>
 #include <stdint.h>
+#include <mpkgsupport/mpkgsupport.h>
 using namespace std;
 
 struct CustomPkgSet {
@@ -345,6 +346,8 @@ class PACKAGE_LIST {
 	map<int, int> reverseTableID;
 	PACKAGE __empty;
     public:
+
+	vector<TagPair> getAlternatives(const vector<string>& alternatives, bool filterQueued);
 	bool priorityInitialized;
 	void sortByPriority(const bool& reverse_order=false);
 	void sortByTags(const bool& reverse_order = false);

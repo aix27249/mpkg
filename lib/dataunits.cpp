@@ -48,7 +48,6 @@ void _ObjectCounter::deleteObject() {
 #include "conditions.h"
 #include "debug.h"
 //#include "constants.h"
-#include <mpkgsupport/mpkgsupport.h>
 int loopCount=0;
 // LOCATION class functions
 
@@ -914,6 +913,155 @@ int getUnusedCount(const vector<string> &base, const vector<string> &alts) {
 	}
 	return ret;
 }
+/*vector<TagPair> PACKAGE_LIST::getAlternatives(const vector<string>& alternatives, bool filterQueued) {
+	vector<TagPair> ret;
+	vector<string> altVec;
+	bool match, found;
+	for (size_t i=0; i<packages.size(); ++i) {
+		altVec = packages[i].getAlternativeVector();
+		if (altVec.empty()) continue;
+		match = true;
+		for (size_t t=0; match && t<alternatives.size(); ++t) {
+			if (!packages[i].checkAlternative(alternatives[t])) match = false;
+		}
+		if (!match) continue;
+		// Check for dupes and add to ret, if none
+		found = false;
+		for (size_t r=0; !found && r<ret.size(); ++r) {
+			if (ret[r].value==packages[i].get_name()) continue;
+		}
+
+		if (!found) ret.push_back(TagPair(packages[i].get_corename(), packages[i].get_name()));
+		
+	}
+	if (filterQueued) {
+		vector<TagPair> ret2;
+		for (size_t i=0; i<ret.size(); ++i) {
+			for (size_t t=0; t<packages.size(); ++t) {
+				if (packages[t].action()!=ST_INSTALL) continue;
+				if (packages[t].get_name()!=ret[i].tag) continue;
+				if (t==packages.size()-1) {
+					if (!dialogMode && verbose) printf("%s: adding pair %s => %s\n", __func__, ret[i].tag.c_str(), ret[i].value.c_str());
+					ret2.push_back(ret[i]);
+				}
+			}
+		}
+		ret = ret2;
+	}
+
+
+	if (!dialogMode && verbose) {
+		printf("%s: return %d pairs\n", __func__, ret.size());
+		for (size_t i=0; i<ret.size(); ++i) {
+			printf("%s: return %s => %s\n", __func__, ret[i].tag.c_str(), ret[i].value.c_str());
+		}
+	}
+	return ret;
+	
+}*/
+vector<TagPair> PACKAGE_LIST::getAlternatives(const vector<string>& alternatives, bool filterQueued) {
+	// ----------------------------------VARIABLES SECTION------------------------------------- //
+	vector<PACKAGE *> altPackages;
+	vector<size_t> meetCount;
+	vector<PACKAGE *> maxMeeters;
+	PACKAGE * selectedPackage;
+	size_t max_meet, min_unused, this_meet, this_unused;
+	vector<string> log;
+
+	vector<TagPair> ret;
+	// ----------------------------Init log by initial conditions------------------------------ //
+	for (size_t i=0; i<alternatives.size(); ++i) {
+		log.push_back("REQUESTED: " + alternatives[i]);
+	}
+
+	// ----------------------------------------RESET--------------------------------------------//
+
+	// First of all: reset to initial state.
+	// By i, we search for alternated packages. By t, we look for appropriate core packages, and move action to them
+	for (size_t i=0; i<packages.size(); ++i) {
+		if (packages[i].get_name()==packages[i].get_corename()) continue;
+		if (packages[i].action()!=ST_INSTALL) continue; // Found alt who wants to be installed, looking for core one
+		for (size_t t=0; t<packages.size(); ++t) {
+			if (i==t) continue;
+			if (packages[t].get_corename()==packages[i].get_corename() && packages[t].get_name()==packages[t].get_corename()) {
+				packages[i].set_action(ST_NONE, "switchAlt reset"); // Alt goes away
+				packages[t].set_action(ST_INSTALL, "switchAlt reset"); // Core one goes to queue
+			}
+		}
+	} // End of reset.
+
+	// --------------------------------PROCESSING--------------------------------------------//
+
+	// Now, for every package who wants to be installed, look for alter ones and choose best from them.
+	// Note that now i and t is opposite than prior case: i is core, t is alt.
+	for (size_t i=0; i<packages.size(); ++i) {
+		if (packages[i].action()!=ST_INSTALL) continue; // Filter no-action packages for i
+		if (packages[i].get_name()!=packages[i].get_corename()) continue; // Filter non-core packages for i
+		// First, filling the altPackages vector
+		altPackages.clear();
+		meetCount.clear();
+		maxMeeters.clear();
+		selectedPackage=NULL;
+		for (size_t t=0; t<packages.size(); ++t) {
+			if (i==t) continue;
+			if (packages[t].get_corename()==packages[i].get_corename()) altPackages.push_back(&packages[t]);
+		}
+		// Now, let's choose the best candidate from altPackages, comparing with alternatives
+		// Priorities:
+		// 1. The more alternatives package meet that's better
+
+		// 1.1 Finding maximum and filling meetCount with exact count for each package
+		max_meet=0;
+		for (size_t t=0; t<altPackages.size(); ++t) {
+			this_meet=0;
+			for (size_t a=0; a<alternatives.size(); ++a) {
+				this_meet+=altPackages[t]->checkAlternative(alternatives[a]);
+			}
+			meetCount.push_back(this_meet);
+			if (this_meet>max_meet) max_meet=this_meet;
+		}
+		// 1.1.1 if no one meets, continue
+		if (max_meet==0) continue;
+		// 1.2 Filling maxMeeters vector with maximum ones
+		for (size_t t=0; t<altPackages.size(); ++t) {
+			if (max_meet==meetCount[t]) maxMeeters.push_back(altPackages[t]);
+		}
+		// 1.3 If we found nothing, there is nothing to select.
+		if (maxMeeters.empty()) continue;
+
+		// 2. From group of maximum-meeted ones (maxMeeters vector), select one who contains minimum of other alt flags (preferably none)
+		// 2.1 First maxMeeter will be start point and first selected candidate. 
+		min_unused=getUnusedCount(maxMeeters[0]->getAlternativeVector(), alternatives);
+		selectedPackage=maxMeeters[0];
+
+		// 2.2 If someone will be better than 0th one, it will replace him, changing min_unused value. When min_unused value reaches zero, break.
+		for (size_t t=1; t<maxMeeters.size(); ++t) {
+			this_unused=getUnusedCount(maxMeeters[t]->getAlternativeVector(), alternatives);
+			if (min_unused>this_unused) {
+				min_unused=this_unused;
+				selectedPackage=maxMeeters[t];
+			}
+			
+			if (min_unused==0) break;
+		}
+
+		// 3. Check if we found alternative
+		if (!selectedPackage) continue;
+		
+		ret.push_back(TagPair(packages[i].get_corename(), selectedPackage->get_name()));
+		// 4. If we found someone, swap actions.
+
+		// Finally, store this swap to log
+		log.push_back("SWITCH: " + packages[i].get_name() + " " + packages[i].get_fullversion() + " to " + selectedPackage->get_name() + " " + selectedPackage->get_fullversion() + ", max_meet=" + IntToStr(max_meet) + ", min_unused=" + IntToStr(min_unused));
+	}
+
+	WriteFileStrings("/var/log/alternatives.log", log);
+	return ret;
+	
+}
+
+
+
 
 void PACKAGE_LIST::switchAlternatives(const vector<string>& alternatives) {
 	// ----------------------------------VARIABLES SECTION------------------------------------- //

@@ -1729,6 +1729,9 @@ vector<string> preprocessInstallList(const string &filename) {
 				vector<string> a;
 				return a;
 			}
+			if (!dialogMode && verbose) {
+				printf("Merging with %s\n", include_name.c_str());
+			}
 			ret = mergeVectors(ret, ReadFileStrings(include_name));
 		}
 	}

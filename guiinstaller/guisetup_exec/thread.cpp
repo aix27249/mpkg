@@ -59,6 +59,8 @@ void SetupThread::run() {
 	parseConfig(&strSettings, &users, &partConfigs, &additional_repositories);
 
 	agiliaSetup.registerStatusNotifier(this);
+
+	printf("MERGE_IN: %s\n", strSettings["merge_setup_variant"].c_str());
 	agiliaSetup.run(strSettings, users, partConfigs, additional_repositories, &updateProgressData);
 	emit reportFinish();
 }
