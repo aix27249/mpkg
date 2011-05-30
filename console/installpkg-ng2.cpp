@@ -81,7 +81,7 @@ int main (int argc, char **argv)
 		
 	bool do_reset=true;
 	int ich;
-	const char* short_opt = "hvpdzfmkDLrailgyqNcwxHbFQVRZWPKCMt:GsE:S:A:B:Ye:";
+	const char* short_opt = "hvpdzfmkDLrailgyqNcwxHbFQVRZWPKCMt:GsE:S:A:B:Ye:j:";
 	//const char* short_opt = "abcdfghiklmpqrvzDLyNwxHFQVRZWPKCME"; // Try to sort this stuff...later :)
 	const struct option long_options[] =  {
 		{ "help",		0, NULL,	'h'},
@@ -125,6 +125,7 @@ int main (int argc, char **argv)
 		{ "abuild",		1, NULL,	'B'},
 		{ "resync",		0, NULL,	'Y'},
 		{ "arch",		1, NULL,	'e'},
+		{ "limit",		1, NULL,	'j'},
 		{ NULL, 		0, NULL, 	0}
 	};
 
@@ -137,6 +138,9 @@ int main (int argc, char **argv)
 		
 
 		switch (ich) {
+			case 'j':
+					_cmdOptions["versionLimit"]=string(optarg);
+					break;
 			case 'e':
 					_cmdOptions["arch"]=string(optarg);
 					break;
@@ -695,7 +699,7 @@ int main (int argc, char **argv)
 	{
 		_cmdOptions["sql_readonly"]="yes";
 		if (argc<=optind) return print_usage(stderr, 1);
-		if (!dialogMode) say(_("Searching for packages which depends on %s\n"),argv[optind]);
+		if (!dialogMode) fprintf(stderr, _("Searching for packages which depends on %s\n"), argv[optind]);
 		actListDependants(core, argv[optind], showOnlyAvailable);
 		return 0;
 	}

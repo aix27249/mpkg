@@ -879,7 +879,7 @@ void actListDependants(mpkg &core, string filename, bool includeNotInstalled) {
 	// Output
 	
 	
-	if (!dialogMode) say(_("Next packages depends on %s: \n"), filename.c_str());
+	if (!dialogMode) fprintf(stderr, _("Next packages depends on %s: \n"), filename.c_str());
 	else {
 		ncInterface.setSubtitle(_("Searching for packages depending on ") + filename);
 		data = _("Next packages depends on ") + filename + "\n";
@@ -887,20 +887,36 @@ void actListDependants(mpkg &core, string filename, bool includeNotInstalled) {
 
 	if (list.empty()) {
 		if (dialogMode) data = _("No package depends on ") + filename;
-		else say(_("No package depends on %s\n"), filename.c_str());
+		else fprintf(stderr, _("No package depends on %s\n"), filename.c_str());
 	}
+	string vcond, pver, vlimit = _cmdOptions["versionLimit"];
 
 	for (size_t i=0; i<list.size(); ++i) {
 		if (!dialogMode) {
-			if (verbose) {
-				for (size_t t=0; t<list[i]->get_dependencies().size(); ++t) {
-					if (list[i]->get_dependencies().at(t).get_package_name()==filename) {
-						say(_("%s %s requires: %s\n"), list[i]->get_name().c_str(), list[i]->get_fullversion().c_str(), list[i]->get_dependencies().at(t).getDepInfo().c_str());
+			for (size_t t=0; t<list[i]->get_dependencies().size(); ++t) {
+				if (list[i]->get_dependencies().at(t).get_package_name()==filename) {
+					vcond = list[i]->get_dependencies().at(t).get_vcondition();
+					pver = list[i]->get_dependencies().at(t).get_package_version();
+					if (vcond=="(any)") {
+						vcond.clear();
+						pver.clear();
+					}
+
+					if (!vlimit.empty()) {
+						if (pver.empty()) break;
+						if (strverscmp2(vlimit, pver)<=0) break;
+					}
+
+					if (verbose) {
+						say("%s%s%s\n", list[i]->get_name().c_str(), vcond.c_str(), pver.c_str());
 						break;
+					}
+					else {
+						say("%s\n", list[i]->get_name().c_str());
+						
 					}
 				}
 			}
-			else say("%s %s\n", list[i]->get_name().c_str(), list[i]->get_fullversion().c_str());
 		}
 		else {
 			data += list[i]->get_name() + " " + list[i]->get_fullversion() + "\n";
