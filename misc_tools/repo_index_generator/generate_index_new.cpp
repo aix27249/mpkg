@@ -54,7 +54,7 @@ string getIndexPath( vector<string> drepo, vector<string> darch, vector<string> 
 	if (darch.size()==1) index_path += "/" + darch[0] + "/repository";
 	return index_path;
 }
-void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vector<string> dbranch, string index_path = "") {
+void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vector<string> dbranch, string index_path = "", bool clear_branch = false) {
 	index_counter++;
 	string fancydistro;
 	string search_subquery;
@@ -74,6 +74,9 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 			if (i<dbranch.size()-1) search_subquery += ",";
 			else search_subquery += ")";
 		}
+	}
+	else {
+		search_subquery += " AND locations.distro_version='8.0' ";
 	}
 
 	if (drepo.size()>0) {
@@ -100,7 +103,8 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 			else search_subquery += ")";
 		}
 	}
-	
+
+	if (clear_branch) dbranch.clear();	
 	printf("Generating index for %s\n", index_path.c_str());
 	MYSQL_RES *packages;
 	int res;
@@ -323,6 +327,9 @@ int main(int argc, char **argv) {
 	
 	// Global index: /
 	generateIndex2(conn, tmp_repo, tmp_arch, tmp_branch);
+	// Deprecated branch:
+	tmp_branch.push_back("8.0_deprecated");
+	generateIndex2(conn, tmp_repo, tmp_arch, tmp_branch, "deprecated_package_tree", true);
 	
 	for (size_t i=0; i<drepo.size(); ++i) {
 		// Index: /$repo/
