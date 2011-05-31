@@ -32,7 +32,7 @@ class PkgScanResults {
 };
 
 
-map<const PACKAGE *, PkgScanResults> checkRevDeps(const PACKAGE_LIST &pkgList, bool fast = false);
-PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast = false);
+map<const PACKAGE *, PkgScanResults> checkRevDeps(const PACKAGE_LIST &pkgList, bool fast = false, bool skip_symbols = false);
+PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast = false, bool skip_symbols = false);
 
 #endif

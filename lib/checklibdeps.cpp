@@ -100,19 +100,19 @@ size_t PkgScanResults::filteredSize(const vector<string>& symFilter, const vecto
 
 
 // Overloaded for list
-map<const PACKAGE *, PkgScanResults> checkRevDeps(const PACKAGE_LIST &pkgList, bool fast) {
+map<const PACKAGE *, PkgScanResults> checkRevDeps(const PACKAGE_LIST &pkgList, bool fast, bool skip_symbols) {
 	map<const PACKAGE *, PkgScanResults> ret;
 	for (size_t i=0; i<pkgList.size(); ++i) {
 		// If not installed - skip it
 		if (!pkgList[i].installed()) continue;
 		fprintf(stderr, "[%d/%d] %s\n", (int) i+1, (int) pkgList.size(), pkgList[i].get_name().c_str());
-		ret[&pkgList[i]] = checkRevDeps(pkgList[i], fast);
+		ret[&pkgList[i]] = checkRevDeps(pkgList[i], fast, skip_symbols);
 		if (ret[&pkgList[i]].size()>0) fprintf(stderr, "\t%sERRORS:%s %d\n", CL_RED, CL_WHITE, (int) ret[&pkgList[i]].size());
 	}
 	return ret;
 }
 
-PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast) {
+PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast, bool skip_symbols) {
 	PkgScanResults ret;
 	
 	// Check if package has files filled in, if no - report error and return empty results. This check includes that package is installed and checkable.
@@ -126,6 +126,8 @@ PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast) {
 	string tmpfile = get_tmp_file();
 	vector<string> data;
 	string ld_preload;
+	string ldd_options;
+	if (!skip_symbols) ldd_options = " -r ";
 	for (size_t i=0; i<pkg.get_files().size(); ++i) {
 		fname = pkg.get_files().at(i);
 		if (fast) {
@@ -141,7 +143,7 @@ PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast) {
 		if (fname.find("usr/lib")==0 && fname.find("python")!=std::string::npos) ld_preload = "LD_PRELOAD=/usr/lib64/libpython2.6.so ";
 		else ld_preload = "";
 
-		system(ld_preload + "ldd -r '" + SYS_ROOT + fname + "' 2>&1 | grep -P 'undefined symbol|not found' > " + tmpfile);
+		system(ld_preload + "ldd " + ldd_options + " '" + SYS_ROOT + fname + "' 2>&1 | grep -P 'undefined symbol|not found' > " + tmpfile);
 		data = ReadFileStrings(tmpfile);
 		if (data.empty()) continue;
 		ret.parseData(fname, data);
