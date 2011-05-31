@@ -117,7 +117,7 @@ PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast, bool skip_symbols) {
 	
 	// Check if package has files filled in, if no - report error and return empty results. This check includes that package is installed and checkable.
 	if (pkg.get_files().empty()) {
-		mError("FATAL: package " + pkg.get_name() + " has no files filled in, check impossible\n");
+		//mError("FATAL: package " + pkg.get_name() + " has no files filled in, check impossible\n");
 		return ret;
 	}
 
@@ -128,6 +128,22 @@ PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast, bool skip_symbols) {
 	string ld_preload;
 	string ldd_options;
 	if (!skip_symbols) ldd_options = " -r ";
+	// Create LD_LIBRARY_PATH variable. For this, we need a full list of .so paths of package
+	vector<string> ld_paths;
+	bool ld_found;
+	for (size_t i=0; i<pkg.get_files().size(); ++i) {
+		if (pkg.get_files().at(i).find(".so")==pkg.get_files().at(i).size()-3) {
+			ld_found = false;
+			for (size_t t=0; !ld_found && t<ld_paths.size(); ++t) {
+				if (ld_paths[t]==getDirectory(pkg.get_files().at(i))) ld_found = true;
+			}
+			if (!ld_found) ld_paths.push_back(getDirectory(pkg.get_files().at(i)));
+		}
+	}
+	string ld_library_path = "$LD_LIBRARY_PATH";
+	for (size_t i=0; i<ld_paths.size(); ++i) {
+		ld_library_path += ":/" + ld_paths[i];
+	}
 	for (size_t i=0; i<pkg.get_files().size(); ++i) {
 		fname = pkg.get_files().at(i);
 		if (fast) {
@@ -140,10 +156,11 @@ PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast, bool skip_symbols) {
 
 		// Too slow, disabled
 		//msay("[" + pkg.get_name() + ": errs: " + IntToStr(ret.symbolErrors.size() + ret.notFoundErrors.size()) + "] [" + IntToStr(i+1) + "/" + IntToStr(pkg.get_files().size()) + "]: /" + fname);
-		if (fname.find("usr/lib")==0 && fname.find("python")!=std::string::npos) ld_preload = "LD_PRELOAD=/usr/lib64/libpython2.6.so ";
+		if (fname.find("usr/lib/")==0 && fname.find("python")!=std::string::npos) ld_preload = "LD_PRELOAD=/usr/lib/libpython2.6.so ";
+		else if (fname.find("usr/lib64/")==0 && fname.find("python")!=std::string::npos) ld_preload = "LD_PRELOAD=/usr/lib64/libpython2.6.so ";
 		else ld_preload = "";
 
-		system(ld_preload + "ldd " + ldd_options + " '" + SYS_ROOT + fname + "' 2>&1 | grep -P 'undefined symbol|not found' > " + tmpfile);
+		system(ld_preload + " " + ld_library_path + " ldd " + ldd_options + " '" + SYS_ROOT + fname + "' 2>&1 | grep -P 'undefined symbol|not found' > " + tmpfile);
 		data = ReadFileStrings(tmpfile);
 		if (data.empty()) continue;
 		ret.parseData(fname, data);
