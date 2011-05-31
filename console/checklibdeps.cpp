@@ -131,8 +131,8 @@ int main(int argc, char **argv) {
 
 	PkgScanResults res;
 	vector<PACKAGE *> rebuild_queue;
-	vector<string> errorList;
-	string tmpErrList;
+	//vector<string> errorList;
+	//string tmpErrList;
 	for (size_t i=0; i<pkgList.size(); ++i) {
 		if (!pkgList[i].installed()) continue;
 		res = scanResults[&pkgList[i]];
@@ -146,18 +146,18 @@ int main(int argc, char **argv) {
 		if (verbose_level>0 && !compact) {
 			vector<string> sE = res.getLostSymbols(symFilter);
 			vector<string> lE = res.getLostLibs(libFilter);
-			tmpErrList.clear();
+			//tmpErrList.clear();
 			printf(_("\tSymbol errors: %d\n"), (int) sE.size());
 			for (size_t t=0; t<sE.size(); ++t) {
 				cout << "\t\t" << sE[t] << endl;
-				tmpErrList += sE[t] + "\n";
+				//tmpErrList += sE[t] + "\n";
 			}
 			printf(_("\tLibrary errors: %d\n"), (int) lE.size());
 			for (size_t t=0; t<lE.size(); ++t) {
 				cout << "\t\t" << lE[t] << endl;
-				tmpErrList += lE[t] + "\n";
+				//tmpErrList += lE[t] + "\n";
 			}
-			errorList.push_back(tmpErrList);
+			//errorList.push_back(tmpErrList);
 		}
 		if (verbose_level>1) {
 			if (!compact) printf(_("\tDetails:\n"));
@@ -175,9 +175,9 @@ int main(int argc, char **argv) {
 	// Check if we need to rebuild
 	if (interactive) {
 		vector<MenuItem> m;
-		for (size_t i=0; i<rebuild_queue.size() && i<errorList.size(); ++i) {
+		for (size_t i=0; i<rebuild_queue.size() /*&& i<errorList.size()*/; ++i) {
 			// TODO: showExMenu currently ignores errorList entry, so we should either implement callback for some key to show errors, or implement showing errorList in showExMenu.
-			m.push_back(MenuItem(rebuild_queue[i]->get_name(), rebuild_queue[i]->get_fullversion(), errorList[i], false));
+			m.push_back(MenuItem(rebuild_queue[i]->get_name(), rebuild_queue[i]->get_fullversion(), "", false));
 		}
 		dialogMode = true;
 		if (ncInterface.showExMenu(_("Select packages you want to rebuild:"), m)!=0) return 0;
