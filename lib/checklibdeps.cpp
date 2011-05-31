@@ -138,7 +138,7 @@ PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast) {
 
 		// Too slow, disabled
 		//msay("[" + pkg.get_name() + ": errs: " + IntToStr(ret.symbolErrors.size() + ret.notFoundErrors.size()) + "] [" + IntToStr(i+1) + "/" + IntToStr(pkg.get_files().size()) + "]: /" + fname);
-		if (fname.find("usr/lib")==0 && fname.find("python")!=std::string::npos && fname.find("site-packages")!=std::string::npos) ld_preload = "LD_PRELOAD=/usr/lib64/libpython2.6.so ";
+		if (fname.find("usr/lib")==0 && fname.find("python")!=std::string::npos) ld_preload = "LD_PRELOAD=/usr/lib64/libpython2.6.so ";
 		else ld_preload = "";
 
 		system(ld_preload + "ldd -r '" + SYS_ROOT + fname + "' 2>&1 | grep -P 'undefined symbol|not found' > " + tmpfile);
