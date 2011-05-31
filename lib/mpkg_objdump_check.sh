@@ -11,7 +11,7 @@ mkdir -p $OUTLDDDIR
 let i=0
 echo "objdump: searching from $i"
 for index in $LDDLIST; do
-	objdump -p $TMPDIR/$index 2>/dev/null | grep NEEDED > $OUTLDDDIR/$i
+	LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:`dirname $TMPDIR/$index` objdump -p $TMPDIR/$index 2>/dev/null | grep NEEDED > $OUTLDDDIR/$i
 	#if [ "`cat $OUTLDDDIR/$i`" != "" ] ; then
 	#	cat $OUTLDDDIR/$i
 	#fi
