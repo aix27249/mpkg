@@ -140,7 +140,7 @@ PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast, bool skip_symbols) {
 			if (!ld_found) ld_paths.push_back(getDirectory(pkg.get_files().at(i)));
 		}
 	}
-	string ld_library_path = "$LD_LIBRARY_PATH";
+	string ld_library_path = "LD_LIBRARY_PATH=$LD_LIBRARY_PATH";
 	for (size_t i=0; i<ld_paths.size(); ++i) {
 		ld_library_path += ":/" + ld_paths[i];
 	}
