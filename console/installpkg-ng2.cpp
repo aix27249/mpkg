@@ -1232,6 +1232,17 @@ int main (int argc, char **argv)
 			}
 			// Add ending slash if missing
 			if (url[url.size()-1]!='/') url += "/";
+
+			// Check file:// repo existance, and warn user if it doesn't exist or doesn't contains index
+			if (url.find("file:///")==0) {
+				string path = url.substr(strlen("file://"));
+				if (!FileExists(path)) {
+					mWarning(_("Directory ") + path + _(" doesn't exist"));
+				}
+				else if (!FileExists(path+"packages.xml.xz") && !FileExists(path+"packages.xml.gz")) {
+					mWarning(_("Directory ") + path + _(" missing any package index"));
+				}
+			}
 			
 			core.add_repository(url);
 		}
