@@ -1219,8 +1219,21 @@ int main (int argc, char **argv)
 	if ( action == ACT_ADD_REPOSITORY ) {
 		_cmdOptions["sql_readonly"]="yes";
 		if (argc<=optind) return print_usage(stderr,1);
+		string url;
 		for (int i=optind; i < argc; i++) {
-			core.add_repository((string) argv[i]);
+			// Check URL for validity
+			url = argv[i];
+			if (url.empty()) continue;
+			if (url[0]=='/') url="file://" + url; // Convert absolute paths to file:// URLs
+			if (url.find("http://")!=0 && url.find("ftp://")!=0 && url.find("https://")!=0 && url.find("ftps://")!=0 && url.find("cdrom://")!=0 && url.find("file:///")!=0) {
+				// Invalid URL: warn user and skip it
+				mWarning(_("Invalid repository URL ") + url);
+				continue;
+			}
+			// Add ending slash if missing
+			if (url[url.size()-1]!='/') url += "/";
+			
+			core.add_repository(url);
 		}
 		list_rep(&core);
 		return 0;
