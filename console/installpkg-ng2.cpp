@@ -566,6 +566,7 @@ int main (int argc, char **argv)
 				r_name.push_back(SYS_CACHE + getFilename(argv[i]));
 
 			}
+			else if (string(argv[i]).find("file:///")==0) r_name.push_back(string(argv[i]).substr(strlen("file://"))); // #1460: added handler for file:// urls.
 			else r_name.push_back((string) argv[i]);
 		}
 
