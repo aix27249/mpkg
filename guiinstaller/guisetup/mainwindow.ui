@@ -136,7 +136,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans';&quot;&gt;This installer is running inside a live system. It contains a working environment with web browser, IM client and other useful things, which you can use to get assistance at installation time.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Droid Sans';&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans'; font-weight:600;&quot;&gt;TINY DISCLAIMER&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans';&quot;&gt;This is a second beta. Please report bugs to http://trac.agilialinux.ru/.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans';&quot;&gt;This is a first release candidate. Please report bugs to http://trac.agilialinux.ru/.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Droid Sans';&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans';&quot;&gt;It is known that it contain some bugs (and some of them are unknown), it may even fail to install. It can eat your cat, make your eyes red and glowing, cause permanent insomnia and make other bad things.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Droid Sans';&quot;&gt;&lt;/p&gt;
@@ -1085,7 +1085,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QRadioButton" name="nvidiaLatestRadioButton">
           <property name="text">
-           <string>270.xx: GeForce 6 and later cards (including Quadro and ION)</string>
+           <string>Latest: GeForce 6 and later cards (including Quadro and ION)</string>
           </property>
           <property name="checked">
            <bool>false</bool>
@@ -1101,6 +1101,9 @@ p, li { white-space: pre-wrap; }
         </item>
         <item>
          <widget class="QRadioButton" name="nvidia96RadioButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>96.xx: GeForce 2 Ti (NOT MX), 3, 4 Ti, 4 MX; Quadro 2 MXR, 2 Go, 4 Go, NVS</string>
           </property>
@@ -1109,7 +1112,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QRadioButton" name="nvidiaNVRadioButton">
           <property name="text">
-           <string>Use open source driver (nouveau)</string>
+           <string>Do not install proprietary driver, use opensource instead</string>
           </property>
           <property name="checked">
            <bool>true</bool>
