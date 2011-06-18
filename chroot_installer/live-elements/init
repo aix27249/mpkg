@@ -189,7 +189,6 @@ if [ "$RESCUE" = "" ]; then
   # Initialize LVM:
   if [ -x /sbin/vgscan ]; then
     /sbin/vgscan --mknodes --ignorelockingfailure
-    sleep 10
     /sbin/vgchange -ay --ignorelockingfailure
   fi
   
@@ -328,56 +327,6 @@ fi
 	mkdir -p /mnt/bootmedia
         mount -o bind /media /mnt/bootmedia
   fi
-
-  mkdir -p /mnt/bin
-  mkdir -p /squash/bin
-  mkdir -p /squash/bin.tmp
-  mkdir -p /mnt/sbin
-  mkdir -p /squash/sbin
-  mkdir -p /squash/sbin.tmp
-  mkdir -p /mnt/lib
-  mkdir -p /squash/lib
-  mkdir -p /squash/lib.tmp
-  if [ -r $FSDIR/lib64.sfs ] ; then
-	mkdir -p /mnt/lib64
-	mkdir -p /squash/lib64.tmp
-	mkdir -p /squash/lib64
-  fi
-  mkdir -p /mnt/usr
-  mkdir -p /squash/usr
-  mkdir -p /squash/usr.tmp
-  echo "Assembling live filesystem, FSDIR=$FSDIR"
-  
-  mount -t squashfs $FSDIR/bin.sfs /squash/bin
-  mount -t tmpfs none /squash/bin.tmp
-  mount -t aufs -o dirs=/squash/bin.tmp:/squash/bin=ro none /mnt/bin
-
-  mount -t squashfs $FSDIR/sbin.sfs /squash/sbin
-  mount -t tmpfs none /squash/sbin.tmp
-  mount -t aufs -o dirs=/squash/sbin.tmp:/squash/sbin=ro none /mnt/sbin
-
-
-  mount -t squashfs $FSDIR/lib.sfs /squash/lib
-  mount -t tmpfs none /squash/lib.tmp
-  mount -t aufs -o dirs=/squash/lib.tmp:/squash/lib=ro none /mnt/lib
-
-  if [ -r $FSDIR/lib64.sfs ] ; then
-  	mount -t squashfs $FSDIR/lib64.sfs /squash/lib64
-	mount -t tmpfs none /squash/lib64.tmp
-	mount -t aufs -o dirs=/squash/lib64.tmp:/squash/lib64=ro none /mnt/lib64
-
-  fi
-  mount -t squashfs $FSDIR/usr.sfs /squash/usr
-  mount -t tmpfs none /squash/usr.tmp
-  mount -t aufs -o dirs=/squash/usr.tmp:/squash/usr=ro none /mnt/usr
- 
-  mkdir -p /mnt/usr/local
-  mkdir -p /squash/local
-  mount -t squashfs $FSDIR/local.sfs /squash/local
-  mkdir -p /squash/local.tmp
-  mount -t tmpfs none /squash/local.tmp
-  mount -t aufs -o dirs=/squash/local.tmp:/squash/local=ro none /mnt/usr/local
-
 
   if [ "$DEBUG" == "1" ] ; then
      echo "Entering debug mode, type exit when done"
