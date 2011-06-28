@@ -501,7 +501,7 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 					else if (item->url_list.at(j).find("file://")!=0 && item->url_list.at(j).find("cdrom://")!=0) {
 						if (downloadProgressData->size()>0) {
 							downloadProgressData->downloadAction=true;
-							downloadProgressData->setItemCurrentAction(item->itemID, _("Downloading"));
+							downloadProgressData->setItemCurrentAction(item->itemID, _("Downloading") + string(" (") + IntToStr(i+1) + "/" + IntToStr(list.size()) + ")");
 							downloadProgressData->setItemState(item->itemID,ITEMSTATE_INPROGRESS);
 							downloadProgressData->setItemChanged(item->itemID);
 						}

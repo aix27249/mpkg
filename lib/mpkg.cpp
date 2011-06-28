@@ -761,14 +761,14 @@ download_process:
 				sqlFlush();
 				return MPKGERROR_ABORTED;
 			}
-			pData.setItemCurrentAction(install_list[i].itemID, string("installing [") + humanizeSize(IntToStr(pkgInstallSpeed)) + _("/s, ETA: ") + IntToStr(ETA_Time/60) + _(" min") + string("]"));
+			pData.setItemCurrentAction(install_list[i].itemID, string("installing [") + IntToStr(i+1) + "/" + IntToStr(install_list.size()) + ", " + humanizeSize(IntToStr(pkgInstallSpeed)) + _("/s, ETA: ") + IntToStr(ETA_Time/60) + _(" min") + string("]"));
 			pData.setItemState(install_list[i].itemID, ITEMSTATE_INPROGRESS);
 			msay(_("Installing package ") + install_list[i].get_name());
 
 			if (dialogMode)
 			{
 				if (pkgInstallTime.size()>1 && pkgInstallSpeed!=0) {
-					ncInterface.setSubtitle(_("Installing packages") + string(" [") + humanizeSize(IntToStr(pkgInstallSpeed)) + _("/s, ETA: ") + IntToStr(ETA_Time/60) + _(" min") + string("]"));
+					ncInterface.setSubtitle(_("Installing packages") + string(" [") + humanizeSize(IntToStr(pkgInstallSpeed)) + _("/s, ETA: ") + IntToStr((ETA_Time/60)+1) + _(" min") + string("]"));
 				}
 				ncInterface.setProgressText("[" + IntToStr(i+1) + "/" + IntToStr(install_list.size()) + _("] Installing: ") + \
 						install_list[i].get_name() + "-" + \
@@ -808,6 +808,9 @@ download_process:
 		
 			if (pkgTotalInstallTime!=0) pkgInstallSpeed=(long double) pkgInstallCurrentSize/(long double) pkgTotalInstallTime; // Update pkgInstal speed
 			ETA_Time = (time_t) ((long double) (sz-pkgInstallCurrentSize)/pkgInstallSpeed);
+			if (i==install_list.size()-1) {
+				pData.setItemCurrentAction(install_list[i].itemID, string(_("Installation finished, doing post-install actions")));
+			}
 
 
 		}
