@@ -260,6 +260,7 @@ bool AgiliaSetup::setMpkgConfig(string pkgsource, const string& volname, const s
 
 	// Now, alternate package sources: for updates and so on
 	for (size_t i=0; i<additional_repositories.size(); ++i) {
+		fprintf(stderr, "Adding repo: %s\n", additional_repositories[i].c_str());
 		rList.push_back(additional_repositories[i]);
 	}
 

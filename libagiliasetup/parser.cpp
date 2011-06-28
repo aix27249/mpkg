@@ -90,9 +90,8 @@ void parseConfig(map<string, string> *_strSettings, vector<TagPair> *_users, vec
 	vector<string> additional_repositories;
 
 	map<string, map<string, string> > partitions;
-	vector<string> repositories;
 	string home = getenv("HOME");
-	loadSettings(home + "/.config/agilia_installer.conf", strSettings, repositories, partitions);
+	loadSettings(home + "/.config/agilia_installer.conf", strSettings, additional_repositories, partitions);
 
 	
 	users.push_back(TagPair(strSettings["username"], strSettings["userpasswd"]));

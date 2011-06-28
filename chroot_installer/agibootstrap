@@ -1,0 +1,125 @@
+#!/bin/bash
+# This tool installs system into chroot.
+
+usage() {
+	echo 'agibootstrap - Installs AgiliaLinux into chroot'
+	echo ''
+	echo "Usage: $0 [OPTIONS] install_path"
+	echo 'Available options:'
+	echo '-h			Show this help'
+	echo '-w [NAME]		Specify package list from repository. Default is MINIMAL'
+	echo '-l [FILENAME] 		Specify package list from file. If specified, it overrides -w'
+	echo '-a [ARCH]		Specify destination architecture, default is host architecture'
+	echo '-r [URL] 		Specify repository URL'
+}
+
+while getopts "hw:l:a:r:" OPTION ; do
+	case $OPTION in
+		h)
+			usage
+			exit 1
+			;;
+		w)
+			WEBLIST="$OPTARG"
+			;;
+		l)
+			LIST="$OPTARG"
+			;;
+		a)
+			ARCH="$OPTARG"
+			;;
+		r)
+			REPO="$OPTARG"
+			;;
+		?)
+			usage
+			exit
+			;;
+	esac
+done
+
+shift $(($OPTIND - 1))
+NODE=$1
+
+# INIT
+set -e
+export PATH=${scriptdir}/bin:$PATH
+CWD=${scriptdir}/live-elements
+# Set alias for chroot to fakechroot. Let's see if it can work such way
+
+# Loading global config
+if [ -r "/etc/mklivecd.conf" ] ; then
+	. /etc/mklivecd.conf
+fi
+
+# Loading local user config
+if [ -r "${REAL_HOME}/.mklivecd.conf" ] ; then
+	. ${REAL_HOME}/.mklivecd.conf
+fi
+
+scriptdir=${scriptdir:-/usr/share/mklivecd/scripts} # This should be defined in global config at package build time in case if you use another paths
+TMPDIR=/tmp/agibootstrap-$$$$$$
+mkdir -p $TMPDIR
+
+
+
+HOSTARCH=`uname -m`
+if [ "$HOSTARCH" != "x86_64" ] ; then
+	HOSTARCH=x86
+fi
+
+
+ARCH=${ARCH:-`uname -m`}
+if [ "$ARCH" != "x86_64" ] ; then
+	ARCH=x86
+fi
+
+if [ "`id -u`" != "0" -a "$HOSTARCH" != "$ARCH" ] ; then
+	echo "Sorry, installing x86 chroot in x86_64 system is only possible with root privileges."
+	exit 1
+fi
+
+if [ "$ARCH" = "x86_64" -a "$HOSTARCH" = "x86" ] ; then
+	echo "Sorry, installing x86_64 chroot in x86 system is impossible."
+	exit 1
+fi
+
+
+# Repository
+REPO=${REPO:-"http://core.agilialinux.ru/"}
+if [ -z "$NODE" ] ; then
+	usage
+	exit 1
+fi
+if [ -f "${NODE}" -o -d "${NODE}" ] ; then
+	echo "Directory exists, remove it before bootstrapping there"
+	exit 1
+fi
+# URL for setup variants
+WEB_LIST_PATH="http://core.agilialinux.ru/8.0/setup_variants/"
+
+
+# Parsing user input
+if [ -z "$LIST" ] ; then
+	WEBLIST=${WEBLIST:-MINIMAL}
+	wget ${WEB_LIST_PATH}${WEBLIST}.list -O $TMPDIR/pkglist
+	LIST=$TMPDIR/pkglist
+else
+	if [ ! -f "$LIST" ] ; then
+		echo "Package list not found"
+	fi
+fi
+
+
+mkdir -p "${NODE}"
+
+if [ "`id -u`" != "0" ] ; then
+	FAKEROOT=fakeroot
+fi
+
+ARCH=$ARCH LIST="$LIST" NODE="$NODE" REPO="$REPO" $FAKEROOT ${scriptdir}/install_virtual_machine.sh
+rm -f ${TMPDIR}/pkglist
+rmdir ${TMPDIR}
+echo "Complete!"
+
+set +e
