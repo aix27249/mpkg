@@ -3,7 +3,9 @@
  */
 #include <mpkg/libmpkg.h>
 int print_usage() {
-	printf("Usage: mpkg-deporder FILENAME, where FILENAME is file with package names\n");
+	// FIXME: this is a shit-like usage output.
+	fprintf(stderr, "Reads package names from specified file, and generates it's dependency order using data from mpkg database. Note that the latest known packages will be always picked.\n");
+	fprintf(stderr, "Usage:\n\tmpkg-deporder FILENAME, where FILENAME is file with package names\n");
 	return 1;
 }
 bool canBeResolvedBy(const PACKAGE &pkg, const vector<PACKAGE *> pkgarray) {
@@ -54,7 +56,7 @@ vector<PACKAGE *> buildDependencyOrderNew(const PACKAGE_LIST &packages) {
 
 }
 int main(int argc, char **argv) {
-	if (argc<1) return print_usage();
+	if (argc<2) return print_usage();
 	string filename = argv[1];
 	vector<string> pkgnames = ReadFileStrings(filename);
 	mpkg core;

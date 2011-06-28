@@ -11,7 +11,7 @@ int showCmdHelp(const string cmd, bool is_error)
 	showBanner();
 
 	fprintf(stream, _("\nUsage: %s [options] ACTION [package] [package] ...\n"), cmd.c_str());
-	fprintf(stream,_("Options:\n"));
+	fprintf(stream,_("Common options:\n"));
 	fprintf(stream,_("\t-h    --help              show this help\n"));
 	fprintf(stream,_("\t-v    --verbose           be verbose\n"));
 	fprintf(stream,_("\t-g    --dialog            use dialog mode UI\n"));
@@ -51,7 +51,7 @@ int showCmdHelp(const string cmd, bool is_error)
 	fprintf(stream,_("\t-e    --arch=ARCH         temporarily override architecture. Valid options is x86_64 and x86.\n"));
 
 	
-	fprintf(stream,_("\nActions:\n"));
+	fprintf(stream,_("\nAvailable commands:\n"));
 	fprintf(stream,_("\tmpkg-version                            show mpkg version\n"));
 	fprintf(stream,_("\tmpkg-install PACKAGE_NAME | FILENAME    install package(s)\n"));
 	fprintf(stream,_("\tmpkg-upgradeall                         upgrade all installed packages\n"));
@@ -76,7 +76,7 @@ int showCmdHelp(const string cmd, bool is_error)
 	fprintf(stream,_("\tmpkg-delete_rep REPOSITORY_NUMBER       delete Nth repository\n"));
 	fprintf(stream,_("\tmpkg-enable_rep REPOSITORY_NUMBER       enable Nth repository\n"));
 	fprintf(stream,_("\tmpkg-disable_rep REPOSITORY_NUMBER      disable Nth repository\n"));
-	fprintf(stream,_("\tmpkg-getrepositorylist [LIST_URL]       get the list of repositories from server (by default, from rpunet.ru)\n"));
+	fprintf(stream,_("\tmpkg-getrepositorylist [LIST_URL]       get the list of repositories from server (by default, from packages.agilialinux.ru)\n"));
 	fprintf(stream,_("\tmpkg-installfromlist FILE_NAME          install using file with list of items\n"));
 	fprintf(stream,_("\tmpkg-exportinstalled [FILE_NAME]        export list of installed packages to file or stdout\n"));
 	fprintf(stream,_("\tmpkg-reset                              reset queue\n"));
@@ -85,24 +85,45 @@ int showCmdHelp(const string cmd, bool is_error)
 	fprintf(stream,_("\tmpkg-search PATTERN                     search package by name containing PATTERN\n"));
 	fprintf(stream,_("\tmpkg-searchdescription PATTERN          search package by description containing PATTERN\n"));
 	fprintf(stream,_("\tmpkg-clean                              remove all downloaded packages from cache\n"));
-	fprintf(stream,_("\tmpkg-check [package_name]               checks installed package(s) for damaged files. Use -r flag to to repair\n"));
-	fprintf(stream,_("\tmpkg-checklibdeps [package_name]        checks installed package(s) for broken libs. Use -r flag to to repair\n"));
+	fprintf(stream,_("\tmpkg-check [package_name]               checks installed package(s) for missing files. Use -r flag to to repair\n"));
+	fprintf(stream,_("\tmpkg-checkdeps URL                      checks specified repository if all dependencies can be resolved within same repository"));
 
 
+	fprintf(stream,_("\tmpkg-checklibdeps [PACKAGE_NAME]        checks installed package(s) for broken binary dependencies.\n"));
+	fprintf(stream,_("\tmpkg-altlist			    shows all alternatives in database\n"));
+	fprintf(stream,_("\tmpkg-altshow PACKAGE_NAME		    shows all alternative branches of specified package\n")); 
+	fprintf(stream,_("\tmpkg-conflicts PACKAGE_NAME		    checks package for file conflicts (files with same names and paths, but from different packages)\n")); 
+	fprintf(stream,_("\tmpkg-deleteprofile PROFILE_NAME	    delete repository profile\n")); 
+	fprintf(stream,_("\tmpkg-depgraph URL OUTPUT_FILE           generates dot file with dependency graph of specified package\n")); 
+	fprintf(stream,_("\tmpkg-deporder FILENAME	            reads package names from specified file, and generates it's dependency order\n")); 
+	fprintf(stream,_("\tmpkg-fixdeps		            fixes broken dependencies of installed packages\n")); 
+	fprintf(stream,_("\tmpkg-listprofiles		            shows list of known repository profiles\n")); 
+	fprintf(stream,_("\tmpkg-maintainer OPTIONS [NAME] [EMAIL]  get/set maintainer name and email (for mkpkg)\n")); 
+	fprintf(stream,_("\tmpkg-quicklist		            shows machine-readable list of all installed packages. Used primarily in bash-completion.\n")); 
+	fprintf(stream,_("\tmpkg-rollback [TRANSACTION_ID] [PACKAGE_NAME]  transactions rollback. Rolls back latest transaction. See command help for details.\n")); 
+	fprintf(stream,_("\tmpkg-saveprofile PROFILE_NAME	    saves current repository set under specified profile name.\n")); 
+	fprintf(stream,_("\tmpkg-setmeta PATH | FILENAME [OPTIONS]  a tool to modify package metadata. See command help for details\n")); 
+	fprintf(stream,_("\tmpkg-setprofile PROFILE_NAME	    loads specified repository set profile.\n")); 
+	fprintf(stream,_("\tmpkg-spkg2abuild FILENAME		    converts spkg file to ABUILD tree.\n")); 
+	fprintf(stream,_("\tmpkg-transactions			    shows all package transactions.\n")); 
+	fprintf(stream,_("\tmpkg-validate PATH | FILENAME	    validates package integrity and some guidelines.\n")); 
+
+	
+	
+	
 	fprintf(stream,_("\nInteractive options:\n"));
 	fprintf(stream,_("\tmpkg-menu                      shows the package selection menu\n"));
 	
 	fprintf(stream,_("\nRepository maintaining functions:\n"));
-	fprintf(stream,_("\tindex                     create a repository index file \"packages.xml.xz\"\n"));
-	fprintf(stream,_("\tconvert_dir <outp_dir>    convert whole directory (including sub-dirs) to MPKG format\n"));
-	fprintf(stream,_("\tconvert <filename>        convert package to MPKG format\n"));
-	fprintf(stream,_("\tnativize [dir]            search directory for non-native packages and convert it to MPKG format\n"));
-	fprintf(stream,_("\tgendeps <filename(s)>         generate dependencies and import it into package\n"));
-	fprintf(stream,_("\tgendeps2 <filename(s)>         generate dependencies and import it into package (new algorithm\n"));
-	fprintf(stream,_("\tcleardeps <filename>         clear package dependencies\n"));
-	fprintf(stream,_("\tchecklist [dir]           check md5 sums of a package tree (requires a valid index in this dir)\n"));
-	fprintf(stream,_("\tsync <syncmap file>       syncronize repositories by sync map\n"));
-	fprintf(stream,_("\tbuildup <filename>        increase spkg/tgz build\n"));
+	fprintf(stream,_("\tmpkg-index                     create a repository index file \"packages.xml.xz\"\n"));
+	fprintf(stream,_("\tmpkg-convert_dir <outp_dir>    convert whole directory (including sub-dirs) to MPKG format\n"));
+	fprintf(stream,_("\tmpkg-convert <filename>        convert package to MPKG format\n"));
+	fprintf(stream,_("\tmpkg-nativize [dir]            search directory for non-native packages and convert it to MPKG format\n"));
+	fprintf(stream,_("\tmpkg-gendeps <filename(s)>         generate dependencies and import it into package. Also can be called by mpkg-gendeps2.\n"));
+	fprintf(stream,_("\tmpkg-cleardeps <filename>         clear package dependencies\n"));
+	fprintf(stream,_("\tmpkg-checklist [dir]           check md5 sums of a package tree (requires a valid index in this dir)\n"));
+	fprintf(stream,_("\tmpkg-sync <syncmap file>       syncronize repositories by sync map\n"));
+	fprintf(stream,_("\tmpkg-buildup <filename>        increase spkg/tgz build\n"));
 	fprintf(stream, "\n");
 
 

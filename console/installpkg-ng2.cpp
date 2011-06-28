@@ -360,7 +360,7 @@ int main (int argc, char **argv)
 	if (mConfig.getValue("require_root")=="false") require_root = false;
 	if (require_root && uid != 0 ) {
 		string arg_string;
-		arg_string = (string) program_name + " -x ";
+		arg_string = (string) argv[0] + " -x ";
 		for (int i=1; i<argc; i++) {
 			arg_string += (string) argv[i] + " ";
 		}

@@ -34,7 +34,7 @@ LINK_LIBRARIES(mpkg)
 ADD_EXECUTABLE(mpkg-core installpkg-ng2)
 SET_TARGET_PROPERTIES(mpkg-core PROPERTIES OUTPUT_NAME "mpkg")
 ADD_EXECUTABLE(mpkg-validate validator)
-ADD_EXECUTABLE(mpkg-create-deltas createdeltas)
+#ADD_EXECUTABLE(mpkg-create-deltas createdeltas)
 #ADD_EXECUTABLE(testing testing)
 #ADD_EXECUTABLE(mpkgeditor pkgeditor)
 ADD_EXECUTABLE(mpkg-setmeta setmeta)
@@ -43,7 +43,7 @@ ADD_EXECUTABLE(mpkg-saveprofile saveprofile)
 ADD_EXECUTABLE(mpkg-listprofiles listprofiles)
 ADD_EXECUTABLE(mpkg-deleteprofile deleteprofile)
 ADD_EXECUTABLE(mpkg-depgraph depgraph)
-ADD_EXECUTABLE(mpkg-collectfileindex collectfileindex)
+#ADD_EXECUTABLE(mpkg-collectfileindex collectfileindex)
 ADD_EXECUTABLE(mpkg-checkdeps checkdeps)
 ADD_EXECUTABLE(mpkg-altlist altlist)
 ADD_EXECUTABLE(mpkg-altshow altshow)
@@ -63,13 +63,13 @@ ADD_EXECUTABLE(mpkg-conflicts conflicts)
 FILE(GLOB aliases "${CMAKE_CURRENT_SOURCE_DIR}/aliases/mpkg-*")
 FILE(GLOB update_all_caches "${CMAKE_CURRENT_SOURCE_DIR}/update-all-caches")
 IF(X86_64)
-	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-create-deltas mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-collectfileindex mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts
+	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib64
 		ARCHIVE DESTINATION lib64
 	)
 ELSE(X86_64)
-	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-create-deltas mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-collectfileindex mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts
+	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib
 		ARCHIVE DESTINATION lib
@@ -77,7 +77,7 @@ ELSE(X86_64)
 ENDIF(X86_64)
 INSTALL(FILES ${aliases} DESTINATION bin PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE )
 INSTALL(FILES ${update_all_caches} DESTINATION bin PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE )
-INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mpkg-importsrc" DESTINATION bin PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE )
+#INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mpkg-importsrc" DESTINATION bin PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE )
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/scripts/mpkglddcheck.sh" DESTINATION libexec PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mkpkg_generator.sh" DESTINATION bin PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/amerge" DESTINATION bin PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE)
