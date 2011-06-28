@@ -12,7 +12,7 @@
 #include <mpkg/ncurses_if.h>
 #include <time.h>
 #include <mpkg/tests.h>
-const char* program_name;
+#include <mpkg/console-help.h>
 extern char* optarg;
 extern int optind, opterr, optopt;
 //string output_dir;
@@ -20,8 +20,6 @@ extern int optind, opterr, optopt;
 bool repair_damaged=false;
 int setup_action(char* act);
 int check_action(char* act);
-int print_usage(FILE* stream=stdout, int exit_code=0);
-void ShowBanner();
 int list_rep(mpkg *core);
 bool showOnlyAvailable=false;
 bool showOnlyInstalled=false;
@@ -31,10 +29,11 @@ bool enqueueOnly = false;
 bool exportinstalled_includeversions = false;
 bool index_filelist = false;
 bool rssMode = false;
-void ShowBanner()
-{
-	say("MPKG package system v.%s\n", mpkgVersion);
+string program_name;
+int print_usage(string cmd, bool is_error = false) {
+	return showCmdHelp(cmd, is_error);
 }
+
 void cleanDebugFile()
 {
 	struct stat s;
@@ -60,7 +59,7 @@ int main (int argc, char **argv)
 	ncInterface.setStrings();
 
 	cleanDebugFile();
-
+	program_name = argv[0];
 
 	/**
 	 * remove everything?
@@ -129,7 +128,6 @@ int main (int argc, char **argv)
 		{ NULL, 		0, NULL, 	0}
 	};
 
-	program_name = argv[0];
 	bool clear_other_tags = false;
 	pid_t pid;
 	if (!dialogMode) interactive_mode=true;
@@ -214,8 +212,7 @@ int main (int argc, char **argv)
 					do_reset=false;
 					break;
 			case 'h':
-					print_usage(stdout, 0);
-					return 0;
+					return print_usage(program_name);
 
 			case 'v':
 					verbose = true;
@@ -288,7 +285,7 @@ int main (int argc, char **argv)
 					interactive_mode = false;
 					break;
 			case '?':
-					return print_usage(stderr, 1);
+					return print_usage(program_name, true);
 
 			case -1:
 					break;
@@ -308,7 +305,7 @@ int main (int argc, char **argv)
 		mError(_("Error initializing CORE"));
 		abort();
 	}
-	if (string(argv[0]).find("buildpkg")==string(argv[0]).size()-strlen("buildpkg"))
+	if (string(program_name).find("buildpkg")==string(program_name).size()-strlen("buildpkg"))
 	{
 		if (argc-optind==1) core.build_package((string) argv[optind],false);
 		if (argc-optind==0) core.build_package((string) "", false);
@@ -319,7 +316,7 @@ int main (int argc, char **argv)
 		}
 	    	return 0;
 	}
-	if ((string) argv[0] == "buildsrcpkg")
+	if ((string) program_name == "buildsrcpkg")
 	{
 		if (argc==2) core.build_package((string) argv[1],true);
 		if (argc==1) core.build_package((string) "", true);
@@ -330,11 +327,10 @@ int main (int argc, char **argv)
 		}
 	    	return 0;
 	}
-	//if (showHeader) ShowBanner();
 	if ( optind < argc ) {
 		if ( check_action( argv[optind++] ) == -1 )
 		{
-			return print_usage(stderr, 1);
+			return print_usage(program_name, true);
 		}
 		
 		action = setup_action( argv[optind-1] );
@@ -364,7 +360,7 @@ int main (int argc, char **argv)
 	if (mConfig.getValue("require_root")=="false") require_root = false;
 	if (require_root && uid != 0 ) {
 		string arg_string;
-		arg_string = (string) argv[0] + " -x ";
+		arg_string = (string) program_name + " -x ";
 		for (int i=1; i<argc; i++) {
 			arg_string += (string) argv[i] + " ";
 		}
@@ -398,18 +394,14 @@ int main (int argc, char **argv)
 	{
 		if (do_reset) core.clean_queue();
 	}
-	if (htmlMode) {
-		newHtmlPage();
-		printHtml("MPKG запущен");
-	}
 
 	if ( action == ACT_NONE ) {
-		return print_usage(stderr, 1);
+		return print_usage(program_name, true);
 	}
 
 	if ( action == ACT_SHOW)
 	{
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 		
 		_cmdOptions["sql_readonly"]="yes";
 		//------
@@ -438,23 +430,15 @@ int main (int argc, char **argv)
 	vector<string> pname;
 	if (action == ACT_COMMIT)
 	{
-		if (argc!=optind) return print_usage(stderr,1);
-		newHtmlPage();
-		printHtml("Выполнение очереди намеченных ранее операций...");
-		int ret = core.commit();
+		if (argc!=optind) return print_usage(program_name, true);
+		core.commit();
 		unlockDatabase();
-		newHtmlPage();
-		if (ret) printHtml("При выполнении очереди возникли ошибки");
-		else {
-			printHtml("Очередь действий выполнена успешно");
-			printHtmlRedirect();
-		}
 		return 0;
 	}
 
 	if (action == ACT_SHOWQUEUE)
 	{
-		if (argc!=optind) return print_usage(stderr,1);
+		if (argc!=optind) return print_usage(program_name, true);
 
 		_cmdOptions["sql_readonly"]="yes";
 		vector<string> list_empty;
@@ -465,7 +449,7 @@ int main (int argc, char **argv)
 
 	if (action == ACT_RESETQUEUE)
 	{
-		if (argc!=optind) return print_usage(stderr,1);
+		if (argc!=optind) return print_usage(program_name, true);
 
 		lockDatabase();
 		core.clean_queue();
@@ -484,7 +468,7 @@ int main (int argc, char **argv)
 
 	if (action == ACT_PACKAGEMENU)
 	{
-		if (argc!=optind) return print_usage(stderr,1);
+		if (argc!=optind) return print_usage(program_name, true);
 		lockDatabase();
 		dialogMode = true;
 		actPackageMenu(core);
@@ -494,7 +478,7 @@ int main (int argc, char **argv)
 
 	if (action == ACT_INSTALLFROMLIST)
 	{
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 		string filename = argv[optind];
 		if (filename.find("http://")==0 || filename.find("ftp://")==0) {
 			string tmp = get_tmp_file();
@@ -514,7 +498,7 @@ int main (int argc, char **argv)
 	}				
 	
 	if (action == ACT_SHOWVERSION) {
-		ShowBanner();
+		showBanner();
 		return 0;
 	}
 	if (action == ACT_UPDATEALL || action == ACT_LISTUPGRADE)
@@ -525,34 +509,8 @@ int main (int argc, char **argv)
 
 	if (action == ACT_BUILD)
 	{
-		if (argc<=optind) return print_usage(stderr,1);
-		string s_pkg, build_dir_name;
-		string march, mtune, olevel;
-		for (int i=optind; i < argc; i++)
-		{
-			s_pkg = argv[i];
-			if (s_pkg.find("march=")==0) {
-				march=s_pkg.substr(strlen("march="));
-				continue;
-			}
-			if (s_pkg.find("mtune=")==0) {
-				mtune=s_pkg.substr(strlen("mtune="));
-				continue;
-			}
-
-			if (s_pkg.find("olevel=")==0) {
-				olevel=s_pkg.substr(strlen("olevel="));
-				continue;
-			}
-
-			if (emerge_package(s_pkg, &s_pkg, march, mtune, olevel, &build_dir_name)!=0) {
-				mError("Building of " + s_pkg + " was failed. Look into "+ build_dir_name + " for details");
-				//delete_tmp_files();
-				return 0;
-			}
-		}
-		delete_tmp_files();
-		return 0;
+		fprintf(stderr, _("mpkg-build has been deprecated many time ago, and it's support was dropped. Please convert your SPKG files to ABUILD using mpkg-spkg2abuild."));
+		return 1;
 	}
 
 	if (action == ACT_INSTALL || action == ACT_UPGRADE || action == ACT_REINSTALL)
@@ -560,7 +518,7 @@ int main (int argc, char **argv)
 
 		vector<string> r_name, fname, p_version, p_build;
 		string name, version, build;
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 		lockDatabase();
 		string http_file_tmp;
 		for (int i = optind; i < argc; i++) {
@@ -644,33 +602,6 @@ int main (int argc, char **argv)
 		return 0;
 	}
 
-	if (action == ACT_CONFIG)
-	{
-		// TODO: Update to current state of possible config values
-		if (argc!=optind) return print_usage(stderr,1);
-
-		_cmdOptions["sql_readonly"]="yes";
-		say(_("Current configuration:\n"));
-		say(_("System root: %s\n"), SYS_ROOT.c_str());
-		say(_("Package cache: %s\n"), SYS_CACHE.c_str());
-		say(_("Run scripts: %d\n"), !DO_NOT_RUN_SCRIPTS);
-		say(_("Database: %s\n"), DB_FILENAME.c_str());
-		say(_("CD-ROM device: %s\n"), CDROM_DEVICE.c_str());
-		say(_("CD-ROM mountpoint: %s\n"), CDROM_MOUNTPOINT.c_str());
-		say(_("Scripts directory: %s\n"), SCRIPTS_DIR.c_str());
-		list_rep(&core);
-		return 0;
-	}
-	/*if (action == ACT_EXPORT)
-	{
-
-		_cmdOptions["sql_readonly"]="yes";
-		string dest_dir=SYS_ROOT+"/"+legacyPkgDir;
-		if (argc>optind) dest_dir=argv[optind];
-
-		core.exportBase(dest_dir);
-		return 0;
-	}*/
 	if (action == ACT_LISTGROUPS)
 	{
 
@@ -683,26 +614,10 @@ int main (int argc, char **argv)
 		}
 		return 0;
 	}
-	if (action == ACT_TEST)
-	{
-		run_testing_facility(&core, "");
-		/*
-		if (argc<=optind) return print_usage(stderr,1);
-		for (int i=optind; i<argc; ++i) {
-			generateDeps_new(core, argv[i]);
-		}*/
-		return 0;
-		
-#ifdef RELEASE
-		return print_usage(stderr,1);
-#else
-		return 0;
-#endif
-	}
 	if (action == ACT_LISTDEPENDANTS)
 	{
 		_cmdOptions["sql_readonly"]="yes";
-		if (argc<=optind) return print_usage(stderr, 1);
+		if (argc<=optind) return print_usage(program_name, true);
 		if (!dialogMode) fprintf(stderr, _("Searching for packages which depends on %s\n"), argv[optind]);
 		actListDependants(core, argv[optind], showOnlyAvailable);
 		return 0;
@@ -711,7 +626,7 @@ int main (int argc, char **argv)
 	if (action == ACT_LISTGROUP)
 	{
 		_cmdOptions["sql_readonly"]="yes";
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 		string group=argv[optind];
 		PACKAGE_LIST pkgList1;
 		PACKAGE_LIST pkgList2;
@@ -728,7 +643,7 @@ int main (int argc, char **argv)
 
 	if (action == ACT_INSTALLGROUP)
 	{
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 		lockDatabase();
 		string group=argv[optind];
 		PACKAGE_LIST pkgList1;
@@ -753,7 +668,7 @@ int main (int argc, char **argv)
 
 	if (action == ACT_REMOVEGROUP)
 	{
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 		lockDatabase();
 		string group=argv[optind];
 		PACKAGE_LIST pkgList1;
@@ -782,7 +697,7 @@ int main (int argc, char **argv)
 	if (action == ACT_FILESEARCH)
 	{
 		_cmdOptions["sql_readonly"]="yes";
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 		searchByFile(&core, argv[optind]);
 		return 0;
 	}
@@ -791,24 +706,13 @@ int main (int argc, char **argv)
 	if (action == ACT_WHICH)
 	{
 		_cmdOptions["sql_readonly"]="yes";
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 		searchByFile(&core, argv[optind],true);
 		return 0;
 	}
 	
-
-
-	/*if (action == ACT_GENDEPS)
-	{
-		_cmdOptions["sql_readonly"]="yes";
-		if (argc<=optind) return print_usage(stderr,1);
-		for (int i=optind; i<argc; ++i) {
-			generateDeps(argv[i]);
-		}
-		return 0;
-	}*/
 	if (action == ACT_GENDEPSNEW) {
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 
 		_cmdOptions["sql_readonly"]="yes";
 		for (int i=optind; i<argc; ++i) {
@@ -819,7 +723,7 @@ int main (int argc, char **argv)
 	}
 	if (action == ACT_CLEARDEPS) {
 		_cmdOptions["sql_readonly"]="yes";
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 		for (int i=optind; i<argc; ++i) {
 			system("mpkg-setmeta " + string(argv[i]) + " -Z");
 		}
@@ -842,39 +746,25 @@ int main (int argc, char **argv)
 		if (optind>=argc) core.db->get_full_filelist(&checkList);
 		say(_("checking...\n"));
 		string pkgname;
-		if (optind>=argc)
-		{
-			//printf("mode 1\n");
+		if (optind>=argc) {
 			// Check entire system
-			for (unsigned int i=0; i<checkList.size(); i++)
-			{
+			for (size_t i=0; i<checkList.size(); ++i) {
 				if (core.checkPackageIntegrity(checkList.get_package_ptr(i))) {
 					if (verbose) {
 						say("[%d/%d] ",i+1,checkList.size());
 						say("%s: %sOK%s\n", checkList[i].get_name().c_str(), CL_GREEN, CL_WHITE);
 					}
 				}
-				else 
-				{
-					//say("[%d/%d] ",i+1,checkList.size());
-					//say(_("%s: %sDAMAGED%s\n"), checkList.get_package(i)->get_name()->c_str(), CL_RED, CL_WHITE);
-					if (repair_damaged) 
-					{
-						//printf("Adding to repair queue\n");
-						repairList.add(checkList[i]);
-					}
+				else if (repair_damaged) {
+					repairList.add(checkList[i]);
 				}
 			}
 		}
-		else
-		{
+		else {
 			int pkgIndex=-1;
-			for (int i = optind; i<argc; i++)
-			{
+			for (int i = optind; i<argc; i++) {
 				pkgname = (string) argv[i];
-
-				for (unsigned int t = 0; t<checkList.size(); t++)
-				{
+				for (size_t t=0; t<checkList.size(); ++t) {
 					if (checkList[t].get_name().find(pkgname)==0) {
 						pkgIndex=t;
 						break;
@@ -882,21 +772,13 @@ int main (int argc, char **argv)
 				}
 				
 				if (core.checkPackageIntegrity(pkgname)) say("%s: %sOK%s\n", argv[i], CL_GREEN, CL_WHITE);
-				else 
-				{
+				else {
 					say(_("%s: %sDAMAGED%s\n"), argv[i], CL_RED, CL_WHITE);
-					if (repair_damaged) 
-					{
-						//printf("Adding\n");
-						repairList.add(checkList[pkgIndex]);
-					}
-
+					if (repair_damaged) repairList.add(checkList[pkgIndex]);
 				}
 			}
 		}
-		for (unsigned int i=0; i<repairList.size(); i++)
-		{
-			//printf("repairing %d\n", i);
+		for (size_t i=0; i<repairList.size(); ++i) {
 			core.repair(repairList.get_package_ptr(i));
 		}
 		if (repairList.size()>0)
@@ -988,7 +870,7 @@ int main (int argc, char **argv)
 	}
 
 	if ( action == ACT_SEARCH ) {
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 
 		_cmdOptions["sql_readonly"]="yes";
 		vector<string> list_search;
@@ -1001,7 +883,7 @@ int main (int argc, char **argv)
 		return 0;
 	}
 	if ( action == ACT_SEARCHBYDESCRIPTION ) {
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 		_cmdOptions["sql_readonly"]="yes";
 		vector<string> query;
 		for (int i=optind; i < argc; i++) {
@@ -1084,7 +966,7 @@ int main (int argc, char **argv)
 	}
 
 	if ( action == ACT_LIST ) {
-		if (argc!=optind) return print_usage(stderr,1);
+		if (argc!=optind) return print_usage(program_name, true);
 
 		_cmdOptions["sql_readonly"]="yes";
 		vector<string> list_empty;
@@ -1094,7 +976,7 @@ int main (int argc, char **argv)
 	}
 
 	if ( action == ACT_UPDATE ) {
-		if (argc!=optind) return print_usage(stderr,1);
+		if (argc!=optind) return print_usage(program_name, true);
 		lockDatabase();
 		actUpdate(core);
 		unlockDatabase();
@@ -1102,7 +984,7 @@ int main (int argc, char **argv)
 	}
 
 	if ( action == ACT_CLEAN ) {
-		if (argc!=optind) return print_usage(stderr,1);
+		if (argc!=optind) return print_usage(program_name, true);
 		actClean(core);
 		return 0;
 	
@@ -1121,7 +1003,7 @@ int main (int argc, char **argv)
 	}
 
 	if ( action == ACT_PURGE  || action==ACT_REMOVE) {
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 
 		lockDatabase();
 		vector<string> r_name;
@@ -1169,7 +1051,7 @@ int main (int argc, char **argv)
 
 	if ( action == ACT_LIST_REP ) {
 		_cmdOptions["sql_readonly"]="yes";
-		if (argc!=optind) return print_usage(stderr,1);
+		if (argc!=optind) return print_usage(program_name, true);
 
 		list_rep(&core);
 		delete_tmp_files();
@@ -1222,7 +1104,7 @@ int main (int argc, char **argv)
 	}
 	if ( action == ACT_ADD_REPOSITORY ) {
 		_cmdOptions["sql_readonly"]="yes";
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 		string url;
 		for (int i=optind; i < argc; i++) {
 			// Check URL for validity
@@ -1255,7 +1137,7 @@ int main (int argc, char **argv)
 	}
 	if (action == ACT_REMOVE_REPOSITORY ) {
 		_cmdOptions["sql_readonly"]="yes";
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 		int shift = 0;
 		for (int i=optind; i<argc; i++) {
 			core.remove_repository(atoi(argv[i])-shift);
@@ -1280,7 +1162,7 @@ int main (int argc, char **argv)
 
 	if (action == ACT_ENABLE_REPOSITORY) {
 		_cmdOptions["sql_readonly"]="yes";
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 		vector<int> en;
 		for (int i=optind; i<argc; i++) {
 			en.push_back(atoi(argv[i])-1);
@@ -1291,7 +1173,7 @@ int main (int argc, char **argv)
 	}
 	if (action == ACT_DISABLE_REPOSITORY) {
 		_cmdOptions["sql_readonly"]="yes";
-		if (argc<=optind) return print_usage(stderr,1);
+		if (argc<=optind) return print_usage(program_name, true);
 		vector<int> en;
 		for (int i=optind; i<argc; i++) {
 			en.push_back(atoi(argv[i])-1);
@@ -1303,7 +1185,7 @@ int main (int argc, char **argv)
 	if (action == ACT_SYNC) {
 		_cmdOptions["sql_readonly"]="yes";
 		if (argc<=optind) {
-			return print_usage(stderr,1);
+			return print_usage(program_name, true);
 		}
 		
 		if (!FileExists(argv[optind])) mError(_("Sync map not found\n"));
@@ -1353,117 +1235,6 @@ int main (int argc, char **argv)
 }
 
 
-int print_usage(FILE* stream, int exit_code)
-{
-	ShowBanner();
-	fprintf(stream, _("\nUsage: %s [options] ACTION [package] [package] ...\n"), program_name);
-	fprintf(stream,_("Options:\n"));
-	fprintf(stream,_("\t-h    --help              show this help\n"));
-	fprintf(stream,_("\t-v    --verbose           be verbose\n"));
-	fprintf(stream,_("\t-g    --dialog            use dialog mode UI\n"));
-	fprintf(stream,_("\t-d    --force-dep         interpret dependency errors as warnings\n"));
-	fprintf(stream,_("\t-z    --no-dep            totally ignore dependencies existance\n"));
-	fprintf(stream,_("\t-f    --force-conflicts   do not perform file conflict checking\n"));
-	fprintf(stream,_("\t-m    --no-md5            do not check package integrity on install\n"));
-	fprintf(stream,_("\t-k    --force-essential   allow removing essential packages\n"));
-	fprintf(stream,_("\t-D    --download-only     just download packages, do not install\n"));
-	fprintf(stream,_("\t-r    --repair            repair damaged packages (use with \"check\" keyword)\n"));
-	fprintf(stream,_("\t-i    --installed         show only installed packages (use with \"list\" keyword)\n"));
-	fprintf(stream,_("\t-a    --available         show only available packages (use with \"list\" keyword)\n"));
-	fprintf(stream,_("\t-l    --filelist          show file list for package (with \"show\" keyword)\n"));
-	fprintf(stream,_("\t-y    --noconfirm         don't ask confirmation\n"));
-	fprintf(stream,_("\t-q    --noreset           don't reset queue at start\n"));
-	fprintf(stream,_("\t-N    --nodepgen          don't generate dependencies on package building\n"));
-	fprintf(stream,_("\t-w    --no_buildcache     don't use source cache when building packages\n")); 
-	fprintf(stream,_("\t-c    --no_resume         disable download resuming\n"));
-	fprintf(stream,_("\t-b    --cleartags         clear all other tags before tagging\n"));
-	fprintf(stream,_("\t-F    --fork              detach from terminal and run in background\n"));
-	fprintf(stream,_("\t-Q    --enqueue           only enqueue actions, do not perform\n"));
-	fprintf(stream,_("\t-H    --html              switch to html mode (useful only for integrate into web)\n"));
-	fprintf(stream,_("\t-V    --enableversions    enable versioning in install lists\n"));
-	fprintf(stream,_("\t-R    --index-filelist    create file list while indexing\n"));
-	fprintf(stream,_("\t-M    --md5index          add md5 sums for each file in filelist\n"));
-	fprintf(stream,_("\t-S    --sysroot=<DIR>     set temporary system root\n"));
-	fprintf(stream,_("\t-t    --conf=CONFIG_FILE  set temporary config file\n"));
-	fprintf(stream,_("\t-A    --download-to=<DIR> download packages to specified directory\n"));
-	fprintf(stream,_("\t-W    --enable-spkg-index enable spkg indexing (otherwise, it will be skipped)\n"));
-	fprintf(stream,_("\t-L    --linksonly         on install/upgradeall, show only download links and exit\n"));
-	fprintf(stream,_("\t-P    --noaaa             try to avoid aaa_elflibs in dependency generation (for gendeps2)\n"));
-	fprintf(stream,_("\t-G    --keep-deps         do not replace deps in package, add to them instead (for gendeps2)\n"));
-	fprintf(stream,_("\t-C    --enable-cache      enable cached indexing\n"));
-	fprintf(stream,_("\t-K    --skip-deprecated   while sync, skip deprecated packages\n"));
-	fprintf(stream,_("\t-s    --keep-symlinks     keep symlinks in archive instead of moving it to doinst.sh\n"));
-	fprintf(stream,_("\t-E    --exclusion-list=FILENAME   Exclude paths from being checked by gendeps2\n"));
-	fprintf(stream,_("\t-e    --arch=ARCH         temporarily override architecture. Valid options is x86_64 and x86.\n"));
-
-	
-	fprintf(stream,_("\nActions:\n"));
-	fprintf(stream,_("\tversion                            show mpkg version\n"));
-	fprintf(stream,_("\tbuild [march=CPU] [mtune=CPU] [olevel={ O0 | O1 | O2 | O3 }] FILENAME     build source package(s)\n"));
-	fprintf(stream,_("\tinstall PACKAGE_NAME | FILENAME    install package(s)\n"));
-	fprintf(stream,_("\tupgrade PACKAGE_NAME | FILENAME    upgrade selected package\n"));
-	fprintf(stream,_("\tupgradeall                         upgrade all installed packages\n"));
-	fprintf(stream,_("\treinstall PACKAGE_NAME             reinstall package(s)\n"));
-	fprintf(stream,_("\tremove PACKAGE_NAME                remove selected package(s)\n"));
-	fprintf(stream,_("\tpurge PACKAGE_NAME                 purge selected package(s)\n"));
-	fprintf(stream,_("\tinstallgroup GROUP_NAME            install all the packages from group\n"));
-	fprintf(stream,_("\tremovegroup GROUP_NAME             remove all the packages from group\n"));
-
-	fprintf(stream,_("\tlistupdates                        list available updates\n"));
-	fprintf(stream,_("\tshow PACKAGE_NAME                  show info about package\n"));
-	fprintf(stream,_("\tupdate                             update packages info\n"));
-	fprintf(stream,_("\tlist                               show the list of all packages in database\n"));
-	fprintf(stream,_("\tlistgroup GROUP_NAME               show the list of packages belonged to group\n"));
-	fprintf(stream,_("\tlistgroups                         show the list of all existing groups\n"));
-	fprintf(stream,_("\twhodepend PACKAGE_NAME             show what packages depends on this one\n"));
-	
-	fprintf(stream,_("\tfilesearch FILE_NAME               look for owner of the file in installed packages (LIKE mode).\n"));
-	fprintf(stream,_("\twhich FILE_NAME                    look for owner of the file in installed packages (EQUAL mode).\n"));
-	fprintf(stream,_("\tlist_rep                           list enabled repositories\n"));
-	fprintf(stream,_("\tadd_rep URL                        add repository\n"));
-	fprintf(stream,_("\tdelete_rep REPOSITORY_NUMBER       delete Nth repository\n"));
-	fprintf(stream,_("\tenable_rep REPOSITORY_NUMBER       enable Nth repository\n"));
-	fprintf(stream,_("\tdisable_rep REPOSITORY_NUMBER      disable Nth repository\n"));
-	fprintf(stream,_("\tgetrepositorylist [LIST_URL]       get the list of repositories from server (by default, from rpunet.ru)\n"));
-	fprintf(stream,_("\tinstallfromlist FILE_NAME          install using file with list of items\n"));
-	fprintf(stream,_("\texportinstalled [FILE_NAME]        export list of installed packages to file or stdout\n"));
-	fprintf(stream,_("\treset                              reset queue\n"));
-	fprintf(stream,_("\tshow_queue                         show queue\n"));
-	fprintf(stream,_("\tcommit                             commit queued actions\n"));
-	fprintf(stream,_("\tsearch PATTERN                     search package by name containing PATTERN\n"));
-	fprintf(stream,_("\tsearchdescription PATTERN          search package by description containing PATTERN\n"));
-	fprintf(stream,_("\tclean                              remove all downloaded packages from cache\n"));
-	fprintf(stream,_("\tcheck [package_name]               checks installed package(s) for damaged files. Use -r flag to to repair\n"));
-
-	fprintf(stream,_("\nInteractive options:\n"));
-	fprintf(stream,_("\tmenu                      shows the package selection menu\n"));
-	
-	fprintf(stream,_("\nRepository maintaining functions:\n"));
-	fprintf(stream,_("\tindex                     create a repository index file \"packages.xml.xz\"\n"));
-	fprintf(stream,_("\tconvert_dir <outp_dir>    convert whole directory (including sub-dirs) to MPKG format\n"));
-	fprintf(stream,_("\tconvert <filename>        convert package to MPKG format\n"));
-	fprintf(stream,_("\tnativize [dir]            search directory for non-native packages and convert it to MPKG format\n"));
-	//fprintf(stream,_("\texport [dir]              export database in slackware format to dir (by default, /var/log/packages/)\n"));
-	fprintf(stream,_("\tgendeps <filename(s)>         generate dependencies and import it into package\n"));
-	fprintf(stream,_("\tgendeps2 <filename(s)>         generate dependencies and import it into package (new algorithm\n"));
-	fprintf(stream,_("\tcleardeps <filename>         clear package dependencies\n"));
-	fprintf(stream,_("\tchecklist [dir]           check md5 sums of a package tree (requires a valid index in this dir)\n"));
-	fprintf(stream,_("\tsync <syncmap file>       syncronize repositories by sync map\n"));
-	fprintf(stream,_("\tbuildup <filename>        increase spkg/tgz build\n"));
-#ifndef RELEASE
-	fprintf(stream,_("\nDebug options:\n"));
-	fprintf(stream,_("\ttest                      Executes unit test\n"));
-#endif
-/*	fprintf(stream,_("\nExtra options for command \"build\" (should be specified _before_ package name):\n"));
-	fprintf(stream,_("\tmarch=                    CPU architecture\n"));
-	fprintf(stream,_("\tmtune=                    CPU tuning\n"));
-	fprintf(stream,_("\tolevel=                   Optimization level\n"));
-	fprintf(stream,_("Example: mpkg build march=i686 mtune=prescott olevel=O3\n"));*/
-	fprintf(stream, "\n");
-
-
-	return exit_code;
-}
 
 int list_rep(mpkg *core)
 {
@@ -1548,6 +1319,7 @@ int check_action(char* act)
 		) {
 		res = -1;
 	}
+	else program_name = "mpkg-" + _act;
 
 	mDebug("res = " + IntToStr(res));
 
