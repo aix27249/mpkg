@@ -736,35 +736,46 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 			if (xmlStart==std::string::npos) {
 				return -1;
 			}
-			indexDoc = xmlParseMemory(xmlData.substr(xmlStart).c_str(), xmlData.substr(xmlStart).size());
+			if (xmlStart!=0) xmlData.erase(xmlData.begin(), xmlData.begin() + xmlStart);
+
+			//indexDoc = xmlParseMemory(xmlData.substr(xmlStart).c_str(), xmlData.substr(xmlStart).size()); // FIXME: This takes GIANT amount of memory
+			indexDoc = xmlReadDoc((const xmlChar *) xmlData.c_str(), "", "UTF-8", XML_PARSE_COMPACT | XML_PARSE_NOBLANKS | XML_PARSE_NOXINCNODE | XML_PARSE_NONET);
 			xmlData.clear();
+
+
 			if (indexDoc == NULL) {
 				xmlFreeDoc(indexDoc);
 				return -1;
 			}
-			
+
 			indexRootNode = xmlDocGetRootElement(indexDoc);
 			if (indexRootNode == NULL) {
 				mError(_("Failed to get index"));
 				xmlFreeDoc(indexDoc);
 				return -1;
 			}
+
 			
 			if (xmlStrcmp(indexRootNode->name, (const xmlChar *) "repository") ) {
 				mError(_("Invalid index file"));
 				xmlFreeDoc(indexDoc);
 				return -1;
 			}
+
 			xml2pkglist(indexDoc, tempPkgList, server_url);
 
+			xmlFreeDoc(indexDoc);
+			xmlCleanupMemory();
+			xmlCleanupParser();
+			
 			for (size_t i=0; i<tempPkgList.size(); ++i) {
 				// NEW: filter repository by architecture
 				if (checkAcceptedArch(tempPkgList.get_package_ptr(i))) packages->add(tempPkgList[i]);
 			}
 			
 			msay((string) CL_5 + _("Index update:") + (string) CL_WHITE +" ["+server_url+"]: " + (string) CL_GREEN + _("done") + (string) CL_WHITE + _(" (total: ") + IntToStr(tempPkgList.size()) + _(" packages, accepted: ") + IntToStr(packages->size()) + ")", SAYMODE_INLINE_END);
-			xmlCleanupMemory();
-			xmlCleanupParser();
+
+			tempPkgList.clear();
 			break;
 
 		case TYPE_SLACK:
