@@ -739,7 +739,8 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 			if (xmlStart!=0) xmlData.erase(xmlData.begin(), xmlData.begin() + xmlStart);
 
 			//indexDoc = xmlParseMemory(xmlData.substr(xmlStart).c_str(), xmlData.substr(xmlStart).size()); // FIXME: This takes GIANT amount of memory
-			indexDoc = xmlReadDoc((const xmlChar *) xmlData.c_str(), "", "UTF-8", XML_PARSE_COMPACT | XML_PARSE_NOBLANKS | XML_PARSE_NOXINCNODE | XML_PARSE_NONET);
+			//indexDoc = xmlReadDoc((const xmlChar *) xmlData.c_str(), "", "UTF-8", XML_PARSE_COMPACT | XML_PARSE_NOBLANKS | XML_PARSE_NOXINCNODE | XML_PARSE_NONET);
+			indexDoc = xmlReadDoc((const xmlChar *) xmlData.c_str(), "", "UTF-8", XML_PARSE_COMPACT | XML_PARSE_NOXINCNODE | XML_PARSE_NONET);
 			xmlData.clear();
 
 

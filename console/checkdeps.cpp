@@ -20,7 +20,6 @@ int main(int argc, char **argv) {
 		checkList.get_package_ptr(i)->set_action(ST_INSTALL, "check");
 	}
 	mpkg core;
-	_cmdOptions["wtf"]="yes";
 	DependencyTracker tracker(core.db);
 	int rcount = tracker.renderDependenciesInPackageList(&checkList);
 	if (rcount) {

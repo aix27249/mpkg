@@ -49,6 +49,7 @@ int showCmdHelp(const string cmd, bool is_error)
 	fprintf(stream,_("\t-s    --keep-symlinks     keep symlinks in archive instead of moving it to doinst.sh\n"));
 	fprintf(stream,_("\t-E    --exclusion-list=FILENAME   Exclude paths from being checked by gendeps2\n"));
 	fprintf(stream,_("\t-e    --arch=ARCH         temporarily override architecture. Valid options is x86_64 and x86.\n"));
+	fprintf(stream,_("\t-Y    --resync            forces deep database update (takes longer time, but rebuilds all package metadata)\n"));
 
 	
 	fprintf(stream,_("\nAvailable commands:\n"));
