@@ -40,6 +40,19 @@ int main(int argc, char **argv) {
 	core.get_packagelist(sqlSearch, &pkgList);
 	vector<string> installList;
 	int res;
+	int uid = getuid();
+	if (uid != 0 ) {
+		string arg_string;
+		arg_string = (string) argv[0] + " ";
+		for (int i=1; i<argc; i++) {
+			arg_string += (string) argv[i] + " ";
+		}
+		if (system("sudo " + arg_string)!=0) {
+			return 1;
+		}
+		return 0;
+	}
+
 
 	for (size_t i=0; i<pkgList.size(); ++i) {
 		if (!pkgList[i].installed()) continue;
