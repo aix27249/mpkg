@@ -94,7 +94,7 @@ void pkgConfigRemove(const PACKAGE &package) {
 			unlink(orig_name.c_str());
 		}
 		else if (sysconf_exists) printf(_("Modified config: %s, leaving in place\n"), sysconf_name.c_str());
-		else printf(_("Config file %s wanished: perhaps it was removed by someone else.\n"), sysconf_name.c_str());
+		else printf(_("Config file %s vanished: perhaps it was removed by someone else.\n"), sysconf_name.c_str());
 	}
 
 	
