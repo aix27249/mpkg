@@ -2,11 +2,16 @@
 echo "Extracting language data from sources"
 
 LANGUAGES="ru uk"
-SOURCES="../lib/*.cpp ../console/*.cpp ../installer/*.cpp ../lib/*.h ../console/*.h ../installer/*.h"
+SRC_TYPES="cpp h"
+PROJECTS="lib console nwidgets mpkgsupport libagiliasetup textinstaller/langselect textinstaller/textsetup textinstaller/textsetup_exec mpkg-parted"
 
 # Extract from sources for each language
 for lang in $LANGUAGES ; do
-	xgettext --from-code="utf-8" --keyword="_" -d mpkg -j -s -o $lang.po $SOURCES
+	for project in $PROJECTS ; do
+		for src_type in $SRC_TYPES ; do
+			xgettext --from-code="utf-8" --keyword="_" -d mpkg -j -s -o $lang.po ../${project}/*.${src_type}
+		done
+	done
 done
 # Extract from sources for template
-xgettext --from-code="utf-8" --keyword="_" -d mpkg -s -o mpkg-template.pot $SOURCES
+#xgettext --from-code="utf-8" --keyword="_" -d mpkg -s -o mpkg-template.pot $SOURCES

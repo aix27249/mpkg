@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-18 22:46+0400\n"
+"POT-Creation-Date: 2011-07-05 21:22+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -282,6 +282,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1326 ../console/installpkg-ng2.cpp:1332
 #: ../console/installpkg-ng2.cpp:1338 ../console/installpkg-ng2.cpp:1390
 #: ../console/installpkg-ng2.cpp:1350 ../console/installpkg-ng2.cpp:1385
+#: ../lib/console-help.cpp:42
 #, c-format
 msgid "\t-A    --download-to=<DIR> download packages to specified directory\n"
 msgstr "\t-A    --download-to=<DIR> скачать пакеты в указанную директорию\n"
@@ -289,7 +290,7 @@ msgstr "\t-A    --download-to=<DIR> скачать пакеты в указан�
 #: installpkg-ng2.cpp:1277 ../console/installpkg-ng2.cpp:1330
 #: ../console/installpkg-ng2.cpp:1337 ../console/installpkg-ng2.cpp:1343
 #: ../console/installpkg-ng2.cpp:1395 ../console/installpkg-ng2.cpp:1355
-#: ../console/installpkg-ng2.cpp:1390
+#: ../console/installpkg-ng2.cpp:1390 ../lib/console-help.cpp:47
 #, c-format
 msgid "\t-C    --enable-cache      enable cached indexing\n"
 msgstr "\t-C    --enable-cache      включить кеширование при индексации\n"
@@ -301,7 +302,7 @@ msgstr "\t-C    --enable-cache      включить кеширование пр
 #: installpkg-ng2.cpp:1256 ../console/installpkg-ng2.cpp:1307
 #: ../console/installpkg-ng2.cpp:1313 ../console/installpkg-ng2.cpp:1319
 #: ../console/installpkg-ng2.cpp:1371 ../console/installpkg-ng2.cpp:1331
-#: ../console/installpkg-ng2.cpp:1366
+#: ../console/installpkg-ng2.cpp:1366 ../lib/console-help.cpp:23
 #, c-format
 msgid "\t-D    --download-only     just download packages, do not install\n"
 msgstr "\t-D    --download-only     только скачать пакеты, не устанавливать\n"
@@ -314,6 +315,7 @@ msgstr "\t-D    --download-only     только скачать, не устан
 
 #: ../console/installpkg-ng2.cpp:1346 ../console/installpkg-ng2.cpp:1398
 #: ../console/installpkg-ng2.cpp:1358 ../console/installpkg-ng2.cpp:1393
+#: ../lib/console-help.cpp:50
 #, c-format
 msgid ""
 "\t-E    --exclusion-list=FILENAME   Exclude paths from being checked by "
@@ -327,6 +329,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1318 ../console/installpkg-ng2.cpp:1324
 #: ../console/installpkg-ng2.cpp:1330 ../console/installpkg-ng2.cpp:1382
 #: ../console/installpkg-ng2.cpp:1342 ../console/installpkg-ng2.cpp:1377
+#: ../lib/console-help.cpp:34
 #, c-format
 msgid ""
 "\t-F    --fork              detach from terminal and run in background\n"
@@ -336,7 +339,7 @@ msgstr ""
 
 #: ../console/installpkg-ng2.cpp:1336 ../console/installpkg-ng2.cpp:1342
 #: ../console/installpkg-ng2.cpp:1394 ../console/installpkg-ng2.cpp:1354
-#: ../console/installpkg-ng2.cpp:1389
+#: ../console/installpkg-ng2.cpp:1389 ../lib/console-help.cpp:46
 #, c-format
 msgid ""
 "\t-G    --keep-deps         do not replace deps in package, add to them "
@@ -350,6 +353,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1320 ../console/installpkg-ng2.cpp:1326
 #: ../console/installpkg-ng2.cpp:1332 ../console/installpkg-ng2.cpp:1384
 #: ../console/installpkg-ng2.cpp:1344 ../console/installpkg-ng2.cpp:1379
+#: ../lib/console-help.cpp:36
 #, c-format
 msgid ""
 "\t-H    --html              switch to html mode (useful only for integrate "
@@ -361,6 +365,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1331 ../console/installpkg-ng2.cpp:1338
 #: ../console/installpkg-ng2.cpp:1344 ../console/installpkg-ng2.cpp:1396
 #: ../console/installpkg-ng2.cpp:1356 ../console/installpkg-ng2.cpp:1391
+#: ../lib/console-help.cpp:48
 #, c-format
 msgid "\t-K    --skip-deprecated   while sync, skip deprecated packages\n"
 msgstr ""
@@ -370,6 +375,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1328 ../console/installpkg-ng2.cpp:1334
 #: ../console/installpkg-ng2.cpp:1340 ../console/installpkg-ng2.cpp:1392
 #: ../console/installpkg-ng2.cpp:1352 ../console/installpkg-ng2.cpp:1387
+#: ../lib/console-help.cpp:44
 #, c-format
 msgid ""
 "\t-L    --linksonly         on install/upgradeall, show only download links "
@@ -381,6 +387,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1323 ../console/installpkg-ng2.cpp:1329
 #: ../console/installpkg-ng2.cpp:1335 ../console/installpkg-ng2.cpp:1387
 #: ../console/installpkg-ng2.cpp:1347 ../console/installpkg-ng2.cpp:1382
+#: ../lib/console-help.cpp:39
 #, c-format
 msgid "\t-M    --md5index          add md5 sums for each file in filelist\n"
 msgstr ""
@@ -389,6 +396,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1314 ../console/installpkg-ng2.cpp:1320
 #: ../console/installpkg-ng2.cpp:1326 ../console/installpkg-ng2.cpp:1378
 #: ../console/installpkg-ng2.cpp:1338 ../console/installpkg-ng2.cpp:1373
+#: ../lib/console-help.cpp:30
 #, c-format
 msgid ""
 "\t-N    --nodepgen          don't generate dependencies on package building\n"
@@ -407,7 +415,7 @@ msgstr ""
 
 #: ../console/installpkg-ng2.cpp:1335 ../console/installpkg-ng2.cpp:1341
 #: ../console/installpkg-ng2.cpp:1393 ../console/installpkg-ng2.cpp:1353
-#: ../console/installpkg-ng2.cpp:1388
+#: ../console/installpkg-ng2.cpp:1388 ../lib/console-help.cpp:45
 #, c-format
 msgid ""
 "\t-P    --noaaa             try to avoid aaa_elflibs in dependency "
@@ -421,6 +429,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1319 ../console/installpkg-ng2.cpp:1325
 #: ../console/installpkg-ng2.cpp:1331 ../console/installpkg-ng2.cpp:1383
 #: ../console/installpkg-ng2.cpp:1343 ../console/installpkg-ng2.cpp:1378
+#: ../lib/console-help.cpp:35
 #, c-format
 msgid "\t-Q    --enqueue           only enqueue actions, do not perform\n"
 msgstr ""
@@ -436,6 +445,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1322 ../console/installpkg-ng2.cpp:1328
 #: ../console/installpkg-ng2.cpp:1334 ../console/installpkg-ng2.cpp:1386
 #: ../console/installpkg-ng2.cpp:1346 ../console/installpkg-ng2.cpp:1381
+#: ../lib/console-help.cpp:38
 #, c-format
 msgid "\t-R    --index-filelist    create file list while indexing\n"
 msgstr "\t-R    --index-filelist    создать индекс файлов при индексировании\n"
@@ -453,6 +463,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1324 ../console/installpkg-ng2.cpp:1330
 #: ../console/installpkg-ng2.cpp:1336 ../console/installpkg-ng2.cpp:1388
 #: ../console/installpkg-ng2.cpp:1348 ../console/installpkg-ng2.cpp:1383
+#: ../lib/console-help.cpp:40
 #, c-format
 msgid "\t-S    --sysroot=<DIR>     set temporary system root\n"
 msgstr "\t-S    --sysroot=<DIR>     временно переопределить корень системы\n"
@@ -468,6 +479,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1321 ../console/installpkg-ng2.cpp:1327
 #: ../console/installpkg-ng2.cpp:1333 ../console/installpkg-ng2.cpp:1385
 #: ../console/installpkg-ng2.cpp:1345 ../console/installpkg-ng2.cpp:1380
+#: ../lib/console-help.cpp:37
 #, c-format
 msgid "\t-V    --enableversions    enable versioning in install lists\n"
 msgstr ""
@@ -478,6 +490,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1327 ../console/installpkg-ng2.cpp:1333
 #: ../console/installpkg-ng2.cpp:1339 ../console/installpkg-ng2.cpp:1391
 #: ../console/installpkg-ng2.cpp:1351 ../console/installpkg-ng2.cpp:1386
+#: ../lib/console-help.cpp:43
 #, c-format
 msgid ""
 "\t-W    --enable-spkg-index enable spkg indexing (otherwise, it will be "
@@ -485,6 +498,13 @@ msgid ""
 msgstr ""
 "\t-W    --enable-spkg-index включить индексирование spkg (по умолчанию - "
 "отключено)\n"
+
+#: ../lib/console-help.cpp:52
+#, c-format
+msgid ""
+"\t-Y    --resync            forces deep database update (takes longer time, "
+"but rebuilds all package metadata)\n"
+msgstr ""
 
 #: installpkg-ng2.cpp:585 installpkg-ng2.cpp:589 installpkg-ng2.cpp:610
 #: installpkg-ng2.cpp:737 installpkg-ng2.cpp:787 installpkg-ng2.cpp:854
@@ -497,6 +517,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1310 ../console/installpkg-ng2.cpp:1316
 #: ../console/installpkg-ng2.cpp:1322 ../console/installpkg-ng2.cpp:1374
 #: ../console/installpkg-ng2.cpp:1334 ../console/installpkg-ng2.cpp:1369
+#: ../lib/console-help.cpp:26
 #, c-format
 msgid ""
 "\t-a    --available         show only available packages (use with \"list\" "
@@ -510,6 +531,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1317 ../console/installpkg-ng2.cpp:1323
 #: ../console/installpkg-ng2.cpp:1329 ../console/installpkg-ng2.cpp:1381
 #: ../console/installpkg-ng2.cpp:1341 ../console/installpkg-ng2.cpp:1376
+#: ../lib/console-help.cpp:33
 #, c-format
 msgid "\t-b    --cleartags         clear all other tags before tagging\n"
 msgstr "\t-b    --cleartags         удалить все предыдущие теги\n"
@@ -528,6 +550,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1316 ../console/installpkg-ng2.cpp:1322
 #: ../console/installpkg-ng2.cpp:1328 ../console/installpkg-ng2.cpp:1380
 #: ../console/installpkg-ng2.cpp:1340 ../console/installpkg-ng2.cpp:1375
+#: ../lib/console-help.cpp:32
 #, c-format
 msgid "\t-c    --no_resume         disable download resuming\n"
 msgstr "\t-c    --no_resume         отключить докачку\n"
@@ -550,11 +573,13 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1301 ../console/installpkg-ng2.cpp:1308
 #: ../console/installpkg-ng2.cpp:1314 ../console/installpkg-ng2.cpp:1366
 #: ../console/installpkg-ng2.cpp:1326 ../console/installpkg-ng2.cpp:1361
+#: ../lib/console-help.cpp:18
 #, c-format
 msgid "\t-d    --force-dep         interpret dependency errors as warnings\n"
 msgstr "\t-d    --force-dep         Игнорировать ошибки зависимостей\n"
 
 #: ../console/installpkg-ng2.cpp:1359 ../console/installpkg-ng2.cpp:1394
+#: ../lib/console-help.cpp:51
 #, c-format
 msgid ""
 "\t-e    --arch=ARCH         temporarily override architecture. Valid options "
@@ -592,6 +617,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1303 ../console/installpkg-ng2.cpp:1310
 #: ../console/installpkg-ng2.cpp:1316 ../console/installpkg-ng2.cpp:1368
 #: ../console/installpkg-ng2.cpp:1328 ../console/installpkg-ng2.cpp:1363
+#: ../lib/console-help.cpp:20
 #, c-format
 msgid "\t-f    --force-conflicts   do not perform file conflict checking\n"
 msgstr "\t-f    --force-conflicts   не выполнять проверку конфликтов файлов\n"
@@ -606,7 +632,7 @@ msgstr "\t-f    --force-conflicts   не выполнять проверку к�
 #: installpkg-ng2.cpp:1249 ../console/installpkg-ng2.cpp:1300
 #: ../console/installpkg-ng2.cpp:1307 ../console/installpkg-ng2.cpp:1313
 #: ../console/installpkg-ng2.cpp:1365 ../console/installpkg-ng2.cpp:1325
-#: ../console/installpkg-ng2.cpp:1360
+#: ../console/installpkg-ng2.cpp:1360 ../lib/console-help.cpp:17
 #, c-format
 msgid "\t-g    --dialog            use dialog mode UI\n"
 msgstr "\t-g    --dialog            использовать диалоговый интерфейс\n"
@@ -627,6 +653,7 @@ msgstr "\t-h\t--help\tПоказать эту справку\n"
 #: ../console/installpkg-ng2.cpp:1298 ../console/installpkg-ng2.cpp:1305
 #: ../console/installpkg-ng2.cpp:1311 ../console/installpkg-ng2.cpp:1363
 #: ../console/installpkg-ng2.cpp:1323 ../console/installpkg-ng2.cpp:1358
+#: ../lib/console-help.cpp:15
 #, c-format
 msgid "\t-h    --help              show this help\n"
 msgstr "\t-h    --help              показать эту справку\n"
@@ -642,6 +669,7 @@ msgstr "\t-h    --help              показать эту справку\n"
 #: ../console/installpkg-ng2.cpp:1309 ../console/installpkg-ng2.cpp:1315
 #: ../console/installpkg-ng2.cpp:1321 ../console/installpkg-ng2.cpp:1373
 #: ../console/installpkg-ng2.cpp:1333 ../console/installpkg-ng2.cpp:1368
+#: ../lib/console-help.cpp:25
 #, c-format
 msgid ""
 "\t-i    --installed         show only installed packages (use with \"list\" "
@@ -661,6 +689,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1305 ../console/installpkg-ng2.cpp:1312
 #: ../console/installpkg-ng2.cpp:1318 ../console/installpkg-ng2.cpp:1370
 #: ../console/installpkg-ng2.cpp:1330 ../console/installpkg-ng2.cpp:1365
+#: ../lib/console-help.cpp:22
 #, c-format
 msgid "\t-k    --force-essential   allow removing essential packages\n"
 msgstr "\t-k    --force-essential   разрешить удаление системных пакетов\n"
@@ -683,7 +712,7 @@ msgstr ""
 #: installpkg-ng2.cpp:1260 ../console/installpkg-ng2.cpp:1311
 #: ../console/installpkg-ng2.cpp:1317 ../console/installpkg-ng2.cpp:1323
 #: ../console/installpkg-ng2.cpp:1375 ../console/installpkg-ng2.cpp:1335
-#: ../console/installpkg-ng2.cpp:1370
+#: ../console/installpkg-ng2.cpp:1370 ../lib/console-help.cpp:27
 #, c-format
 msgid ""
 "\t-l    --filelist          show file list for package (with \"show\" "
@@ -701,7 +730,7 @@ msgstr ""
 #: installpkg-ng2.cpp:1253 ../console/installpkg-ng2.cpp:1304
 #: ../console/installpkg-ng2.cpp:1311 ../console/installpkg-ng2.cpp:1317
 #: ../console/installpkg-ng2.cpp:1369 ../console/installpkg-ng2.cpp:1329
-#: ../console/installpkg-ng2.cpp:1364
+#: ../console/installpkg-ng2.cpp:1364 ../lib/console-help.cpp:21
 #, c-format
 msgid "\t-m    --no-md5            do not check package integrity on install\n"
 msgstr ""
@@ -723,6 +752,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1313 ../console/installpkg-ng2.cpp:1319
 #: ../console/installpkg-ng2.cpp:1325 ../console/installpkg-ng2.cpp:1377
 #: ../console/installpkg-ng2.cpp:1337 ../console/installpkg-ng2.cpp:1372
+#: ../lib/console-help.cpp:29
 #, c-format
 msgid "\t-q    --noreset           don't reset queue at start\n"
 msgstr "\t-q    --noreset           Не сбрасывать очередь при запуске\n"
@@ -743,7 +773,7 @@ msgstr ""
 #: installpkg-ng2.cpp:1257 ../console/installpkg-ng2.cpp:1308
 #: ../console/installpkg-ng2.cpp:1314 ../console/installpkg-ng2.cpp:1320
 #: ../console/installpkg-ng2.cpp:1372 ../console/installpkg-ng2.cpp:1332
-#: ../console/installpkg-ng2.cpp:1367
+#: ../console/installpkg-ng2.cpp:1367 ../lib/console-help.cpp:24
 #, c-format
 msgid ""
 "\t-r    --repair            repair damaged packages (use with \"check\" "
@@ -763,7 +793,7 @@ msgstr ""
 
 #: ../console/installpkg-ng2.cpp:1339 ../console/installpkg-ng2.cpp:1345
 #: ../console/installpkg-ng2.cpp:1397 ../console/installpkg-ng2.cpp:1357
-#: ../console/installpkg-ng2.cpp:1392
+#: ../console/installpkg-ng2.cpp:1392 ../lib/console-help.cpp:49
 #, c-format
 msgid ""
 "\t-s    --keep-symlinks     keep symlinks in archive instead of moving it to "
@@ -782,6 +812,7 @@ msgstr "\t-s    --simulate          режим симуляции\n"
 #: ../console/installpkg-ng2.cpp:1325 ../console/installpkg-ng2.cpp:1331
 #: ../console/installpkg-ng2.cpp:1337 ../console/installpkg-ng2.cpp:1389
 #: ../console/installpkg-ng2.cpp:1349 ../console/installpkg-ng2.cpp:1384
+#: ../lib/console-help.cpp:41
 #, c-format
 msgid "\t-t    --conf=CONFIG_FILE  set temporary config file\n"
 msgstr "\t-t    --conf=CONFIG_FILE  указать временный конфигурационный файл\n"
@@ -805,6 +836,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1299 ../console/installpkg-ng2.cpp:1306
 #: ../console/installpkg-ng2.cpp:1312 ../console/installpkg-ng2.cpp:1364
 #: ../console/installpkg-ng2.cpp:1324 ../console/installpkg-ng2.cpp:1359
+#: ../lib/console-help.cpp:16
 #, c-format
 msgid "\t-v    --verbose           be verbose\n"
 msgstr "\t-v    --verbose           подробный вывод\n"
@@ -817,6 +849,7 @@ msgstr "\t-v    --verbose           подробный вывод\n"
 #: ../console/installpkg-ng2.cpp:1315 ../console/installpkg-ng2.cpp:1321
 #: ../console/installpkg-ng2.cpp:1327 ../console/installpkg-ng2.cpp:1379
 #: ../console/installpkg-ng2.cpp:1339 ../console/installpkg-ng2.cpp:1374
+#: ../lib/console-help.cpp:31
 #, c-format
 msgid ""
 "\t-w    --no_buildcache     don't use source cache when building packages\n"
@@ -832,6 +865,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1312 ../console/installpkg-ng2.cpp:1318
 #: ../console/installpkg-ng2.cpp:1324 ../console/installpkg-ng2.cpp:1376
 #: ../console/installpkg-ng2.cpp:1336 ../console/installpkg-ng2.cpp:1371
+#: ../lib/console-help.cpp:28
 #, c-format
 msgid "\t-y    --noconfirm         don't ask confirmation\n"
 msgstr "\t-y    --noconfirm         не спрашивать подтверждений\n"
@@ -846,6 +880,7 @@ msgstr "\t-y    --noconfirm         не спрашивать подтвержд
 #: ../console/installpkg-ng2.cpp:1302 ../console/installpkg-ng2.cpp:1309
 #: ../console/installpkg-ng2.cpp:1315 ../console/installpkg-ng2.cpp:1367
 #: ../console/installpkg-ng2.cpp:1327 ../console/installpkg-ng2.cpp:1362
+#: ../lib/console-help.cpp:19
 #, c-format
 msgid "\t-z    --no-dep            totally ignore dependencies existance\n"
 msgstr ""
@@ -1585,6 +1620,380 @@ msgstr "\tmenu                      Показать меню пакетов\n"
 msgid "\tmenu       Shows the package selection menu\n"
 msgstr "\tmenu       Показать меню пакетов\n"
 
+#: ../lib/console-help.cpp:76
+#, c-format
+msgid "\tmpkg-add_rep URL                        add repository\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:94
+#, c-format
+msgid "\tmpkg-altlist\t\t\t    shows all alternatives in database\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:95
+#, c-format
+msgid ""
+"\tmpkg-altshow PACKAGE_NAME\t\t    shows all alternative branches of "
+"specified package\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:127
+#, c-format
+msgid "\tmpkg-buildup <filename>        increase spkg/tgz build\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:89
+#, c-format
+msgid ""
+"\tmpkg-check [package_name]               checks installed package(s) for "
+"missing files. Use -r flag to to repair\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:90
+#, c-format
+msgid ""
+"\tmpkg-checkdeps URL                      checks specified repository if all "
+"dependencies can be resolved within same repository"
+msgstr ""
+
+#: ../lib/console-help.cpp:93
+#, c-format
+msgid ""
+"\tmpkg-checklibdeps [PACKAGE_NAME]        checks installed package(s) for "
+"broken binary dependencies.\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:125
+#, c-format
+msgid ""
+"\tmpkg-checklist [dir]           check md5 sums of a package tree (requires "
+"a valid index in this dir)\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:88
+#, c-format
+msgid ""
+"\tmpkg-clean                              remove all downloaded packages "
+"from cache\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:124
+#, c-format
+msgid "\tmpkg-cleardeps <filename>         clear package dependencies\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:85
+#, c-format
+msgid "\tmpkg-commit                             commit queued actions\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:96
+#, c-format
+msgid ""
+"\tmpkg-conflicts PACKAGE_NAME\t\t    checks package for file conflicts "
+"(files with same names and paths, but from different packages)\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:121
+#, c-format
+msgid "\tmpkg-convert <filename>        convert package to MPKG format\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:120
+#, c-format
+msgid ""
+"\tmpkg-convert_dir <outp_dir>    convert whole directory (including sub-"
+"dirs) to MPKG format\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:77
+#, c-format
+msgid "\tmpkg-delete_rep REPOSITORY_NUMBER       delete Nth repository\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:97
+#, c-format
+msgid "\tmpkg-deleteprofile PROFILE_NAME\t    delete repository profile\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:98
+#, c-format
+msgid ""
+"\tmpkg-depgraph URL OUTPUT_FILE           generates dot file with dependency "
+"graph of specified package\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:99
+#, c-format
+msgid ""
+"\tmpkg-deporder FILENAME\t            reads package names from specified "
+"file, and generates it's dependency order\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:79
+#, c-format
+msgid "\tmpkg-disable_rep REPOSITORY_NUMBER      disable Nth repository\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:78
+#, c-format
+msgid "\tmpkg-enable_rep REPOSITORY_NUMBER       enable Nth repository\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:82
+#, c-format
+msgid ""
+"\tmpkg-exportinstalled [FILE_NAME]        export list of installed packages "
+"to file or stdout\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:73
+#, c-format
+msgid ""
+"\tmpkg-filesearch FILE_NAME               look for owner of the file in "
+"installed packages (LIKE mode).\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:100
+#, c-format
+msgid ""
+"\tmpkg-fixdeps\t\t            fixes broken dependencies of installed "
+"packages\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:123
+#, c-format
+msgid ""
+"\tmpkg-gendeps <filename(s)>         generate dependencies and import it "
+"into package. Also can be called by mpkg-gendeps2.\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:80
+#, c-format
+msgid ""
+"\tmpkg-getrepositorylist [LIST_URL]       get the list of repositories from "
+"server (by default, from packages.agilialinux.ru)\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:119
+#, c-format
+msgid ""
+"\tmpkg-index                     create a repository index file \"packages."
+"xml.xz\"\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:57
+#, c-format
+msgid "\tmpkg-install PACKAGE_NAME | FILENAME    install package(s)\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:81
+#, c-format
+msgid ""
+"\tmpkg-installfromlist FILE_NAME          install using file with list of "
+"items\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:62
+#, c-format
+msgid ""
+"\tmpkg-installgroup GROUP_NAME            install all the packages from "
+"group\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:68
+#, c-format
+msgid ""
+"\tmpkg-list                               show the list of all packages in "
+"database\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:75
+#, c-format
+msgid "\tmpkg-list_rep                           list enabled repositories\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:69
+#, c-format
+msgid ""
+"\tmpkg-listgroup GROUP_NAME               show the list of packages belonged "
+"to group\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:70
+#, c-format
+msgid ""
+"\tmpkg-listgroups                         show the list of all existing "
+"groups\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:101
+#, c-format
+msgid ""
+"\tmpkg-listprofiles\t\t            shows list of known repository profiles\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:65
+#, c-format
+msgid "\tmpkg-listupdates                        list available updates\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:102
+#, c-format
+msgid ""
+"\tmpkg-maintainer OPTIONS [NAME] [EMAIL]  get/set maintainer name and email "
+"(for mkpkg)\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:116
+#, c-format
+msgid "\tmpkg-menu                      shows the package selection menu\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:122
+#, c-format
+msgid ""
+"\tmpkg-nativize [dir]            search directory for non-native packages "
+"and convert it to MPKG format\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:61
+#, c-format
+msgid "\tmpkg-purge PACKAGE_NAME                 purge selected package(s)\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:103
+#, c-format
+msgid ""
+"\tmpkg-quicklist\t\t            shows machine-readable list of all installed "
+"packages. Used primarily in bash-completion.\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:59
+#, c-format
+msgid "\tmpkg-reinstall PACKAGE_NAME             reinstall package(s)\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:60
+#, c-format
+msgid "\tmpkg-remove PACKAGE_NAME                remove selected package(s)\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:63
+#, c-format
+msgid ""
+"\tmpkg-removegroup GROUP_NAME             remove all the packages from "
+"group\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:83
+#, c-format
+msgid "\tmpkg-reset                              reset queue\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:104
+#, c-format
+msgid ""
+"\tmpkg-rollback [TRANSACTION_ID] [PACKAGE_NAME]  transactions rollback. "
+"Rolls back latest transaction. See command help for details.\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:105
+#, c-format
+msgid ""
+"\tmpkg-saveprofile PROFILE_NAME\t    saves current repository set under "
+"specified profile name.\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:86
+#, c-format
+msgid ""
+"\tmpkg-search PATTERN                     search package by name containing "
+"PATTERN\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:87
+#, c-format
+msgid ""
+"\tmpkg-searchdescription PATTERN          search package by description "
+"containing PATTERN\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:106
+#, c-format
+msgid ""
+"\tmpkg-setmeta PATH | FILENAME [OPTIONS]  a tool to modify package metadata. "
+"See command help for details\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:107
+#, c-format
+msgid ""
+"\tmpkg-setprofile PROFILE_NAME\t    loads specified repository set profile.\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:66
+#, c-format
+msgid "\tmpkg-show PACKAGE_NAME                  show info about package\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:84
+#, c-format
+msgid "\tmpkg-show_queue                         show queue\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:108
+#, c-format
+msgid "\tmpkg-spkg2abuild FILENAME\t\t    converts spkg file to ABUILD tree.\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:126
+#, c-format
+msgid "\tmpkg-sync <syncmap file>       syncronize repositories by sync map\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:109
+#, c-format
+msgid "\tmpkg-transactions\t\t\t    shows all package transactions.\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:67
+#, c-format
+msgid "\tmpkg-update                             update packages info\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:58
+#, c-format
+msgid ""
+"\tmpkg-upgradeall                         upgrade all installed packages\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:110
+#, c-format
+msgid ""
+"\tmpkg-validate PATH | FILENAME\t    validates package integrity and some "
+"guidelines.\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:56
+#, c-format
+msgid "\tmpkg-version                            show mpkg version\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:74
+#, c-format
+msgid ""
+"\tmpkg-which FILE_NAME                    look for owner of the file in "
+"installed packages (EQUAL mode).\n"
+msgstr ""
+
+#: ../lib/console-help.cpp:71
+#, c-format
+msgid ""
+"\tmpkg-whodepend PACKAGE_NAME             show what packages depends on this "
+"one\n"
+msgstr ""
+
 #: installpkg-ng2.cpp:1115 installpkg-ng2.cpp:1144 installpkg-ng2.cpp:1258
 #: installpkg-ng2.cpp:1253 installpkg-ng2.cpp:1239 installpkg-ng2.cpp:1263
 #: installpkg-ng2.cpp:1184 installpkg-ng2.cpp:1072 installpkg-ng2.cpp:1294
@@ -2113,6 +2522,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:850 ../console/installpkg-ng2.cpp:852
 #: ../console/installpkg-ng2.cpp:856 ../console/installpkg-ng2.cpp:874
 #: ../console/installpkg-ng2.cpp:890 ../console/installpkg-ng2.cpp:901
+#: ../console/installpkg-ng2.cpp:786
 msgid ""
 "\n"
 "\n"
@@ -2204,6 +2614,13 @@ msgid ""
 msgstr ""
 "\n"
 "Архитектура: "
+
+#: ../lib/console-help.cpp:55
+#, c-format
+msgid ""
+"\n"
+"Available commands:\n"
+msgstr ""
 
 #: menu.cpp:603 menu.cpp:608 ../lib/menu.cpp:625 ../lib/menu.cpp:638
 #: ../lib/menu.cpp:648 ../lib/menu.cpp:655 ../lib/menu.cpp:665
@@ -2521,6 +2938,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1372 ../console/installpkg-ng2.cpp:1380
 #: ../console/installpkg-ng2.cpp:1387 ../console/installpkg-ng2.cpp:1439
 #: ../console/installpkg-ng2.cpp:1400 ../console/installpkg-ng2.cpp:1435
+#: ../lib/console-help.cpp:115
 #, c-format
 msgid ""
 "\n"
@@ -2647,6 +3065,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1375 ../console/installpkg-ng2.cpp:1383
 #: ../console/installpkg-ng2.cpp:1390 ../console/installpkg-ng2.cpp:1442
 #: ../console/installpkg-ng2.cpp:1403 ../console/installpkg-ng2.cpp:1438
+#: ../lib/console-help.cpp:118
 #, c-format
 msgid ""
 "\n"
@@ -2681,6 +3100,7 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1296 ../console/installpkg-ng2.cpp:1303
 #: ../console/installpkg-ng2.cpp:1309 ../console/installpkg-ng2.cpp:1361
 #: ../console/installpkg-ng2.cpp:1321 ../console/installpkg-ng2.cpp:1356
+#: ../lib/console-help.cpp:13
 #, c-format
 msgid ""
 "\n"
@@ -2823,6 +3243,7 @@ msgid " (plain file)\n"
 msgstr " (обычный файл)\n"
 
 #: ../installer/setup.cpp:3411 ../installer/setup.cpp:3021
+#: ../libagiliasetup/agiliasetup.cpp:969
 msgid " (recovery mode) on "
 msgstr "(режим восстановления) на"
 
@@ -2846,6 +3267,7 @@ msgid " (total "
 msgstr " (всего "
 
 #: ../lib/repository.cpp:845 ../lib/repository.cpp:765
+#: ../lib/repository.cpp:777
 msgid " (total: "
 msgstr " (всего: "
 
@@ -2863,6 +3285,7 @@ msgstr " ; чтобы исправить это - переименуйте па�
 #: ../lib/mpkg.cpp:979 ../lib/mpkg.cpp:1981 ../lib/mpkg.cpp:984
 #: ../lib/mpkg.cpp:1987 ../lib/mpkg.cpp:1988 ../lib/mpkg.cpp:1100
 #: ../lib/mpkg.cpp:1969 ../lib/mpkg.cpp:416 ../lib/mpkg.cpp:1202
+#: ../lib/mpkg.cpp:1205
 msgid " ==> "
 msgstr " ==> "
 
@@ -2872,14 +3295,17 @@ msgid " AgiliaLinux repository updates"
 msgstr " Обновление репозиториев AgiliaLinux"
 
 #: string_operations.cpp:447 ../lib/string_operations.cpp:447
+#: ../mpkgsupport/string_operations.cpp:450
 msgid " Gb"
 msgstr " Гб"
 
 #: string_operations.cpp:431 ../lib/string_operations.cpp:431
+#: ../mpkgsupport/string_operations.cpp:434
 msgid " Kb"
 msgstr " Кб"
 
 #: string_operations.cpp:439 ../lib/string_operations.cpp:439
+#: ../mpkgsupport/string_operations.cpp:442
 msgid " Mb"
 msgstr " Мб"
 
@@ -2910,6 +3336,7 @@ msgid " build "
 msgstr " сборка "
 
 #: string_operations.cpp:424 ../lib/string_operations.cpp:424
+#: ../mpkgsupport/string_operations.cpp:427
 msgid " bytes"
 msgstr " байт"
 
@@ -2953,7 +3380,7 @@ msgstr " не относится ни к одному из установлен�
 #: ../lib/libmpkg.cpp:820 ../lib/menu.cpp:221 ../lib/metaframe.cpp:246
 #: ../lib/libmpkg.cpp:845 ../lib/metaframe.cpp:86 ../lib/metaframe.cpp:245
 #: ../lib/libmpkg.cpp:852 ../lib/menu.cpp:181
-#: ../console/installpkg-ng2.cpp:1241
+#: ../console/installpkg-ng2.cpp:1241 ../console/installpkg-ng2.cpp:1126
 msgid " doesn't exist"
 msgstr " не существует"
 
@@ -2978,7 +3405,7 @@ msgstr " ошибок"
 #: ../lib/mpkg.cpp:1748 ../lib/mpkg.cpp:1767 ../lib/mpkg.cpp:1768
 #: ../lib/mpkg.cpp:1773 ../lib/mpkg.cpp:1774 ../lib/mpkg.cpp:1775
 #: ../lib/mpkg.cpp:1808 ../lib/mpkg.cpp:1809 ../lib/mpkg.cpp:1071
-#: ../lib/mpkg.cpp:1072
+#: ../lib/mpkg.cpp:1072 ../lib/mpkg.cpp:1074 ../lib/mpkg.cpp:1075
 msgid " files"
 msgstr " файлов"
 
@@ -3138,7 +3565,7 @@ msgstr " кбайт)"
 msgid " min"
 msgstr " мин"
 
-#: ../console/installpkg-ng2.cpp:1244
+#: ../console/installpkg-ng2.cpp:1244 ../console/installpkg-ng2.cpp:1129
 msgid " missing any package index"
 msgstr ""
 
@@ -3172,12 +3599,14 @@ msgstr " не установлен"
 #: ../lib/HttpDownload.cpp:67 ../lib/HttpDownload.cpp:92
 #: ../lib/HttpDownload.cpp:102 ../lib/HttpDownload.cpp:66
 #: ../lib/HttpDownload.cpp:91 ../lib/HttpDownload.cpp:101
+#: ../libagiliasetup/agiliasetup.cpp:211
 msgid " of "
 msgstr " из "
 
 #: ../installer/setup.cpp:3084 ../installer/setup.cpp:3129
 #: ../installer/setup.cpp:3281 ../installer/setup.cpp:3344
 #: ../installer/setup.cpp:3407 ../installer/setup.cpp:3017
+#: ../libagiliasetup/agiliasetup.cpp:965 ../libagiliasetup/agiliasetup.cpp:978
 msgid " on "
 msgstr " на "
 
@@ -3249,6 +3678,7 @@ msgid " packages)"
 msgstr " пакетов)"
 
 #: ../lib/repository.cpp:845 ../lib/repository.cpp:765
+#: ../lib/repository.cpp:777
 msgid " packages, accepted: "
 msgstr " пакетов, принято: "
 
@@ -3398,7 +3828,7 @@ msgstr "%s-%s: %d ошибок\n"
 #: installpkg-ng2.cpp:789 ../console/installpkg-ng2.cpp:833
 #: ../console/installpkg-ng2.cpp:835 ../console/installpkg-ng2.cpp:839
 #: ../console/installpkg-ng2.cpp:857 ../console/installpkg-ng2.cpp:873
-#: ../console/installpkg-ng2.cpp:884
+#: ../console/installpkg-ng2.cpp:884 ../console/installpkg-ng2.cpp:776
 #, c-format
 msgid "%s: %sDAMAGED%s\n"
 msgstr "%s: %sПОВРЕЖДЕН%s\n"
@@ -3560,6 +3990,7 @@ msgstr "%sОшибка:%s %s\n"
 
 #: ../lib/mpkg.cpp:2080 ../lib/mpkg.cpp:2100 ../lib/mpkg.cpp:2106
 #: ../lib/mpkg.cpp:2107 ../lib/mpkg.cpp:2127 ../lib/mpkg.cpp:1360
+#: ../lib/mpkg.cpp:1363
 #, c-format
 msgid "%sFAILED%s\n"
 msgstr "%sОШИБКА%s\n"
@@ -3872,6 +4303,18 @@ msgstr ""
 "), но репозитория в ней не обнаружено.\n"
 "Проверьте путь и попробуйте еще раз."
 
+#: ../textinstaller/textsetup/textsetup.cpp:267
+msgid ""
+"). If you don't know what this stuff means, it is STRONGLY RECOMMENDED to "
+"leave it empty (to use default values)."
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:244
+msgid ""
+"). Select 'NONE' if you wish to keep data. NOTE: IF YOU CREATE NEW "
+"FILESYSTEM HERE, ALL DATA ON PARTITION WILL BE DESTROYED!"
+msgstr ""
+
 #: ../installer/setup.cpp:1495 ../installer/setup.cpp:1549
 #: ../installer/setup.cpp:1546 ../installer/setup.cpp:1550
 #: ../installer/setup.cpp:1566 ../installer/setup.cpp:1577
@@ -3914,6 +4357,13 @@ msgstr ", текущий: "
 #: ../installer/setup.cpp:280
 msgid ", for example, /mnt/win_c"
 msgstr ", например /mnt/win_c"
+
+#: ../textinstaller/textsetup/textsetup.cpp:229
+msgid ""
+", for example: '/boot' (without quotes). For swap partition, enter 'swap'. "
+"For root partition, enter '/'. If you wish to leave partition unused, leave "
+"this field empty."
+msgstr ""
 
 #: ../installer/setup.cpp:1489 ../installer/setup.cpp:2268
 #: ../installer/setup.cpp:1543 ../installer/setup.cpp:2329
@@ -3958,9 +4408,13 @@ msgstr ""
 #: mpkg.cpp:1398 mpkg.cpp:1464 mpkg.cpp:1467 mpkg.cpp:1481 mpkg.cpp:1546
 #: ../lib/mpkg.cpp:1666 ../lib/mpkg.cpp:1669 ../lib/mpkg.cpp:1703
 #: ../lib/mpkg.cpp:1723 ../lib/mpkg.cpp:1729 ../lib/mpkg.cpp:1730
-#: ../lib/mpkg.cpp:1786 ../lib/mpkg.cpp:1049
+#: ../lib/mpkg.cpp:1786 ../lib/mpkg.cpp:1049 ../lib/mpkg.cpp:1052
 msgid ", it will be skipped!"
 msgstr ", он будет пропущен!"
+
+#: ../textinstaller/textsetup/textsetup.cpp:289
+msgid ", label: "
+msgstr ""
 
 #: ../console/deleteprofile.cpp:15
 msgid ", may be you are not root?"
@@ -3978,6 +4432,10 @@ msgstr ", точка монтирования: "
 msgid ", new version: "
 msgstr ", новая версия: "
 
+#: ../textinstaller/textsetup/textsetup.cpp:288
+msgid ", no label"
+msgstr ""
+
 #: ../installer/setup.cpp:319 ../installer/setup.cpp:354
 #: ../installer/setup.cpp:328 ../installer/setup.cpp:363
 #: ../installer/setup.cpp:329 ../installer/setup.cpp:364
@@ -3990,9 +4448,14 @@ msgstr ", новая версия: "
 msgid ", not mounted"
 msgstr ", не подключено"
 
+#: ../libagiliasetup/agiliasetup.cpp:852
+msgid ", see log for details"
+msgstr ""
+
 #: mpkg.cpp:1461 ../lib/mpkg.cpp:1581 ../lib/mpkg.cpp:1584
 #: ../lib/mpkg.cpp:1614 ../lib/mpkg.cpp:1634 ../lib/mpkg.cpp:1640
 #: ../lib/mpkg.cpp:1641 ../lib/mpkg.cpp:1683 ../lib/mpkg.cpp:951
+#: ../lib/mpkg.cpp:954
 msgid ", should be: "
 msgstr ", должно быть: "
 
@@ -4288,6 +4751,15 @@ msgid ""
 "now."
 msgstr ". Установка прервана."
 
+#: ../libagiliasetup/agiliasetup.cpp:508 ../libagiliasetup/agiliasetup.cpp:514
+#: ../libagiliasetup/agiliasetup.cpp:518
+msgid ". Error log:\n"
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:388
+msgid ". It should not be empty!"
+msgstr ""
+
 #: ../installer/setup.cpp:2742 ../installer/setup.cpp:2739
 #: ../installer/setup.cpp:2880 ../installer/setup.cpp:2894
 #: ../installer/setup.cpp:2891 ../installer/setup.cpp:2892
@@ -4414,6 +4886,7 @@ msgstr "1280x1024, 256 цветов"
 #: ../installer/setup.cpp:387 ../installer/setup.cpp:475
 #: ../installer/setup.cpp:391 ../installer/setup.cpp:478
 #: ../installer/setup.cpp:175 ../installer/setup.cpp:262
+#: ../textinstaller/textsetup/textsetup.cpp:181
 msgid "4th version of standard linux filesystem"
 msgstr "4-я версия стандартной файловой системы Linux"
 
@@ -4492,6 +4965,7 @@ msgstr "800x600, 256 цветов"
 #: mpkg.cpp:1461 ../lib/mpkg.cpp:1581 ../lib/mpkg.cpp:1584
 #: ../lib/mpkg.cpp:1614 ../lib/mpkg.cpp:1634 ../lib/mpkg.cpp:1640
 #: ../lib/mpkg.cpp:1641 ../lib/mpkg.cpp:1683 ../lib/mpkg.cpp:951
+#: ../lib/mpkg.cpp:954
 msgid ": MD5 checksum incorrect: got "
 msgstr ": контрольная сумма не совпадает: получено "
 
@@ -4500,7 +4974,7 @@ msgstr ": контрольная сумма не совпадает: получ�
 #: mpkg.cpp:1347 mpkg.cpp:1350 mpkg.cpp:1364 mpkg.cpp:1426
 #: ../lib/mpkg.cpp:1546 ../lib/mpkg.cpp:1549 ../lib/mpkg.cpp:1579
 #: ../lib/mpkg.cpp:1595 ../lib/mpkg.cpp:1601 ../lib/mpkg.cpp:1602
-#: ../lib/mpkg.cpp:1644 ../lib/mpkg.cpp:912
+#: ../lib/mpkg.cpp:1644 ../lib/mpkg.cpp:912 ../lib/mpkg.cpp:915
 msgid ": building from source"
 msgstr ": сборка из исходников"
 
@@ -4509,7 +4983,7 @@ msgstr ": сборка из исходников"
 #: mpkg.cpp:1383 mpkg.cpp:1449 mpkg.cpp:1452 mpkg.cpp:1466 mpkg.cpp:1531
 #: ../lib/mpkg.cpp:1651 ../lib/mpkg.cpp:1654 ../lib/mpkg.cpp:1688
 #: ../lib/mpkg.cpp:1708 ../lib/mpkg.cpp:1714 ../lib/mpkg.cpp:1715
-#: ../lib/mpkg.cpp:1768 ../lib/mpkg.cpp:1031
+#: ../lib/mpkg.cpp:1768 ../lib/mpkg.cpp:1031 ../lib/mpkg.cpp:1034
 msgid ": checking file conflicts"
 msgstr ": проверка конфликтов файлов"
 
@@ -4518,7 +4992,7 @@ msgstr ": проверка конфликтов файлов"
 #: mpkg.cpp:1730 mpkg.cpp:1733 mpkg.cpp:1747 mpkg.cpp:1817
 #: ../lib/mpkg.cpp:1952 ../lib/mpkg.cpp:1955 ../lib/mpkg.cpp:2018
 #: ../lib/mpkg.cpp:2038 ../lib/mpkg.cpp:2044 ../lib/mpkg.cpp:2045
-#: ../lib/mpkg.cpp:2025 ../lib/mpkg.cpp:1258
+#: ../lib/mpkg.cpp:2025 ../lib/mpkg.cpp:1258 ../lib/mpkg.cpp:1261
 msgid ": checking for backups"
 msgstr ": проверка резервных копий"
 
@@ -4526,7 +5000,7 @@ msgstr ": проверка резервных копий"
 #: mpkg.cpp:1378 mpkg.cpp:1381 mpkg.cpp:1395 mpkg.cpp:1457
 #: ../lib/mpkg.cpp:1577 ../lib/mpkg.cpp:1580 ../lib/mpkg.cpp:1610
 #: ../lib/mpkg.cpp:1630 ../lib/mpkg.cpp:1636 ../lib/mpkg.cpp:1637
-#: ../lib/mpkg.cpp:1679 ../lib/mpkg.cpp:947
+#: ../lib/mpkg.cpp:1679 ../lib/mpkg.cpp:947 ../lib/mpkg.cpp:950
 msgid ": checking package integrity"
 msgstr ": проверка целостности пакетов"
 
@@ -4543,7 +5017,7 @@ msgstr ": проверка источника пакета"
 #: mpkg.cpp:1343 mpkg.cpp:1346 mpkg.cpp:1360 mpkg.cpp:1422
 #: ../lib/mpkg.cpp:1542 ../lib/mpkg.cpp:1545 ../lib/mpkg.cpp:1575
 #: ../lib/mpkg.cpp:1591 ../lib/mpkg.cpp:1597 ../lib/mpkg.cpp:1598
-#: ../lib/mpkg.cpp:1640 ../lib/mpkg.cpp:908
+#: ../lib/mpkg.cpp:1640 ../lib/mpkg.cpp:908 ../lib/mpkg.cpp:911
 msgid ": checking package type"
 msgstr ": проверка типа пакета"
 
@@ -4552,7 +5026,7 @@ msgstr ": проверка типа пакета"
 #: mpkg.cpp:1849 mpkg.cpp:1852 mpkg.cpp:1866 mpkg.cpp:1936
 #: ../lib/mpkg.cpp:2071 ../lib/mpkg.cpp:2074 ../lib/mpkg.cpp:2137
 #: ../lib/mpkg.cpp:2157 ../lib/mpkg.cpp:2163 ../lib/mpkg.cpp:2164
-#: ../lib/mpkg.cpp:2185 ../lib/mpkg.cpp:1418
+#: ../lib/mpkg.cpp:2185 ../lib/mpkg.cpp:1418 ../lib/mpkg.cpp:1421
 msgid ": clearing script directory"
 msgstr ": очистка каталога скриптов"
 
@@ -4561,7 +5035,7 @@ msgstr ": очистка каталога скриптов"
 #: mpkg.cpp:1613 mpkg.cpp:1616 mpkg.cpp:1630 mpkg.cpp:1700
 #: ../lib/mpkg.cpp:1835 ../lib/mpkg.cpp:1838 ../lib/mpkg.cpp:1872
 #: ../lib/mpkg.cpp:1892 ../lib/mpkg.cpp:1898 ../lib/mpkg.cpp:1899
-#: ../lib/mpkg.cpp:1909 ../lib/mpkg.cpp:1172
+#: ../lib/mpkg.cpp:1909 ../lib/mpkg.cpp:1172 ../lib/mpkg.cpp:1175
 msgid ": complete"
 msgstr ": выполнено"
 
@@ -4578,7 +5052,7 @@ msgstr ": поиск конфигурационных файлов"
 #: mpkg.cpp:1899 mpkg.cpp:1902 mpkg.cpp:1916 mpkg.cpp:1986
 #: ../lib/mpkg.cpp:2121 ../lib/mpkg.cpp:2124 ../lib/mpkg.cpp:2187
 #: ../lib/mpkg.cpp:2207 ../lib/mpkg.cpp:2213 ../lib/mpkg.cpp:2214
-#: ../lib/mpkg.cpp:2238 ../lib/mpkg.cpp:1471
+#: ../lib/mpkg.cpp:2238 ../lib/mpkg.cpp:1471 ../lib/mpkg.cpp:1474
 msgid ": done"
 msgstr ": готово"
 
@@ -4595,7 +5069,7 @@ msgstr ": ошибка при закачке, либо неподдержива�
 #: mpkg.cpp:1512 mpkg.cpp:1578 mpkg.cpp:1581 mpkg.cpp:1595 mpkg.cpp:1665
 #: ../lib/mpkg.cpp:1797 ../lib/mpkg.cpp:1800 ../lib/mpkg.cpp:1834
 #: ../lib/mpkg.cpp:1854 ../lib/mpkg.cpp:1860 ../lib/mpkg.cpp:1861
-#: ../lib/mpkg.cpp:1868 ../lib/mpkg.cpp:1131
+#: ../lib/mpkg.cpp:1868 ../lib/mpkg.cpp:1131 ../lib/mpkg.cpp:1134
 msgid ": executing post-install script"
 msgstr ": выполняю пост-установочный скрипт"
 
@@ -4604,7 +5078,7 @@ msgstr ": выполняю пост-установочный скрипт"
 #: mpkg.cpp:1842 mpkg.cpp:1845 mpkg.cpp:1859 mpkg.cpp:1929
 #: ../lib/mpkg.cpp:2064 ../lib/mpkg.cpp:2067 ../lib/mpkg.cpp:2130
 #: ../lib/mpkg.cpp:2150 ../lib/mpkg.cpp:2156 ../lib/mpkg.cpp:2157
-#: ../lib/mpkg.cpp:2178 ../lib/mpkg.cpp:1411
+#: ../lib/mpkg.cpp:2178 ../lib/mpkg.cpp:1411 ../lib/mpkg.cpp:1414
 msgid ": executing post-remove script"
 msgstr ": выполняю скрипт после удаления"
 
@@ -4621,7 +5095,7 @@ msgstr ": выполняю предустановочный скрипт"
 #: mpkg.cpp:1714 mpkg.cpp:1717 mpkg.cpp:1731 mpkg.cpp:1801
 #: ../lib/mpkg.cpp:1936 ../lib/mpkg.cpp:1939 ../lib/mpkg.cpp:2002
 #: ../lib/mpkg.cpp:2022 ../lib/mpkg.cpp:2028 ../lib/mpkg.cpp:2029
-#: ../lib/mpkg.cpp:2009 ../lib/mpkg.cpp:1242
+#: ../lib/mpkg.cpp:2009 ../lib/mpkg.cpp:1242 ../lib/mpkg.cpp:1245
 msgid ": executing pre-remove script"
 msgstr ": выполняю скрипт перед удалением"
 
@@ -4630,7 +5104,7 @@ msgstr ": выполняю скрипт перед удалением"
 #: mpkg.cpp:1612 mpkg.cpp:1626 mpkg.cpp:1696 ../lib/mpkg.cpp:1831
 #: ../lib/mpkg.cpp:1834 ../lib/mpkg.cpp:1868 ../lib/mpkg.cpp:1888
 #: ../lib/mpkg.cpp:1894 ../lib/mpkg.cpp:1895 ../lib/mpkg.cpp:1906
-#: ../lib/mpkg.cpp:1169
+#: ../lib/mpkg.cpp:1169 ../lib/mpkg.cpp:1172
 msgid ": exporting legacy data"
 msgstr ": экспорт текстовых данных"
 
@@ -4639,7 +5113,7 @@ msgstr ": экспорт текстовых данных"
 #: mpkg.cpp:1443 mpkg.cpp:1509 mpkg.cpp:1512 mpkg.cpp:1526 mpkg.cpp:1591
 #: ../lib/mpkg.cpp:1711 ../lib/mpkg.cpp:1714 ../lib/mpkg.cpp:1748
 #: ../lib/mpkg.cpp:1768 ../lib/mpkg.cpp:1774 ../lib/mpkg.cpp:1775
-#: ../lib/mpkg.cpp:1809 ../lib/mpkg.cpp:1072
+#: ../lib/mpkg.cpp:1809 ../lib/mpkg.cpp:1072 ../lib/mpkg.cpp:1075
 msgid ": extracting "
 msgstr ": распаковка "
 
@@ -4654,6 +5128,7 @@ msgstr ": распаковка "
 #: ../lib/mpkg.cpp:2009 ../lib/mpkg.cpp:1677 ../lib/mpkg.cpp:2015
 #: ../lib/mpkg.cpp:1678 ../lib/mpkg.cpp:2016 ../lib/mpkg.cpp:1711
 #: ../lib/mpkg.cpp:1996 ../lib/mpkg.cpp:977 ../lib/mpkg.cpp:1229
+#: ../lib/mpkg.cpp:980 ../lib/mpkg.cpp:1232
 msgid ": extracting file list"
 msgstr ": извлечение списка файлов"
 
@@ -4662,7 +5137,7 @@ msgstr ": извлечение списка файлов"
 #: mpkg.cpp:1322 mpkg.cpp:1388 mpkg.cpp:1391 mpkg.cpp:1405 mpkg.cpp:1467
 #: ../lib/mpkg.cpp:1587 ../lib/mpkg.cpp:1590 ../lib/mpkg.cpp:1620
 #: ../lib/mpkg.cpp:1640 ../lib/mpkg.cpp:1646 ../lib/mpkg.cpp:1647
-#: ../lib/mpkg.cpp:1689 ../lib/mpkg.cpp:957
+#: ../lib/mpkg.cpp:1689 ../lib/mpkg.cpp:957 ../lib/mpkg.cpp:960
 msgid ": extracting metadata"
 msgstr ": извлечение метаданных"
 
@@ -4671,7 +5146,7 @@ msgstr ": извлечение метаданных"
 #: mpkg.cpp:1406 mpkg.cpp:1409 mpkg.cpp:1423 mpkg.cpp:1488
 #: ../lib/mpkg.cpp:1608 ../lib/mpkg.cpp:1611 ../lib/mpkg.cpp:1644
 #: ../lib/mpkg.cpp:1664 ../lib/mpkg.cpp:1670 ../lib/mpkg.cpp:1671
-#: ../lib/mpkg.cpp:1704 ../lib/mpkg.cpp:970
+#: ../lib/mpkg.cpp:1704 ../lib/mpkg.cpp:970 ../lib/mpkg.cpp:973
 msgid ": extracting scripts"
 msgstr ": извлечение скриптов"
 
@@ -4680,7 +5155,7 @@ msgstr ": извлечение скриптов"
 #: mpkg.cpp:1883 mpkg.cpp:1886 mpkg.cpp:1900 mpkg.cpp:1970
 #: ../lib/mpkg.cpp:2105 ../lib/mpkg.cpp:2108 ../lib/mpkg.cpp:2171
 #: ../lib/mpkg.cpp:2191 ../lib/mpkg.cpp:2197 ../lib/mpkg.cpp:2198
-#: ../lib/mpkg.cpp:2222 ../lib/mpkg.cpp:1455
+#: ../lib/mpkg.cpp:2222 ../lib/mpkg.cpp:1455 ../lib/mpkg.cpp:1458
 msgid ": finishing"
 msgstr ": завершение"
 
@@ -4689,7 +5164,7 @@ msgstr ": завершение"
 #: mpkg.cpp:1532 mpkg.cpp:1598 mpkg.cpp:1601 mpkg.cpp:1615 mpkg.cpp:1685
 #: ../lib/mpkg.cpp:1820 ../lib/mpkg.cpp:1823 ../lib/mpkg.cpp:1857
 #: ../lib/mpkg.cpp:1877 ../lib/mpkg.cpp:1883 ../lib/mpkg.cpp:1884
-#: ../lib/mpkg.cpp:1888 ../lib/mpkg.cpp:1151
+#: ../lib/mpkg.cpp:1888 ../lib/mpkg.cpp:1151 ../lib/mpkg.cpp:1154
 msgid ": finishing installation"
 msgstr ": завершение установки"
 
@@ -4698,7 +5173,7 @@ msgstr ": завершение установки"
 #: mpkg.cpp:1251 mpkg.cpp:1254 mpkg.cpp:1268 mpkg.cpp:1330
 #: ../lib/mpkg.cpp:1450 ../lib/mpkg.cpp:1453 ../lib/mpkg.cpp:1483
 #: ../lib/mpkg.cpp:1499 ../lib/mpkg.cpp:1505 ../lib/mpkg.cpp:1506
-#: ../lib/mpkg.cpp:1635 ../lib/mpkg.cpp:903
+#: ../lib/mpkg.cpp:1635 ../lib/mpkg.cpp:903 ../lib/mpkg.cpp:906
 msgid ": initialization"
 msgstr ": инициализация"
 
@@ -4707,7 +5182,8 @@ msgstr ": инициализация"
 #: mpkg.cpp:1505 ../lib/mpkg.cpp:1625 ../lib/mpkg.cpp:1628
 #: ../lib/mpkg.cpp:1662 ../lib/mpkg.cpp:1682 ../lib/mpkg.cpp:1688
 #: ../lib/mpkg.cpp:1689 ../lib/mpkg.cpp:1727 ../lib/mpkg.cpp:2040
-#: ../lib/mpkg.cpp:990 ../lib/mpkg.cpp:1273
+#: ../lib/mpkg.cpp:990 ../lib/mpkg.cpp:1273 ../lib/mpkg.cpp:993
+#: ../lib/mpkg.cpp:1276
 msgid ": looking for X fonts"
 msgstr ": поиск шрифтов X11"
 
@@ -4716,7 +5192,7 @@ msgstr ": поиск шрифтов X11"
 #: mpkg.cpp:1412 mpkg.cpp:1478 mpkg.cpp:1481 mpkg.cpp:1495 mpkg.cpp:1560
 #: ../lib/mpkg.cpp:1680 ../lib/mpkg.cpp:1683 ../lib/mpkg.cpp:1717
 #: ../lib/mpkg.cpp:1737 ../lib/mpkg.cpp:1743 ../lib/mpkg.cpp:1744
-#: ../lib/mpkg.cpp:1799 ../lib/mpkg.cpp:1062
+#: ../lib/mpkg.cpp:1799 ../lib/mpkg.cpp:1062 ../lib/mpkg.cpp:1065
 msgid ": merging file lists into database"
 msgstr ": запись списка файлов в базу данных"
 
@@ -4746,6 +5222,10 @@ msgstr ": нет подходящей версии"
 msgid ": not installed"
 msgstr ": не установлен"
 
+#: ../textinstaller/textsetup/textsetup.cpp:201
+msgid ": options"
+msgstr ""
+
 #: libmpkg.cpp:341 libmpkg.cpp:342 libmpkg.cpp:358 libmpkg.cpp:374
 #: libmpkg.cpp:384 libmpkg.cpp:390 libmpkg.cpp:391 libmpkg.cpp:524
 #: libmpkg.cpp:527 libmpkg.cpp:542 libmpkg.cpp:543 libmpkg.cpp:544
@@ -4766,7 +5246,7 @@ msgstr ": пакет не найден"
 #: mpkg.cpp:1798 mpkg.cpp:1801 mpkg.cpp:1815 mpkg.cpp:1885
 #: ../lib/mpkg.cpp:2020 ../lib/mpkg.cpp:2023 ../lib/mpkg.cpp:2086
 #: ../lib/mpkg.cpp:2106 ../lib/mpkg.cpp:2112 ../lib/mpkg.cpp:2113
-#: ../lib/mpkg.cpp:2134 ../lib/mpkg.cpp:1367
+#: ../lib/mpkg.cpp:2134 ../lib/mpkg.cpp:1367 ../lib/mpkg.cpp:1370
 msgid ": removing empty directories"
 msgstr ": удаление пустых директорий"
 
@@ -4775,7 +5255,7 @@ msgstr ": удаление пустых директорий"
 #: mpkg.cpp:1749 mpkg.cpp:1752 mpkg.cpp:1766 mpkg.cpp:1836
 #: ../lib/mpkg.cpp:1971 ../lib/mpkg.cpp:1974 ../lib/mpkg.cpp:2037
 #: ../lib/mpkg.cpp:2057 ../lib/mpkg.cpp:2063 ../lib/mpkg.cpp:2064
-#: ../lib/mpkg.cpp:2086 ../lib/mpkg.cpp:1319
+#: ../lib/mpkg.cpp:2086 ../lib/mpkg.cpp:1319 ../lib/mpkg.cpp:1322
 msgid ": removing files ["
 msgstr ": удаление файлов ["
 
@@ -4784,7 +5264,7 @@ msgstr ": удаление файлов ["
 #: mpkg.cpp:1854 mpkg.cpp:1857 mpkg.cpp:1871 mpkg.cpp:1941
 #: ../lib/mpkg.cpp:2076 ../lib/mpkg.cpp:2079 ../lib/mpkg.cpp:2142
 #: ../lib/mpkg.cpp:2162 ../lib/mpkg.cpp:2168 ../lib/mpkg.cpp:2169
-#: ../lib/mpkg.cpp:2190 ../lib/mpkg.cpp:1423
+#: ../lib/mpkg.cpp:2190 ../lib/mpkg.cpp:1423 ../lib/mpkg.cpp:1426
 msgid ": restoring backups"
 msgstr ": восстановление резервных копий"
 
@@ -4799,6 +5279,7 @@ msgstr ": восстановление резервных копий"
 #: ../lib/mpkg.cpp:2200 ../lib/mpkg.cpp:1892 ../lib/mpkg.cpp:2206
 #: ../lib/mpkg.cpp:1893 ../lib/mpkg.cpp:2207 ../lib/mpkg.cpp:1904
 #: ../lib/mpkg.cpp:2231 ../lib/mpkg.cpp:1167 ../lib/mpkg.cpp:1464
+#: ../lib/mpkg.cpp:1170 ../lib/mpkg.cpp:1467
 msgid ": updating database"
 msgstr ": обновление базы данных"
 
@@ -4877,6 +5358,7 @@ msgid "Aborting installation\n"
 msgstr "Отмена установки\n"
 
 #: ncurses_if.h:62 ncurses_if.h:63 ../lib/ncurses_if.h:63
+#: ../nwidgets/ncurses_if.h:63
 msgid "Accept"
 msgstr "Принять"
 
@@ -5002,7 +5484,8 @@ msgstr ""
 #: ../installer/setup.cpp:28 ../installer/setup.cpp:39
 #: ../installer/setup.cpp:41 ../installer/setup.cpp:3407
 #: ../installer/setup.cpp:3411 ../installer/setup.cpp:3017
-#: ../installer/setup.cpp:3021
+#: ../installer/setup.cpp:3021 ../libagiliasetup/agiliasetup.cpp:965
+#: ../libagiliasetup/agiliasetup.cpp:969
 msgid "AgiliaLinux "
 msgstr "AgiliaLinux "
 
@@ -5202,6 +5685,11 @@ msgstr ""
 "При проведении первоначальной конфигурации произошла ошибка. Устраните "
 "причину и перезапустите инсталлятор."
 
+#: ../textinstaller/textsetup/textsetup.cpp:153
+msgid ""
+"Another command-line partition editor. Be careful: for advanced users only."
+msgstr ""
+
 #: ../installer/setup.cpp:253 ../installer/setup.cpp:339
 #: ../installer/setup.cpp:262 ../installer/setup.cpp:348
 #: ../installer/setup.cpp:263 ../installer/setup.cpp:349
@@ -5211,6 +5699,7 @@ msgstr ""
 #: ../installer/setup.cpp:391 ../installer/setup.cpp:479
 #: ../installer/setup.cpp:395 ../installer/setup.cpp:482
 #: ../installer/setup.cpp:179 ../installer/setup.cpp:266
+#: ../textinstaller/textsetup/textsetup.cpp:185
 msgid "Another good filesystem for general use."
 msgstr "Еще одна неплохая файловая система под стандартные задачи."
 
@@ -5273,6 +5762,7 @@ msgstr "Доступные обновления:\n"
 #: ../installer/setup.cpp:393 ../installer/setup.cpp:481
 #: ../installer/setup.cpp:397 ../installer/setup.cpp:484
 #: ../installer/setup.cpp:181 ../installer/setup.cpp:268
+#: ../textinstaller/textsetup/textsetup.cpp:187
 msgid ""
 "B-Tree FS, new EXPERIMENTAL filesystem similar to ZFS. Separate /boot "
 "partition required to use it as root filesystem."
@@ -5378,6 +5868,10 @@ msgstr ""
 msgid "Boot loader: "
 msgstr "Загрузчик: "
 
+#: ../libagiliasetup/agiliasetup.cpp:1162
+msgid "Bootloader partition not specified, how you wish to boot, Luke?"
+msgstr ""
+
 #: ../console/installpkg-ng2.cpp:1265 ../console/installpkg-ng2.cpp:1272
 #: ../console/installpkg-ng2.cpp:1278
 msgid "Branch: "
@@ -5457,6 +5951,7 @@ msgstr ""
 
 #: ncurses_if.cpp:47 ncurses_if.cpp:94 ../lib/ncurses_if.cpp:47
 #: ../lib/ncurses_if.cpp:94 ../lib/ncurses_if.cpp:48 ../lib/ncurses_if.cpp:95
+#: ../nwidgets/ncurses_if.cpp:50 ../nwidgets/ncurses_if.cpp:97
 msgid "CANCEL"
 msgstr "ОТМЕНА"
 
@@ -5506,6 +6001,10 @@ msgstr "Автоопределение CD/DVD не удалось. Указат�
 msgid "CD/DVD drive found at "
 msgstr "Привод CD/DVD найден в "
 
+#: ../textinstaller/textsetup/textsetup.cpp:221
+msgid "CONTINUE"
+msgstr ""
+
 #: ../installer/setup.cpp:1353 ../installer/setup.cpp:1374
 #: ../installer/setup.cpp:1469 ../installer/setup.cpp:1496
 #: ../installer/setup.cpp:1502 ../installer/setup.cpp:1407
@@ -5530,6 +6029,10 @@ msgstr "CUSTOM"
 #: ../lib/libmpkg.cpp:238
 msgid "Cache cleanup complete"
 msgstr "Очистка кеша завершена"
+
+#: ../libagiliasetup/agiliasetup.cpp:287
+msgid "Caching setup variants"
+msgstr ""
 
 #: validator.cpp:167 validator.cpp:168 ../console/validator.cpp:168
 msgid "Can't understand what with versioning"
@@ -5675,6 +6178,7 @@ msgstr "Изменить настройки"
 #: ../console/installpkg-ng2.cpp:1214 ../console/installpkg-ng2.cpp:1221
 #: ../console/installpkg-ng2.cpp:1227 ../console/installpkg-ng2.cpp:1277
 #: ../console/installpkg-ng2.cpp:1293 ../console/installpkg-ng2.cpp:1328
+#: ../console/installpkg-ng2.cpp:1213
 msgid "Changes:"
 msgstr "Изменения:"
 
@@ -5748,7 +6252,7 @@ msgstr "Проверка целостности системы"
 #: ../console/checkdeps.cpp:13 ../console/installpkg-ng2.cpp:1116
 #: ../console/installpkg-ng2.cpp:1122 ../console/installpkg-ng2.cpp:1165
 #: ../console/checkdeps.cpp:18 ../console/installpkg-ng2.cpp:1181
-#: ../console/installpkg-ng2.cpp:1192
+#: ../console/installpkg-ng2.cpp:1192 ../console/installpkg-ng2.cpp:1077
 #, c-format
 msgid "Checking %d packages in %s\n"
 msgstr "Проверяем %d пакетов в %s\n"
@@ -6297,6 +6801,7 @@ msgstr "Очистить старые теги?"
 #: mpkg.cpp:1279 ../lib/mpkg.cpp:1399 ../lib/mpkg.cpp:1402
 #: ../lib/mpkg.cpp:1432 ../lib/mpkg.cpp:1448 ../lib/mpkg.cpp:1454
 #: ../lib/mpkg.cpp:1455 ../lib/mpkg.cpp:1554 ../lib/mpkg.cpp:822
+#: ../lib/mpkg.cpp:825
 msgid "Clearing unreachable packages"
 msgstr "Удаление недоступных пакетов из базы"
 
@@ -6316,6 +6821,10 @@ msgstr "Шрифты с патчами cleartype"
 msgid "Command line based partitioning (expert mode)"
 msgstr "Разбиение из командной строки (экспертный режим)"
 
+#: ../textinstaller/textsetup/textsetup.cpp:152
+msgid "Command-line partition editor. MBR only."
+msgstr ""
+
 #: libmpkg.cpp:276 libmpkg.cpp:277 libmpkg.cpp:289 libmpkg.cpp:305
 msgid "Commit failed"
 msgstr "Операции завершились с ошибками"
@@ -6326,6 +6835,10 @@ msgstr "Операции завершились с ошибками"
 #: ../lib/libmpkg.cpp:504 ../lib/libmpkg.cpp:538
 msgid "Commit failed, error code: "
 msgstr "Операции завершились с ошибками, код возврата: "
+
+#: ../libagiliasetup/agiliasetup.cpp:441
+msgid "Commit failed: got empty queue. Probably we have dependency errors"
+msgstr ""
 
 #: menu.cpp:22 menu.cpp:44 ../lib/menu.cpp:44 ../lib/menu.cpp:28
 msgid "Commit queued actions"
@@ -6360,6 +6873,11 @@ msgstr "Выполнение..."
 #: libmpkg.cpp:428
 msgid "Committing...\n"
 msgstr "Выполнение...\n"
+
+#: ../lib/console-help.cpp:14
+#, c-format
+msgid "Common options:\n"
+msgstr ""
 
 #: libmpkg.cpp:275 libmpkg.cpp:276 libmpkg.cpp:284 libmpkg.cpp:300
 #: libmpkg.cpp:288 libmpkg.cpp:294 libmpkg.cpp:295 libmpkg.cpp:430
@@ -6422,6 +6940,14 @@ msgstr "Настройка системы..."
 msgid "Confirm installation parameters"
 msgstr "Подтверждение параметров установки"
 
+#: ../textinstaller/textsetup/textsetup.cpp:393
+msgid "Confirm password by entering it again."
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:365
+msgid "Confirm root password by entering it again."
+msgstr ""
+
 #: ../installer/setup.cpp:413 mpkg.cpp:750 ../installer/setup.cpp:422
 #: ../installer/setup.cpp:1534 ../installer/setup.cpp:1892 mpkg.cpp:813
 #: ../installer/setup.cpp:423 ../installer/setup.cpp:1588
@@ -6441,9 +6967,14 @@ msgstr "Подтверждение параметров установки"
 #: ../installer/setup.cpp:2275 ../lib/mpkg.cpp:1164 ../installer/setup.cpp:562
 #: ../installer/setup.cpp:1922 ../installer/setup.cpp:2294 ../lib/mpkg.cpp:493
 #: ../installer/setup.cpp:346 ../installer/setup.cpp:1579
-#: ../installer/setup.cpp:1921
+#: ../installer/setup.cpp:1921 ../textinstaller/textsetup/textsetup.cpp:221
 msgid "Continue"
 msgstr "Продолжить"
+
+#: ../textinstaller/textsetup/textsetup.cpp:165
+#: ../textinstaller/textsetup/textsetup.cpp:292
+msgid "Continue to next step"
+msgstr ""
 
 #: ../installer/setup.cpp:984 ../installer/setup.cpp:996
 #: ../installer/setup.cpp:993 ../installer/setup.cpp:994
@@ -6498,6 +7029,10 @@ msgstr "Создать RAID-массив"
 msgid "Create filelist index?"
 msgstr "Создать индекс списка файлов?"
 
+#: ../libagiliasetup/agiliasetup.cpp:761
+msgid "Creating initrd"
+msgstr ""
+
 #: ../installer/setup.cpp:2752 ../installer/setup.cpp:2749
 #: ../installer/setup.cpp:2890 ../installer/setup.cpp:2904
 #: ../installer/setup.cpp:2901 ../installer/setup.cpp:2902
@@ -6535,6 +7070,10 @@ msgstr "Формирование очереди установки"
 #, c-format
 msgid "Creating package %s\n"
 msgstr "Создание пакета %s\n"
+
+#: ../libagiliasetup/agiliasetup.cpp:469
+msgid "Creating swap in "
+msgstr ""
 
 #: ../lib/bus.cpp:423
 msgid "Creating symlink to"
@@ -6631,6 +7170,7 @@ msgstr "Customizable config, checking....\n"
 #: ../console/installpkg-ng2.cpp:1413 ../console/installpkg-ng2.cpp:1421
 #: ../console/installpkg-ng2.cpp:1428 ../console/installpkg-ng2.cpp:1480
 #: ../console/installpkg-ng2.cpp:1441 ../console/installpkg-ng2.cpp:1476
+#: ../console/installpkg-ng2.cpp:1250
 msgid "DISABLED"
 msgstr "ОТКЛЮЧЕН"
 
@@ -6756,6 +7296,10 @@ msgstr "Обновление базы данных успешно заверше
 msgid "Database: %s\n"
 msgstr "База данных: %s\n"
 
+#: ../textinstaller/textsetup/textsetup.cpp:214
+msgid "Defaults"
+msgstr ""
+
 #: ../installer/setup.cpp:2436 ../installer/setup.cpp:2433
 #: ../installer/setup.cpp:2495 ../installer/setup.cpp:2492
 #: ../installer/setup.cpp:2493 ../installer/setup.cpp:2494
@@ -6811,12 +7355,17 @@ msgstr "Проверка зависимостей завершена, колич
 #: libmpkg.cpp:421 libmpkg.cpp:422 libmpkg.cpp:447 libmpkg.cpp:450
 #: libmpkg.cpp:455 ../lib/libmpkg.cpp:455 ../console/checkdeps.cpp:23
 #: ../console/checkdeps.cpp:28 ../lib/libmpkg.cpp:489
+#: ../console/checkdeps.cpp:27
 msgid "Dependency error"
 msgstr "Ошибка зависимостей"
 
 #: validator.cpp:165 validator.cpp:166 ../console/validator.cpp:166
 msgid "Deprecated version: there is already "
 msgstr "Устаревшая версия: уже "
+
+#: ../nwidgets/ncurses_if.cpp:899 ../nwidgets/ncurses_if.cpp:900
+msgid "Description"
+msgstr ""
 
 #: validator.cpp:133 validator.cpp:134 ../console/validator.cpp:134
 msgid "Description is good"
@@ -6855,7 +7404,12 @@ msgstr ""
 "Определение порядка установки пакетов (это может занять некоторое время)..."
 
 #: ../console/installpkg-ng2.cpp:1241 ../console/installpkg-ng2.cpp:1244
+#: ../console/installpkg-ng2.cpp:1126 ../console/installpkg-ng2.cpp:1129
 msgid "Directory "
+msgstr ""
+
+#: ../mpkgsupport/file_routines.cpp:71
+msgid "Directory list"
 msgstr ""
 
 #: HttpDownload.cpp:246 ../lib/HttpDownload.cpp:246
@@ -6886,6 +7440,7 @@ msgid "Disk space will be freed"
 msgstr "Будет освобождено места на диске"
 
 #: ncurses_if.h:62 ncurses_if.h:63 ../lib/ncurses_if.h:63
+#: ../nwidgets/ncurses_if.h:63
 msgid "Do not accept"
 msgstr "Отклонить"
 
@@ -6898,6 +7453,7 @@ msgstr "Отклонить"
 #: ../installer/setup.cpp:395 ../installer/setup.cpp:484
 #: ../installer/setup.cpp:399 ../installer/setup.cpp:487
 #: ../installer/setup.cpp:183 ../installer/setup.cpp:271
+#: ../textinstaller/textsetup/textsetup.cpp:190
 msgid "Do not format (use as is and keep data)"
 msgstr "Не форматировать (сохранить данные)"
 
@@ -6912,6 +7468,10 @@ msgstr "Не форматировать (сохранить данные)"
 #: ../installer/setup.cpp:2958 ../installer/setup.cpp:2568
 msgid "Do not install boot loader"
 msgstr "Не устанавливать загрузчик"
+
+#: ../textinstaller/textsetup/textsetup.cpp:321
+msgid "Do not install bootloader (think twice!)"
+msgstr ""
 
 #: ../installer/setup.cpp:941 ../installer/setup.cpp:958
 #: ../installer/setup.cpp:942 ../installer/setup.cpp:959
@@ -6981,6 +7541,10 @@ msgstr "Хотите ли вы смонтировать раздел, содер
 msgid "Do you want to mount partition with packages?"
 msgstr "Хотите ли вы смонтировать раздел, содержащий директорию с пакетами?"
 
+#: ../textinstaller/textsetup/textsetup.cpp:105
+msgid "Do you want to specify additional repositories?"
+msgstr ""
+
 #: ../installer/setup.cpp:1318 ../installer/setup.cpp:1385
 #: ../installer/setup.cpp:1426
 msgid ""
@@ -7006,6 +7570,10 @@ msgstr ""
 #: ../installer/setup.cpp:1927 ../installer/setup.cpp:1584
 msgid "Do you wish to configure network?"
 msgstr "Хотите ли вы настроить сеть?"
+
+#: ../textinstaller/textsetup/textsetup.cpp:436
+msgid "Does your hardware clock stores time in UTC instead of localtime?"
+msgstr ""
 
 #: menu.cpp:690 menu.cpp:702 ../lib/menu.cpp:724 ../lib/menu.cpp:737
 #: ../lib/menu.cpp:747 ../lib/menu.cpp:756 ../lib/menu.cpp:701
@@ -7169,6 +7737,10 @@ msgstr "Редактировать конфигурационный файл в�
 msgid "Edit current package set"
 msgstr "Редактировать текущий набор пакетов"
 
+#: ../textinstaller/textsetup/textsetup.cpp:106
+msgid "Edit file and place each repository on separate line"
+msgstr ""
+
 #: ../installer/setup.cpp:1330 ../installer/setup.cpp:1384
 #: ../installer/setup.cpp:1381 ../installer/setup.cpp:1382
 #: ../installer/setup.cpp:1398 ../installer/setup.cpp:1409
@@ -7211,6 +7783,14 @@ msgstr ""
 #: menu.cpp:20 menu.cpp:50 ../lib/menu.cpp:50 ../lib/menu.cpp:34
 msgid "Edit tags of package"
 msgstr "Редактирование тегов у пакета"
+
+#: ../textinstaller/textsetup/textsetup.cpp:390
+msgid "Empty password is not allowed."
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:362
+msgid "Empty root password is not allowed."
+msgstr ""
 
 #: ../installer/setup.cpp:1218 ../installer/setup.cpp:1226
 msgid "Enable GUI logon screen?"
@@ -7256,6 +7836,10 @@ msgstr "Введите номер графического режима VESA (д
 msgid "Enter a part of filename:"
 msgstr "Введите часть имени файла:"
 
+#: ../textinstaller/textsetup/textsetup.cpp:65
+msgid "Enter custom URL to repository:"
+msgstr ""
+
 #: ../installer/setup.cpp:1091 ../installer/setup.cpp:760
 msgid "Enter hostname (for example, agilia):"
 msgstr "Введите имя хоста (например, agilia):"
@@ -7268,6 +7852,14 @@ msgstr "Введите имя хоста (например, agilia):"
 msgid "Enter hostname (for example, mops):"
 msgstr "Введите имя компьютера (например, mops):"
 
+#: ../textinstaller/textsetup/textsetup.cpp:408
+msgid "Enter hostname:"
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:266
+msgid "Enter mount options for partition "
+msgstr ""
+
 #: ../installer/setup.cpp:350 ../installer/setup.cpp:359
 #: ../installer/setup.cpp:360 ../installer/setup.cpp:370
 #: ../installer/setup.cpp:407 ../installer/setup.cpp:469
@@ -7275,6 +7867,10 @@ msgstr "Введите имя компьютера (например, mops):"
 #: ../installer/setup.cpp:280
 msgid "Enter mount point for "
 msgstr "Укажите точку монтирования для "
+
+#: ../textinstaller/textsetup/textsetup.cpp:228
+msgid "Enter mount point for partition "
+msgstr ""
 
 #: ../installer/setup.cpp:1773 ../installer/setup.cpp:1829
 #: ../installer/setup.cpp:1826 ../installer/setup.cpp:1830
@@ -7294,6 +7890,10 @@ msgstr "Введите имя сетевой карты:"
 #: ../installer/setup.cpp:1093 ../installer/setup.cpp:762
 msgid "Enter network name (for example, example.net):"
 msgstr "Введите имя сети (например, example.net):"
+
+#: ../textinstaller/textsetup/textsetup.cpp:409
+msgid "Enter network name. Leave 'example.net' for intranet:"
+msgstr ""
 
 #: menu.cpp:105 ../lib/menu.cpp:103 ../lib/menu.cpp:68
 msgid "Enter new tag for package:"
@@ -7317,6 +7917,7 @@ msgstr "Введите имя пакета или его часть:"
 #: ../installer/setup.cpp:902 ../installer/setup.cpp:926
 #: ../installer/setup.cpp:933 ../installer/setup.cpp:937
 #: ../installer/setup.cpp:942 ../installer/setup.cpp:712
+#: ../textinstaller/textsetup/textsetup.cpp:388
 msgid "Enter password for user "
 msgstr "Введите пароль для пользователя "
 
@@ -7331,6 +7932,10 @@ msgstr "Введите пароль для пользователя "
 msgid "Enter repository URL:"
 msgstr "Введите URL репозитория:"
 
+#: ../textinstaller/textsetup/textsetup.cpp:360
+msgid "Enter root password. It should not be empty!"
+msgstr ""
+
 #: menu.cpp:156 ../lib/menu.cpp:154 ../lib/menu.cpp:119
 msgid "Enter search pattern:"
 msgstr "Введите шаблон поиска:"
@@ -7344,6 +7949,12 @@ msgstr "Введите шаблон поиска:"
 #: ../installer/setup.cpp:1928 ../installer/setup.cpp:1585
 msgid "Enter server's hostname or IP address:"
 msgstr "Введите имя сервера или его IP:"
+
+#: ../textinstaller/textsetup/textsetup.cpp:381
+msgid ""
+"Enter user name. It may contain only lowercase latin characters, digits and "
+"_ character. Username should not start with digit."
+msgstr ""
 
 #: ../installer/setup.cpp:886 ../installer/setup.cpp:896
 #: ../installer/setup.cpp:934 ../installer/setup.cpp:933
@@ -7400,6 +8011,10 @@ msgstr ""
 "Ошибка при закачке индекса с репозитория: ошибка закачки, либо не "
 "поддерживаемый тип репозитория"
 
+#: ../libagiliasetup/agiliasetup.cpp:372
+msgid "Error getting package list: return code "
+msgstr ""
+
 #: libmpkg.cpp:900 libmpkg.cpp:901 libmpkg.cpp:909 libmpkg.cpp:910
 #: libmpkg.cpp:1180 libmpkg.cpp:1187 libmpkg.cpp:1188 ../lib/libmpkg.cpp:1234
 #: ../lib/libmpkg.cpp:1289 ../lib/libmpkg.cpp:1339 ../lib/libmpkg.cpp:1347
@@ -7414,14 +8029,34 @@ msgstr "Ошибка в "
 msgid "Error in dependencies: "
 msgstr "Неразрешенные зависимости: "
 
+#: ../libagiliasetup/agiliasetup.cpp:283
+msgid ""
+"Error in getRepositoryData: Failed to retreive repository data, cannot "
+"continue"
+msgstr ""
+
+#: ../libagiliasetup/agiliasetup.cpp:363 ../libagiliasetup/agiliasetup.cpp:406
+msgid "Error in prepareInstallQueue: queue commit failed, return code: "
+msgstr ""
+
+#: ../libagiliasetup/agiliasetup.cpp:270
+msgid ""
+"Error in setMpkgConfig: failed to set repository list. Most probable reason: "
+"error writing config file"
+msgstr ""
+
 #: installpkg-ng2.cpp:42 installpkg-ng2.cpp:45 installpkg-ng2.cpp:61
 #: installpkg-ng2.cpp:58 installpkg-ng2.cpp:59 installpkg-ng2.cpp:67
 #: installpkg-ng2.cpp:68 installpkg-ng2.cpp:66
 #: ../console/installpkg-ng2.cpp:286 ../console/installpkg-ng2.cpp:288
 #: ../console/installpkg-ng2.cpp:292 ../console/installpkg-ng2.cpp:304
-#: ../console/installpkg-ng2.cpp:308
+#: ../console/installpkg-ng2.cpp:308 ../console/installpkg-ng2.cpp:305
 msgid "Error initializing CORE"
 msgstr "Ошибка при инициализации"
+
+#: ../libagiliasetup/agiliasetup.cpp:549
+msgid "Error mounting root partition. Error log:\n"
+msgstr ""
 
 #: installpkg-ng2.cpp:438 installpkg-ng2.cpp:443 installpkg-ng2.cpp:398
 #: menu.cpp:63 menu.cpp:64 libmpkg.cpp:1072 libmpkg.cpp:1073 libmpkg.cpp:1074
@@ -7443,17 +8078,31 @@ msgstr "Ошибка при запросе базы данных"
 msgid "Error updating data from "
 msgstr "Ошибка при обновлении данных с "
 
+#: ../libagiliasetup/agiliasetup.cpp:518
+msgid "Error while activating swap "
+msgstr ""
+
+#: ../libagiliasetup/agiliasetup.cpp:514
+msgid "Error while creating swap partition in "
+msgstr ""
+
 #: mpkg.cpp:1358 mpkg.cpp:1408 mpkg.cpp:1450 mpkg.cpp:1456 mpkg.cpp:1457
 #: mpkg.cpp:1480 mpkg.cpp:1500 mpkg.cpp:1566 mpkg.cpp:1569 mpkg.cpp:1583
 #: mpkg.cpp:1653 ../lib/mpkg.cpp:1785 ../lib/mpkg.cpp:1788
 #: ../lib/mpkg.cpp:1822 ../lib/mpkg.cpp:1842 ../lib/mpkg.cpp:1848
 #: ../lib/mpkg.cpp:1849 ../lib/mpkg.cpp:1850 ../lib/mpkg.cpp:1113
+#: ../lib/mpkg.cpp:1116
 msgid "Error while extracting package "
 msgstr "Ошибка при распаковке пакета "
+
+#: ../libagiliasetup/agiliasetup.cpp:508
+msgid "Error while formatting partition"
+msgstr ""
 
 #: mpkg.cpp:1461 ../lib/mpkg.cpp:1581 ../lib/mpkg.cpp:1584
 #: ../lib/mpkg.cpp:1614 ../lib/mpkg.cpp:1634 ../lib/mpkg.cpp:1640
 #: ../lib/mpkg.cpp:1641 ../lib/mpkg.cpp:1683 ../lib/mpkg.cpp:951
+#: ../lib/mpkg.cpp:954
 msgid "Error while installing package "
 msgstr "Ошибка при установке пакета "
 
@@ -7467,7 +8116,7 @@ msgstr "Ошибка: "
 #: mpkg.cpp:1397 mpkg.cpp:1463 mpkg.cpp:1466 mpkg.cpp:1480 mpkg.cpp:1545
 #: ../lib/mpkg.cpp:1665 ../lib/mpkg.cpp:1668 ../lib/mpkg.cpp:1702
 #: ../lib/mpkg.cpp:1722 ../lib/mpkg.cpp:1728 ../lib/mpkg.cpp:1729
-#: ../lib/mpkg.cpp:1785 ../lib/mpkg.cpp:1048
+#: ../lib/mpkg.cpp:1785 ../lib/mpkg.cpp:1048 ../lib/mpkg.cpp:1051
 msgid "Error: Unresolved file conflict on package "
 msgstr "Ошибка: неразрешенный конфликт файлов в пакете "
 
@@ -7501,6 +8150,11 @@ msgstr "Ошибка: пароль установить не удалось, в�
 #: ../installer/setup.cpp:2982 ../installer/setup.cpp:2592
 msgid "Error: no hard drive detected"
 msgstr "Ошибка: жесткие диски не обнаружены"
+
+#: ../textinstaller/textsetup/textsetup.cpp:371
+#: ../textinstaller/textsetup/textsetup.cpp:399
+msgid "Error: passwords does not match."
+msgstr ""
 
 #: ../installer/setup.cpp:2155 ../installer/setup.cpp:2215
 #: ../installer/setup.cpp:2212 ../installer/setup.cpp:2216
@@ -7540,6 +8194,7 @@ msgstr "Например: mpkg build march=i686 mtune=prescott olevel=O3\n"
 #: mpkg.cpp:1223 mpkg.cpp:1284 ../lib/mpkg.cpp:1404 ../lib/mpkg.cpp:1407
 #: ../lib/mpkg.cpp:1437 ../lib/mpkg.cpp:1453 ../lib/mpkg.cpp:1459
 #: ../lib/mpkg.cpp:1460 ../lib/mpkg.cpp:1559 ../lib/mpkg.cpp:827
+#: ../lib/mpkg.cpp:830
 msgid "Executing ldconfig"
 msgstr "Выполнение ldconfig"
 
@@ -7600,6 +8255,10 @@ msgstr "ОШИБКА\n"
 #: ../lib/libmpkg.cpp:1139 ../lib/libmpkg.cpp:1157
 msgid "FATAL: No good package found for item ["
 msgstr "FATAL: Не найдено подходящего пакета для ["
+
+#: ../libagiliasetup/agiliasetup.cpp:1201
+msgid "FATAL: empty password for user "
+msgstr ""
 
 #: ../installer/setup.cpp:1354 ../installer/setup.cpp:1360
 #: ../installer/setup.cpp:1377 ../installer/setup.cpp:1398
@@ -7665,6 +8324,14 @@ msgstr "Не удалось подключиться к Samba-серверу:\n"
 msgid "Failed to create link from "
 msgstr "Не удалось создать ссылку из "
 
+#: ../mpkgsupport/file_routines.cpp:39
+msgid "Failed to create temp file"
+msgstr ""
+
+#: ../libagiliasetup/agiliasetup.cpp:1028
+msgid "Failed to create users! See log for details."
+msgstr ""
+
 #: ../console/deleteprofile.cpp:15
 msgid "Failed to delete profile "
 msgstr "Не удалось удалить профиль "
@@ -7694,18 +8361,30 @@ msgstr "Ошибка при распаковке исходников"
 #: mpkg.cpp:1499 mpkg.cpp:1565 mpkg.cpp:1568 mpkg.cpp:1582 mpkg.cpp:1652
 #: ../lib/mpkg.cpp:1784 ../lib/mpkg.cpp:1787 ../lib/mpkg.cpp:1821
 #: ../lib/mpkg.cpp:1841 ../lib/mpkg.cpp:1847 ../lib/mpkg.cpp:1848
-#: ../lib/mpkg.cpp:1849 ../lib/mpkg.cpp:1112
+#: ../lib/mpkg.cpp:1849 ../lib/mpkg.cpp:1112 ../lib/mpkg.cpp:1115
 msgid "Failed to extract!"
 msgstr "Ошибка при распаковке!"
+
+#: ../libagiliasetup/agiliasetup.cpp:868
+msgid "Failed to generate GRUB2 configuration, expecting boot failure."
+msgstr ""
 
 #: repository.cpp:665 repository.cpp:579 repository.cpp:580 repository.cpp:482
 #: repository.cpp:502 repository.cpp:534 repository.cpp:536 repository.cpp:650
 #: repository.cpp:727 repository.cpp:731 repository.cpp:739
 #: ../lib/repository.cpp:760 ../lib/repository.cpp:768
 #: ../lib/repository.cpp:795 ../lib/repository.cpp:828
-#: ../lib/repository.cpp:748
+#: ../lib/repository.cpp:748 ../lib/repository.cpp:754
 msgid "Failed to get index"
 msgstr "Не удалось получить индекс"
+
+#: ../libagiliasetup/agiliasetup.cpp:437
+msgid "Failed to get package list: core error, return code "
+msgstr ""
+
+#: ../libagiliasetup/agiliasetup.cpp:851
+msgid "Failed to install GRUB2 to "
+msgstr ""
 
 #: mpkg.cpp:988 mpkg.cpp:1038 mpkg.cpp:1048 mpkg.cpp:1091 mpkg.cpp:1087
 #: mpkg.cpp:1093 mpkg.cpp:1094 mpkg.cpp:1103 mpkg.cpp:1118 mpkg.cpp:1184
@@ -7739,7 +8418,7 @@ msgstr ""
 #: ../installer/setup.cpp:3179 ../installer/setup.cpp:3224
 #: ../installer/setup.cpp:3376 ../installer/setup.cpp:3439
 #: ../installer/setup.cpp:3494 ../installer/setup.cpp:3505
-#: ../installer/setup.cpp:3115
+#: ../installer/setup.cpp:3115 ../libagiliasetup/agiliasetup.cpp:603
 msgid "Failed to mount partition "
 msgstr "Не удалось смонтировать раздел "
 
@@ -7777,6 +8456,16 @@ msgstr "Не удалось получить ответ от пользоват�
 msgid "Failed to restore standard MBR boot loader on drive "
 msgstr "Не удалось восстановить стандартный MBR на диске "
 
+#: ../textinstaller/textsetup/textsetup.cpp:96
+msgid ""
+"Failed to retrieve required data from specified repository. Select another "
+"one?"
+msgstr ""
+
+#: ../libagiliasetup/agiliasetup.cpp:1024
+msgid "Failed to set root password! See log for details."
+msgstr ""
+
 #: ../installer/setup.cpp:252 ../installer/setup.cpp:338
 #: ../installer/setup.cpp:261 ../installer/setup.cpp:347
 #: ../installer/setup.cpp:262 ../installer/setup.cpp:348
@@ -7786,6 +8475,7 @@ msgstr "Не удалось восстановить стандартный MBR 
 #: ../installer/setup.cpp:390 ../installer/setup.cpp:478
 #: ../installer/setup.cpp:394 ../installer/setup.cpp:481
 #: ../installer/setup.cpp:178 ../installer/setup.cpp:265
+#: ../textinstaller/textsetup/textsetup.cpp:184
 msgid "Fast filesystem developed by SGI"
 msgstr "Быстрая файловая система, разработанная SGI"
 
@@ -7829,6 +8519,7 @@ msgstr "Файл %s найден в %d пакетах:\n"
 #: ../console/installpkg-ng2.cpp:478 ../console/installpkg-ng2.cpp:480
 #: ../console/installpkg-ng2.cpp:484 ../console/installpkg-ng2.cpp:487
 #: ../console/installpkg-ng2.cpp:499 ../console/installpkg-ng2.cpp:503
+#: ../console/installpkg-ng2.cpp:490
 msgid "File not found"
 msgstr "Файл не найден"
 
@@ -7863,6 +8554,22 @@ msgstr "Имя файла: "
 msgid "Filesystem type and mountpoint options for "
 msgstr "Тип файловой системы и опции монтирования для "
 
+#: ../libagiliasetup/agiliasetup.cpp:642
+msgid "Finishing installation"
+msgstr ""
+
+#: ../libagiliasetup/agiliasetup.cpp:104
+msgid "Finishing..."
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:219
+msgid "Format to:"
+msgstr ""
+
+#: ../libagiliasetup/agiliasetup.cpp:448
+msgid "Formatting "
+msgstr ""
+
 #: ../installer/setup.cpp:455 ../installer/setup.cpp:464
 #: ../installer/setup.cpp:465 ../installer/setup.cpp:475
 #: ../installer/setup.cpp:512 ../installer/setup.cpp:574
@@ -7884,6 +8591,7 @@ msgstr "Форматирование раздела "
 #: ../installer/setup.cpp:511 ../installer/setup.cpp:573
 #: ../installer/setup.cpp:597 ../installer/setup.cpp:603
 #: ../installer/setup.cpp:606 ../installer/setup.cpp:376
+#: ../libagiliasetup/agiliasetup.cpp:501
 msgid "Formatting partitions"
 msgstr "Форматирование разделов"
 
@@ -7925,6 +8633,7 @@ msgstr "Найдена транзакция %d\n"
 
 #: string_operations.cpp:604 string_operations.cpp:644
 #: string_operations.cpp:653 ../lib/string_operations.cpp:649
+#: ../mpkgsupport/string_operations.cpp:652
 msgid "Friday"
 msgstr "Пятница"
 
@@ -8112,9 +8821,21 @@ msgstr "Серия GeForce FX"
 msgid "Generate dependencies"
 msgstr "Генерировать зависимости пакета"
 
+#: ../libagiliasetup/agiliasetup.cpp:860
+msgid "Generating GRUB2 menu"
+msgstr ""
+
 #: menu.cpp:132 ../lib/menu.cpp:130 ../lib/menu.cpp:95
 msgid "Generating dependencies for "
 msgstr "Генерация зависимостей для "
+
+#: ../libagiliasetup/agiliasetup.cpp:1103
+msgid "Generating font cache"
+msgstr ""
+
+#: ../libagiliasetup/agiliasetup.cpp:1098
+msgid "Generating font index"
+msgstr ""
 
 #: ../installer/setup.cpp:2478 ../installer/setup.cpp:2475
 #: ../installer/setup.cpp:2476 ../installer/setup.cpp:2477
@@ -8318,6 +9039,10 @@ msgstr ""
 msgid "Ignore"
 msgstr "Игнорировать"
 
+#: ../libagiliasetup/agiliasetup.cpp:211
+msgid "Importing "
+msgstr ""
+
 #: ../installer/setup.cpp:1329 ../installer/setup.cpp:1366
 #: ../installer/setup.cpp:1420 ../installer/setup.cpp:1436
 #: ../installer/setup.cpp:1458 ../installer/setup.cpp:1473
@@ -8331,6 +9056,7 @@ msgstr "Импорт списка пакетов для установки..."
 #: mpkg.cpp:1441 ../lib/mpkg.cpp:1561 ../lib/mpkg.cpp:1564
 #: ../lib/mpkg.cpp:1594 ../lib/mpkg.cpp:1610 ../lib/mpkg.cpp:1616
 #: ../lib/mpkg.cpp:1617 ../lib/mpkg.cpp:1659 ../lib/mpkg.cpp:927
+#: ../lib/mpkg.cpp:930
 msgid "Importing to database\n"
 msgstr "Импорт в базу данных\n"
 
@@ -8388,7 +9114,7 @@ msgstr "Файл индекса "
 #: ../lib/repository.cpp:842 ../lib/repository.cpp:817
 #: ../lib/repository.cpp:850 ../lib/repository.cpp:844
 #: ../lib/repository.cpp:882 ../lib/repository.cpp:845
-#: ../lib/repository.cpp:765
+#: ../lib/repository.cpp:765 ../lib/repository.cpp:777
 msgid "Index update:"
 msgstr "Обновление данных:"
 
@@ -8438,6 +9164,10 @@ msgstr "Информация о пакете"
 msgid "Initial system configuration"
 msgstr "Первоначальная настройка системы"
 
+#: ../libagiliasetup/agiliasetup.cpp:1097
+msgid "Initializing X11 font database"
+msgstr ""
+
 #: ../lib/local_package.cpp:724 ../lib/local_package.cpp:774
 #: ../lib/local_package.cpp:810 ../lib/local_package.cpp:818
 #: ../lib/local_package.cpp:641 ../lib/local_package.cpp:640
@@ -8474,6 +9204,10 @@ msgstr "Изучение локального пакета "
 msgid "Inspecting local package %s\n"
 msgstr "Изучение локального пакета %s\n"
 
+#: ../libagiliasetup/agiliasetup.cpp:988
+msgid "Install complete, running post-install actions"
+msgstr ""
+
 #: ../installer/setup.cpp:1850 ../installer/setup.cpp:1906
 #: ../installer/setup.cpp:1903 ../installer/setup.cpp:1907
 #: ../installer/setup.cpp:1927 ../installer/setup.cpp:1938
@@ -8483,6 +9217,10 @@ msgstr "Изучение локального пакета %s\n"
 #: ../installer/setup.cpp:2252 ../installer/setup.cpp:1879
 msgid "Install from DVD"
 msgstr "Установка с DVD"
+
+#: ../textinstaller/textsetup/textsetup.cpp:72
+msgid "Install from ISO image"
+msgstr ""
 
 #: ../installer/setup.cpp:1854 ../installer/setup.cpp:1910
 #: ../installer/setup.cpp:1907 ../installer/setup.cpp:1911
@@ -8514,6 +9252,10 @@ msgstr "Установка с ISO-образа через Samba (сеть Window
 msgid "Install from a set of CD/DVD"
 msgstr "Установка с набора CD/DVD"
 
+#: ../textinstaller/textsetup/textsetup.cpp:73
+msgid "Install from directory on local hard drive"
+msgstr ""
+
 #: ../installer/setup.cpp:1852 ../installer/setup.cpp:1908
 #: ../installer/setup.cpp:1905 ../installer/setup.cpp:1909
 #: ../installer/setup.cpp:1929 ../installer/setup.cpp:1940
@@ -8524,6 +9266,10 @@ msgstr "Установка с набора CD/DVD"
 msgid "Install from hard drive"
 msgstr "Установка с жесткого диска"
 
+#: ../textinstaller/textsetup/textsetup.cpp:70
+msgid "Install from installation DVD or USB flash"
+msgstr ""
+
 #: ../installer/setup.cpp:1853 ../installer/setup.cpp:1909
 #: ../installer/setup.cpp:1906 ../installer/setup.cpp:1910
 #: ../installer/setup.cpp:1930 ../installer/setup.cpp:1941
@@ -8533,6 +9279,18 @@ msgstr "Установка с жесткого диска"
 #: ../installer/setup.cpp:2255 ../installer/setup.cpp:1882
 msgid "Install from network repository (FTP, HTTP)"
 msgstr "Установка с сетевого репозитория (FTP, HTTP)"
+
+#: ../textinstaller/textsetup/textsetup.cpp:71
+msgid "Install from official network repository"
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:319
+msgid "Install in Master Boot Record (recommended"
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:320
+msgid "Install on partition (for advanced users only)"
+msgstr ""
 
 #: menu.cpp:34
 msgid "Install package group"
@@ -8574,7 +9332,7 @@ msgstr "Установить обновления"
 #: mpkg.cpp:1194 mpkg.cpp:1197 mpkg.cpp:1211 mpkg.cpp:1272
 #: ../lib/mpkg.cpp:1392 ../lib/mpkg.cpp:1395 ../lib/mpkg.cpp:1425
 #: ../lib/mpkg.cpp:1441 ../lib/mpkg.cpp:1447 ../lib/mpkg.cpp:1544
-#: ../lib/mpkg.cpp:814
+#: ../lib/mpkg.cpp:814 ../lib/mpkg.cpp:817
 msgid "Installation complete."
 msgstr "Установка завершена."
 
@@ -8651,6 +9409,14 @@ msgstr "Установка не удалась"
 #: ../installer/setup.cpp:1353 ../installer/setup.cpp:1011
 msgid "Installation finished"
 msgstr "Установка завершена"
+
+#: ../textinstaller/textsetup_exec/main.cpp:44
+msgid "Installation finished!"
+msgstr ""
+
+#: ../lib/mpkg.cpp:812
+msgid "Installation finished, doing post-install actions"
+msgstr ""
 
 #: ../installer/setup.cpp:1584 ../installer/setup.cpp:1638
 #: ../installer/setup.cpp:1635 ../installer/setup.cpp:1639
@@ -8825,7 +9591,15 @@ msgstr "Установлен"
 #: ../lib/mpkg.cpp:1062 ../lib/mpkg.cpp:1071 ../lib/mpkg.cpp:1072
 #: ../lib/mpkg.cpp:1131 ../lib/mpkg.cpp:1132 ../lib/mpkg.cpp:1150
 #: ../lib/mpkg.cpp:1151 ../lib/mpkg.cpp:1167 ../lib/mpkg.cpp:1169
-#: ../lib/mpkg.cpp:1172 ../lib/mpkg.cpp:1273
+#: ../lib/mpkg.cpp:1172 ../lib/mpkg.cpp:1273 ../lib/mpkg.cpp:906
+#: ../lib/mpkg.cpp:911 ../lib/mpkg.cpp:915 ../lib/mpkg.cpp:949
+#: ../lib/mpkg.cpp:950 ../lib/mpkg.cpp:959 ../lib/mpkg.cpp:960
+#: ../lib/mpkg.cpp:972 ../lib/mpkg.cpp:973 ../lib/mpkg.cpp:979
+#: ../lib/mpkg.cpp:980 ../lib/mpkg.cpp:993 ../lib/mpkg.cpp:1034
+#: ../lib/mpkg.cpp:1035 ../lib/mpkg.cpp:1064 ../lib/mpkg.cpp:1065
+#: ../lib/mpkg.cpp:1074 ../lib/mpkg.cpp:1075 ../lib/mpkg.cpp:1134
+#: ../lib/mpkg.cpp:1135 ../lib/mpkg.cpp:1153 ../lib/mpkg.cpp:1154
+#: ../lib/mpkg.cpp:1170 ../lib/mpkg.cpp:1175 ../lib/mpkg.cpp:1276
 msgid "Installing "
 msgstr "Установка "
 
@@ -8863,6 +9637,7 @@ msgstr "Установка GRUB2"
 #: ../installer/setup.cpp:3061 ../installer/setup.cpp:3213
 #: ../installer/setup.cpp:3276 ../installer/setup.cpp:3331
 #: ../installer/setup.cpp:3347 ../installer/setup.cpp:2957
+#: ../libagiliasetup/agiliasetup.cpp:843 ../libagiliasetup/agiliasetup.cpp:915
 msgid "Installing GRUB2 to "
 msgstr "Установка GRUB2 в "
 
@@ -8918,7 +9693,7 @@ msgstr "Установка пакета"
 #: ../lib/mpkg.cpp:1500 ../lib/mpkg.cpp:1543 ../lib/mpkg.cpp:1408
 #: ../lib/mpkg.cpp:1506 ../lib/mpkg.cpp:1549 ../lib/mpkg.cpp:1507
 #: ../lib/mpkg.cpp:1550 ../lib/mpkg.cpp:1496 ../lib/mpkg.cpp:1636
-#: ../lib/mpkg.cpp:766 ../lib/mpkg.cpp:904
+#: ../lib/mpkg.cpp:766 ../lib/mpkg.cpp:904 ../lib/mpkg.cpp:907
 msgid "Installing package "
 msgstr "Установка пакета "
 
@@ -8934,6 +9709,7 @@ msgstr "Установка пакета "
 #: ../lib/mpkg.cpp:1372 ../lib/mpkg.cpp:1386 ../lib/mpkg.cpp:1412
 #: ../lib/mpkg.cpp:1462 ../lib/mpkg.cpp:1472 ../lib/mpkg.cpp:1501
 #: ../lib/mpkg.cpp:737 ../lib/mpkg.cpp:746 ../lib/mpkg.cpp:771
+#: ../libagiliasetup/agiliasetup.cpp:625
 msgid "Installing packages"
 msgstr "Установка пакетов"
 
@@ -8990,7 +9766,7 @@ msgstr "Несовпадение контрольной суммы в файле
 #: repository.cpp:733 repository.cpp:737 repository.cpp:745
 #: ../lib/repository.cpp:766 ../lib/repository.cpp:774
 #: ../lib/repository.cpp:801 ../lib/repository.cpp:834
-#: ../lib/repository.cpp:754
+#: ../lib/repository.cpp:754 ../lib/repository.cpp:761
 msgid "Invalid index file"
 msgstr "Некорректный файл индекса"
 
@@ -8999,7 +9775,7 @@ msgstr "Некорректный файл индекса"
 msgid "Invalid input\n"
 msgstr "Некорректный ввод\n"
 
-#: ../console/installpkg-ng2.cpp:1231
+#: ../console/installpkg-ng2.cpp:1231 ../console/installpkg-ng2.cpp:1116
 msgid "Invalid repository URL "
 msgstr ""
 
@@ -9033,6 +9809,7 @@ msgstr ""
 #: ../installer/setup.cpp:391 ../installer/setup.cpp:479
 #: ../installer/setup.cpp:395 ../installer/setup.cpp:482
 #: ../installer/setup.cpp:179 ../installer/setup.cpp:266
+#: ../textinstaller/textsetup/textsetup.cpp:185
 msgid "Journaling filesystem by IBM"
 msgstr "Журналируемая файловая система IBM"
 
@@ -9045,8 +9822,13 @@ msgstr "Журналируемая файловая система IBM"
 #: ../installer/setup.cpp:392 ../installer/setup.cpp:480
 #: ../installer/setup.cpp:396 ../installer/setup.cpp:483
 #: ../installer/setup.cpp:180 ../installer/setup.cpp:267
+#: ../textinstaller/textsetup/textsetup.cpp:186
 msgid "Journaling filesystem developed by Hans Reiser"
 msgstr "Журналируемая файловая система, разработанная Hans Reiser"
+
+#: ../textinstaller/textsetup/textsetup.cpp:211
+msgid "Keep data"
+msgstr ""
 
 #: ../installer/setup.cpp:2185 ../installer/setup.cpp:2202
 #: ../installer/setup.cpp:2207 ../installer/setup.cpp:2224
@@ -9076,6 +9858,18 @@ msgstr "Новые GeForce (серия 6xxx и новее)"
 #: ../installer/setup.cpp:2413 ../installer/setup.cpp:2040
 msgid "Latest GeForce (series 6xxx and later), beta driver"
 msgstr "Новые GeForce (серия 6xxx и новее), beta-драйвер"
+
+#: ../textinstaller/textsetup/textsetup.cpp:138
+msgid "Latest NVIDIA driver for GeForce 6 and newer cards"
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:139
+msgid "Legacy NVIDIA driver (173.xx) for GeForce 5 FX cards"
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:140
+msgid "Legacy NVIDIA driver (96.xx) for GeForce 4 and older cards"
+msgstr ""
 
 #: ../installer/setup.cpp:735 ../installer/setup.cpp:736
 #: ../installer/setup.cpp:746 ../installer/setup.cpp:783
@@ -9306,6 +10100,7 @@ msgstr "Битые метаданные: распакованный размер
 #: repository.cpp:66 string_operations.cpp:252 repository.cpp:79
 #: repository.cpp:83 ../lib/repository.cpp:83 ../lib/string_operations.cpp:252
 #: ../lib/repository.cpp:113 ../lib/repository.cpp:70
+#: ../mpkgsupport/string_operations.cpp:255
 #, c-format
 msgid "Malformed package name or unknown package extension: %s\n"
 msgstr "Некорректное имя пакета или неизвестное расширение: %s\n"
@@ -9319,7 +10114,9 @@ msgstr "Некорректное имя пакета или неизвестно
 #: ../lib/string_operations.cpp:270 ../lib/string_operations.cpp:279
 #: ../lib/repository.cpp:128 ../lib/repository.cpp:139
 #: ../lib/repository.cpp:150 ../lib/repository.cpp:85 ../lib/repository.cpp:96
-#: ../lib/repository.cpp:107
+#: ../lib/repository.cpp:107 ../mpkgsupport/string_operations.cpp:264
+#: ../mpkgsupport/string_operations.cpp:273
+#: ../mpkgsupport/string_operations.cpp:282
 #, c-format
 msgid "Malformed package name: %s\n"
 msgstr "Некорректное имя пакета: %s\n"
@@ -9409,8 +10206,13 @@ msgstr ""
 
 #: string_operations.cpp:596 string_operations.cpp:636
 #: string_operations.cpp:645 ../lib/string_operations.cpp:641
+#: ../mpkgsupport/string_operations.cpp:644
 msgid "Monday"
 msgstr "Понедельник"
+
+#: ../textinstaller/textsetup/textsetup.cpp:220
+msgid "Mount options:"
+msgstr ""
 
 #: ../installer/setup.cpp:1139 ../installer/setup.cpp:1189
 #: ../installer/setup.cpp:1186 ../installer/setup.cpp:1187
@@ -9421,6 +10223,10 @@ msgstr "Понедельник"
 #: ../installer/setup.cpp:1468 ../installer/setup.cpp:1126
 msgid "Mount partition?"
 msgstr "Смонтировать разде?"
+
+#: ../textinstaller/textsetup/textsetup.cpp:218
+msgid "Mount point:"
+msgstr ""
 
 #: HttpDownload.cpp:202 ../lib/HttpDownload.cpp:202
 #: ../lib/HttpDownload.cpp:208 ../lib/HttpDownload.cpp:210
@@ -9477,6 +10283,7 @@ msgstr "Монтирование раздела с ISO-образом"
 #: ../installer/setup.cpp:547 ../installer/setup.cpp:609
 #: ../installer/setup.cpp:633 ../installer/setup.cpp:639
 #: ../installer/setup.cpp:642 ../installer/setup.cpp:412
+#: ../libagiliasetup/agiliasetup.cpp:527
 msgid "Mounting partitions"
 msgstr "Монтирование разделов"
 
@@ -9487,6 +10294,10 @@ msgstr "Монтирование разделов"
 #: ../installer/setup.cpp:645 ../installer/setup.cpp:415
 msgid "Mounting root partition ("
 msgstr "Монтирование корневого раздела ("
+
+#: ../libagiliasetup/agiliasetup.cpp:615
+msgid "Moving database"
+msgstr ""
 
 #: libmpkg.cpp:969 libmpkg.cpp:970 libmpkg.cpp:978 libmpkg.cpp:979
 #: libmpkg.cpp:1249 libmpkg.cpp:1278 libmpkg.cpp:1331 ../lib/libmpkg.cpp:1401
@@ -9504,16 +10315,25 @@ msgstr "Перемещаем устаревший пакет в %s-%s to %s\n"
 msgid "Moving package database to hard drive"
 msgstr "Перемещение базы данных пакетов на жесткий диск"
 
+#: ../textinstaller/textsetup/textsetup.cpp:151
+msgid "NCurses-based partition editor. MBR only."
+msgstr ""
+
 #: ../installer/setup.cpp:370 ../installer/setup.cpp:458
 #: ../installer/setup.cpp:394 ../installer/setup.cpp:482
 #: ../installer/setup.cpp:398 ../installer/setup.cpp:485
 #: ../installer/setup.cpp:182 ../installer/setup.cpp:269
+#: ../textinstaller/textsetup/textsetup.cpp:188
 msgid ""
 "NILFS2, new EXPERIMENTAL snapshot-based filesystem. Separate /boot partition "
 "required to use it as root filesystem."
 msgstr ""
 "NILFS2, новая ЭКСПЕРИМЕНТАЛЬНАЯ файловая система. Если вы хотите "
 "использовать её в качестве корневой, необходим отдельный /boot."
+
+#: ../textinstaller/textsetup/textsetup.cpp:141
+msgid "NV: Non-accelerated opensource driver"
+msgstr ""
 
 #: menu.cpp:601 menu.cpp:606 ../lib/menu.cpp:623 ../lib/menu.cpp:636
 #: ../lib/menu.cpp:646 ../lib/menu.cpp:653 ../lib/menu.cpp:663
@@ -9522,7 +10342,7 @@ msgstr "Имя: "
 
 #: ../console/installpkg-ng2.cpp:992 ../console/installpkg-ng2.cpp:996
 #: ../console/installpkg-ng2.cpp:1001 ../console/installpkg-ng2.cpp:1017
-#: ../console/installpkg-ng2.cpp:1028
+#: ../console/installpkg-ng2.cpp:1028 ../console/installpkg-ng2.cpp:913
 #, c-format
 msgid "Nativizing in %s\n"
 msgstr "Конвертация в %s\n"
@@ -9571,7 +10391,7 @@ msgstr ""
 
 #: ../lib/mpkg.cpp:2393 ../lib/mpkg.cpp:2396 ../lib/mpkg.cpp:2460
 #: ../lib/mpkg.cpp:2480 ../lib/mpkg.cpp:2486 ../lib/mpkg.cpp:2487
-#: ../lib/mpkg.cpp:2531 ../lib/mpkg.cpp:1768
+#: ../lib/mpkg.cpp:2531 ../lib/mpkg.cpp:1768 ../lib/mpkg.cpp:1771
 #, c-format
 msgid "New packages in repositories: %d\n"
 msgstr "Новых пакетов в репозиториях: %d\n"
@@ -9585,6 +10405,7 @@ msgstr "Новых пакетов в репозиториях: %d\n"
 #: ../installer/setup.cpp:387 ../installer/setup.cpp:475
 #: ../installer/setup.cpp:391 ../installer/setup.cpp:478
 #: ../installer/setup.cpp:175 ../installer/setup.cpp:262
+#: ../textinstaller/textsetup/textsetup.cpp:181
 msgid ""
 "New version of EXT, developed to superseed EXT3. The fastest journaling "
 "filesystem in most cases."
@@ -9630,7 +10451,7 @@ msgstr "Следующие пакеты будут установлены:\n"
 
 #: ncurses_if.h:46 ncurses_if.h:47 ../lib/ncurses_if.h:47
 #: ../installer/setup.cpp:529 ../installer/setup.cpp:532
-#: ../installer/setup.cpp:316
+#: ../installer/setup.cpp:316 ../nwidgets/ncurses_if.h:47
 msgid "No"
 msgstr "Нет"
 
@@ -9788,6 +10609,10 @@ msgstr "Нет пакетов зависящих от %s\n"
 msgid "No package set selected\n"
 msgstr "Не выбран набор пакетов\n"
 
+#: ../libagiliasetup/agiliasetup.cpp:1170
+msgid "No package source specified, cannot continue"
+msgstr ""
+
 #: dependencies.cpp:341
 msgid "No packages to install\n"
 msgstr "Нет пакетов для установки\n"
@@ -9810,6 +10635,10 @@ msgstr "Нет пакетов для удаления"
 msgid "No partitions found on your hard drive. Create it first."
 msgstr ""
 "Не обнаружено ни одного раздела на ваших жестких дисках. Сперва создайте их."
+
+#: ../libagiliasetup/agiliasetup.cpp:1166
+msgid "No setup variant selected, cannot continue"
+msgstr ""
 
 #: validator.cpp:126 validator.cpp:127 ../console/validator.cpp:127
 msgid "No short description"
@@ -9858,6 +10687,10 @@ msgstr "Нет такого репозитория: "
 msgid "No tags specified"
 msgstr "Теги не указаны"
 
+#: ../libagiliasetup/agiliasetup.cpp:1186
+msgid "No timezone specified, cannot continue"
+msgstr ""
+
 #: installpkg-ng2.cpp:445 installpkg-ng2.cpp:433 installpkg-ng2.cpp:478
 #: installpkg-ng2.cpp:498 installpkg-ng2.cpp:538 installpkg-ng2.cpp:543
 #: menu.cpp:186 menu.cpp:187 menu.cpp:103 menu.cpp:104 menu.cpp:211
@@ -9869,9 +10702,19 @@ msgstr "Теги не указаны"
 msgid "No updates available\n"
 msgstr "Обновлений не найдено\n"
 
+#: ../libagiliasetup/agiliasetup.cpp:1176
+msgid "No volume name specified, cannot continue"
+msgstr ""
+
 #: bus.cpp:395 ../lib/bus.cpp:395 ../lib/bus.cpp:396 ../lib/bus.cpp:412
+#: ../textinstaller/textsetup/textsetup.cpp:209
 msgid "None"
 msgstr "Нет"
+
+#: ../textinstaller/textsetup/textsetup.cpp:240
+#: ../textinstaller/textsetup/textsetup.cpp:262
+msgid "Not applicable for swap partitions"
+msgstr ""
 
 #: ../lib/repository.cpp:517 ../lib/repository.cpp:527
 #: ../lib/repository.cpp:557
@@ -9917,8 +10760,13 @@ msgstr ""
 msgid "Nothing to do\n"
 msgstr "Действий не намечено\n"
 
+#: ../textinstaller/textsetup/textsetup.cpp:142
+msgid "Nouveau: accelerated, but unstable, opensource driver"
+msgstr ""
+
 #: ncurses_if.cpp:46 ncurses_if.cpp:93 ../lib/ncurses_if.cpp:46
 #: ../lib/ncurses_if.cpp:93 ../lib/ncurses_if.cpp:47 ../lib/ncurses_if.cpp:94
+#: ../nwidgets/ncurses_if.cpp:49 ../nwidgets/ncurses_if.cpp:96
 msgid "OK"
 msgstr "OK"
 
@@ -9931,6 +10779,7 @@ msgstr "OK"
 #: ../installer/setup.cpp:389 ../installer/setup.cpp:477
 #: ../installer/setup.cpp:393 ../installer/setup.cpp:480
 #: ../installer/setup.cpp:177 ../installer/setup.cpp:264
+#: ../textinstaller/textsetup/textsetup.cpp:183
 msgid "Old, stable, very fast (it doesn't use jounal), but less reliable"
 msgstr ""
 "Старая, стабильная и очень быстрая (она не использует журналирование), но "
@@ -10069,6 +10918,7 @@ msgstr "Пакет "
 #: mpkg.cpp:1428 ../lib/mpkg.cpp:1548 ../lib/mpkg.cpp:1551
 #: ../lib/mpkg.cpp:1581 ../lib/mpkg.cpp:1597 ../lib/mpkg.cpp:1603
 #: ../lib/mpkg.cpp:1604 ../lib/mpkg.cpp:1646 ../lib/mpkg.cpp:914
+#: ../lib/mpkg.cpp:917
 #, c-format
 msgid "Package %s is source-based. Building...\n"
 msgstr "Пакет %s является пакетом из исходников. Собираем...\n"
@@ -10186,6 +11036,10 @@ msgstr ""
 msgid "Package selection"
 msgstr "Выбор пакетов"
 
+#: ../libagiliasetup/agiliasetup.cpp:325
+msgid "Package set contains no packages, installation failed."
+msgstr ""
+
 #: ../installer/setup.cpp:1124 ../installer/setup.cpp:1173
 #: ../installer/setup.cpp:1170 ../installer/setup.cpp:1171
 #: ../installer/setup.cpp:1187 ../installer/setup.cpp:1198
@@ -10225,13 +11079,14 @@ msgstr "Пакет был собран в папку %s/%s\n"
 #: mpkg.cpp:1434 ../lib/mpkg.cpp:1554 ../lib/mpkg.cpp:1557
 #: ../lib/mpkg.cpp:1587 ../lib/mpkg.cpp:1603 ../lib/mpkg.cpp:1609
 #: ../lib/mpkg.cpp:1610 ../lib/mpkg.cpp:1652 ../lib/mpkg.cpp:920
+#: ../lib/mpkg.cpp:923
 #, c-format
 msgid "Package was built. Filename: %s\n"
 msgstr "Пакет собран. Имя файла: %s\n"
 
 #: ../lib/mpkg.cpp:2456 ../lib/mpkg.cpp:2459 ../lib/mpkg.cpp:2524
 #: ../lib/mpkg.cpp:2544 ../lib/mpkg.cpp:2550 ../lib/mpkg.cpp:2551
-#: ../lib/mpkg.cpp:2603 ../lib/mpkg.cpp:1843
+#: ../lib/mpkg.cpp:2603 ../lib/mpkg.cpp:1843 ../lib/mpkg.cpp:1846
 #, c-format
 msgid "Packages removed from repositories: %d\n"
 msgstr "Удалено пакетов из репозиториев: %d\n"
@@ -10398,6 +11253,7 @@ msgstr "Ответьте Y (да) или N (нет)\n"
 #: ../console/installpkg-ng2.cpp:1029 ../console/installpkg-ng2.cpp:1036
 #: ../console/installpkg-ng2.cpp:1040 ../console/installpkg-ng2.cpp:1049
 #: ../console/installpkg-ng2.cpp:1065 ../console/installpkg-ng2.cpp:1076
+#: ../console/installpkg-ng2.cpp:961
 msgid "Please define output directory"
 msgstr "Укажите выходную директорию"
 
@@ -10421,6 +11277,17 @@ msgstr "Вставьте диск с меткой "
 #: installpkg-ng2.cpp:333
 msgid "Please select input file"
 msgstr "Укажите входной файл"
+
+#: ../textinstaller/textsetup/textsetup.cpp:299
+msgid ""
+"Please select partition to specify it's mount point and formatting options"
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:156
+msgid ""
+"Please select partitioning tool. You can skip this step if you have already "
+"partitioned your hard drives"
+msgstr ""
 
 #: ../installer/setup.cpp:1173 ../installer/setup.cpp:1177
 #: ../installer/setup.cpp:1179 ../installer/setup.cpp:1208
@@ -10446,6 +11313,10 @@ msgstr ""
 "на сегодняшний день. Если вы хотите использовать другое окружение (XFCE, "
 "Fluxbox, и т.д.) - ваш выбор должен основываться на программах, которые вы "
 "хотите использовать из KDE\n"
+
+#: ../textinstaller/textsetup/textsetup.cpp:76
+msgid "Please, choose package source from a list below:"
+msgstr ""
 
 #: ../installer/setup.cpp:133 ../installer/setup.cpp:142
 #: ../installer/setup.cpp:143 ../installer/setup.cpp:153
@@ -10497,6 +11368,7 @@ msgstr "Предопределенный корневой раздел не су
 #: mpkg.cpp:1288 ../lib/mpkg.cpp:1408 ../lib/mpkg.cpp:1411
 #: ../lib/mpkg.cpp:1441 ../lib/mpkg.cpp:1457 ../lib/mpkg.cpp:1463
 #: ../lib/mpkg.cpp:1464 ../lib/mpkg.cpp:1563 ../lib/mpkg.cpp:831
+#: ../lib/mpkg.cpp:834
 msgid "Prelinking with randomization..."
 msgstr "Выполняется prelink с heap randomization..."
 
@@ -10504,6 +11376,7 @@ msgstr "Выполняется prelink с heap randomization..."
 #: mpkg.cpp:1292 ../lib/mpkg.cpp:1412 ../lib/mpkg.cpp:1415
 #: ../lib/mpkg.cpp:1445 ../lib/mpkg.cpp:1461 ../lib/mpkg.cpp:1467
 #: ../lib/mpkg.cpp:1468 ../lib/mpkg.cpp:1567 ../lib/mpkg.cpp:835
+#: ../lib/mpkg.cpp:838
 msgid "Prelinking..."
 msgstr "Выполняется prelink..."
 
@@ -10517,6 +11390,14 @@ msgid ""
 msgstr ""
 "Выполняем прелинкинг...\n"
 "Это может занять 3-5 минут, в зависимости от вашего железа"
+
+#: ../libagiliasetup/agiliasetup.cpp:298
+msgid "Preparing install queue"
+msgstr ""
+
+#: ../libagiliasetup/agiliasetup.cpp:626
+msgid "Preparing to installation"
+msgstr ""
 
 #: mpkg.cpp:540 mpkg.cpp:599 mpkg.cpp:602 mpkg.cpp:663 ../lib/mpkg.cpp:783
 #: ../lib/mpkg.cpp:786 ../lib/mpkg.cpp:800 ../lib/mpkg.cpp:813
@@ -10550,6 +11431,7 @@ msgstr "Первичный DNS (если нет - оставьте пустым)
 #: mpkg.cpp:1449 ../lib/mpkg.cpp:1569 ../lib/mpkg.cpp:1572
 #: ../lib/mpkg.cpp:1602 ../lib/mpkg.cpp:1622 ../lib/mpkg.cpp:1628
 #: ../lib/mpkg.cpp:1629 ../lib/mpkg.cpp:1671 ../lib/mpkg.cpp:939
+#: ../lib/mpkg.cpp:942
 msgid "Processing to install binary\n"
 msgstr "Переход к установке бинарного пакета\n"
 
@@ -10578,7 +11460,7 @@ msgstr "Установка проприетарных драйверов"
 #: mpkg.cpp:1684 mpkg.cpp:1687 mpkg.cpp:1701 mpkg.cpp:1771
 #: ../lib/mpkg.cpp:1906 ../lib/mpkg.cpp:1909 ../lib/mpkg.cpp:1972
 #: ../lib/mpkg.cpp:1992 ../lib/mpkg.cpp:1998 ../lib/mpkg.cpp:1999
-#: ../lib/mpkg.cpp:1980 ../lib/mpkg.cpp:1213
+#: ../lib/mpkg.cpp:1980 ../lib/mpkg.cpp:1213 ../lib/mpkg.cpp:1216
 msgid "Purging"
 msgstr "Полное удаление"
 
@@ -10658,6 +11540,7 @@ msgstr "Переустановить пакет"
 #: ../installer/setup.cpp:392 ../installer/setup.cpp:480
 #: ../installer/setup.cpp:396 ../installer/setup.cpp:483
 #: ../installer/setup.cpp:180 ../installer/setup.cpp:267
+#: ../textinstaller/textsetup/textsetup.cpp:186
 msgid ""
 "ReiserFS is a general-purpose, journaled computer file system designed and "
 "implemented by a team at Namesys led by Hans Reiser. ReiserFS is currently "
@@ -10698,7 +11581,7 @@ msgstr "Удален"
 #: mpkg.cpp:1683 mpkg.cpp:1686 mpkg.cpp:1700 mpkg.cpp:1770
 #: ../lib/mpkg.cpp:1905 ../lib/mpkg.cpp:1908 ../lib/mpkg.cpp:1971
 #: ../lib/mpkg.cpp:1991 ../lib/mpkg.cpp:1997 ../lib/mpkg.cpp:1998
-#: ../lib/mpkg.cpp:1979 ../lib/mpkg.cpp:1212
+#: ../lib/mpkg.cpp:1979 ../lib/mpkg.cpp:1212 ../lib/mpkg.cpp:1215
 msgid "Removing"
 msgstr "Удаление"
 
@@ -10722,7 +11605,7 @@ msgstr "Удаляю %s\n"
 #: mpkg.cpp:1761 mpkg.cpp:1827 mpkg.cpp:1830 mpkg.cpp:1844 mpkg.cpp:1914
 #: ../lib/mpkg.cpp:2049 ../lib/mpkg.cpp:2052 ../lib/mpkg.cpp:2115
 #: ../lib/mpkg.cpp:2135 ../lib/mpkg.cpp:2141 ../lib/mpkg.cpp:2142
-#: ../lib/mpkg.cpp:2163 ../lib/mpkg.cpp:1396
+#: ../lib/mpkg.cpp:2163 ../lib/mpkg.cpp:1396 ../lib/mpkg.cpp:1399
 msgid "Removing empty directory"
 msgstr "Удаляю пустую директорию"
 
@@ -10741,7 +11624,7 @@ msgstr "Удаляется критически важный системный 
 #: mpkg.cpp:1722 mpkg.cpp:1788 mpkg.cpp:1791 mpkg.cpp:1805 mpkg.cpp:1875
 #: ../lib/mpkg.cpp:2010 ../lib/mpkg.cpp:2013 ../lib/mpkg.cpp:2076
 #: ../lib/mpkg.cpp:2096 ../lib/mpkg.cpp:2102 ../lib/mpkg.cpp:2103
-#: ../lib/mpkg.cpp:2123 ../lib/mpkg.cpp:1356
+#: ../lib/mpkg.cpp:2123 ../lib/mpkg.cpp:1356 ../lib/mpkg.cpp:1359
 msgid "Removing file"
 msgstr "Удаляю файл"
 
@@ -10761,7 +11644,7 @@ msgstr "Удаление пакета"
 #: mpkg.cpp:1627 mpkg.cpp:1693 mpkg.cpp:1696 mpkg.cpp:1710 mpkg.cpp:1780
 #: ../lib/mpkg.cpp:1915 ../lib/mpkg.cpp:1918 ../lib/mpkg.cpp:1981
 #: ../lib/mpkg.cpp:2001 ../lib/mpkg.cpp:2007 ../lib/mpkg.cpp:2008
-#: ../lib/mpkg.cpp:1988 ../lib/mpkg.cpp:1221
+#: ../lib/mpkg.cpp:1988 ../lib/mpkg.cpp:1221 ../lib/mpkg.cpp:1224
 msgid "Removing package "
 msgstr "Удаление пакета "
 
@@ -10858,8 +11741,13 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:1404 ../console/installpkg-ng2.cpp:1412
 #: ../console/installpkg-ng2.cpp:1419 ../console/installpkg-ng2.cpp:1471
 #: ../console/installpkg-ng2.cpp:1432 ../console/installpkg-ng2.cpp:1467
+#: ../console/installpkg-ng2.cpp:1241
 msgid "Repository list:\n"
 msgstr "Список репозиториев:\n"
+
+#: ../libagiliasetup/agiliasetup.cpp:1180
+msgid "Repository location not specified, cannot continue"
+msgstr ""
 
 #: installpkg-ng2.cpp:479 mpkgsys.cpp:313 installpkg-ng2.cpp:482
 #: mpkgsys.cpp:308 installpkg-ng2.cpp:437 menu.cpp:103 mpkgsys.cpp:306
@@ -10939,6 +11827,14 @@ msgstr "Продолжение докачки с %Li\n"
 msgid "Retrieving index: ["
 msgstr "Извлечение индекса: ["
 
+#: ../libagiliasetup/agiliasetup.cpp:279
+msgid "Retrieving indices from repository"
+msgstr ""
+
+#: ../libagiliasetup/agiliasetup.cpp:170
+msgid "Retrieving list..."
+msgstr ""
+
 #: installpkg-ng2.cpp:895 installpkg-ng2.cpp:850 installpkg-ng2.cpp:836
 #: installpkg-ng2.cpp:860 installpkg-ng2.cpp:786 installpkg-ng2.cpp:674
 #: installpkg-ng2.cpp:722 installpkg-ng2.cpp:739 installpkg-ng2.cpp:695
@@ -10946,6 +11842,7 @@ msgstr "Извлечение индекса: ["
 #: ../console/installpkg-ng2.cpp:782 ../console/installpkg-ng2.cpp:784
 #: ../console/installpkg-ng2.cpp:788 ../console/installpkg-ng2.cpp:806
 #: ../console/installpkg-ng2.cpp:821 ../console/installpkg-ng2.cpp:832
+#: ../console/installpkg-ng2.cpp:739
 msgid "Retrieving package data, it may take a while...\n"
 msgstr "Извлечение данных о пакетах, это может занять некоторое время...\n"
 
@@ -10959,6 +11856,14 @@ msgstr "Запрос списка пакетов"
 #: ../lib/libmpkg.cpp:246
 msgid "Retrieving package list..."
 msgstr "Получение списка пакетов..."
+
+#: ../libagiliasetup/agiliasetup.cpp:169
+msgid "Retrieving setup variants"
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:89
+msgid "Retrieving setup variants from repository..."
+msgstr ""
 
 #: libmpkg.cpp:163 libmpkg.cpp:164 libmpkg.cpp:166 libmpkg.cpp:172
 #: libmpkg.cpp:173 libmpkg.cpp:186 libmpkg.cpp:189 libmpkg.cpp:190
@@ -11065,6 +11970,7 @@ msgstr "Русский (UNIX)"
 
 #: string_operations.cpp:606 string_operations.cpp:646
 #: string_operations.cpp:655 ../lib/string_operations.cpp:651
+#: ../mpkgsupport/string_operations.cpp:654
 msgid "Saturday"
 msgstr "Суббота"
 
@@ -11191,7 +12097,7 @@ msgstr "Поиск пакетов, зависящих от  "
 #: installpkg-ng2.cpp:620 ../console/installpkg-ng2.cpp:664
 #: ../console/installpkg-ng2.cpp:666 ../console/installpkg-ng2.cpp:670
 #: ../console/installpkg-ng2.cpp:680 ../console/installpkg-ng2.cpp:692
-#: ../console/installpkg-ng2.cpp:703
+#: ../console/installpkg-ng2.cpp:703 ../console/installpkg-ng2.cpp:621
 #, c-format
 msgid "Searching for packages which depends on %s\n"
 msgstr "Поиск пакетов, зависящих от %s\n"
@@ -11265,8 +12171,13 @@ msgstr "Похоже, свободного места недостаточно �
 #: ../installer/setup.cpp:388 ../installer/setup.cpp:476
 #: ../installer/setup.cpp:392 ../installer/setup.cpp:479
 #: ../installer/setup.cpp:176 ../installer/setup.cpp:263
+#: ../textinstaller/textsetup/textsetup.cpp:182
 msgid "Seems to be a best balance between reliability and performance"
 msgstr "Наилучший баланс между производительностью и надежностью"
+
+#: ../textinstaller/textsetup/textsetup.cpp:47
+msgid "Select ISO file:"
+msgstr ""
 
 #: ../installer/setup.cpp:1603 ../installer/setup.cpp:1659
 #: ../installer/setup.cpp:1656 ../installer/setup.cpp:1660
@@ -11307,6 +12218,20 @@ msgstr "Выбрать другой список"
 msgid "Select directory to index:"
 msgstr "Выберите директорию для индексирования:"
 
+#: ../textinstaller/textsetup/textsetup.cpp:57
+msgid "Select directory which contains repository:"
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:335
+msgid ""
+"Select disk for bootloader. Note for GPT users: you need a hybrid partition "
+"table to use GRUB on it."
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:168
+msgid "Select drive to edit:"
+msgstr ""
+
 #: ../installer/setup.cpp:1140 ../installer/setup.cpp:1190
 #: ../installer/setup.cpp:1187 ../installer/setup.cpp:1188
 #: ../installer/setup.cpp:1204 ../installer/setup.cpp:1215
@@ -11316,6 +12241,10 @@ msgstr "Выберите директорию для индексировани�
 #: ../installer/setup.cpp:1469 ../installer/setup.cpp:1127
 msgid "Select file with package list:"
 msgstr "Укажите файл со списком пакетов:"
+
+#: ../textinstaller/textsetup/textsetup.cpp:243
+msgid "Select filesystem for partition "
+msgstr ""
 
 #: ../installer/setup.cpp:1359 ../installer/setup.cpp:1413
 #: ../installer/setup.cpp:1410 ../installer/setup.cpp:1411
@@ -11328,6 +12257,10 @@ msgid "Select group and edit package list if needed. When ready, select [OK]"
 msgstr ""
 "Выберите группу и при необходимости отредактируйте список пакетов. По "
 "завершении нажмите [OK]"
+
+#: ../textinstaller/textsetup/textsetup.cpp:127
+msgid "Select installation type:"
+msgstr ""
 
 #: ../installer/setup.cpp:414 ../installer/setup.cpp:423
 #: ../installer/setup.cpp:424 ../installer/setup.cpp:434
@@ -11346,6 +12279,16 @@ msgstr ""
 #: ../lib/menu.cpp:276 ../lib/menu.cpp:236
 msgid "Select packages you wish to be updated:\n"
 msgstr "Выберите пакеты, которые вы хотите обновить:\n"
+
+#: ../textinstaller/textsetup/textsetup.cpp:223
+msgid "Select parameters for partition "
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:348
+msgid ""
+"Select partition for bootloader. Note: not all partitions listed here are "
+"suitable for keeping bootloader on it."
+msgstr ""
 
 #: ../installer/setup.cpp:1139 ../installer/setup.cpp:1189
 #: ../installer/setup.cpp:1186 ../installer/setup.cpp:1187
@@ -11377,6 +12320,20 @@ msgstr "Выберите раздел с пакетами:"
 msgid "Select share to mount:"
 msgstr "Выберите ресурс для подключения:"
 
+#: ../textinstaller/textsetup/textsetup.cpp:419
+msgid "Select the way you wish to manage your network:"
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:324
+msgid ""
+"Select where to install bootloader. If in doubt, select 'MBR'. All other "
+"options requires some additional preparations, which you should do manually."
+msgstr ""
+
+#: ../textinstaller/textsetup/textsetup.cpp:434
+msgid "Select your timezone:"
+msgstr ""
+
 #: setprofile.cpp:10 ../console/setprofile.cpp:10
 #, c-format
 msgid "Selected profile %s doesn't exist\n"
@@ -11406,6 +12363,10 @@ msgstr "Набор из "
 msgid "Set package version"
 msgstr "Сменить версию у пакета"
 
+#: ../libagiliasetup/agiliasetup.cpp:242
+msgid "Setting MPKG config"
+msgstr ""
+
 #: ../installer/setup.cpp:926 ../installer/setup.cpp:929
 #: ../installer/setup.cpp:699
 msgid "Setting new password for user "
@@ -11416,7 +12377,7 @@ msgstr "Установка нового пароля для пользовате
 #: installpkg-ng2.cpp:970 ../console/installpkg-ng2.cpp:1014
 #: ../console/installpkg-ng2.cpp:1021 ../console/installpkg-ng2.cpp:1025
 #: ../console/installpkg-ng2.cpp:1033 ../console/installpkg-ng2.cpp:1049
-#: ../console/installpkg-ng2.cpp:1060
+#: ../console/installpkg-ng2.cpp:1060 ../console/installpkg-ng2.cpp:945
 #, c-format
 msgid "Setting version of %s to %s...\n"
 msgstr "Устанавливаю версию %s равной %s...\n"
@@ -11429,6 +12390,10 @@ msgstr "Устанавливаю версию %s равной %s...\n"
 msgid "Setup finished. Time:\n"
 msgstr "Установка завершена. Время:\n"
 
+#: ../libagiliasetup/agiliasetup.cpp:330
+msgid "Setup list not found, cannot continue. File which we looked for: "
+msgstr ""
+
 #: ../installer/setup.cpp:1493 ../installer/setup.cpp:1547
 #: ../installer/setup.cpp:1544 ../installer/setup.cpp:1548
 #: ../installer/setup.cpp:1564 ../installer/setup.cpp:1575
@@ -11438,6 +12403,10 @@ msgstr "Установка завершена. Время:\n"
 #: ../installer/setup.cpp:1834 ../installer/setup.cpp:1491
 msgid "Setup mode: "
 msgstr "Режим установки: "
+
+#: ../libagiliasetup/agiliasetup.cpp:303
+msgid "Setup variant not specified, cannot confinue"
+msgstr ""
 
 #: validator.cpp:128 validator.cpp:129 ../console/validator.cpp:129
 msgid "Short description is good"
@@ -11533,6 +12502,10 @@ msgstr "Один CD/DVD"
 msgid "Skip"
 msgstr "Пропустить"
 
+#: ../textinstaller/textsetup/textsetup.cpp:154
+msgid "Skip partition editing"
+msgstr ""
+
 #: errorcodes.cpp:36 errorcodes.cpp:37 ../lib/errorcodes.cpp:37
 #: ../lib/errorcodes.cpp:39 ../lib/errorhandler.cpp:118
 msgid "Skip/Ignore"
@@ -11619,6 +12592,10 @@ msgstr "Файл с исходниками не найден, отмена"
 msgid "Source url: [%s]\n"
 msgstr "URL исходников: [%s]\n"
 
+#: ../textinstaller/textsetup/textsetup.cpp:74
+msgid "Specify custom repository set"
+msgstr ""
+
 #: ../installer/setup.cpp:2214 ../installer/setup.cpp:2220
 #: ../installer/setup.cpp:2248 ../installer/setup.cpp:2254
 #: ../installer/setup.cpp:2247 ../installer/setup.cpp:2251
@@ -11649,6 +12626,7 @@ msgstr "Стандартный"
 #: ../installer/setup.cpp:389 ../installer/setup.cpp:477
 #: ../installer/setup.cpp:393 ../installer/setup.cpp:480
 #: ../installer/setup.cpp:177 ../installer/setup.cpp:264
+#: ../textinstaller/textsetup/textsetup.cpp:183
 msgid "Standard Linux filesystem (without journaling)."
 msgstr "Стандартная файловая система Linux (без журналирования)."
 
@@ -11674,6 +12652,7 @@ msgstr "Стандартный режим установки"
 #: ../installer/setup.cpp:388 ../installer/setup.cpp:476
 #: ../installer/setup.cpp:392 ../installer/setup.cpp:479
 #: ../installer/setup.cpp:176 ../installer/setup.cpp:263
+#: ../textinstaller/textsetup/textsetup.cpp:182
 msgid "Standard journaling Linux filesystem"
 msgstr "Стандартная журналируемая файловая система Linux"
 
@@ -11712,6 +12691,7 @@ msgstr ""
 
 #: string_operations.cpp:608 string_operations.cpp:648
 #: string_operations.cpp:657 ../lib/string_operations.cpp:653
+#: ../mpkgsupport/string_operations.cpp:656
 msgid "Sunday"
 msgstr "Воскресенье"
 
@@ -11747,7 +12727,7 @@ msgstr "Раздел подкачки: "
 #: installpkg-ng2.cpp:1142 ../console/installpkg-ng2.cpp:1193
 #: ../console/installpkg-ng2.cpp:1200 ../console/installpkg-ng2.cpp:1206
 #: ../console/installpkg-ng2.cpp:1255 ../console/installpkg-ng2.cpp:1271
-#: ../console/installpkg-ng2.cpp:1306
+#: ../console/installpkg-ng2.cpp:1306 ../console/installpkg-ng2.cpp:1191
 msgid "Sync map not found\n"
 msgstr "Карта синхронизации не найдена\n"
 
@@ -11756,6 +12736,7 @@ msgstr "Карта синхронизации не найдена\n"
 #: mpkg.cpp:1242 mpkg.cpp:1303 ../lib/mpkg.cpp:1423 ../lib/mpkg.cpp:1426
 #: ../lib/mpkg.cpp:1456 ../lib/mpkg.cpp:1472 ../lib/mpkg.cpp:1478
 #: ../lib/mpkg.cpp:1479 ../lib/mpkg.cpp:1604 ../lib/mpkg.cpp:872
+#: ../lib/mpkg.cpp:875
 msgid "Syncing disks..."
 msgstr "Синхронизация дискового кеша..."
 
@@ -11806,12 +12787,14 @@ msgstr "Tar не удалось распаковать полученный па
 
 #: ../console/installpkg-ng2.cpp:167 ../console/installpkg-ng2.cpp:171
 #: ../console/installpkg-ng2.cpp:183 ../console/installpkg-ng2.cpp:187
+#: ../console/installpkg-ng2.cpp:185
 #, c-format
 msgid "Temporarily reassigned system cache: %s\n"
 msgstr "Временно переназначенный системный кеш: %s\n"
 
 #: ../console/installpkg-ng2.cpp:162 ../console/installpkg-ng2.cpp:166
 #: ../console/installpkg-ng2.cpp:178 ../console/installpkg-ng2.cpp:182
+#: ../console/installpkg-ng2.cpp:180
 #, c-format
 msgid "Temporarily reassigned system root: %s\n"
 msgstr "Временно переназначенный корень системы: %s\n"
@@ -11825,6 +12808,7 @@ msgstr "Временно переназначенный корень систе�
 #: ../installer/setup.cpp:390 ../installer/setup.cpp:478
 #: ../installer/setup.cpp:394 ../installer/setup.cpp:481
 #: ../installer/setup.cpp:178 ../installer/setup.cpp:265
+#: ../textinstaller/textsetup/textsetup.cpp:184
 msgid ""
 "The best choise to store data (especially large files). Supports online "
 "defragmentation and other advanced features. Not recommended to use as root "
@@ -11879,8 +12863,16 @@ msgstr "Этот диск уже проиндексирован"
 msgid "This disc doesn't recognized as AgiliaLinux installation disc"
 msgstr "Данный диск не распознан как установочный диск AgiliaLinux"
 
+#: ../textinstaller/textsetup/mechanics.cpp:41
+msgid ""
+"This program should have suid bit, or be run from root. Otherwise, it could "
+"not get drive information.\n"
+"This is fatal, and we have to exit."
+msgstr ""
+
 #: string_operations.cpp:602 string_operations.cpp:642
 #: string_operations.cpp:651 ../lib/string_operations.cpp:647
+#: ../mpkgsupport/string_operations.cpp:650
 msgid "Thursday"
 msgstr "Четверг"
 
@@ -11914,7 +12906,8 @@ msgstr ""
 #: ../console/installpkg-ng2.cpp:307 ../console/installpkg-ng2.cpp:300
 #: ../console/installpkg-ng2.cpp:311 ../console/installpkg-ng2.cpp:312
 #: ../console/installpkg-ng2.cpp:323 ../console/installpkg-ng2.cpp:316
-#: ../console/installpkg-ng2.cpp:327
+#: ../console/installpkg-ng2.cpp:327 ../console/installpkg-ng2.cpp:313
+#: ../console/installpkg-ng2.cpp:324
 #, c-format
 msgid "Too many arguments\n"
 msgstr "Слишком много аргументов\n"
@@ -11963,6 +12956,7 @@ msgstr "Всего к закачке: %s\n"
 
 #: string_operations.cpp:598 string_operations.cpp:638
 #: string_operations.cpp:647 ../lib/string_operations.cpp:643
+#: ../mpkgsupport/string_operations.cpp:646
 msgid "Tuesday"
 msgstr "Вторник"
 
@@ -12017,6 +13011,10 @@ msgstr "Неизвестный выбор"
 msgid "Unknown value, don't know what to do, aborting"
 msgstr "Неизвестное значение, не знаю что делать, выход"
 
+#: ../libagiliasetup/agiliasetup.cpp:105
+msgid "Unmounting filesystems and syncing disks"
+msgstr ""
+
 #: validator.cpp:120 validator.cpp:121 ../console/validator.cpp:121
 msgid "Unresolvable dependencies"
 msgstr "Неразрешимые зависимости"
@@ -12033,7 +13031,7 @@ msgstr "Неразрешенные зависимости: "
 #: mpkg.cpp:1398 mpkg.cpp:1464 mpkg.cpp:1467 mpkg.cpp:1481 mpkg.cpp:1546
 #: ../lib/mpkg.cpp:1666 ../lib/mpkg.cpp:1669 ../lib/mpkg.cpp:1703
 #: ../lib/mpkg.cpp:1723 ../lib/mpkg.cpp:1729 ../lib/mpkg.cpp:1730
-#: ../lib/mpkg.cpp:1786 ../lib/mpkg.cpp:1049
+#: ../lib/mpkg.cpp:1786 ../lib/mpkg.cpp:1049 ../lib/mpkg.cpp:1052
 msgid "Unresolved file conflict on package "
 msgstr "Неразрешенный файловый конфликт в пакете "
 
@@ -12063,7 +13061,7 @@ msgstr "Обновить данные с репозиториев"
 #: mpkg.cpp:1672 mpkg.cpp:1675 mpkg.cpp:1689 mpkg.cpp:1759
 #: ../lib/mpkg.cpp:1894 ../lib/mpkg.cpp:1897 ../lib/mpkg.cpp:1960
 #: ../lib/mpkg.cpp:1980 ../lib/mpkg.cpp:1986 ../lib/mpkg.cpp:1987
-#: ../lib/mpkg.cpp:1968 ../lib/mpkg.cpp:1201
+#: ../lib/mpkg.cpp:1968 ../lib/mpkg.cpp:1201 ../lib/mpkg.cpp:1204
 msgid "Updating"
 msgstr "Обновление"
 
@@ -12079,13 +13077,17 @@ msgstr "Обновление данных из "
 #: mpkg.cpp:1155 mpkg.cpp:1221 mpkg.cpp:1224 mpkg.cpp:1238 mpkg.cpp:1299
 #: ../lib/mpkg.cpp:1419 ../lib/mpkg.cpp:1422 ../lib/mpkg.cpp:1452
 #: ../lib/mpkg.cpp:1468 ../lib/mpkg.cpp:1474 ../lib/mpkg.cpp:1475
-#: ../lib/mpkg.cpp:1574 ../lib/mpkg.cpp:842
+#: ../lib/mpkg.cpp:1574 ../lib/mpkg.cpp:842 ../lib/mpkg.cpp:845
 msgid "Updating font indexes"
 msgstr "Обновление индексов шрифтов"
 
-#: ../lib/mpkg.cpp:1597 ../lib/mpkg.cpp:865
+#: ../lib/mpkg.cpp:1597 ../lib/mpkg.cpp:865 ../lib/mpkg.cpp:868
 msgid "Updating icon cache and mime database"
 msgstr "Обновление кеша иконок и mime-базы"
+
+#: ../textinstaller/textsetup/mechanics.cpp:36
+msgid "Updating lists of available drives and partitions, please wait"
+msgstr ""
 
 #: mpkg.cpp:1325 mpkg.cpp:897 mpkg.cpp:937 mpkg.cpp:947 mpkg.cpp:990
 #: mpkg.cpp:995 mpkg.cpp:1001 mpkg.cpp:1002 mpkg.cpp:1011 mpkg.cpp:1026
@@ -12155,10 +13157,11 @@ msgstr "Обновление пакетов"
 #: repository.cpp:768 repository.cpp:772 repository.cpp:780 ../lib/bus.cpp:399
 #: ../lib/repository.cpp:801 ../lib/repository.cpp:809
 #: ../lib/repository.cpp:836 ../lib/bus.cpp:400 ../lib/bus.cpp:416
+#: ../libagiliasetup/agiliasetup.cpp:278
 msgid "Updating repository data"
 msgstr "Обновление данных репозитория"
 
-#: ../lib/mpkg.cpp:1548 ../lib/mpkg.cpp:817
+#: ../lib/mpkg.cpp:1548 ../lib/mpkg.cpp:817 ../lib/mpkg.cpp:820
 msgid "Updating system files"
 msgstr "Обновление системных файлов"
 
@@ -12166,7 +13169,7 @@ msgstr "Обновление системных файлов"
 #: installpkg-ng2.cpp:77 installpkg-ng2.cpp:75
 #: ../console/installpkg-ng2.cpp:295 ../console/installpkg-ng2.cpp:297
 #: ../console/installpkg-ng2.cpp:301 ../console/installpkg-ng2.cpp:313
-#: ../console/installpkg-ng2.cpp:317
+#: ../console/installpkg-ng2.cpp:317 ../console/installpkg-ng2.cpp:314
 #, c-format
 msgid "Usage: buildpkg [output_directory]\n"
 msgstr "Использование: buildpkg [output_directory]\n"
@@ -12175,7 +13178,7 @@ msgstr "Использование: buildpkg [output_directory]\n"
 #: installpkg-ng2.cpp:88 installpkg-ng2.cpp:86
 #: ../console/installpkg-ng2.cpp:306 ../console/installpkg-ng2.cpp:308
 #: ../console/installpkg-ng2.cpp:312 ../console/installpkg-ng2.cpp:324
-#: ../console/installpkg-ng2.cpp:328
+#: ../console/installpkg-ng2.cpp:328 ../console/installpkg-ng2.cpp:325
 #, c-format
 msgid "Usage: buildsrcpkg [output_directory]\n"
 msgstr "Использование: buildsrcpkg [output_directory]\n"
@@ -12248,6 +13251,14 @@ msgstr "Дружественный к пользователю интерфей�
 #: ../installer/setup.cpp:2071 ../installer/setup.cpp:2093
 msgid "User-friendly frontend to parted. Recommended"
 msgstr "Дружелюбный фронт-енд для parted. Рекомендуется"
+
+#: ../libagiliasetup/agiliasetup.cpp:1159
+msgid "Validating config"
+msgstr ""
+
+#: ../libagiliasetup/agiliasetup.cpp:427
+msgid "Validating queue"
+msgstr ""
 
 #: validator.cpp:157 validator.cpp:158 ../console/validator.cpp:158
 msgid "Version ok"
@@ -12327,6 +13338,7 @@ msgstr "Внимание: "
 
 #: string_operations.cpp:600 string_operations.cpp:640
 #: string_operations.cpp:649 ../lib/string_operations.cpp:645
+#: ../mpkgsupport/string_operations.cpp:648
 msgid "Wednesday"
 msgstr "Среда"
 
@@ -12337,6 +13349,7 @@ msgstr "Среда"
 #: mpkg.cpp:1998 ../lib/mpkg.cpp:2133 ../lib/mpkg.cpp:2136
 #: ../lib/mpkg.cpp:2199 ../lib/mpkg.cpp:2219 ../lib/mpkg.cpp:2225
 #: ../lib/mpkg.cpp:2226 ../lib/mpkg.cpp:2251 ../lib/mpkg.cpp:1484
+#: ../lib/mpkg.cpp:1487
 msgid "Weird status of package, i'm afraid to remove this..."
 msgstr "Странный статус пакета, страшновато его удалять..."
 
@@ -12481,7 +13494,7 @@ msgstr "ДА"
 
 #: ncurses_if.h:46 ncurses_if.h:47 ../lib/ncurses_if.h:47
 #: ../installer/setup.cpp:529 ../installer/setup.cpp:532
-#: ../installer/setup.cpp:316
+#: ../installer/setup.cpp:316 ../nwidgets/ncurses_if.h:47
 msgid "Yes"
 msgstr "Да"
 
@@ -12551,6 +13564,10 @@ msgstr "Вы не указали раздел для корневой файло
 msgid "You didn't specified directory for deprecated packages"
 msgstr "Вы не указали директорию для устаревших пакетов"
 
+#: ../textinstaller/textsetup/textsetup.cpp:143
+msgid "You have NVIDIA video card. Please select appropriate driver to use:"
+msgstr ""
+
 #: ../installer/setup.cpp:260 ../installer/setup.cpp:269
 #: ../installer/setup.cpp:270 ../installer/setup.cpp:280
 #: ../installer/setup.cpp:317 ../installer/setup.cpp:376
@@ -12611,6 +13628,10 @@ msgstr ""
 msgid "You have specified directory ("
 msgstr "Вы указали директорию ("
 
+#: ../libagiliasetup/agiliasetup.cpp:869
+msgid "You have to create config manually."
+msgstr ""
+
 #: installpkg-ng2.cpp:179 installpkg-ng2.cpp:182 installpkg-ng2.cpp:185
 #: installpkg-ng2.cpp:196 installpkg-ng2.cpp:222 installpkg-ng2.cpp:244
 #: installpkg-ng2.cpp:262 installpkg-ng2.cpp:264 installpkg-ng2.cpp:268
@@ -12650,17 +13671,17 @@ msgstr "Ваша база данных должна быть обновлена 
 msgid "[%d/%d] Downloading file %s\n"
 msgstr "[%d/%d] Скачивается файл %s\n"
 
-#: ../lib/mpkg.cpp:1592 ../lib/mpkg.cpp:860
+#: ../lib/mpkg.cpp:1592 ../lib/mpkg.cpp:860 ../lib/mpkg.cpp:863
 #, c-format
 msgid "[%d/%d] Installing GConf schema %s\n"
 msgstr "[%d/%d] Установка GConf-схемы %s\n"
 
-#: ../lib/mpkg.cpp:1586 ../lib/mpkg.cpp:854
+#: ../lib/mpkg.cpp:1586 ../lib/mpkg.cpp:854 ../lib/mpkg.cpp:857
 #, c-format
 msgid "[%d/%d] Removing GConf schema %s\n"
 msgstr "[%d/%d] Удаление GConf-схемы %s\n"
 
-#: ../lib/mpkg.cpp:1581 ../lib/mpkg.cpp:849
+#: ../lib/mpkg.cpp:1581 ../lib/mpkg.cpp:849 ../lib/mpkg.cpp:852
 #, c-format
 msgid "[%d/%d] Updating icon cache in %s\n"
 msgstr "[%d/%d] Обновление кеша иконок в %s\n"
@@ -12790,11 +13811,13 @@ msgstr "еще одного "
 
 #: string_operations.cpp:618 string_operations.cpp:658
 #: string_operations.cpp:667 ../lib/string_operations.cpp:663
+#: ../mpkgsupport/string_operations.cpp:666
 msgid "april"
 msgstr "апреля"
 
 #: string_operations.cpp:622 string_operations.cpp:662
 #: string_operations.cpp:671 ../lib/string_operations.cpp:667
+#: ../mpkgsupport/string_operations.cpp:670
 msgid "august"
 msgstr "августа"
 
@@ -12804,7 +13827,7 @@ msgstr "августа"
 #: mpkg.cpp:1673 mpkg.cpp:1739 mpkg.cpp:1742 mpkg.cpp:1756 mpkg.cpp:1826
 #: ../lib/mpkg.cpp:1961 ../lib/mpkg.cpp:1964 ../lib/mpkg.cpp:2027
 #: ../lib/mpkg.cpp:2047 ../lib/mpkg.cpp:2053 ../lib/mpkg.cpp:2054
-#: ../lib/mpkg.cpp:2034 ../lib/mpkg.cpp:1267
+#: ../lib/mpkg.cpp:2034 ../lib/mpkg.cpp:1267 ../lib/mpkg.cpp:1270
 msgid "building file list"
 msgstr "построение списка файлов"
 
@@ -12850,7 +13873,8 @@ msgstr "проверка пропущена"
 #: ../lib/mpkg.cpp:1693 ../lib/mpkg.cpp:1709 ../lib/mpkg.cpp:1713
 #: ../lib/mpkg.cpp:1715 ../lib/mpkg.cpp:1719 ../lib/mpkg.cpp:1716
 #: ../lib/mpkg.cpp:1720 ../lib/mpkg.cpp:1769 ../lib/mpkg.cpp:1773
-#: ../lib/mpkg.cpp:1032 ../lib/mpkg.cpp:1036
+#: ../lib/mpkg.cpp:1032 ../lib/mpkg.cpp:1036 ../lib/mpkg.cpp:1035
+#: ../lib/mpkg.cpp:1039
 msgid "checking file conflicts"
 msgstr "проверка конфликтов файлов"
 
@@ -12858,7 +13882,7 @@ msgstr "проверка конфликтов файлов"
 #: mpkg.cpp:1377 mpkg.cpp:1380 mpkg.cpp:1394 mpkg.cpp:1456
 #: ../lib/mpkg.cpp:1576 ../lib/mpkg.cpp:1579 ../lib/mpkg.cpp:1609
 #: ../lib/mpkg.cpp:1629 ../lib/mpkg.cpp:1635 ../lib/mpkg.cpp:1636
-#: ../lib/mpkg.cpp:1678 ../lib/mpkg.cpp:946
+#: ../lib/mpkg.cpp:1678 ../lib/mpkg.cpp:946 ../lib/mpkg.cpp:949
 msgid "checking package integrity"
 msgstr "проверка целостности пакетов"
 
@@ -12867,7 +13891,7 @@ msgstr "проверка целостности пакетов"
 #: installpkg-ng2.cpp:745 ../console/installpkg-ng2.cpp:789
 #: ../console/installpkg-ng2.cpp:791 ../console/installpkg-ng2.cpp:795
 #: ../console/installpkg-ng2.cpp:813 ../console/installpkg-ng2.cpp:829
-#: ../console/installpkg-ng2.cpp:840
+#: ../console/installpkg-ng2.cpp:840 ../console/installpkg-ng2.cpp:747
 msgid "checking...\n"
 msgstr "Проверка...\n"
 
@@ -12878,6 +13902,7 @@ msgstr "Проверка...\n"
 #: mpkg.cpp:1975 ../lib/mpkg.cpp:2110 ../lib/mpkg.cpp:2113
 #: ../lib/mpkg.cpp:2176 ../lib/mpkg.cpp:2196 ../lib/mpkg.cpp:2202
 #: ../lib/mpkg.cpp:2203 ../lib/mpkg.cpp:2227 ../lib/mpkg.cpp:1460
+#: ../lib/mpkg.cpp:1463
 msgid "cleaning file list"
 msgstr "очистка списка файлов"
 
@@ -12887,6 +13912,7 @@ msgstr "data.xml распарсен"
 
 #: string_operations.cpp:626 string_operations.cpp:666
 #: string_operations.cpp:675 ../lib/string_operations.cpp:671
+#: ../mpkgsupport/string_operations.cpp:674
 msgid "december"
 msgstr "декабря"
 
@@ -12909,6 +13935,7 @@ msgstr "поиск конфигурационных файлов"
 #: ../lib/repository.cpp:882 ../lib/HttpDownload.cpp:556
 #: ../lib/HttpDownload.cpp:573 ../lib/repository.cpp:845
 #: ../lib/HttpDownload.cpp:576 ../lib/repository.cpp:765
+#: ../lib/repository.cpp:777
 msgid "done"
 msgstr "готово"
 
@@ -12921,6 +13948,7 @@ msgstr "ошибка"
 #: mpkg.cpp:1596 mpkg.cpp:1666 ../lib/mpkg.cpp:1798 ../lib/mpkg.cpp:1801
 #: ../lib/mpkg.cpp:1835 ../lib/mpkg.cpp:1855 ../lib/mpkg.cpp:1861
 #: ../lib/mpkg.cpp:1862 ../lib/mpkg.cpp:1869 ../lib/mpkg.cpp:1132
+#: ../lib/mpkg.cpp:1135
 msgid "executing post-install script"
 msgstr "выполнение постустановочного скрипта"
 
@@ -12930,7 +13958,7 @@ msgstr "выполнение постустановочного скрипта"
 #: mpkg.cpp:1494 mpkg.cpp:1560 mpkg.cpp:1563 mpkg.cpp:1577 mpkg.cpp:1647
 #: ../lib/mpkg.cpp:1779 ../lib/mpkg.cpp:1782 ../lib/mpkg.cpp:1816
 #: ../lib/mpkg.cpp:1836 ../lib/mpkg.cpp:1842 ../lib/mpkg.cpp:1843
-#: ../lib/mpkg.cpp:1844 ../lib/mpkg.cpp:1107
+#: ../lib/mpkg.cpp:1844 ../lib/mpkg.cpp:1107 ../lib/mpkg.cpp:1110
 msgid "executing post-install scripts..."
 msgstr "выполнение пост-установочных скриптов"
 
@@ -12944,7 +13972,7 @@ msgstr "выполнение скриптов после удаления"
 #: mpkg.cpp:1843 mpkg.cpp:1846 mpkg.cpp:1860 mpkg.cpp:1930
 #: ../lib/mpkg.cpp:2065 ../lib/mpkg.cpp:2068 ../lib/mpkg.cpp:2131
 #: ../lib/mpkg.cpp:2151 ../lib/mpkg.cpp:2157 ../lib/mpkg.cpp:2158
-#: ../lib/mpkg.cpp:2179 ../lib/mpkg.cpp:1412
+#: ../lib/mpkg.cpp:2179 ../lib/mpkg.cpp:1412 ../lib/mpkg.cpp:1415
 msgid "executing post-remove scripts"
 msgstr "выполнение скриптов после удаления"
 
@@ -12971,7 +13999,7 @@ msgstr "выполнение предустановочных скриптов"
 #: mpkg.cpp:1650 mpkg.cpp:1716 mpkg.cpp:1719 mpkg.cpp:1733 mpkg.cpp:1803
 #: ../lib/mpkg.cpp:1938 ../lib/mpkg.cpp:1941 ../lib/mpkg.cpp:2004
 #: ../lib/mpkg.cpp:2024 ../lib/mpkg.cpp:2030 ../lib/mpkg.cpp:2031
-#: ../lib/mpkg.cpp:2011 ../lib/mpkg.cpp:1244
+#: ../lib/mpkg.cpp:2011 ../lib/mpkg.cpp:1244 ../lib/mpkg.cpp:1247
 msgid "executing pre-remove scripts"
 msgstr "выполнение скриптов перед удалением"
 
@@ -12980,6 +14008,7 @@ msgstr "выполнение скриптов перед удалением"
 #: mpkg.cpp:1525 mpkg.cpp:1590 ../lib/mpkg.cpp:1710 ../lib/mpkg.cpp:1713
 #: ../lib/mpkg.cpp:1747 ../lib/mpkg.cpp:1767 ../lib/mpkg.cpp:1773
 #: ../lib/mpkg.cpp:1774 ../lib/mpkg.cpp:1808 ../lib/mpkg.cpp:1071
+#: ../lib/mpkg.cpp:1074
 msgid "extracting "
 msgstr "распаковка "
 
@@ -12991,7 +14020,8 @@ msgstr "распаковка "
 #: ../lib/mpkg.cpp:1650 ../lib/mpkg.cpp:1668 ../lib/mpkg.cpp:1670
 #: ../lib/mpkg.cpp:1674 ../lib/mpkg.cpp:1676 ../lib/mpkg.cpp:1675
 #: ../lib/mpkg.cpp:1677 ../lib/mpkg.cpp:1708 ../lib/mpkg.cpp:1710
-#: ../lib/mpkg.cpp:974 ../lib/mpkg.cpp:976
+#: ../lib/mpkg.cpp:974 ../lib/mpkg.cpp:976 ../lib/mpkg.cpp:977
+#: ../lib/mpkg.cpp:979
 msgid "extracting file list"
 msgstr "извлечение списка файлов"
 
@@ -13005,11 +14035,13 @@ msgstr "извлечение установочных скриптов"
 #: mpkg.cpp:1404 mpkg.cpp:1466 ../lib/mpkg.cpp:1586 ../lib/mpkg.cpp:1589
 #: ../lib/mpkg.cpp:1619 ../lib/mpkg.cpp:1639 ../lib/mpkg.cpp:1645
 #: ../lib/mpkg.cpp:1646 ../lib/mpkg.cpp:1688 ../lib/mpkg.cpp:956
+#: ../lib/mpkg.cpp:959
 msgid "extracting metadata"
 msgstr "извлечение метаданных"
 
 #: ../lib/mpkg.cpp:1643 ../lib/mpkg.cpp:1663 ../lib/mpkg.cpp:1669
 #: ../lib/mpkg.cpp:1670 ../lib/mpkg.cpp:1703 ../lib/mpkg.cpp:969
+#: ../lib/mpkg.cpp:972
 msgid "extracting scripts"
 msgstr "извлечение скриптов"
 
@@ -13019,12 +14051,13 @@ msgstr "извлечение скриптов"
 #: mpkg.cpp:1441 mpkg.cpp:1507 mpkg.cpp:1510 mpkg.cpp:1524 mpkg.cpp:1589
 #: ../lib/mpkg.cpp:1709 ../lib/mpkg.cpp:1712 ../lib/mpkg.cpp:1746
 #: ../lib/mpkg.cpp:1766 ../lib/mpkg.cpp:1772 ../lib/mpkg.cpp:1773
-#: ../lib/mpkg.cpp:1807 ../lib/mpkg.cpp:1070
+#: ../lib/mpkg.cpp:1807 ../lib/mpkg.cpp:1070 ../lib/mpkg.cpp:1073
 msgid "extracting..."
 msgstr "распаковка..."
 
 #: string_operations.cpp:616 string_operations.cpp:656
 #: string_operations.cpp:665 ../lib/string_operations.cpp:661
+#: ../mpkgsupport/string_operations.cpp:664
 msgid "february"
 msgstr "февраля"
 
@@ -13037,6 +14070,7 @@ msgstr "завершено\n"
 #: mpkg.cpp:1614 mpkg.cpp:1684 ../lib/mpkg.cpp:1819 ../lib/mpkg.cpp:1822
 #: ../lib/mpkg.cpp:1856 ../lib/mpkg.cpp:1876 ../lib/mpkg.cpp:1882
 #: ../lib/mpkg.cpp:1883 ../lib/mpkg.cpp:1887 ../lib/mpkg.cpp:1150
+#: ../lib/mpkg.cpp:1153
 msgid "finishing installation"
 msgstr "завершение установки"
 
@@ -13047,6 +14081,10 @@ msgstr "завершение установки"
 #: ../lib/mpkgsys.cpp:203
 msgid "get_package error: returned "
 msgstr "get_package ошибка: возвращено "
+
+#: ../libagiliasetup/agiliasetup.cpp:852
+msgid "grub-install returned "
+msgstr ""
 
 #: setmeta.cpp:7 ../console/setmeta.cpp:7
 #, c-format
@@ -13060,7 +14098,7 @@ msgstr "help                        показать эту справку\n"
 #: installpkg-ng2.cpp:961 ../console/installpkg-ng2.cpp:1005
 #: ../console/installpkg-ng2.cpp:1012 ../console/installpkg-ng2.cpp:1016
 #: ../console/installpkg-ng2.cpp:1023 ../console/installpkg-ng2.cpp:1039
-#: ../console/installpkg-ng2.cpp:1050
+#: ../console/installpkg-ng2.cpp:1050 ../console/installpkg-ng2.cpp:935
 #, c-format
 msgid "increasing build of %s...\n"
 msgstr "Увеличиваю номер билда  %s...\n"
@@ -13078,7 +14116,7 @@ msgstr "Увеличиваю номер билда  %s...\n"
 #: ../lib/mpkg.cpp:1501 ../lib/mpkg.cpp:2002 ../lib/mpkg.cpp:1507
 #: ../lib/mpkg.cpp:2008 ../lib/mpkg.cpp:1508 ../lib/mpkg.cpp:2009
 #: ../lib/mpkg.cpp:1637 ../lib/mpkg.cpp:1989 ../lib/mpkg.cpp:905
-#: ../lib/mpkg.cpp:1222
+#: ../lib/mpkg.cpp:1222 ../lib/mpkg.cpp:908 ../lib/mpkg.cpp:1225
 msgid "initialization"
 msgstr "инициализация"
 
@@ -13097,22 +14135,25 @@ msgstr "установка"
 #: mpkg.cpp:1403 mpkg.cpp:1469 mpkg.cpp:1472 mpkg.cpp:1486 mpkg.cpp:1551
 #: ../lib/mpkg.cpp:1671 ../lib/mpkg.cpp:1674 ../lib/mpkg.cpp:1708
 #: ../lib/mpkg.cpp:1728 ../lib/mpkg.cpp:1734 ../lib/mpkg.cpp:1735
-#: ../lib/mpkg.cpp:1791 ../lib/mpkg.cpp:1054
+#: ../lib/mpkg.cpp:1791 ../lib/mpkg.cpp:1054 ../lib/mpkg.cpp:1057
 msgid "installing..."
 msgstr "установка..."
 
 #: string_operations.cpp:615 string_operations.cpp:655
 #: string_operations.cpp:664 ../lib/string_operations.cpp:660
+#: ../mpkgsupport/string_operations.cpp:663
 msgid "january"
 msgstr "января"
 
 #: string_operations.cpp:621 string_operations.cpp:661
 #: string_operations.cpp:670 ../lib/string_operations.cpp:666
+#: ../mpkgsupport/string_operations.cpp:669
 msgid "july"
 msgstr "июля"
 
 #: string_operations.cpp:620 string_operations.cpp:660
 #: string_operations.cpp:669 ../lib/string_operations.cpp:665
+#: ../mpkgsupport/string_operations.cpp:668
 msgid "june"
 msgstr "июня"
 
@@ -13135,11 +14176,13 @@ msgstr "главное меню"
 
 #: string_operations.cpp:617 string_operations.cpp:657
 #: string_operations.cpp:666 ../lib/string_operations.cpp:662
+#: ../mpkgsupport/string_operations.cpp:665
 msgid "march"
 msgstr "марта"
 
 #: string_operations.cpp:619 string_operations.cpp:659
 #: string_operations.cpp:668 ../lib/string_operations.cpp:664
+#: ../mpkgsupport/string_operations.cpp:667
 msgid "may"
 msgstr "мая"
 
@@ -13157,12 +14200,20 @@ msgstr "md5 не совпадает"
 #: mpkg.cpp:1494 mpkg.cpp:1559 ../lib/mpkg.cpp:1679 ../lib/mpkg.cpp:1682
 #: ../lib/mpkg.cpp:1716 ../lib/mpkg.cpp:1736 ../lib/mpkg.cpp:1742
 #: ../lib/mpkg.cpp:1743 ../lib/mpkg.cpp:1798 ../lib/mpkg.cpp:1061
+#: ../lib/mpkg.cpp:1064
 msgid "merging file lists into database"
 msgstr "внесение списка файлов в базу данных"
 
 #: mpkg.cpp:1181
 msgid "min"
 msgstr "мин"
+
+#: ../console/installpkg-ng2.cpp:512
+#, c-format
+msgid ""
+"mpkg-build has been deprecated many time ago, and it's support was dropped. "
+"Please convert your SPKG files to ABUILD using mpkg-spkg2abuild."
+msgstr ""
 
 #: ../console/checklibdeps.cpp:4 ../console/checklibdeps.cpp:5
 #, c-format
@@ -13264,11 +14315,13 @@ msgstr "не закеширован"
 
 #: string_operations.cpp:625 string_operations.cpp:665
 #: string_operations.cpp:674 ../lib/string_operations.cpp:670
+#: ../mpkgsupport/string_operations.cpp:673
 msgid "november"
 msgstr "ноября"
 
 #: string_operations.cpp:624 string_operations.cpp:664
 #: string_operations.cpp:673 ../lib/string_operations.cpp:669
+#: ../mpkgsupport/string_operations.cpp:672
 msgid "october"
 msgstr "октября"
 
@@ -13302,6 +14355,7 @@ msgstr "packages.xml.xz или packages.xml.gz не найден"
 #: mpkg.cpp:1982 ../lib/mpkg.cpp:2117 ../lib/mpkg.cpp:2120
 #: ../lib/mpkg.cpp:2183 ../lib/mpkg.cpp:2203 ../lib/mpkg.cpp:2209
 #: ../lib/mpkg.cpp:2210 ../lib/mpkg.cpp:2234 ../lib/mpkg.cpp:1467
+#: ../lib/mpkg.cpp:1470
 msgid "remove complete"
 msgstr "удаление завершено"
 
@@ -13311,7 +14365,7 @@ msgstr "удаление завершено"
 #: mpkg.cpp:1735 mpkg.cpp:1801 mpkg.cpp:1804 mpkg.cpp:1818 mpkg.cpp:1888
 #: ../lib/mpkg.cpp:2023 ../lib/mpkg.cpp:2026 ../lib/mpkg.cpp:2089
 #: ../lib/mpkg.cpp:2109 ../lib/mpkg.cpp:2115 ../lib/mpkg.cpp:2116
-#: ../lib/mpkg.cpp:2137 ../lib/mpkg.cpp:1370
+#: ../lib/mpkg.cpp:2137 ../lib/mpkg.cpp:1370 ../lib/mpkg.cpp:1373
 msgid "removing empty directories..."
 msgstr "удаление пустых директорий..."
 
@@ -13321,7 +14375,7 @@ msgstr "удаление пустых директорий..."
 #: mpkg.cpp:1678 mpkg.cpp:1744 mpkg.cpp:1747 mpkg.cpp:1761 mpkg.cpp:1831
 #: ../lib/mpkg.cpp:1966 ../lib/mpkg.cpp:1969 ../lib/mpkg.cpp:2032
 #: ../lib/mpkg.cpp:2052 ../lib/mpkg.cpp:2058 ../lib/mpkg.cpp:2059
-#: ../lib/mpkg.cpp:2082 ../lib/mpkg.cpp:1315
+#: ../lib/mpkg.cpp:2082 ../lib/mpkg.cpp:1315 ../lib/mpkg.cpp:1318
 msgid "removing files..."
 msgstr "удаление файлов..."
 
@@ -13340,6 +14394,7 @@ msgstr "повторная попытка...\n"
 
 #: string_operations.cpp:623 string_operations.cpp:663
 #: string_operations.cpp:672 ../lib/string_operations.cpp:668
+#: ../mpkgsupport/string_operations.cpp:671
 msgid "september"
 msgstr "сентября"
 
@@ -13352,7 +14407,7 @@ msgstr "сентября"
 #: installpkg-ng2.cpp:951 ../console/installpkg-ng2.cpp:995
 #: ../console/installpkg-ng2.cpp:1002 ../console/installpkg-ng2.cpp:1006
 #: ../console/installpkg-ng2.cpp:1012 ../console/installpkg-ng2.cpp:1028
-#: ../console/installpkg-ng2.cpp:1039
+#: ../console/installpkg-ng2.cpp:1039 ../console/installpkg-ng2.cpp:924
 #, c-format
 msgid "tagging %s as %s...\n"
 msgstr "Присваиваем пакету %s тег %s...\n"
