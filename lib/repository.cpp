@@ -10,7 +10,9 @@
 #include <libxml/debugXML.h>
 #include "terminal.h"
 #include "xml2pkglist.h"
-Repository::Repository(){}
+Repository::Repository(){
+	package_descriptions = NULL;
+}
 Repository::~Repository(){}
 bool validateRepStr(const string& r) {
 	if (r.find(":/")!=std::string::npos) return true;
@@ -763,7 +765,7 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 				return -1;
 			}
 
-			xml2pkglist(indexDoc, tempPkgList, server_url);
+			xml2pkglist(indexDoc, tempPkgList, server_url, package_descriptions);
 
 			xmlFreeDoc(indexDoc);
 			xmlCleanupMemory();

@@ -88,11 +88,38 @@ int mpkgSys::build_package(string out_directory, bool source)
 	say(_("Package was built to %s/%s\n"), out_directory.c_str(), pkgname.c_str());
     	return 0;
 }
+
+int mpkgSys::updatePackageDescriptions(const vector< pair<string, string> > &descriptions) {
+	if (mConfig.getValue("description_sync")!="yes") return 0;
+	// First of all: create directory. The path is: SYS_MPKG_VAR_DIRECTORY + "/descriptions";
+	const string base_path = SYS_MPKG_VAR_DIRECTORY + "/descriptions";
+	system("mkdir -p \"" + base_path + "\"");
+
+	// Now download indexes. There are two methods: rsync and not rsync :) All these are configured via system config, and default is "rsync"
+	// Also, user can choose language. Default is "all"
+	string preferred_method = "rsync";
+	string preferred_lang = "all";
+
+	// Let's implement simple scheme, in which we use only rsync and only all languages.
+	for (size_t i=0; i<descriptions.size(); ++i) {
+		//cout << "Lang: " << descriptions[i].first << ", Path: " << descriptions[i].second << endl;
+		if (descriptions[i].first == preferred_lang) {
+		       if (preferred_method == "rsync" && descriptions[i].second.find("rsync://")==0) {
+			       system("rsync -arvh " + descriptions[i].second + " " + base_path + "/ >/dev/null");
+		       }
+		}
+	}
+
+
+	return 0;
+}
 int mpkgSys::update_repository_data(mpkgDatabase *db)//, DependencyTracker *DepTracker)
 {
 	// Функция, с которой начинается обновление данных.
 	
 	Repository *rep = new Repository;		// Объект репозиториев
+	vector< pair<string, string> > package_descriptions;
+	rep->package_descriptions = &package_descriptions; // Add pointer to package descriptions
 	PACKAGE_LIST *availablePackages = new PACKAGE_LIST;		// Список пакетов, полученных из всех репозиториев...
 	PACKAGE_LIST *tmpPackages = new PACKAGE_LIST;		// Список пакетов, полученных из текущего репозитория (временное хранилище)
 
@@ -139,12 +166,10 @@ int mpkgSys::update_repository_data(mpkgDatabase *db)//, DependencyTracker *DepT
 	delete tmpPackages;
 	// Вот тут-то и начинается самое главное. Вызываем фильтрацию пакетов (действие будет происходить в функции updateRepositoryData.
 	int ret=db->updateRepositoryData(availablePackages);
+
+	// Now - update package descriptions
+	updatePackageDescriptions(package_descriptions);
 	if (!dialogMode && !htmlMode) say(_("Update complete.\n"));
-	if (htmlMode) {
-		newHtmlPage();
-		printHtml("Package data update complete");
-		printHtmlRedirect();
-	}
 	pData.clear();
 	return ret;
 }

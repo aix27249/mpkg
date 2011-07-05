@@ -144,7 +144,8 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 	fprintf(xml, "<descriptions>\n");
 	for (size_t i=0; i<langs.size(); ++i) {
 		if (langs[i].empty()) continue;
-		fprintf(xml, "\t<description lang=\"%s\" path=\"rsync://packages.agilialinux.ru/descriptions/%s\" />\n", langs[i].c_str(), langs[i].c_str()); // FIXME: do not hardcode paths
+		if (langs[i]!="all") fprintf(xml, "\t<description lang=\"%s\" path=\"rsync://packages.agilialinux.ru/descriptions/%s\" />\n", langs[i].c_str(), langs[i].c_str()); // FIXME: do not hardcode paths
+		else fprintf(xml, "\t<description lang=\"all\" path=\"rsync://packages.agilialinux.ru/descriptions\" />\n");
 		fprintf(xml, "\t<description lang=\"%s\" path=\"http://packages.agilialinux.ru/descriptions/%s.tar.xz\" />\n", langs[i].c_str(), langs[i].c_str()); // FIXME: do not hardcode paths here too
 	}
 

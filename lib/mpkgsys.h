@@ -60,6 +60,7 @@ namespace mpkgSys {
 	int nativize_directory(string input_dir);
 	int _conv_dir(const char *filename, const struct stat *file_status, int filetype);
 	int _nativize_dir(const char *filename, const struct stat *file_status, int filetype);
+	int updatePackageDescriptions(const vector< pair<string, string> > &descriptions);
 	
 
 	int build_package();

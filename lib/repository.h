@@ -36,6 +36,8 @@ class Repository
 		int get_index(string server_url, PACKAGE_LIST *packages, unsigned int type=TYPE_AUTO);
 		Repository();
 		~Repository();
+
+		vector< pair<string, string> > *package_descriptions;
 		
 	private:
 	//	int ProcessPackage(const char *filename, const struct stat *file_status, int filetype);

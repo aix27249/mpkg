@@ -144,6 +144,54 @@ void parsePackage(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 	}
 }
 
+void parseDescriptions(xmlDocPtr doc, xmlNodePtr cur, vector< pair<string, string> > *descriptions) {
+	cur = cur->xmlChildrenNode;
+	xmlAttrPtr attr;
+	pair<string, string> desc_url;
+	bool found = false;
+	xmlChar *buff;
+	while (cur != NULL) {
+		if (!xmlStrcmp(cur->name, (const xmlChar *) "description")) {
+			buff = xmlGetProp(cur, (const xmlChar *) "lang");
+			if (buff) {
+				desc_url.first = (const char *) buff;
+				xmlFree(buff);
+			}
+			buff = xmlGetProp(cur, (const xmlChar *) "path");
+			if (buff) {
+				desc_url.second = (const char *) buff;
+				xmlFree(buff);
+			}
+
+			/*
+			// Read attributes "lang" and "path"
+			attr = cur->properties;
+			while (attr != NULL) {
+				if (!xmlStrcmp(attr->name, (const xmlChar *) "lang")) {
+					desc_url.first = cutSpaces((const char *) attr->children->name);
+					cout << "\nFOUND LANG: " << desc_url.first << endl;
+				}
+				else if (!xmlStrcmp(attr->name, (const xmlChar *) "path")) {
+					desc_url.second = cutSpaces((const char *) attr->children->name);
+
+					cout << "\nFOUND PATH: " << desc_url.second << endl;
+				}
+				attr = attr->next;
+			}
+			// Check dupes and add
+			*/
+
+			found = false;
+			for (size_t i=0; !found && i<descriptions->size(); ++i) {
+				if (descriptions->at(i)==desc_url) found = true;
+			}
+			if (!found) descriptions->push_back(desc_url);
+			desc_url.first.clear();
+			desc_url.second.clear();
+		}
+		cur = cur->next;
+	}
+}
 int getPackageCount(xmlNodePtr cur) {
 	cur = cur->xmlChildrenNode;
 	int counter = 0;
@@ -156,7 +204,7 @@ int getPackageCount(xmlNodePtr cur) {
 	return counter;
 }
 
-int xml2pkglist(xmlDocPtr doc, PACKAGE_LIST &pkgList, const string& server_url) {
+int xml2pkglist(xmlDocPtr doc, PACKAGE_LIST &pkgList, const string& server_url, vector< pair<string, string> >  *descriptions) {
 	xmlNodePtr cur = xmlDocGetRootElement(doc);
 
 	int package_count = getPackageCount(cur);
@@ -175,6 +223,9 @@ int xml2pkglist(xmlDocPtr doc, PACKAGE_LIST &pkgList, const string& server_url) 
 			parsePackage(doc, cur, *pkgList.get_package_ptr(counter));
 			if (!pkgList[counter].abuild_url.empty()) pkgList.get_package_ptr(counter)->abuild_url = server_url + pkgList.get_package_ptr(counter)->abuild_url;
 			counter++;
+		}
+		else if (descriptions != NULL && !xmlStrcmp(cur->name, (const xmlChar *) "descriptions")) {
+			parseDescriptions(doc, cur, descriptions);
 		}
 		cur = cur->next;
 	}
