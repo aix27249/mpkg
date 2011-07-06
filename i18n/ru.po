@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-07-05 21:22+0400\n"
-"PO-Revision-Date: 2011-07-06 00:59+0300\n"
+"PO-Revision-Date: 2011-07-06 17:04+0300\n"
 "Last-Translator: Alexander Maslov <coder@dps.ru>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -15219,9 +15219,8 @@ msgid "Install from a set of CD/DVD"
 msgstr "Установка с набора CD/DVD"
 
 #: ../textinstaller/textsetup/textsetup.cpp:73
-#, fuzzy
 msgid "Install from directory on local hard drive"
-msgstr "Установка из директории жесткого диска"
+msgstr "Установка из директории на жестком диске"
 
 #: ../installer/setup.cpp:1852
 #: ../installer/setup.cpp:1908
@@ -19064,9 +19063,8 @@ msgid "Please, choose KDE branch which you prefer. Both of them are stable enoug
 msgstr "Выберите ветку KDE, которую вы предпочитаете. Обе ветки достаточно стабильны на сегодняшний день. Если вы хотите использовать другое окружение (XFCE, Fluxbox, и т.д.) - ваш выбор должен основываться на программах, которые вы хотите использовать из KDE\n"
 
 #: ../textinstaller/textsetup/textsetup.cpp:76
-#, fuzzy
 msgid "Please, choose package source from a list below:"
-msgstr "Выберите источник пакета из списка ниже:"
+msgstr "Выберите способ установки из списка ниже:"
 
 #: ../installer/setup.cpp:133
 #: ../installer/setup.cpp:142
