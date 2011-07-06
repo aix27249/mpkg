@@ -146,7 +146,6 @@ void parsePackage(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 
 void parseDescriptions(xmlDocPtr doc, xmlNodePtr cur, vector< pair<string, string> > *descriptions) {
 	cur = cur->xmlChildrenNode;
-	xmlAttrPtr attr;
 	pair<string, string> desc_url;
 	bool found = false;
 	xmlChar *buff;

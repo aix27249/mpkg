@@ -88,25 +88,71 @@ int mpkgSys::build_package(string out_directory, bool source)
 	say(_("Package was built to %s/%s\n"), out_directory.c_str(), pkgname.c_str());
     	return 0;
 }
+int rsyncDescriptions(const string& path, const string& base_path) {
+	cout << _("Retrieving descriptions from ") << path << "..." << endl;
+	return system("rsync -arvh " + path + " " + base_path + "/ >/dev/null");
+}
+
+int wgetDescriptions(const string& path, const string& base_path) {
+	cout << _("Retrieving descriptions from ") << path << "..." << endl;
+	string filename = getFilename(path);
+	int ret = system("wget " + path + " -O " + base_path + "/" + filename + " >/dev/null");
+	if (ret != 0) return ret;
+	ret = system("tar xf " + base_path + "/" + filename + " -C " + base_path);
+	unlink(string(base_path + "/" + filename).c_str());
+	return ret;
+}
 
 int mpkgSys::updatePackageDescriptions(const vector< pair<string, string> > &descriptions) {
-	if (mConfig.getValue("description_sync")!="yes") return 0;
+	
+	//if (mConfig.getValue("description_sync")!="yes") return 0; // At this time, enable this functionality only if specified explicitly
+
 	// First of all: create directory. The path is: SYS_MPKG_VAR_DIRECTORY + "/descriptions";
 	const string base_path = SYS_MPKG_VAR_DIRECTORY + "/descriptions";
 	system("mkdir -p \"" + base_path + "\"");
 
 	// Now download indexes. There are two methods: rsync and not rsync :) All these are configured via system config, and default is "rsync"
 	// Also, user can choose language. Default is "all"
-	string preferred_method = "rsync";
-	string preferred_lang = "all";
-
-	// Let's implement simple scheme, in which we use only rsync and only all languages.
-	for (size_t i=0; i<descriptions.size(); ++i) {
-		//cout << "Lang: " << descriptions[i].first << ", Path: " << descriptions[i].second << endl;
-		if (descriptions[i].first == preferred_lang) {
-		       if (preferred_method == "rsync" && descriptions[i].second.find("rsync://")==0) {
-			       system("rsync -arvh " + descriptions[i].second + " " + base_path + "/ >/dev/null");
-		       }
+	string preferred_method = mConfig.getValue("description_preferred_method");
+	if (preferred_method != "rsync" && preferred_method != "archive") preferred_method = "rsync";
+	vector<string> methods;
+	if (preferred_method == "rsync") {
+		methods.push_back("rsync");
+		methods.push_back("archive");
+	}
+	else if (preferred_method == "archive") {
+		methods.push_back("archive");
+		methods.push_back("rsync");
+	}
+	string _lang = mConfig.getValue("description_languages");
+	vector<string> preferred_languages = splitString(_lang, " ");
+	for (size_t i=0; i<preferred_languages.size(); ++i) {
+		if (cutSpaces(preferred_languages[i]).empty()) {
+			preferred_languages.erase(preferred_languages.begin() + i);
+			i--;
+		}
+	}
+	if (preferred_languages.empty()) preferred_languages.push_back("all");
+	string this_method;
+	bool lang_got;
+	for (size_t l = 0; l < preferred_languages.size(); ++l) {
+		lang_got = false;
+		for (size_t m = 0; !lang_got && m < methods.size(); ++m) {
+			for (size_t d=0; d<descriptions.size(); ++d) {
+				if (descriptions[d].first != preferred_languages[l]) continue;
+				if (descriptions[d].second.find("rsync://")==0) this_method = "rsync";
+				else this_method = "archive";
+				if (this_method == methods[m]) {
+					if (this_method == "rsync") {
+						rsyncDescriptions(descriptions[d].second, base_path);
+						lang_got = true;
+					}
+					else if (this_method == "archive") {
+						wgetDescriptions(descriptions[d].second, base_path);
+						lang_got = true;
+					}
+				}
+			}
 		}
 	}
 
