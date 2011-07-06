@@ -43,6 +43,8 @@ NODE=$1
 
 # INIT
 set -e
+
+export scriptdir=${scriptdir:-/usr/share/mklivecd/scripts} # This should be defined in global config at package build time in case if you use another paths
 export PATH=${scriptdir}/bin:$PATH
 CWD=${scriptdir}/live-elements
 # Set alias for chroot to fakechroot. Let's see if it can work such way
@@ -57,7 +59,6 @@ if [ -r "${REAL_HOME}/.mklivecd.conf" ] ; then
 	. ${REAL_HOME}/.mklivecd.conf
 fi
 
-scriptdir=${scriptdir:-/usr/share/mklivecd/scripts} # This should be defined in global config at package build time in case if you use another paths
 TMPDIR=/tmp/agibootstrap-$$$$$$
 mkdir -p $TMPDIR
 
@@ -117,7 +118,7 @@ if [ "`id -u`" != "0" ] ; then
 	FAKEROOT=fakeroot
 fi
 
-ARCH=$ARCH LIST="$LIST" NODE="$NODE" REPO="$REPO" $FAKEROOT ${scriptdir}/install_virtual_machine.sh
+scriptdir="${scriptdir}" ARCH=$ARCH LIST="$LIST" NODE="$NODE" REPO="$REPO" $FAKEROOT ${scriptdir}/install_virtual_machine.sh
 rm -f ${TMPDIR}/pkglist
 rmdir ${TMPDIR}
 echo "Complete!"

@@ -16,7 +16,10 @@ echo Chroot: `which chroot`
 
 
 # Creating directory structure
-scriptdir=${scriptdir:-$(pwd)}
+if [ -z "$scriptdir" ] ; then
+	echo 'Warning: scriptdir not specified, using current path instead'
+	scriptdir=${scriptdir:-$(pwd)}
+fi
 rm -rf $NODE
 mkdir -p ${NODE}/{etc,tmp}
 mkdir -p ${NODE}/var/mpkg/{packages,scripts,configs,backup}
