@@ -592,6 +592,18 @@ void showPackageInfoCLI(const PACKAGE *pkg, const string &hasUpdate) {
 
 
 	string shortDescription = pkg->get_short_description();
+	string lang = setlocale(LC_MESSAGES, NULL);
+	if (lang.size()<2) lang = "en";
+	else lang = lang.substr(0, 2);
+	// HARDCORE
+	string short_translated = SYS_MPKG_VAR_DIRECTORY + "/descriptions/" + lang + string("/shortdesc/") + strToLower(pkg->get_name()) + ".txt";
+	if (FileExists(short_translated)) {
+		shortDescription = ReadFile(short_translated);
+		strReplace(&shortDescription, "\t", "");
+		strReplace(&shortDescription, "\n", "");
+		strReplace(&shortDescription, "\r", "");
+	}
+
 	cout << pkg->get_name() << " " << pkg->get_version() << "-" << pkg->get_build() << " (" << pkg->get_arch() << "): " << shortDescription << endl;
 	if (pkg->installed()) cout << _("Installed:") << "\t" << getInstallDate(pkg) << endl;
 	else cout << _("Available in:") << "\t" << pkg->package_distro_version.c_str() << endl;

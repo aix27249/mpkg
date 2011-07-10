@@ -52,6 +52,7 @@ bool strToBool(string data);
 string boolToStr(bool value);
 string toHtml(string data);
 
+string strToLower(string str);
 // TODO: get rid of this. We should use std::map instead.
 class StringMap {
 	public:

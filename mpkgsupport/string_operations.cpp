@@ -759,6 +759,13 @@ string boolToStr(bool value) {
 	return "no";
 }
 
+string strToLower(string str) {
+	for (size_t i=0; i<str.size(); ++i) {
+		if (str[i] >= 0x41 && str[i] <= 0x5A) str[i]=tolower(str[i]);
+	}
+	return str;
+}
+
 void strReplace(string *data, string pattern, string value) {
 	if (!data || data->empty()) return;
 	if (pattern.empty()) return;
