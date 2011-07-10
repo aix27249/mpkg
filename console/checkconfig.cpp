@@ -31,8 +31,8 @@ int main(int argc, char **argv) {
 
 	_cmdOptions["sql_readonly"] = "yes";
 	program_name = argv[0];
-	bool repair;
-	bool copy;
+	bool repair = false;
+	bool copy = false;
 	do {
 		ich = getopt_long(argc, argv, short_opt, long_options, NULL);
 		
