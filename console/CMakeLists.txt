@@ -1,5 +1,5 @@
 #
-# MOPSLinux packaging system
+# MPKG packaging system
 #
 #
 cmake_minimum_required(VERSION 2.4)
@@ -55,6 +55,7 @@ ADD_EXECUTABLE(mpkg-deporder deporder)
 #ADD_EXECUTABLE(mpkg-deppath deppath)
 #ADD_EXECUTABLE(mpkg-depclean depclean)
 ADD_EXECUTABLE(mpkg-fixdeps fixdeps)
+ADD_EXECUTABLE(mpkg-checkconfigs checkconfig)
 ADD_EXECUTABLE(mpkg-transactions transactions)
 ADD_EXECUTABLE(mpkg-rollback rollback)
 ADD_EXECUTABLE(mpkg-conflicts conflicts)
@@ -63,13 +64,13 @@ ADD_EXECUTABLE(mpkg-conflicts conflicts)
 FILE(GLOB aliases "${CMAKE_CURRENT_SOURCE_DIR}/aliases/mpkg-*")
 FILE(GLOB update_all_caches "${CMAKE_CURRENT_SOURCE_DIR}/update-all-caches")
 IF(X86_64)
-	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts
+	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts mpkg-checkconfigs
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib64
 		ARCHIVE DESTINATION lib64
 	)
 ELSE(X86_64)
-	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts
+	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts mpkg-checkconfigs
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib
 		ARCHIVE DESTINATION lib
