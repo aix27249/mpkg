@@ -590,6 +590,8 @@ void showPackageInfoCLI(const PACKAGE *pkg, const string &hasUpdate) {
 	}
 
 
+	// FIXME: Split this code into separate function(s) like getShortDescriptionTranslated(string pkgname, string lang)
+	// Note: think twice about it's signature
 
 	string shortDescription = pkg->get_short_description();
 	string lang = setlocale(LC_MESSAGES, NULL);

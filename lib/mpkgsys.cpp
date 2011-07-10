@@ -105,7 +105,7 @@ int wgetDescriptions(const string& path, const string& base_path) {
 
 int mpkgSys::updatePackageDescriptions(const vector< pair<string, string> > &descriptions) {
 	
-	//if (mConfig.getValue("description_sync")!="yes") return 0; // At this time, enable this functionality only if specified explicitly
+	if (mConfig.getValue("disable_description_sync")=="yes") return 0; // Allow user to disable this functionality
 
 	// First of all: create directory. The path is: SYS_MPKG_VAR_DIRECTORY + "/descriptions";
 	const string base_path = SYS_MPKG_VAR_DIRECTORY + "/descriptions";
