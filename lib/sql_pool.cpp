@@ -347,7 +347,6 @@ int SQLiteDB::init()
 	}*/
 	int ret;
 	if (_cmdOptions["sql_readonly"]=="yes") {
-		if (verbose && !dialogMode) say(_("Opening database %s in read-only mode\n"), db_filename.c_str());
 		ret = sqlite3_open_v2(db_filename.c_str(), &db, SQLITE_OPEN_READONLY, NULL);
 		if (ret!=SQLITE_OK) {
 			mError(_("Cannot open database even in read-only mode:\n") + string(sqlite3_errmsg(db)));
@@ -355,11 +354,10 @@ int SQLiteDB::init()
 		}
 	}
 	else do {
-		if (verbose && !dialogMode) say(_("Opening database %s in read-write mode\n"), db_filename.c_str());
 		// Try to open database until it can be opened. 
 		ret = sqlite3_open_v2(db_filename.c_str(), &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
 		if (ret==SQLITE_BUSY || ret==SQLITE_LOCKED) {
-			if (!dialogMode) say(_("Database is locked by another process, waiting for release...\nYou can press CTRL-C to break waiting and exit\n"));
+			if (!dialogMode) fprintf(stderr, _("Database is locked by another process, waiting for release...\nYou can press CTRL-C to break waiting and exit\n"));
 			else ncInterface.showInfoBox(_("Database is locked, waiting for release...\nYou can press CTRL-C to break waiting and exit\n"));
 			sleep(1);
 		}
@@ -374,9 +372,6 @@ int SQLiteDB::init()
 		mError(_("Cannot open database:\n") + string(sqlite3_errmsg(db)));
 		return 1;
 	}
-
-	
-	if (verbose && !dialogMode) say(_("Database opened\n"));
 
 	sqlBegin();
 	return ret;
@@ -876,7 +871,6 @@ opendb:
 		sqlError=sql_return;
 		sqlErrMsg="Error opening database file "+db_filename+", aborting.";
 		mError(sqlErrMsg);
-		if (verbose) printf("Closing database handler %p\n", db);
 	       	int close_result = sqlite3_close(db);
 		if (close_result!=SQLITE_OK) printf("Failed to close DB handler %p, return code: %d\n", db, close_result); 
 	       	if (mpkgErrorHandler.callError(MPKG_SUBSYS_SQLDB_OPEN_ERROR)==MPKG_RETURN_RETRY) goto opendb;
@@ -890,7 +884,6 @@ check_integrity:
 		if (_cmdOptions["sql_readonly"]=="yes") {
 			_cmdOptions["sql_readonly"]="no";
 
-			if (verbose) printf("Closing database handler %p\n", db);
 			int close_result = sqlite3_close(db);
 			if (close_result!=SQLITE_OK) printf("Failed to close DB handler %p, return code: %d\n", db, close_result); 
 			sql_return = init();
@@ -903,7 +896,6 @@ check_integrity:
 		}
 
 		mError("Integrity check failed, aborting");
-		if (verbose) printf("Closing database handler %p\n", db);
 		int close_result = sqlite3_close(db);
 		if (close_result!=SQLITE_OK) printf("Failed to close DB handler %p, return code: %d\n", db, close_result); 
 		abort();
@@ -936,7 +928,6 @@ int SQLiteDB::initDatabaseStructure()
 
 SQLiteDB::~SQLiteDB(){
 	sqlCommit();	
-	if (verbose) printf("Closing database handler %p\n", db);
 	int close_result = sqlite3_close(db);
 	if (close_result!=SQLITE_OK) printf("Failed to close DB handler %p, return code: %d\n", db, close_result); 
 	if (simulate)

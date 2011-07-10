@@ -7,7 +7,8 @@
 #include "deltas.h"
 #include "terminal.h"
 #include <iostream>
-
+mpkgDatabase *_globalDB = NULL;
+int _globalDBUsers = 0;
 string getErrorDescription(int errCode) { // FIXME: LOCALIZATION!!!
 	switch(errCode) {
 		case MPKGERROR_OK:
@@ -66,7 +67,13 @@ mpkg::mpkg(bool _loadDatabase)
 	if (_loadDatabase)
 	{
 		mDebug("Loading database");
-		db = new mpkgDatabase();
+		if (!_globalDB) {
+			db = new mpkgDatabase();
+			_globalDB = db;
+		}
+		else db = _globalDB;
+		_globalDBUsers++;
+
 		DepTracker = new DependencyTracker(db);
 	}
 	init_ok=true;
@@ -79,7 +86,13 @@ mpkg::mpkg(bool _loadDatabase)
 mpkg::~mpkg()
 {
 	if (DepTracker!=NULL) delete DepTracker;
-	if (db!=NULL) delete db;
+	if (db!=NULL) {
+		_globalDBUsers--;
+		if (_globalDBUsers==0) {
+			delete db;
+			_globalDB = NULL;
+		}
+	}
 	delete_tmp_files();
 	mpkgSys::clean_cache(true);
 	mDebug("Deleting core");

@@ -1751,6 +1751,8 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 			
 			pkgList->get_package_ptr(pkgNumber)->set_dependencies(newPackages->at(i).get_dependencies());
 			pkgList->get_package_ptr(pkgNumber)->set_tags(newPackages->at(i).get_tags());
+
+			if (forceFullDBUpdate) pkgList->get_package_ptr(pkgNumber)->config_files=newPackages->at(i).config_files;
 			//db.sql_exec("DELETE FROM dependencies WHERE packages_package_id='" + IntToStr(pkgList->get_package_ptr(pkgNumber)->get_id()) + "';");
 		}
 		else			// Если соответствие НЕ найдено...

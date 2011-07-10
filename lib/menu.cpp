@@ -551,106 +551,21 @@ void manageRepositories(mpkg &core) {
 	if (ret != -1) core.set_repositorylist(rep_list, disabled_list);
 //	core.set_disabled_repositorylist(disabled_list);
 }
+string getInstallDate(const PACKAGE *pkg) {
+	mpkg core;
+	SQLRecord sqlSearch, sqlFields;
+	sqlSearch.addField("action_type", 0);
+	sqlSearch.addField("package_md5", pkg->get_md5());
+	sqlFields.addField("action_date");
+	SQLTable results;
+	core.db->get_sql_vtable(results, sqlFields, "transaction_details", sqlSearch);
+	if (results.empty()) return _("unknown date");
+	return results.getValue(0,0);
+	
 
-void show_package_info(mpkg *core, string name, string version, string build, bool showFilelist, int id)
-{
-	PACKAGE_LIST pkgList;
-	SQLRecord sqlSearch;
-	if (id>=0) {
-		sqlSearch.addField("package_id", id);
-	}
-	if (!name.empty()) {
-		sqlSearch.addField("package_name", name);
-	}
-	if (!version.empty()) {
-		sqlSearch.addField("package_version", version);
-	}
-	if (!build.empty()) {
-		sqlSearch.addField("package_build", build);
-	}
+}
 
-	core->get_packagelist(sqlSearch, &pkgList);
-	// Let's change behavior a little: show only one package: installed if any, or maxVersion if not.
-	// We should add some key to show all packages, but... I don't know what to choose :) TODO: do it, later.
-	pkgList.initVersioning();
-	PACKAGE *installedPkg = (PACKAGE *) pkgList.getInstalledOne();
-	PACKAGE *maxVersionPkg = pkgList.getMaxVersion();
-	string hasUpdate;
-	if (installedPkg && maxVersionPkg && installedPkg!=maxVersionPkg) hasUpdate = _("\nUpdate available: ") + maxVersionPkg->get_fullversion() + "\n";
-	PACKAGE *pkg = installedPkg;
-	if (!pkg) pkg=maxVersionPkg;
-	if (dialogMode) ncInterface.setSubtitle(_("Information about package ") + name);
-	if (!pkg || pkgList.IsEmpty()) {
-		if (!dialogMode) say(_("No such package %s %s %s\n"), name.c_str(), version.c_str(), build.c_str());
-		else ncInterface.showMsgBox(_("No such package\n"));
-		return;
-	}
-	if (dialogMode) {
-		string data;
-		string locationsInfo;
-		string url;
-		string depData;
-		string deltaInfo;
-		string hasABUILD;
-	//	for (unsigned int i=0; i<pkgList.size(); ++i) {
-	//		pkg = pkgList.get_package_ptr(i);
-			mstring taglist;
-			for (unsigned int t=0; t< pkg->get_tags().size(); ++t) {
-				taglist+="  " + pkg->get_tags().at(t)+"\n";
-			}
-			locationsInfo.clear();
-			for (unsigned int t=0; t<pkg->get_locations().size(); t++) {
-				url = pkg->get_locations().at(t).get_full_url();
-			       	if (pkg->get_filename()!=url) url += pkg->get_filename();
-				if (url.find("/./")) url = url.substr(0, url.find("/./")) + url.substr(url.find("/./")+2);
-				locationsInfo += "  " + url + "\n";
-			}
-			deltaInfo.clear();
-			for (unsigned int t=0; t<pkg->deltaSources.size(); t++) {
-				deltaInfo += pkg->deltaSources[t].dup_url + "\n";
-			}
-			depData.clear();
-			for (unsigned int t=0; t<pkg->get_dependencies().size(); t++) {
-				// Sorry for hardcoding search.php here, it will be replaced by cmdline and/or config option later.
-				depData += pkg->get_dependencies().at(t).getDepInfo()+"\n";
-			}
-
-			hasABUILD.clear();
-			if (!pkg->abuild_url.empty()) {
-				hasABUILD = "\nABUILD: " + pkg->abuild_url;
-			}
-
-			data = _("Name: ") + pkg->get_name() \
-				+ (string) _("\nVersion: ") + pkg->get_version() \
-			       	+ (string) _("\nBeta release: ") + pkg->get_betarelease() \
-			       	+ (string) _("\nArch: ") + pkg->get_arch() \
-			       	+ (string) _("\nBuild: ") + pkg->get_build() \
-			       	+ (string) _("\nProvides: ") + pkg->get_provides() \
-			       	+ (string) _("\nConflicts: ") + pkg->get_conflicts() \
-				+ (string) _("\nBranch: ") + pkg->get_repository_tags() \
-				+ (string) _("\nShort description: ") + pkg->get_short_description() \
-				+ (string) _("\nFull description: ") + pkg->get_description() \
-			       	+ (string) _("\nCompressed size: ") + humanizeSize(pkg->get_compressed_size()) \
-			       	+ (string) _("\nInstalled size: ") + humanizeSize(pkg->get_installed_size()) \
-			       	+ (string) _("\nFile name: ") + pkg->get_filename() \
-			       	+ (string) _("\nMD5 checksum: ") + pkg->get_md5() \
-			       	+ (string) _("\nMaintainer: ") + pkg->get_packager() \
-			       	+ (string) " (" + pkg->get_packager_email() + (string)")" \
-			       	+ (string) _("\n\nTags: \n") \
-			       	+ taglist.s_str() \
-				+ (string) _("\nAdded to repository: ") + getTimeString(pkg->add_date) \
-				+ (string) _("\nLocations: \n") + locationsInfo \
-				+ (string) _("\nDeltas: \n") + deltaInfo \
-				+ (string) _("\nDependencies: \n") + depData \
-				+ hasABUILD \
-				+ hasUpdate;
-				;
-
-
-	//	}
-		ncInterface.showMsgBox(data);
-		return;
-	}
+void showPackageInfoCLI(const PACKAGE *pkg, const string &hasUpdate) {
 	string vstatus;
 	vstatus.clear();
 	if (pkg->available()) vstatus = _("Available");
@@ -661,7 +576,55 @@ void show_package_info(mpkg *core, string name, string version, string build, bo
 	if (vstatus.empty()) vstatus = _("Doesn't exist");
 	vstatus = pkg->get_vstatus(true) + " (" + vstatus + ")";
 
-	say(_("%sID:%s %d\n"), CL_GREEN, CL_WHITE, pkg->get_id());
+	string tags;
+	for (size_t i=0; i<pkg->get_tags().size(); ++i) {
+		tags += pkg->get_tags().at(i);
+		if (i<pkg->get_tags().size()-1) tags+= ", ";
+	}
+
+	string depends;
+	for (size_t i=0; i<pkg->get_dependencies().size(); ++i) {
+		depends += pkg->get_dependencies().at(i).get_package_name();
+	       	if (atoi(pkg->get_dependencies().at(i).get_condition().c_str())!=VER_ANY) depends += pkg->get_dependencies().at(i).get_vcondition() + pkg->get_dependencies().at(i).get_package_version();
+		if (i<pkg->get_dependencies().size()-1) depends+= ", ";
+	}
+
+
+
+	string shortDescription = pkg->get_short_description();
+	cout << pkg->get_name() << " " << pkg->get_version() << "-" << pkg->get_build() << " (" << pkg->get_arch() << "): " << shortDescription << endl;
+	if (pkg->installed()) cout << _("Installed:") << "\t" << getInstallDate(pkg) << endl;
+	else cout << _("Available in:") << "\t" << pkg->package_distro_version.c_str() << endl;
+	if (!pkg->get_provides().empty()) cout << _("Provides:") << "\t" << pkg->get_provides() << endl;
+	if (!pkg->get_conflicts().empty()) cout << _("Conflicts with:") << "\t"	<< pkg->get_conflicts() << endl;
+	cout << _("Size:") << "\t\t" << humanizeSize(atoi(pkg->get_compressed_size().c_str())) << _(" compressed") << endl << "\t\t" << humanizeSize(atoi(pkg->get_installed_size().c_str())) << _(" installed") << endl;
+	cout << _("Tags:") << "\t\t" << tags << endl;
+	cout << _("Built by:") << "\t" << pkg->get_packager();
+	if (verbose) cout << " <" << pkg->get_packager_email() << ">" << endl;
+	else cout << endl;
+	cout << _("Depends:") << "\t" << depends << endl;
+	if (verbose) {
+		cout << _("MD5:") << "\t\t" << pkg->get_md5() << endl;
+		cout << _("Package ID:") << "\t" << pkg->get_id() << endl;
+		if (pkg->available()) {
+			cout << _("Locations:") << "\t";
+			for (size_t i=0; i<pkg->get_locations().size(); ++i) {
+				if (i!=0) cout << "\t\t";
+				cout << pkg->get_locations().at(i).get_full_url() << endl;
+			}
+		}
+		if (!pkg->config_files.empty()) {
+			cout << _("Config files:") << "\t";
+			for (size_t i=0; i<pkg->config_files.size(); ++i) {
+				if (i!=0) cout << "\t\t";
+				cout << pkg->config_files[i].name << endl;
+			}
+		}
+	}
+	
+	
+	   
+	/*   say(_("%sID:%s %d\n"), CL_GREEN, CL_WHITE, pkg->get_id());
 	say(_("%sName:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_name().c_str());
 	say(_("%sVersion:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_version().c_str());
 	say(_("%sArch:%s %s\n"), CL_GREEN, CL_WHITE, pkg->get_arch().c_str());
@@ -733,22 +696,142 @@ void show_package_info(mpkg *core, string name, string version, string build, bo
 
 	if (!pkg->get_changelog().empty() && pkg->get_changelog()!="0") say(_("%sChangelog:%s          \n%s\n"), CL_GREEN, CL_WHITE, pkg->get_changelog().c_str());
 	if (!pkg->get_description().empty() && pkg->get_description()!="0") say(_("%sDescription:%s        \n%s\n"), CL_GREEN, CL_WHITE, pkg->get_description().c_str());
+	*/
+}
 
-	if (showFilelist)
-	{
-		say(_("%sFilelist:%s\n"), CL_GREEN, CL_WHITE);
-		if (pkg->installed())
+void showPackageFilelist(PACKAGE *pkg) {
+	say(_("%sFilelist:%s\n"), CL_GREEN, CL_WHITE);
+	if (pkg->installed()) {
+		if (pkg->get_files().size()==0)
 		{
-			core->db->get_filelist(pkg->get_id(), pkg->get_files_ptr());
-			if (pkg->get_files().size()==0)
-			{
-				say(_("\tPackage contains no files\n"));
-			}
-			else for (size_t t=0; t<pkg->get_files().size(); ++t) {
-				say ("\t    %s\n", pkg->get_files().at(t).c_str());
-			}
+			say(_("\tPackage contains no files\n"));
 		}
-		else say (_("\tPackage is not installed\n"));
+		else for (size_t t=0; t<pkg->get_files().size(); ++t) {
+			say ("\t    %s\n", pkg->get_files().at(t).c_str());
+		}
+	}
+	else say (_("\tPackage is not installed\n"));
+}
+
+void showPackageInfoDialog(const PACKAGE *pkg, const string &hasUpdate) {
+	if (!dialogMode) showPackageInfoCLI(pkg, hasUpdate);
+
+	ncInterface.setSubtitle(_("Information about package ") + pkg->get_name());
+	if (dialogMode) {
+		string data;
+		string locationsInfo;
+		string url;
+		string depData;
+		string deltaInfo;
+		string hasABUILD;
+	//	for (unsigned int i=0; i<pkgList.size(); ++i) {
+	//		pkg = pkgList.get_package_ptr(i);
+			mstring taglist;
+			for (unsigned int t=0; t< pkg->get_tags().size(); ++t) {
+				taglist+="  " + pkg->get_tags().at(t)+"\n";
+			}
+			locationsInfo.clear();
+			for (unsigned int t=0; t<pkg->get_locations().size(); t++) {
+				url = pkg->get_locations().at(t).get_full_url();
+			       	if (pkg->get_filename()!=url) url += pkg->get_filename();
+				if (url.find("/./")) url = url.substr(0, url.find("/./")) + url.substr(url.find("/./")+2);
+				locationsInfo += "  " + url + "\n";
+			}
+			deltaInfo.clear();
+			for (unsigned int t=0; t<pkg->deltaSources.size(); t++) {
+				deltaInfo += pkg->deltaSources[t].dup_url + "\n";
+			}
+			depData.clear();
+			for (unsigned int t=0; t<pkg->get_dependencies().size(); t++) {
+				// Sorry for hardcoding search.php here, it will be replaced by cmdline and/or config option later.
+				depData += pkg->get_dependencies().at(t).getDepInfo()+"\n";
+			}
+
+			hasABUILD.clear();
+			if (!pkg->abuild_url.empty()) {
+				hasABUILD = "\nABUILD: " + pkg->abuild_url;
+			}
+
+			data = _("Name: ") + pkg->get_name() \
+				+ (string) _("\nVersion: ") + pkg->get_version() \
+			       	+ (string) _("\nBeta release: ") + pkg->get_betarelease() \
+			       	+ (string) _("\nArch: ") + pkg->get_arch() \
+			       	+ (string) _("\nBuild: ") + pkg->get_build() \
+			       	+ (string) _("\nProvides: ") + pkg->get_provides() \
+			       	+ (string) _("\nConflicts: ") + pkg->get_conflicts() \
+				+ (string) _("\nBranch: ") + pkg->get_repository_tags() \
+				+ (string) _("\nShort description: ") + pkg->get_short_description() \
+				+ (string) _("\nFull description: ") + pkg->get_description() \
+			       	+ (string) _("\nCompressed size: ") + humanizeSize(pkg->get_compressed_size()) \
+			       	+ (string) _("\nInstalled size: ") + humanizeSize(pkg->get_installed_size()) \
+			       	+ (string) _("\nFile name: ") + pkg->get_filename() \
+			       	+ (string) _("\nMD5 checksum: ") + pkg->get_md5() \
+			       	+ (string) _("\nMaintainer: ") + pkg->get_packager() \
+			       	+ (string) " (" + pkg->get_packager_email() + (string)")" \
+			       	+ (string) _("\n\nTags: \n") \
+			       	+ taglist.s_str() \
+				+ (string) _("\nAdded to repository: ") + getTimeString(pkg->add_date) \
+				+ (string) _("\nLocations: \n") + locationsInfo \
+				+ (string) _("\nDeltas: \n") + deltaInfo \
+				+ (string) _("\nDependencies: \n") + depData \
+				+ hasABUILD \
+				+ hasUpdate;
+				;
+
+
+	//	}
+		ncInterface.showMsgBox(data);
+		return;
+	}
+}
+
+
+
+void show_package_info(mpkg *core, string name, string version, string build, bool showFilelist, int id) {
+	PACKAGE_LIST pkgList;
+	SQLRecord sqlSearch;
+	if (id>=0) {
+		sqlSearch.addField("package_id", id);
+	}
+	if (!name.empty()) {
+		sqlSearch.addField("package_name", name);
+	}
+	if (!version.empty()) {
+		sqlSearch.addField("package_version", version);
+	}
+	if (!build.empty()) {
+		sqlSearch.addField("package_build", build);
+	}
+
+	core->get_packagelist(sqlSearch, &pkgList);
+	// Let's change behavior a little: show only one package: installed if any, or maxVersion if not.
+	// We should add some key to show all packages, but... I don't know what to choose :) TODO: do it, later.
+	pkgList.initVersioning();
+	PACKAGE *installedPkg = (PACKAGE *) pkgList.getInstalledOne();
+	PACKAGE *maxVersionPkg = pkgList.getMaxVersion();
+	string hasUpdate;
+	if (installedPkg && maxVersionPkg && installedPkg!=maxVersionPkg) hasUpdate = _("\nUpdate available: ") + maxVersionPkg->get_fullversion() + "\n";
+	PACKAGE *pkg = installedPkg;
+	if (!pkg) pkg=maxVersionPkg;
+	if (!pkg || pkgList.IsEmpty()) {
+		if (!dialogMode) say(_("No such package %s %s %s\n"), name.c_str(), version.c_str(), build.c_str());
+		else ncInterface.showMsgBox(_("No such package\n"));
+		return;
+	}
+	PACKAGE_LIST newList;
+	newList.add(*pkg);
+	pkg = newList.get_package_ptr(0);
+	pkgList.clear();
+	if (showFilelist) core->db->get_full_filelist(&newList);
+	if (verbose) core->db->get_full_config_files_list(&newList);
+
+	// At this point, pkg contains pointer to package to be shown.
+	if (showFilelist) {
+		showPackageFilelist(pkg);
+	}
+	else {
+		if (dialogMode) showPackageInfoDialog(pkg, hasUpdate);
+		else showPackageInfoCLI(pkg, hasUpdate);
 	}
 }
 

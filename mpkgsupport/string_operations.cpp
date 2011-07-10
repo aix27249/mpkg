@@ -429,22 +429,19 @@ const string humanizeSize(double size)
 	if (size >= 1024 && size < 1048576)
 	{
 		new_size = size/1024;
-		tmp=IntToStr((int) (new_size*1000));
-		if (tmp.length()>=4) tmp=tmp.substr(1,2);
-		ret = IntToStr((int) new_size) + "."+ tmp + _(" Kb");
+		ret = IntToStr((int) new_size) + _(" Kb");
 		return ret;
 	}
 	if (size >= (1024*1024) && size < (1024*1024*1024))
 	{
 		new_size = size/(1024*1024);
-		tmp=IntToStr((int) (new_size*1000));
-		if (tmp.length()>=4) tmp=tmp.substr(1,2);
-		ret = IntToStr((int) new_size) + "." +tmp + _(" Mb");
+		ret = IntToStr((int) new_size) + _(" Mb");
 		return ret;
 	}
 	if (size >= (1024*1024*1024))
 	{
 		new_size = size/(1024*1024*1024);
+		// Gigabytes matters, so show it with details
 		tmp=IntToStr((int) (new_size*1000));
 		if (tmp.length()>=4) tmp=tmp.substr(1,2);
 		ret = IntToStr((int) new_size) + "." + tmp + _(" Gb");
