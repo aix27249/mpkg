@@ -11,6 +11,7 @@ PROJECT(MKLIVECD)
 # Examples will be in /usr/doc/mklivecd/examples/
 # Global config: /etc/mklivecd.conf
 # Main wrapper: /usr/sbin/mklivecd
+set (SYSCONF_INSTALL_DIR "/etc" CACHE)
 
 FILE(GLOB scripts "${CMAKE_CURRENT_SOURCE_DIR}/*.sh")
 FILE(GLOB conftemplate "${CMAKE_CURRENT_SOURCE_DIR}/mpkg.xml*")
@@ -45,7 +46,7 @@ INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/live-elements/initrd32.img" DESTINATI
 
 # Configuration file and ISOBUILD example
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/ISOBUILD.example" DESTINATION share/mklivecd)
-INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mklivecd.conf" DESTINATION etc)
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mklivecd.conf" DESTINATION ${SYSCONF_INSTALL_DIR})
 
 # Plugins
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/plugins/remove_extra_locales" DESTINATION share/mklivecd/scripts/plugins)
