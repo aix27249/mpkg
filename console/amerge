@@ -1,4 +1,4 @@
 #!/bin/sh
 for i in $@ ; do
-	no_bt_filename_check=1 mkpkg -si -bt http://api.agilialinux.ru/bt/$i
+	mkpkg -si -bt api:$i
 done
