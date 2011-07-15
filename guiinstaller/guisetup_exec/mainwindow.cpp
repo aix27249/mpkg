@@ -45,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	mpkgErrorHandler.registerErrorHandler(qtErrorHandler);
 	ui->setupUi(this);
 	//setWindowState(Qt::WindowMaximized);
+	ui->skipMD5Button->hide(); // Hide this initially
 	show();
 	//changePhoto();
 	qRegisterMetaType<ErrorDescription> ("ErrorDescription");
@@ -66,7 +67,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(this, SIGNAL(sendErrorResponce(MpkgErrorReturn)), thread, SLOT(receiveErrorResponce(MpkgErrorReturn)));
 	connect(thread, SIGNAL(sendErrorHandler(ErrorDescription, const QString &)), this, SLOT(errorHandler(ErrorDescription, const QString &)));
 			
-
 	// GTFO mounted cd :)
 	system("umount /var/log/mount");
 
