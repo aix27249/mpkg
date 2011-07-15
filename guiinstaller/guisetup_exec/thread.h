@@ -30,6 +30,7 @@ class SetupThread: public QThread, public StatusNotifier {
 	private:
 		MpkgErrorReturn errCode;
 		AgiliaSetup agiliaSetup;
+		bool md5ButtonShown;
 
 
 	signals:

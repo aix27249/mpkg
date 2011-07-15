@@ -25,6 +25,16 @@ void SetupThread::receiveErrorResponce(MpkgErrorReturn ret) {
 void SetupThread::updateData(const ItemState& a) {
 	emit setDetailsText(QString::fromStdString(a.name + ": " + a.currentAction));
 	if (a.totalProgress>=0 && a.totalProgress<=100) emit setProgress(a.totalProgress);
+	if (a.currentAction==_("Checking md5")) { // This piece of code can be named as OMGWTF KOSTYLI, so we need a more elegant solution here.
+		emit showMD5Button(true);
+		md5ButtonShown = true;
+	}
+	else {
+		if (md5ButtonShown) {
+			emit showMD5Button(false);
+			md5ButtonShown = false;
+		}
+	}
 }
 
 void SetupThread::setDetailsTextCall(const string& msg) {
