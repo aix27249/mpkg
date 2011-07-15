@@ -103,7 +103,7 @@ class mpkgDatabase
 		bool hasFileList;
 	public:
 		void createDBCache();
-		bool check_cache(PACKAGE *package, bool clear_wrong=true, bool quiet = true);
+		bool check_cache(PACKAGE *package, bool clear_wrong=true, ItemOrder itemOrder_mark = ITEMORDER_MIDDLE);
 		int commit_actions(); // Commits ALL actions planned in database
 		//int set_available(int package_id, int status);
 		int set_action(int package_id, int status, const string& reason);

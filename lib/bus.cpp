@@ -34,6 +34,7 @@ void ProgressData::callEvent() {
 	a.currentAction=getItemCurrentAction(lastChangedItem);
 	a.progress=10000.0f*(getItemProgress(lastChangedItem)/getItemProgressMaximum(lastChangedItem))/100;
 	a.totalProgress=10000.0f*(getTotalProgress()/getTotalProgressMax())/100;
+	a.itemOrder = getItemOrder(lastChangedItem);
 	int64_t totalMem = 0;
 	for (size_t i=0; i<itemName.size(); ++i) {
 		totalMem += itemName[i].size();
@@ -57,6 +58,7 @@ int ProgressData::addItem(string iName, double maxProgress, int iState)
 	idleTime.push_back(0);
 	itemProgressMaximum.push_back(maxProgress);
 	itemState.push_back(iState);
+	itemOrder.push_back(ITEMORDER_MIDDLE);
 	//callEvent();
 	return itemName.size()-1;
 }
@@ -65,6 +67,7 @@ void ProgressData::clear()
 	sendEvents = false;
 	itemName.resize(0);
 	itemCurrentAction.resize(0);
+	itemOrder.resize(0);
 	itemProgress.resize(0);
 	itemProgressMaximum.resize(0);
 	itemState.resize(0);
@@ -116,9 +119,10 @@ void ProgressData::setItemName(int itemID, string name)
 	//setItemChanged(itemID);
 }
 
-void ProgressData::setItemCurrentAction(int itemID, string action)
+void ProgressData::setItemCurrentAction(int itemID, string action, ItemOrder itemOrder_mark)
 {
-	if (itemCurrentAction.size()>(unsigned int)itemID) itemCurrentAction.at(itemID)=action;
+	if (itemCurrentAction.size()>(size_t)itemID) itemCurrentAction.at(itemID)=action;
+	if (itemOrder.size()>(size_t)itemID) itemOrder.at(itemID)=itemOrder_mark;
 	setItemChanged(itemID);
 }
 
@@ -209,6 +213,12 @@ string ProgressData::getItemCurrentAction(int itemID)
 	if (itemCurrentAction.size()>(unsigned int)itemID) return itemCurrentAction.at(itemID);
 	else return "noSuchItem";
 }
+
+ItemOrder ProgressData::getItemOrder(int itemID) {
+	if (itemOrder.size()>(size_t)itemID) return itemOrder.at(itemID);
+	else return ITEMORDER_MIDDLE;
+}
+
 double ProgressData::getItemProgress(int itemID)
 {
 	if (itemProgress.size()>(unsigned int)itemID) return itemProgress.at(itemID);

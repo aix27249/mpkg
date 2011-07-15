@@ -172,7 +172,7 @@ int mpkgDatabase::emerge_to_db(PACKAGE *package)
 }
 
 
-bool mpkgDatabase::check_cache(PACKAGE *package, bool clear_wrong, bool) {
+bool mpkgDatabase::check_cache(PACKAGE *package, bool clear_wrong, ItemOrder itemOrder_mark) {
 	string fname = SYS_CACHE + "/" + package->get_filename();
 	//if (package->usedSource.find("cdrom://")!=std::string::npos && FileExists(fname)) return true; // WHAT THE FUCK IS THIS??!!
 	string got_md5;
@@ -185,7 +185,7 @@ bool mpkgDatabase::check_cache(PACKAGE *package, bool clear_wrong, bool) {
 		}
 
 		// Checking MD5
-		pData.setItemCurrentAction(package->itemID, _("Checking MD5"));
+		pData.setItemCurrentAction(package->itemID, _("Checking MD5"), itemOrder_mark);
 		if (verbose) printf("Checking MD5 of %s/%s", SYS_CACHE.c_str(), package->get_filename().c_str());
 		got_md5 = get_file_md5(SYS_CACHE + "/" + package->get_filename());
 
@@ -526,6 +526,7 @@ int mpkgDatabase::commit_actions()
 	int transaction_id = startTransaction(install_list, remove_list, getSqlDb());
 	msay(_("Looking for install queue"));
 	vector<bool> needFullDownload(install_list.size());
+	ItemOrder thisItemOrder;
 	if (install_list.size()>0) {
 		// Building download queue
 		msay(_("Looking for package locations"));
@@ -554,9 +555,13 @@ int mpkgDatabase::commit_actions()
 			// Clear broken symlinks
 			//clean_cache_symlinks();
 			msay(_("Checking cache and building download queue: ") + install_list[i].get_name());
+			
+			// Item order mark. No last here.
+			if (i==0) thisItemOrder = ITEMORDER_FIRST;
+			else thisItemOrder = ITEMORDER_MIDDLE;
 	
-	
-			if (skip || !check_cache(install_list.get_package_ptr(i), !enableDownloadResume)) {
+
+			if (skip || !check_cache(install_list.get_package_ptr(i), !enableDownloadResume, thisItemOrder)) {
 				needFullDownload[i]=!tryGetDelta(install_list.get_package_ptr(i));
 			}
 			if (needFullDownload[i]) {
@@ -643,7 +648,11 @@ download_process:
 			}
 			msay(_("Checking md5 of downloaded files: ") + install_list[i].get_name());
 	
-			if (!check_cache(install_list.get_package_ptr(i), false))
+			if (i==install_list.size()-1) thisItemOrder = ITEMORDER_LAST;
+			else if (i==0) thisItemOrder = ITEMORDER_FIRST;
+			else thisItemOrder = ITEMORDER_MIDDLE;
+
+			if (!check_cache(install_list.get_package_ptr(i), false, thisItemOrder))
 			{
 				pData.setItemState(install_list[i].itemID, ITEMSTATE_FAILED);
 	

@@ -16,10 +16,18 @@ using namespace std;
 #define ITEMSTATE_FAILED 3
 #define ITEMSTATE_ABORTED 4
 #define IDLE_MAX 500
+
+typedef enum {
+	ITEMORDER_MIDDLE,
+	ITEMORDER_FIRST,
+	ITEMORDER_LAST
+} ItemOrder;
+
 struct ItemState {
 	string name, currentAction;
 	int progress, totalProgress;
 	int itemState;
+	ItemOrder itemOrder;
 };
 
 
@@ -29,7 +37,7 @@ class ProgressData
 		//static void setProgress(unsigned int itemNum, double progress);
 		//static void setProgressMaximum(unsigned int itemNum, double progress);
 		void setItemName(int itemID, string name);
-		void setItemCurrentAction(int itemID, string action);
+		void setItemCurrentAction(int itemID, string action, ItemOrder itemOrder_mark = ITEMORDER_MIDDLE);
 		void setItemProgress(int itemID, double progress);
 		void increaseItemProgress(int itemID);
 		void setItemProgressMaximum(int itemID, double progress);
@@ -46,6 +54,7 @@ class ProgressData
 
 
 		string getItemName(int itemID);
+		ItemOrder getItemOrder(int itemID);
 		string getItemCurrentAction(int itemID);
 		double getItemProgress(int itemID);
 		double getItemProgressMaximum(int itemID);
@@ -75,6 +84,7 @@ class ProgressData
 		vector<double> itemProgressMaximum;
 		vector<int>itemState;
 		vector<unsigned int >itemChanged;
+		vector<ItemOrder> itemOrder;
 		
 		vector<int> idleTime;
 		void (*eventHandler) (ItemState);
