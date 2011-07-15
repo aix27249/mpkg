@@ -26,8 +26,10 @@ void SetupThread::updateData(const ItemState& a) {
 	emit setDetailsText(QString::fromStdString(a.name + ": " + a.currentAction));
 	if (a.totalProgress>=0 && a.totalProgress<=100) emit setProgress(a.totalProgress);
 	if (a.currentAction==_("Checking md5")) { // This piece of code can be named as OMGWTF KOSTYLI, so we need a more elegant solution here.
-		emit showMD5Button(true);
-		md5ButtonShown = true;
+		if (!md5ButtonShown) {
+			emit showMD5Button(true);
+			md5ButtonShown = true;
+		}
 	}
 	else {
 		if (md5ButtonShown) {
@@ -61,6 +63,7 @@ void SetupThread::skipMD5() {
 
 void SetupThread::run() {
 	progressWidgetPtr = this;
+	md5ButtonShown = false;
 	map<string, string> strSettings;
 	vector<PartConfig> partConfigs;
 	vector<TagPair> users;
