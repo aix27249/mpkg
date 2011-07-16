@@ -1037,6 +1037,8 @@ int CursesInterface::showMenu(string str,vector<MenuItem> menulist,int def_selec
 				
 				break;
 			}
+			case ESCAPE:
+				return -1;
 		}
 
 	}while(key!=ESCAPE);
@@ -1209,6 +1211,8 @@ bool CursesInterface::showText(string Text,string str_ok,string str_cancel)
 				
 				break;
 			}
+			case ESCAPE:
+				return -1;
 		}
 
 	} while(key!=ESCAPE);
@@ -1763,6 +1767,9 @@ int CursesInterface::showExMenu(string text, vector<MenuItem> &menuItems,int def
 				}
 				break;
 			}
+			case ESCAPE:
+				return -1;
+				break;
 			case INSERT:
 			case DELETE:
 				if (key_pressed == NULL) break;

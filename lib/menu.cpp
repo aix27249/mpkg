@@ -355,10 +355,20 @@ void list(mpkg *core, const vector<string>& search, const bool showOnlyAvailable
 	}
 	bool showThis;
 	string id_str;
-	int counter = 0;
 	vector<MenuItem> menuItems;
 	string branch, distro;
 	string taglist, extradata;
+	// Create virtual pkglist
+	PACKAGE_LIST *newPkgList = new PACKAGE_LIST;
+	for (size_t i=0; i<pkglist.size(); ++i) {
+		showThis=true;
+		if (showOnlyAvailable && !pkglist[i].available()) showThis=false;
+		if (showOnlyInstalled && !pkglist[i].installed()) showThis=false;
+		if (onlyQueue && pkglist[i].action()!=ST_NONE) showThis=false;
+		if (showThis) newPkgList->add(pkglist[i]);
+	}
+	pkglist = *newPkgList;
+	delete newPkgList;
 	for (unsigned int i=0; i<pkglist.size(); i++)
 	{
 		if (pkglist[i].get_repository_tags().empty() || pkglist[i].get_repository_tags()=="0") branch.clear();
@@ -366,49 +376,38 @@ void list(mpkg *core, const vector<string>& search, const bool showOnlyAvailable
 		if (pkglist[i].package_distro_version.empty() || pkglist[i].package_distro_version == "0") distro.clear();
 		else distro = "{" + pkglist[i].package_distro_version + "}";
 
-		showThis=true;
-		if (showOnlyAvailable && !pkglist[i].available()) showThis=false;
-		if (showOnlyInstalled && !pkglist[i].installed()) showThis=false;
-		if (showThis)
-		{
-			counter++;
-			if (!dialogMode) {
-				if (pkglist[i].isRemoveBlacklisted()) say("*");
-				else say(" ");
+		if (!dialogMode) {
+			if (pkglist[i].isRemoveBlacklisted()) say("*");
+			else say(" ");
+		}
+		id_str = IntToStr(pkglist[i].get_id());
+		while (id_str.length()<4) id_str = " " + id_str;
+		extradata.clear();
+		if (verbose) {
+			taglist.clear();
+			for (size_t d=0; d<pkglist[i].get_tags().size(); ++d) {
+				if (d) taglist += ", ";
+				else taglist = _(", tags: ");
+				taglist += pkglist[i].get_tags().at(d);
 			}
-			if (!onlyQueue || pkglist[i].action()!=ST_NONE)
-			{
-				id_str = IntToStr(pkglist[i].get_id());
-				while (id_str.length()<4) id_str = " " + id_str;
-				extradata.clear();
-				if (verbose) {
-					taglist.clear();
-					for (size_t d=0; d<pkglist[i].get_tags().size(); ++d) {
-						if (d) taglist += ", ";
-						else taglist = _(", tags: ");
-						taglist += pkglist[i].get_tags().at(d);
-					}
-					extradata = " [" + string(CL_5) + humanizeSize(atoi(pkglist[i].get_installed_size().c_str())) + string(CL_WHITE) + "] ";
-				}
-
-				if (!dialogMode) {
-					say("[%s] [ %s ]%s\t", id_str.c_str(), pkglist[i].get_vstatus(true).c_str(), extradata.c_str());
-					say("%s-%s-%s-%s\t(%s) %s%s%s%s%s\n", \
-						pkglist[i].get_name().c_str(), \
-						pkglist[i].get_version().c_str(), \
-						pkglist[i].get_arch().c_str(), \
-						pkglist[i].get_build().c_str(), \
-						pkglist[i].get_short_description().c_str(), \
-						CL_BLUE, branch.c_str(), distro.c_str(), CL_WHITE, taglist.c_str());
-					
-				}
-				else {
-					menuItems.push_back(MenuItem(IntToStr(pkglist[i].get_id()), string(pkglist[i].get_name() + " " + pkglist[i].get_fullversion() + " (" + pkglist[i].get_description() + ") " + branch + distro), pkglist[i].get_description(), pkglist[i].installed()));
-				}
-			}
+			extradata = " [" + string(CL_5) + humanizeSize(atoi(pkglist[i].get_installed_size().c_str())) + string(CL_WHITE) + "] ";
+		}
+		if (!dialogMode) {
+			say("[%s] [ %s ]%s\t", id_str.c_str(), pkglist[i].get_vstatus(true).c_str(), extradata.c_str());
+			say("%s-%s-%s-%s\t(%s) %s%s%s%s%s\n", \
+				pkglist[i].get_name().c_str(), \
+				pkglist[i].get_version().c_str(), \
+				pkglist[i].get_arch().c_str(), \
+				pkglist[i].get_build().c_str(), \
+				pkglist[i].get_short_description().c_str(), \
+				CL_BLUE, branch.c_str(), distro.c_str(), CL_WHITE, taglist.c_str());
+			
+		}
+		else {
+			menuItems.push_back(MenuItem(IntToStr(pkglist[i].get_id()), string(pkglist[i].get_name() + " " + pkglist[i].get_fullversion() + " (" + pkglist[i].get_description() + ") " + branch + distro), pkglist[i].get_description(), pkglist[i].installed()));
 		}
 	}
-	if (!dialogMode) say(_("Total: %d packages\n"), counter);
+	if (!dialogMode) say(_("Total: %d packages\n"), pkglist.size());
 	else {
 		int ret=0;
 		while (ret!=-1) {
@@ -730,7 +729,7 @@ void showPackageFilelist(PACKAGE *pkg) {
 void showPackageInfoDialog(const PACKAGE *pkg, const string &hasUpdate) {
 	if (!dialogMode) showPackageInfoCLI(pkg, hasUpdate);
 
-	ncInterface.setSubtitle(_("Information about package ") + pkg->get_name());
+	ncInterface.setSubtitle(_("Information about package ") + string(" ") + pkg->get_name() + " (ID: " + IntToStr(pkg->get_id()) + ")");
 	if (dialogMode) {
 		string data;
 		string locationsInfo;
