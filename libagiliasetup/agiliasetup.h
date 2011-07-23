@@ -119,6 +119,9 @@ class AgiliaSetup {
 		string sysconf_lang;
 		map<string, string> settings;
 
+		bool enableService(const string& service, const string& runlevel = "default", bool force_create_runlevel = false);
+		void updateOpenrcDeps();
+
 
 		
 

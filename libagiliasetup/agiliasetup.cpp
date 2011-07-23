@@ -25,21 +25,39 @@ void AgiliaSetup::setDefaultXDM() {
 
 }
 
-void AgiliaSetup::setDefaultRunlevels() {
-	system("chroot /tmp/new_sysroot rc-update add mdadm boot 2>/dev/null >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add lvm boot 2>/dev/null >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add sysfs sysinit 2>/dev/null >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add udev sysinit 2>/dev/null >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add consolefont default 2>/dev/null >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add hald default 2>/dev/null >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add sysklogd default 2>/dev/null >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add dbus default 2>/dev/null >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add sshd default 2>/dev/null >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add alsasound default 2>/dev/null >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add acpid default 2>/dev/null >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add cupsd default 2>/dev/null >/dev/null");
-	system("chroot /tmp/new_sysroot rc-update add cron default 2>/dev/null >/dev/null");
 
+bool AgiliaSetup::enableService(const string& service, const string& runlevel, bool force_create_runlevel) {
+	const string root = "/tmp/new_sysroot";
+	if (!FileExists(root + "/etc/init.d/" + service)) return false;
+	if (!FileExists(root + "/etc/runlevels/" + runlevel)) {
+		if (!force_create_runlevel) return false;
+		else system("mkdir " + root + "/etc/runlevels/" + runlevel);
+	}
+	int ret = system("chroot " + root + " rc-update add " + service + " " + runlevel + " 2>/dev/null >/dev/null");
+	if (ret==0) return true;
+	return false;
+}
+
+void AgiliaSetup::setDefaultRunlevels() {
+	enableService("mdadm", "boot");
+	enableService("lvm, boot");
+	enableService("sysfs", "sysinit");
+	enableService("udev", "sysinit");
+	enableService("consolefont");
+	enableService("sysklogd");
+	enableService("dbus");
+	enableService("sshd");
+	enableService("alsasound");
+	enableService("acpid");
+	enableService("cupsd");
+	enableService("cron");
+	enableService("bluetooth");
+}
+
+void AgiliaSetup::updateOpenrcDeps() {
+	// Hack timestamps on /etc/conf.d
+	system("for i in /tmp/new_sysroot/etc/conf.d/* ; do touch -d 20010101 -m 20010101 $i ; done");
+	system("chroot /tmp/new_sysroot rc-update -u");
 }
 
 
@@ -1064,6 +1082,7 @@ bool AgiliaSetup::postInstallActions(const string& language, const string& setup
 
 	setDefaultRunlevels();
 	setDefaultXDM();
+	updateOpenrcDeps();
 
 	// Link /dev/cdrom and /dev/mouse
 	string cdlist = get_tmp_file();
