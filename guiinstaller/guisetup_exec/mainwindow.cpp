@@ -132,7 +132,8 @@ void MainWindow::reboot() {
 		delete thread;
 		thread = NULL;
 	}
-	system("nohup /usr/bin/reboot_after_10_seconds.sh &");
+	string this_pid = IntToStr((unsigned int) getpid());
+	system("nohup /usr/bin/reboot_after_10_seconds.sh " + this_pid + " &");
 	qApp->quit();
 }
 
