@@ -307,17 +307,18 @@ int mpkgDatabase::commit_actions()
 		delta_max_size += guessDeltaSize(install_list[i]);
 	}
 	long double freespace = get_disk_freespace(SYS_ROOT);
+	long double required_space = (ins_size - rem_size)+(ins_size - rem_size)*0.2;
 	
-	if (freespace < (ins_size - rem_size))
+	if (freespace < required_space)
 	{
 		if (dialogMode)
 		{
-			if (!ncInterface.showYesNo(_("It seems to be that disk free space is not enough to install. Required: ") + humanizeSize(ins_size - rem_size) + _(", available: ") + humanizeSize(freespace) + _("\nNote that if you splitted your filesystem tree (e.g. separate /usr, and so on), this information may be incorrect and you can safely ignore this warning.\nContinue anyway?")))
+			if (!ncInterface.showYesNo(_("It seems to be that disk free space is not enough to install. Required: ") + humanizeSize(required_space) + _(", available: ") + humanizeSize(freespace) + _("\nNote that if you splitted your filesystem tree (e.g. separate /usr, and so on), this information may be incorrect and you can safely ignore this warning.\nContinue anyway?")))
 			{
 				return MPKGERROR_COMMITERROR;
 			}
 		}
-		else mWarning(_("It seems to be that disk free space is not enough to install. Required: ") + humanizeSize(ins_size - rem_size) + _(", available: ") + humanizeSize(freespace));
+		else mWarning(_("It seems to be that disk free space is not enough to install. Required: ") + humanizeSize(required_space) + _(", available: ") + humanizeSize(freespace));
 	}
 	string branch;
 	string distro;
