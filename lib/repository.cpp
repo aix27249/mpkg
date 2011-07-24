@@ -678,7 +678,7 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 		       cm = "xz -df " + index_filename + ".xz > /dev/null 2>/dev/null";
 		       mpkgDownloadOk = true;
 	       	}
-		else if (CommonGetFile(server_url + "packages.xml.gz", index_filename+".gz")==DOWNLOAD_OK) {
+		else if (_cmdOptions["cdrom_permanent_fail"]!="yes" && CommonGetFile(server_url + "packages.xml.gz", index_filename+".gz")==DOWNLOAD_OK) {
 			mpkgDownloadOk = true;
 		}
 		if (mpkgDownloadOk) {
@@ -693,10 +693,10 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 	if (_abortActions) return MPKGERROR_ABORTED;
 
 	if (type == TYPE_SLACK || type == TYPE_AUTO) {
-		if (CommonGetFile(server_url + "PACKAGES.TXT", index_filename)==DOWNLOAD_OK) {
+		if (_cmdOptions["cdrom_permanent_fail"]!="yes" && CommonGetFile(server_url + "PACKAGES.TXT", index_filename)==DOWNLOAD_OK) {
 			if (ReadFile(index_filename).find("PACKAGE NAME:  ")!=std::string::npos) {
 				currentStatus = _("Detected legacy Slackware repository");
-				if (CommonGetFile(server_url + "CHECKSUMS.md5", md5sums_filename) == DOWNLOAD_OK) {
+				if (_cmdOptions["cdrom_permanent_fail"]!="yes" && CommonGetFile(server_url + "CHECKSUMS.md5", md5sums_filename) == DOWNLOAD_OK) {
 					type = TYPE_SLACK;
 				}
 				else {

@@ -279,7 +279,10 @@ try_mount:
 			if (dialogMode) 
 			{
 				if (ncInterface.showYesNo(_("Please insert disk with label ") + cdromVolName + _(" into drive ") + CDROM_DEVICE)) goto try_mount;
-				else return -1;
+				else {
+					_cmdOptions["cdrom_permanent_fail"]="yes";
+					return -1;
+				}
 			}
 			else
 			{
