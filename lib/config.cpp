@@ -106,7 +106,7 @@ string DepErrorTable::print(int num) {
 void initDirectoryStructure() {
 	if (getuid()) return;
 	if (!FileExists(SYS_ROOT)) system("mkdir -p " + SYS_ROOT);
-	if (!FileExists(SYS_CACHE)) system("mkdir -p " + SYS_CACHE);
+	if (!FileExists(SYS_CACHE)) system("mkdir -p " + SYS_CACHE + " 2>/dev/null");
 	if (!FileExists(SCRIPTS_DIR)) system("mkdir -p " + SCRIPTS_DIR);
 }
 
