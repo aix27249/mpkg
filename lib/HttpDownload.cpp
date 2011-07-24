@@ -616,7 +616,7 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
     						break;
 					}
 					else {
-						mError(_("\nDownload error: ") + (string) curl_easy_strerror(result));
+						if (_cmdOptions["hide_download_errors"]!="true") mError(_("Downloading ") + item->name + _(" is failed: ") + (string) curl_easy_strerror(result));
 						if (_abortActions)	{
 #ifdef DL_CLEANUP
 							curl_easy_cleanup(ch);
@@ -625,7 +625,6 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 						}
 						if (!setupMode && downloadProgressData->size()>0) downloadProgressData->setItemState(item->itemID, ITEMSTATE_FAILED);
 
-						mError(_("Downloading ") + item->name + _(" is failed: error while downloading"));
     			    			is_have_error = true;
     						item->status = DL_STATUS_FAILED;
     					}

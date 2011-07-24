@@ -281,15 +281,10 @@ void actUpgrade(mpkg &core, int action) {
 
 }
 void actUpdate(mpkg &core) {
+	if (dialogMode) ncInterface.showInfoBox(_("Updating data from repositories..."));
 	core.update_repository_data();
 	delete_tmp_files();
 	if (usedCdromMount) system("umount " + CDROM_MOUNTPOINT + " 2>/dev/null >/dev/null");
-	if (htmlMode) {
-		newHtmlPage();
-		printHtml(_("Repository data update complete"));
-		printHtmlRedirect();
-	}
-
 }
 
 void actSearch(mpkg &core) {

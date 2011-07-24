@@ -710,7 +710,7 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 
 	if (type != TYPE_MPKG && type != TYPE_SLACK) {
 		currentStatus = _("Error updating data from ") +server_url+_(": download error or unsupported type");
-		mError(_("Error downloading package index: download error, or unsupported repository type"));
+		mError(server_url + string(": ") + _("Error downloading package index: download error, or unsupported repository type"));
 		return -1;
 	}
 

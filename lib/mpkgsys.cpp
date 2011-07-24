@@ -89,16 +89,18 @@ int mpkgSys::build_package(string out_directory, bool source)
     	return 0;
 }
 int rsyncDescriptions(const string& path, const string& base_path) {
-	cout << _("Retrieving descriptions from ") << path << "..." << endl;
-	return system("rsync -arvh " + path + " " + base_path + "/ >/dev/null");
+	if (!dialogMode) cout << _("Retrieving descriptions from ") << path << "..." << endl;
+	else ncInterface.showInfoBox(_("Retrieving descriptions from ") + path + "...");
+	return system("rsync -arvh " + path + " " + base_path + "/ >/dev/null 2>/dev/null");
 }
 
 int wgetDescriptions(const string& path, const string& base_path) {
-	cout << _("Retrieving descriptions from ") << path << "..." << endl;
+	if (!dialogMode) cout << _("Retrieving descriptions from ") << path << "..." << endl;
+	else ncInterface.showInfoBox(_("Retrieving descriptions from ") + path + "...");
 	string filename = getFilename(path);
-	int ret = system("wget " + path + " -O " + base_path + "/" + filename + " >/dev/null");
+	int ret = system("wget " + path + " -O " + base_path + "/" + filename + " >/dev/null 2>/dev/null");
 	if (ret != 0) return ret;
-	ret = system("tar xf " + base_path + "/" + filename + " -C " + base_path);
+	ret = system("tar xf " + base_path + "/" + filename + " -C " + base_path + " >/dev/null 2>/dev/null");
 	unlink(string(base_path + "/" + filename).c_str());
 	return ret;
 }
@@ -109,7 +111,7 @@ int mpkgSys::updatePackageDescriptions(const vector< pair<string, string> > &des
 
 	// First of all: create directory. The path is: SYS_MPKG_VAR_DIRECTORY + "/descriptions";
 	const string base_path = SYS_MPKG_VAR_DIRECTORY + "/descriptions";
-	system("mkdir -p \"" + base_path + "\"");
+	system("mkdir -p \"" + base_path + "\" 2>/dev/null >/dev/null");
 
 	// Now download indexes. There are two methods: rsync and not rsync :) All these are configured via system config, and default is "rsync"
 	// Also, user can choose language. Default is "all"
@@ -172,17 +174,13 @@ int mpkgSys::update_repository_data(mpkgDatabase *db)//, DependencyTracker *DepT
 	// А есть ли у нас вообще репозитории? Может нам и ловить-то нечего?...
 	// Впрочем, надо все равно пойти на принцип и пометить все пакеты как недоступные. Ибо это действительно так.
 	// Поэтому - проверка устранена.
-	if (!dialogMode && !htmlMode) {
+	if (!dialogMode) {
 #ifdef X86_64
 		say(_("Updating package data from %ld repository(s)...\n"), REPOSITORY_LIST.size());
 #else
 		say(_("Updating package data from %d repository(s)...\n"), REPOSITORY_LIST.size());
 #endif
 
-	}
-	if (htmlMode) {
-		newHtmlPage();
-		printHtml("Updating package data from " + IntToStr(REPOSITORY_LIST.size()) + " repository(s)...\n");
 	}
 	int total_packages=0; // Счетчик полученных пакетов.
 
@@ -197,7 +195,9 @@ int mpkgSys::update_repository_data(mpkgDatabase *db)//, DependencyTracker *DepT
 		delete tmpPackages;
 		tmpPackages = new PACKAGE_LIST;					//Очищаем временный список.
 		pData.setItemChanged(i);
+		_cmdOptions["hide_download_errors"] = "true";
 		rep->get_index(REPOSITORY_LIST[i], tmpPackages);	// Получаем список пакетов.
+		_cmdOptions["hide_download_errors"] = "false";
 		pData.increaseItemProgress(i);
 		pData.setItemState(i, ITEMSTATE_FINISHED);
 		cnt++;
