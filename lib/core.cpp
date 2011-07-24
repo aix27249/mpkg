@@ -354,7 +354,7 @@ int mpkgDatabase::backupFiles(vector <string *> fileNames, vector<int> overwritt
 			src = SYS_ROOT + *fileNamesNew[f];
 			dest = SYS_BACKUP + "/" + p->get_name() + "_" + p->get_md5() + "/" + *fileNamesNew[f];
 			if (rename(src.c_str(), dest.c_str())) {
-				if (errno==EXDEV && !system("mv " + src + " " + dest + "/ 2>/dev/null > /dev/null")) {
+				if (errno==EXDEV && !system("mv '" + src + "' '" + dest + "'/ 2>/dev/null > /dev/null")) {
 					hasErrors = true;
 				}
 			}
