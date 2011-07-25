@@ -44,7 +44,7 @@
        <number>0</number>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="welcomePage">
        <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -1102,7 +1102,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QRadioButton" name="nvidia96RadioButton">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="text">
            <string>96.xx: GeForce 2 Ti (NOT MX), 3, 4 Ti, 4 MX; Quadro 2 MXR, 2 Go, 4 Go, NVS</string>
