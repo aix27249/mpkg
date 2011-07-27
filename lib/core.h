@@ -79,6 +79,7 @@ class SQLTable
 		string * getValuePtr(unsigned int num, const int& field_index);
 		int getFieldIndex(const string& fieldname) const; // returns the field index
 		SQLRecord* getRecord(unsigned int num);
+		const SQLRecord& operator [] (size_t num) const;
 
 		void addRecord(const SQLRecord& record);
 		SQLTable();

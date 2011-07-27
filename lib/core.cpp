@@ -130,10 +130,14 @@ int mpkgDatabase::check_file_conflicts_new(const PACKAGE& package)
 	sqlFields.addField("packages_package_id");
 	sqlFields.addField("file_name");
 	if (package.get_files().size()==0) return 0; // If a package has no files, it cannot conflict =)
+	// To check: sqlSearch should not be greater than 999 (SQLITE_MAX_VARIABLE_NUMBER).
 	for (unsigned int i=0;i<package.get_files().size(); ++i) {
 		if (package.get_files().at(i).at(package.get_files().at(i).length()-1)!='/') {
 			sqlSearch.addField("file_name", package.get_files().at(i));
 		}
+	}
+	if (sqlSearch.size()>900) {
+		mWarning("sqlSearch in " + string(__func__) + " exceeds size limits");
 	}
 	db.get_sql_vtable(sqlTable, sqlFields, "files", sqlSearch);
 	int fPackages_package_id = sqlTable.getFieldIndex("packages_package_id");
@@ -859,9 +863,11 @@ void mpkgDatabase::get_full_filelist(PACKAGE_LIST *pkgList)
 	SQLRecord sqlFields;
 	sqlFields.addField("file_name");
 	sqlFields.addField("packages_package_id");
-	sqlSearch.setSearchMode(SEARCH_IN);
-	for (size_t i=0; i<pkgList->size(); ++i) {
-		sqlSearch.addField("packages_package_id", pkgList->at(i).get_id());
+	if (pkgList->size()<900) {
+		sqlSearch.setSearchMode(SEARCH_IN);
+		for (size_t i=0; i<pkgList->size(); ++i) {
+			sqlSearch.addField("packages_package_id", pkgList->at(i).get_id());
+		}
 	}
 
 	// Create pkg-id map
@@ -955,9 +961,11 @@ void mpkgDatabase::get_full_dependencylist(PACKAGE_LIST *pkgList) //TODO: incomp
 	SQLRecord search;
 	SQLTable deplist;
 	
-	search.setSearchMode(SEARCH_IN);
-	for (size_t i=0; i<pkgList->size(); ++i) {
-		search.addField("packages_package_id", pkgList->at(i).get_id());
+	if (pkgList->size()<900) {
+		search.setSearchMode(SEARCH_IN);
+		for (size_t i=0; i<pkgList->size(); ++i) {
+			search.addField("packages_package_id", pkgList->at(i).get_id());
+		}
 	}
 
 	db.get_sql_vtable(deplist, fields, "dependencies", search); // Emerging the list of all existing dependencies
@@ -1012,9 +1020,11 @@ void mpkgDatabase::get_full_taglist(PACKAGE_LIST *pkgList)
 	fields.addField("packages_package_id");
 	fields.addField("tags_tag_id");
 
-	search.setSearchMode(SEARCH_IN);
-	for (size_t i=0; i<pkgList->size(); ++i) {
-		search.addField("packages_package_id", pkgList->at(i).get_id());
+	if (pkgList->size()<900) {
+		search.setSearchMode(SEARCH_IN);
+		for (size_t i=0; i<pkgList->size(); ++i) {
+			search.addField("packages_package_id", pkgList->at(i).get_id());
+		}
 	}
 
 	db.get_sql_vtable(links, fields, "tags_links", search);
@@ -1147,9 +1157,11 @@ void mpkgDatabase::get_full_locationlist(PACKAGE_LIST *pkgList)
 	sqlFields.addField("server_url");
 	sqlFields.addField("packages_package_id");
 
-	sqlSearch.setSearchMode(SEARCH_IN);
-	for (size_t i=0; i<pkgList->size(); ++i) {
-		sqlSearch.addField("packages_package_id", pkgList->at(i).get_id());
+	if (pkgList->size()<900) {
+		sqlSearch.setSearchMode(SEARCH_IN);
+		for (size_t i=0; i<pkgList->size(); ++i) {
+			sqlSearch.addField("packages_package_id", pkgList->at(i).get_id());
+		}
 	}
 
 	db.get_sql_vtable(*sqlTable, sqlFields, "locations", sqlSearch);
@@ -1610,6 +1622,9 @@ void SQLTable::addRecord(const SQLRecord& record) {
 }
 
 
+const SQLRecord& SQLTable::operator [] (size_t num) const {
+	return table[num];
+}
 SQLTable::SQLTable(){}
 SQLTable::~SQLTable(){}
 

@@ -170,6 +170,8 @@ void StringMap::setValue(const string& keyName, const string& keyValue) {
 
 void PrepareSql(string& str)
 {
+	return;
+	/*
 	if (str.empty())
 	{
 		str="0";
@@ -184,7 +186,7 @@ void PrepareSql(string& str)
 		if (last_pos!=std::string::npos) str.insert(last_pos+offset, "\'");
 		else return;
 		offset += last_pos + 2;
-	}
+	}*/
 }
 
 const string getAbsolutePath(const string& directory)

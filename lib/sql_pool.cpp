@@ -437,7 +437,127 @@ long long int SQLProxy::getLastID()
 	if (sqliteDB==NULL) sqliteDB = new SQLiteDB;
 	return sqliteDB->getLastID();
 }
-int SQLiteDB::get_sql_vtable(SQLTable &output, const SQLRecord& fields, const string &table_name, const SQLRecord& search)
+
+int SQLiteDB::get_sql_vtable(SQLTable &output, const SQLRecord& fields, const string &table_name, const SQLRecord& search) {
+	if (search.size()>900) {
+		mWarning("WARNING: SEARCH IN " + table_name + " IS TOO BIG: " + IntToStr(search.size()));
+	}
+	//printf("data received, building query\n");
+	string sql_query;
+	string sql_action;
+	string sql_fields;
+	string sql_from;
+	string sql_where;
+
+	// Do what?
+	sql_action="SELECT";
+	vector<string> fieldList;
+	SQLRecord templateRow;
+	if (fields.empty()) {
+		fieldList = getFieldNames(table_name);
+		for (size_t i=0; i<fieldList.size(); ++i) {
+			templateRow.addField(fieldList[i]);
+		}
+	}
+	else {
+		for (size_t i=0; i<fields.size(); ++i) {
+			fieldList.push_back(fields.getFieldName(i));
+		}
+		templateRow = fields;
+	}
+
+	for (size_t i=0; i<fieldList.size(); ++i) {
+		if (i<fieldList.size()-1) sql_fields = sql_fields + fieldList[i] + ",";
+		else sql_fields = sql_fields + fieldList[i];
+	}
+
+	sql_from = "FROM " + table_name;
+	if (!search.empty()) {
+		if (search.getEqMode()!=EQ_EQUAL && search.getSearchMode()==SEARCH_IN) {
+			mWarning("SEARCH_IN is not supported for like statements, result may be not as you expected");
+		}
+		sql_where="WHERE ";
+		if (search.getSearchMode()==SEARCH_IN) {
+			sql_where = sql_where + search.getFieldName(0) + " IN (";
+			//Building IN statements
+			for (size_t i=0; i<search.size(); ++i) {
+				if (i<search.size()-1) sql_where = sql_where + "?,";
+				else sql_where = sql_where + "?)";
+			}
+		}
+		else { // LIKE mode
+			for (size_t i=0; i<search.size(); ++i) {
+				switch(search.getEqMode()) {
+					case EQ_EQUAL:
+						sql_where = sql_where + search.getFieldName(i) + "=?";
+						break;
+					case EQ_LIKE:
+						sql_where = sql_where + search.getFieldName(i) + " LIKE '%' || ? || '%'";
+						break;
+					case EQ_CUSTOMLIKE:
+						sql_where = sql_where + search.getFieldName(i) + " LIKE ?";
+						break;
+				}
+
+				if (i<search.size()-1) {
+					switch(search.getSearchMode()) {
+						case SEARCH_AND: 
+							sql_where = sql_where + " AND ";
+							break;
+						case SEARCH_OR: 
+							sql_where = sql_where + " OR ";
+							break;
+					}
+				}
+			}
+		}
+	}
+	string order, group;
+	// Note here: leading space IS REQUIRED.
+	if (table_name == "packages") order = " ORDER BY package_name";
+	if (!search.orderBy.empty()) order = " ORDER BY " + search.orderBy;
+	if (!search.groupBy.empty()) group = " GROUP BY " + search.groupBy;
+	sql_query=sql_action + " " + sql_fields + " " + sql_from + " " + sql_where + group + order + ";";
+	
+	// Now, query is complete, bind values
+	sqlite3_stmt *stmt;
+	int p_ret = sqlite3_prepare_v2(db, sql_query.c_str(), -1, &stmt, NULL);
+	if (p_ret!=SQLITE_OK) {
+		printf("Prepare fails, ret: %d\n", p_ret);
+		printf("query:\n%s\n", sql_query.c_str());
+		return p_ret;
+	}
+
+	for (size_t i=0; i<search.size(); ++i) {
+		sqlite3_bind_text(stmt, i+1, search.getValueI(i).c_str(), -1, SQLITE_STATIC); // NOTE: index in sqlite3_bind_* are counted from 1, not 0! It made me cry when I tried to get this work, btw...
+	}
+
+	// Exec!
+	output.clear(); // Ensure that output is clean and empty
+	SQLRecord row; 	// One row of data
+	int sql_ret;
+	const char *str;
+	do {
+		sql_ret = sqlite3_step(stmt);
+		if (sql_ret!=SQLITE_ROW) {
+			break;
+		}
+		row = templateRow;
+		for (unsigned int i=0; i<(unsigned int) fieldList.size(); ++i) {
+			str = (const char *) sqlite3_value_text(sqlite3_column_value(stmt, i));
+			if (str) row.setValue(i, (const char *) sqlite3_column_text(stmt, i));
+		}
+		output.addRecord(row);
+	}
+	while (sql_ret==SQLITE_ROW);
+
+	sqlite3_finalize(stmt);
+	if (sql_ret==SQLITE_DONE) return SQLITE_OK;
+	else return sql_ret;
+}
+
+
+/*int SQLiteDB::get_sql_vtable_old(SQLTable &output, const SQLRecord& fields, const string &table_name, const SQLRecord& search)
 {
 	//printf("data received, building query\n");
 	string sql_query;
@@ -565,7 +685,7 @@ int SQLiteDB::get_sql_vtable(SQLTable &output, const SQLRecord& fields, const st
 		return 0;
 	}
 	else return sql_ret;
-}
+}*/
 
 int SQLiteDB::getLastError()
 {
@@ -735,7 +855,7 @@ const vector<string> SQLiteDB::getFieldNames(const string& table_name) const {
 #endif
 	return fieldNames;
 }
-
+/*
 int SQLiteDB::sql_insert(const string& table_name, const SQLRecord& values)
 {
 	vector<mstring> sqlMatrix;
@@ -762,8 +882,51 @@ int SQLiteDB::sql_insert(const string& table_name, const SQLRecord& values)
 	sql_query += ");";
 	return sql_exec(sql_query.str);
 }
+*/
+int SQLiteDB::sql_insert(const string& table_name, const SQLRecord& values) {
+	string query_prepare = "INSERT INTO " + table_name + " VALUES(NULL,";
+	vector<string> fieldNames=getFieldNames(table_name);
+	// Note: algorithm requires that fieldNames.size()>=2
+	for (size_t i=1; i<fieldNames.size(); ++i) {
+		if (i<fieldNames.size()-1) query_prepare = query_prepare + "?,";
+		else query_prepare = query_prepare + "?);";
+	}
+	sqlite3_stmt *stmt;
+	int p_ret = sqlite3_prepare_v2(db, query_prepare.c_str(), -1, &stmt, NULL);
+	if (p_ret!=SQLITE_OK) {
+		printf("INSERT prepare fails, ret: %d\n", p_ret);
+		printf("query: %s\n", query_prepare.c_str());
+		return p_ret;
+	}
+	for (size_t i=1; i<fieldNames.size(); ++i) {
+		sqlite3_bind_text(stmt, i, values.getValue(fieldNames[i]).c_str(), -1, SQLITE_STATIC); // NOTE: in sqlite3_bind_* indexes counts from 1, not from 0.
+		//printf("BIND: %d, %s\n", i, values.getValue(fieldNames[i]).c_str());
+	}
+	int ret = sqlite3_step(stmt);
+	if (ret==SQLITE_DONE) ret = SQLITE_OK;
+	else {
+		printf("FAILED TO INSERT: %d\n", ret);
+		abort();
+	}
+	sqlite3_finalize(stmt);
+	return ret;
+}
 
-int SQLiteDB::sql_insert(const string& table_name, const SQLTable& values)
+// Table-based wrapper on sql_insert
+int SQLiteDB::sql_insert(const string& table_name, const SQLTable& values) {
+	if (values.empty()) return 0;
+	int ret;
+	for (size_t i=0; i<values.getRecordCount(); ++i) {
+		ret = sql_insert(table_name, values[i]);
+		if (ret!=SQLITE_OK) {
+			mError("SQLite error: insert returned " + IntToStr(ret));
+			return ret;
+		}
+	}
+	return SQLITE_OK;
+}
+
+/*int SQLiteDB::sql_insert(const string& table_name, const SQLTable& values)
 {
 	if (values.empty()) return 0;
 	vector<string> fieldNames=getFieldNames(table_name);
@@ -793,9 +956,55 @@ int SQLiteDB::sql_insert(const string& table_name, const SQLTable& values)
 	}
 	sqlMatrix.clear();
 	return sql_exec(sql_query.str);
+}*/
+
+int SQLiteDB::sql_update(const string& table_name, const SQLRecord& fields, const SQLRecord& search) {
+	if (fields.size() + search.size()>900) {
+		mWarning("Too many fields in sql_update to " + table_name + ": " + IntToStr(fields.size() + search.size()));
+	}
+	string sql_query="UPDATE " + table_name + " SET ";
+	for (size_t i=0; i<fields.size(); ++i) {
+		if (i<fields.size()-1) sql_query = sql_query + fields.getFieldName(i)+"=?,";
+		else sql_query = sql_query + fields.getFieldName(i)+"=?";
+	}
+	if (fields.empty()) {
+		mDebug("Fields are empty, cannot update SQL data");
+		return -1;
+	}
+	if (!search.empty()) {
+		if (search.getSearchMode()==SEARCH_IN) {
+			mError("SEARCH_IN is not supported in UPDATE!");
+			return -1;
+		}
+		sql_query+=" WHERE ";
+		for (size_t i=0; i<search.size(); i++) {
+			sql_query+=search.getFieldName(i)+"=?";
+		       	if (i!=search.size()-1 && search.getSearchMode()==SEARCH_AND) sql_query+=" AND ";
+			if (i!=search.size()-1 && search.getSearchMode()==SEARCH_OR) sql_query+=" OR ";
+		}
+	}
+	sql_query+=";";
+	sqlite3_stmt *stmt;
+	
+	int p_ret = sqlite3_prepare_v2(db, sql_query.c_str(), -1, &stmt, NULL);
+	if (p_ret!=SQLITE_OK) {
+		printf("Prepare fails, ret: %d\n", p_ret);
+		printf("query:\n%s\n", sql_query.c_str());
+		return p_ret;
+	}
+	for (size_t i=0; i<fields.size(); ++i) {
+		sqlite3_bind_text(stmt, i+1, fields.getValueI(i).c_str(), -1, SQLITE_STATIC);
+	}
+
+	for (size_t i=0; i<search.size(); ++i) {
+		sqlite3_bind_text(stmt, fields.size()+i+1, search.getValueI(i).c_str(), -1, SQLITE_STATIC); // NOTE: index in sqlite3_bind_* are counted from 1, not 0! It made me cry when I tried to get this work, btw...
+	}
+	int ret = sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
+	if (ret==SQLITE_DONE) return SQLITE_OK;
+	return ret;
 }
-
-
+/*
 int SQLiteDB::sql_update(const string& table_name, const SQLRecord& fields, const SQLRecord& search)
 {
 	string sql_query="update "+table_name+" set ";
@@ -823,7 +1032,51 @@ int SQLiteDB::sql_update(const string& table_name, const SQLRecord& fields, cons
 	if (sql_query.length()>100000) mWarning("\nSQL query is too long, recommended to update code to matrix usage to prevent performance drop\n");
 	return sql_exec(sql_query);
 }
+*/
 
+int SQLiteDB::sql_delete(const string& table_name, const SQLRecord& search) {
+	string sql_query = "DELETE FROM "+table_name;
+	if (!search.empty()) {
+		sql_query = sql_query + " WHERE ";
+		if (search.getSearchMode()==SEARCH_IN) {
+			sql_query += search.getFieldName(0) + " IN (";
+		}
+		for (size_t i=0; i<search.size(); ++i) {
+			switch(search.getSearchMode()) {
+				case SEARCH_AND:
+					sql_query = sql_query + search.getFieldName(i) + "=?";
+		       			if (i<search.size()-1) sql_query = sql_query + " AND ";
+					break;
+				case SEARCH_OR:
+					sql_query = sql_query + search.getFieldName(i) + "=?";
+					if (i<search.size()-1) sql_query = sql_query + " OR ";
+					break;
+				case SEARCH_IN:
+					if (i<search.size()-1) sql_query = sql_query + "?,";
+					else sql_query = sql_query + "?)";
+					break;
+			}
+		}
+	}
+	sql_query = sql_query + ";";
+	sqlite3_stmt *stmt;
+	
+	int p_ret = sqlite3_prepare_v2(db, sql_query.c_str(), -1, &stmt, NULL);
+	if (p_ret!=SQLITE_OK) {
+		printf("Prepare fails, ret: %d\n", p_ret);
+		printf("query:\n%s\n", sql_query.c_str());
+		return p_ret;
+	}
+	for (size_t i=0; i<search.size(); ++i) {
+		sqlite3_bind_text(stmt, i+1, search.getValueI(i).c_str(), -1, SQLITE_STATIC); // NOTE: index in sqlite3_bind_* are counted from 1, not 0! It made me cry when I tried to get this work, btw...
+	}
+	int ret = sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
+	if (ret==SQLITE_DONE) return SQLITE_OK;
+	return ret;
+}
+
+/*
 int SQLiteDB::sql_delete(const string& table_name, const SQLRecord& search)
 {
 	mstring sql_query;
@@ -853,7 +1106,7 @@ int SQLiteDB::sql_delete(const string& table_name, const SQLRecord& search)
 	sql_query += ";";
 	return sql_exec(sql_query.str);
 }
-
+*/
 SQLiteDB::SQLiteDB(string filename, bool skip_integrity_check)
 {
 	initOk = false;
@@ -902,6 +1155,7 @@ check_integrity:
 	}
 
 	sql_exec("PRAGMA case_sensitive_like = true;");
+	sqlite3_limit(db, SQLITE_LIMIT_VARIABLE_NUMBER, 1000000); // Limit possible variable number by one million.
 	initOk = true;
 }
 
