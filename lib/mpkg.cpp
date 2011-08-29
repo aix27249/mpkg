@@ -322,6 +322,7 @@ int mpkgDatabase::commit_actions()
 	}
 	string branch;
 	string distro;
+	string is_virtual;
 	// Let's show the summary for console and dialog users and ask for confirmation
 	if (consoleMode)
 	{
@@ -371,10 +372,12 @@ int mpkgDatabase::commit_actions()
 					else dialogMsg+=_("Will be removed:\n");
 				}
 				removeCount++;
-				if (!dialogMode) say("  [%d] %s %s %s %s\n", removeCount, \
+				if (remove_list[i].isTaggedBy("virtual")) is_virtual = string(" (") + _("virtual package") + string(")");
+				else is_virtual.clear();
+				if (!dialogMode) say("  [%d] %s %s %s %s%s\n", removeCount, \
 						remove_list[i].get_name().c_str(), \
-						remove_list[i].get_fullversion().c_str(), branch.c_str(), reason.c_str());
-				else dialogMsg += "  [" + IntToStr(removeCount) + "] " + remove_list[i].get_name() + " " + remove_list[i].get_fullversion() + branch + "\n";
+						remove_list[i].get_fullversion().c_str(), branch.c_str(), reason.c_str(), is_virtual.c_str());
+				else dialogMsg += "  [" + IntToStr(removeCount) + "] " + remove_list[i].get_name() + " " + remove_list[i].get_fullversion() + branch + is_virtual + "\n";
 			}
 		}
 		// Purge
@@ -390,11 +393,14 @@ int mpkgDatabase::commit_actions()
 					if (!dialogMode) msay(_("Will be purged:\n"));
 					else dialogMsg += _("Will be purged:\n");
 				}
+				if (remove_list[i].isTaggedBy("virtual")) is_virtual = string(" (") + _("virtual package") + string(")");
+				else is_virtual.clear();
+
 				purgeCount++;
-				if (!dialogMode) say("  [%d] %s %s %s %s\n", purgeCount, \
+				if (!dialogMode) say("  [%d] %s %s %s %s%s\n", purgeCount, \
 						remove_list[i].get_name().c_str(), \
-						remove_list[i].get_fullversion().c_str(), branch.c_str(), reason.c_str());
-				else dialogMsg += "  [" + IntToStr(purgeCount) + "] " + remove_list[i].get_name() + " " + remove_list[i].get_fullversion() + branch + "\n";
+						remove_list[i].get_fullversion().c_str(), branch.c_str(), reason.c_str(), is_virtual.c_str());
+				else dialogMsg += "  [" + IntToStr(purgeCount) + "] " + remove_list[i].get_name() + " " + remove_list[i].get_fullversion() + branch + is_virtual + "\n";
 			}
 		}
 		// Update
