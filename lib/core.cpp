@@ -130,15 +130,12 @@ int mpkgDatabase::check_file_conflicts_new(const PACKAGE& package)
 	sqlFields.addField("packages_package_id");
 	sqlFields.addField("file_name");
 	if (package.get_files().size()==0) return 0; // If a package has no files, it cannot conflict =)
-	// To check: sqlSearch should not be greater than 999 (SQLITE_MAX_VARIABLE_NUMBER).
 	for (unsigned int i=0;i<package.get_files().size(); ++i) {
 		if (package.get_files().at(i).at(package.get_files().at(i).length()-1)!='/') {
 			sqlSearch.addField("file_name", package.get_files().at(i));
 		}
 	}
-	if (sqlSearch.size()>900) {
-		mWarning("sqlSearch in " + string(__func__) + " exceeds size limits");
-	}
+	
 	db.get_sql_vtable(sqlTable, sqlFields, "files", sqlSearch);
 	int fPackages_package_id = sqlTable.getFieldIndex("packages_package_id");
 	int fFile_name = sqlTable.getFieldIndex("file_name");
@@ -1401,6 +1398,15 @@ SQLProxy* mpkgDatabase::getSqlDb()
 	return &db;
 }
 // class SQLRecord
+
+const SQLField& SQLRecord::getField(size_t index) const {
+	return field[index];
+}
+void SQLRecord::addField(const SQLField &new_field) {
+	field.push_back(new_field);
+}
+
+
 vector<string> SQLRecord::getRecordValues()
 {
 	vector<string> output;

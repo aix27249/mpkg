@@ -59,6 +59,9 @@ class SQLRecord
 		void setValue(unsigned int& field_index, const string& value);
 		string orderBy;
 		string groupBy;
+		const SQLField& getField(size_t index) const;
+		void addField(const SQLField &);
+		
 
 		SQLRecord();
 		~SQLRecord();

@@ -1230,7 +1230,36 @@ const string& SQLProxy::getLastErrMsg() {
 int SQLProxy::get_sql_vtable(SQLTable& output, const SQLRecord& fields, const string& table_name, const SQLRecord& search)
 {
 	if (sqliteDB==NULL) sqliteDB = new SQLiteDB;
-	return sqliteDB->get_sql_vtable(output, fields, table_name, search);
+	
+	// Check if search size exceeds limits and recombine request if possible
+	if (search.size()<=900) return sqliteDB->get_sql_vtable(output, fields, table_name, search);
+	else {
+		if (search.getSearchMode()!=SEARCH_IN) {
+			mError("Query limit exceeded, but cannot be recomposed: use SEARCH_IN for long queries");
+			return SQLITE_FAIL;
+		}
+		SQLRecord searchProxy;
+		SQLTable outputProxy;
+		searchProxy.setSearchMode(SEARCH_IN);
+		size_t limit = 0;
+		int ret = SQLITE_OK;
+		for (size_t i=0; i<search.size(); ++i) {
+			searchProxy.addField(search.getField(i));
+			limit++;
+			if (limit==900) {
+				ret = sqliteDB->get_sql_vtable(outputProxy, fields, table_name, searchProxy);
+				if (ret != SQLITE_OK) return ret;
+				for (size_t t=0; t<outputProxy.size(); ++t) {
+					output.addRecord(outputProxy[t]);
+				}
+				outputProxy.clear();
+				searchProxy.clear();
+				limit = 0;
+			}
+		}
+		return ret;
+	}
+
 }
 
 int SQLProxy::sql_insert(const string& table_name, const SQLRecord& values)
