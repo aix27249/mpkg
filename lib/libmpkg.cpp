@@ -393,7 +393,7 @@ int mpkg::enable_repository(vector<int> rep_nums)
 	}
 	for (unsigned int i=0; i<rep_nums.size(); ++i) {
 		if (rep_nums[i]>=(int) flags.size() || rep_nums[i]<0) {
-			mError(_("No such repository: ") + IntToStr(rep_nums[i]));
+			mError(_("No such repository: ") + IntToStr(rep_nums[i] + 1));
 			continue;
 		}
 		flags[rep_nums[i]]=true;
@@ -430,7 +430,7 @@ int mpkg::disable_repository(vector<int> rep_nums)
 	}
 	for (unsigned int i=0; i<rep_nums.size(); ++i) {
 		if (rep_nums[i]>=(int) flags.size() || rep_nums[i]<0) {
-			mError(_("No such repository: ") + IntToStr(rep_nums[i]));
+			mError(_("No such repository: ") + IntToStr(rep_nums[i] + 1));
 			continue;
 		}
 		flags[rep_nums[i]]=false;
