@@ -39,7 +39,7 @@ while getopts "hw:l:a:r:" OPTION ; do
 done
 
 shift $(($OPTIND - 1))
-NODE=$1
+NODE=`readlink -m $1`
 
 # INIT
 set -e
