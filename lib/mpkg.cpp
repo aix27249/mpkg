@@ -423,16 +423,16 @@ int mpkgDatabase::commit_actions()
 						CL_6, remove_list[i].get_fullversion().c_str(), CL_WHITE, _(" ==> "), 
 						CL_GREEN, remove_list[i].updatingBy->get_fullversion().c_str(), CL_BLUE, branch.c_str(), CL_WHITE, reason.c_str());
 
-					if (!checkAcceptedArch(remove_list.get_package_ptr(i))) mWarning(string(CL_RED) + \
+					if (!checkAcceptedArch(remove_list[i].updatingBy)) mWarning(string(CL_RED) + \
 							_("ARCHITECTURE WARNING: ") + \
 							string(CL_WHITE) + \
 							_("Package ") + \
-							remove_list[i].get_name() + "-" + \
-							remove_list[i].get_version() + "-" + \
-							remove_list[i].get_arch() + "-" + \
-							remove_list[i].get_build() + \
+							remove_list[i].updatingBy->get_name() + "-" + \
+							remove_list[i].updatingBy->get_version() + "-" + \
+							remove_list[i].updatingBy->get_arch() + "-" + \
+							remove_list[i].updatingBy->get_build() + \
 							_(" has non-native architecture (") + \
-							remove_list[i].get_arch() + \
+							remove_list[i].updatingBy->get_arch() + \
 							_("), are you sure it is what you wanted?"));
 				}
 				else dialogMsg += "  [" + IntToStr(updateCount) + "] " + \
