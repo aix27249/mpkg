@@ -1161,14 +1161,56 @@ int SQLProxy::sql_update(const string& table_name, const SQLRecord& fields, cons
 {
 	if (sqliteDB==NULL) sqliteDB = new SQLiteDB;
 	internalDataChanged=true;
-	return sqliteDB->sql_update(table_name, fields, search);
+	if (search.size()<=900) return sqliteDB->sql_update(table_name, fields, search);
+	else {
+		if (search.getSearchMode()!=SEARCH_IN) {
+			mError(string(__func__) + ": query limit exceeded, but cannot be recomposed: use SEARCH_IN for long queries");
+			return SQLITE_FAIL;
+		}
+		SQLRecord searchProxy;
+		searchProxy.setSearchMode(SEARCH_IN);
+		size_t limit = 0;
+		int ret = SQLITE_OK;
+		for (size_t i=0; i<search.size(); ++i) {
+			searchProxy.addField(search.getField(i));
+			limit++;
+			if (limit==900) {
+				ret = sqliteDB->sql_update(table_name, fields, searchProxy);
+				if (ret != SQLITE_OK) return ret;
+				searchProxy.clear();
+				limit = 0;
+			}
+		}
+		return ret;
+	}
 }
 
 int SQLProxy::sql_delete(const string& table_name, const SQLRecord& search)
 {
 	if (sqliteDB==NULL) sqliteDB = new SQLiteDB;
 	internalDataChanged=true;
-	return sqliteDB->sql_delete(table_name, search);
+	if (search.size()<=900) return sqliteDB->sql_delete(table_name, search);
+	else {
+		if (search.getSearchMode()!=SEARCH_IN) {
+			mError(string(__func__) + ": query limit exceeded, but cannot be recomposed: use SEARCH_IN for long queries");
+			return SQLITE_FAIL;
+		}
+		SQLRecord searchProxy;
+		searchProxy.setSearchMode(SEARCH_IN);
+		size_t limit = 0;
+		int ret = SQLITE_OK;
+		for (size_t i=0; i<search.size(); ++i) {
+			searchProxy.addField(search.getField(i));
+			limit++;
+			if (limit==900) {
+				ret = sqliteDB->sql_delete(table_name, searchProxy);
+				if (ret != SQLITE_OK) return ret;
+				searchProxy.clear();
+				limit = 0;
+			}
+		}
+		return ret;
+	}
 }
 int SQLProxy::sql_exec(const string& query) {
 	if (sqliteDB==NULL) sqliteDB = new SQLiteDB;
