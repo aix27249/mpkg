@@ -855,34 +855,7 @@ const vector<string> SQLiteDB::getFieldNames(const string& table_name) const {
 #endif
 	return fieldNames;
 }
-/*
-int SQLiteDB::sql_insert(const string& table_name, const SQLRecord& values)
-{
-	vector<mstring> sqlMatrix;
-	int limiter = SQLMATRIX_LIMIT;
-	vector<string> fieldNames=getFieldNames(table_name);
-	mstring sql_query;
-	sql_query+="insert into "+table_name+" values(NULL,";
-	for (unsigned int i=1; i<fieldNames.size();i++)
-	{
-		if (limiter == SQLMATRIX_LIMIT) {
-			sqlMatrix.resize(sqlMatrix.size()+1);
-			limiter=0;
-		}
-		sqlMatrix[sqlMatrix.size()-1]+= "'"+ values.getValue(fieldNames[i])+"'";
-		if (i!=fieldNames.size()-1) sqlMatrix[sqlMatrix.size()-1] += ",";
-		limiter++;
-	}
-	for (unsigned int i=0; i<sqlMatrix.size(); i++)
-	{
-		sql_query += sqlMatrix[i];
-		sqlMatrix[i].clear();
-	}
-	sqlMatrix.clear();
-	sql_query += ");";
-	return sql_exec(sql_query.str);
-}
-*/
+
 int SQLiteDB::sql_insert(const string& table_name, const SQLRecord& values) {
 	string query_prepare = "INSERT INTO " + table_name + " VALUES(NULL,";
 	vector<string> fieldNames=getFieldNames(table_name);
@@ -925,38 +898,6 @@ int SQLiteDB::sql_insert(const string& table_name, const SQLTable& values) {
 	}
 	return SQLITE_OK;
 }
-
-/*int SQLiteDB::sql_insert(const string& table_name, const SQLTable& values)
-{
-	if (values.empty()) return 0;
-	vector<string> fieldNames=getFieldNames(table_name);
-	vector<mstring> sqlMatrix;
-	mstring sql_query;
-	int limiter = SQLMATRIX_LIMIT;
-	for (unsigned int k=0; k<values.getRecordCount(); k++)
-	{
-		if (limiter == SQLMATRIX_LIMIT) {
-			sqlMatrix.resize(sqlMatrix.size()+1);
-			limiter=0;
-		}
-
-		sqlMatrix[sqlMatrix.size()-1] += "insert into "+table_name+" values(NULL,";
-		for (unsigned int i=1; i<fieldNames.size();i++)
-		{
-			sqlMatrix[sqlMatrix.size()-1] +="'"+values.getValue(k, fieldNames[i])+"'";
-			if (i!=fieldNames.size()-1) sqlMatrix[sqlMatrix.size()-1] += ",";
-		}
-		sqlMatrix[sqlMatrix.size()-1] += ");";
-		limiter++;
-	}
-	for (unsigned int i=0; i<sqlMatrix.size(); i++)
-	{
-		sql_query += sqlMatrix[i];
-		sqlMatrix[i].clear();
-	}
-	sqlMatrix.clear();
-	return sql_exec(sql_query.str);
-}*/
 
 int SQLiteDB::sql_update(const string& table_name, const SQLRecord& fields, const SQLRecord& search) {
 	if (fields.size() + search.size()>900) {
@@ -1004,35 +945,6 @@ int SQLiteDB::sql_update(const string& table_name, const SQLRecord& fields, cons
 	if (ret==SQLITE_DONE) return SQLITE_OK;
 	return ret;
 }
-/*
-int SQLiteDB::sql_update(const string& table_name, const SQLRecord& fields, const SQLRecord& search)
-{
-	string sql_query="update "+table_name+" set ";
-	for (unsigned int i=0;i<fields.size(); i++)
-	{
-		sql_query+=fields.getFieldName(i)+"='"+fields.getValue(fields.getFieldName(i))+"'";
-		if (i!=fields.size()-1) sql_query+=", ";
-	}
-	if (fields.empty()) 
-	{
-		mDebug("Fields are empty, cannot update SQL data");
-		return -1;
-	}
-	if (!search.empty())
-	{
-		sql_query+=" where ";
-		for (unsigned int i=0; i<search.size(); i++)
-		{
-			sql_query+=search.getFieldName(i)+"='"+search.getValueI(i)+"'";
-		       	if (i!=search.size()-1 && search.getSearchMode()==SEARCH_AND) sql_query+=" and ";
-			if (i!=search.size()-1 && search.getSearchMode()==SEARCH_OR) sql_query+=" or ";
-		}
-	}
-	sql_query+=";";
-	if (sql_query.length()>100000) mWarning("\nSQL query is too long, recommended to update code to matrix usage to prevent performance drop\n");
-	return sql_exec(sql_query);
-}
-*/
 
 int SQLiteDB::sql_delete(const string& table_name, const SQLRecord& search) {
 	string sql_query = "DELETE FROM "+table_name;
@@ -1076,37 +988,6 @@ int SQLiteDB::sql_delete(const string& table_name, const SQLRecord& search) {
 	return ret;
 }
 
-/*
-int SQLiteDB::sql_delete(const string& table_name, const SQLRecord& search)
-{
-	mstring sql_query;
-	sql_query +="delete from "+table_name;
-	if (!search.empty())
-	{
-		sql_query += " where ";
-		if (search.getSearchMode()==SEARCH_IN) {
-			sql_query += search.getFieldName(0) + " in (";
-		}
-		for (unsigned int i=0; i<search.size(); i++)
-		{
-			if (search.getSearchMode()==SEARCH_AND) {
-				sql_query += search.getFieldName(i) + "='" + search.getValueI(i)+"'";
-		       		if (i!=search.size()-1) sql_query += " and ";
-			}
-			if (search.getSearchMode()==SEARCH_OR) {
-				sql_query += search.getFieldName(i) + "='" + search.getValueI(i)+"'";
-				if (i!=search.size()-1 && search.getSearchMode()==SEARCH_OR) sql_query += " or ";
-			}
-			if (search.getSearchMode()==SEARCH_IN) {
-				if (i!=search.size()-1) sql_query += "'" + search.getValueI(i) + "',";
-				else sql_query += "'" + search.getValueI(i) + "')";
-			}
-		}
-	}
-	sql_query += ";";
-	return sql_exec(sql_query.str);
-}
-*/
 SQLiteDB::SQLiteDB(string filename, bool skip_integrity_check)
 {
 	initOk = false;
