@@ -1115,7 +1115,7 @@ int SQLProxy::get_sql_vtable(SQLTable& output, const SQLRecord& fields, const st
 	// Check if search size exceeds limits and recombine request if possible
 	if (search.size()<=900) return sqliteDB->get_sql_vtable(output, fields, table_name, search);
 	else {
-		printf("Search size: %d, RECOMBINE...\n", search.size());
+		//printf("Search size: %d, RECOMBINE...\n", search.size());
 		if (search.getSearchMode()!=SEARCH_IN) {
 			mError("Query limit exceeded, but cannot be recomposed: use SEARCH_IN for long queries");
 			return SQLITE_FAIL;
@@ -1142,7 +1142,7 @@ int SQLProxy::get_sql_vtable(SQLTable& output, const SQLRecord& fields, const st
 				limit = 0;
 			}
 		}
-		printf("Step get_sql_vtable OK, ret: %d, searchProxy.size: %d, outputProxy.size: %d, output: %d\n", ret, searchProxy.size(), outputProxy.size(), output.size());
+		//printf("Step get_sql_vtable OK, ret: %d, searchProxy.size: %d, outputProxy.size: %d, output: %d\n", ret, searchProxy.size(), outputProxy.size(), output.size());
 
 		return ret;
 	}
