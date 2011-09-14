@@ -1115,6 +1115,7 @@ int SQLProxy::get_sql_vtable(SQLTable& output, const SQLRecord& fields, const st
 	// Check if search size exceeds limits and recombine request if possible
 	if (search.size()<=900) return sqliteDB->get_sql_vtable(output, fields, table_name, search);
 	else {
+		printf("Search size: %d, RECOMBINE...\n", search.size());
 		if (search.getSearchMode()!=SEARCH_IN) {
 			mError("Query limit exceeded, but cannot be recomposed: use SEARCH_IN for long queries");
 			return SQLITE_FAIL;
@@ -1127,9 +1128,12 @@ int SQLProxy::get_sql_vtable(SQLTable& output, const SQLRecord& fields, const st
 		for (size_t i=0; i<search.size(); ++i) {
 			searchProxy.addField(search.getField(i));
 			limit++;
-			if (limit==900) {
+			if (limit==900 || i==search.size()-1) {
 				ret = sqliteDB->get_sql_vtable(outputProxy, fields, table_name, searchProxy);
-				if (ret != SQLITE_OK) return ret;
+				if (ret != SQLITE_OK) {
+					printf("Step get_sql_vtable fails, ret: %d, searchProxy.size: %d, outputProxy.size: %d, output: %d\n", ret, searchProxy.size(), outputProxy.size(), output.size());
+					return ret;
+				}
 				for (size_t t=0; t<outputProxy.size(); ++t) {
 					output.addRecord(outputProxy[t]);
 				}
@@ -1138,6 +1142,8 @@ int SQLProxy::get_sql_vtable(SQLTable& output, const SQLRecord& fields, const st
 				limit = 0;
 			}
 		}
+		printf("Step get_sql_vtable OK, ret: %d, searchProxy.size: %d, outputProxy.size: %d, output: %d\n", ret, searchProxy.size(), outputProxy.size(), output.size());
+
 		return ret;
 	}
 
@@ -1174,7 +1180,7 @@ int SQLProxy::sql_update(const string& table_name, const SQLRecord& fields, cons
 		for (size_t i=0; i<search.size(); ++i) {
 			searchProxy.addField(search.getField(i));
 			limit++;
-			if (limit==900) {
+			if (limit==900 || i==search.size()-1) {
 				ret = sqliteDB->sql_update(table_name, fields, searchProxy);
 				if (ret != SQLITE_OK) return ret;
 				searchProxy.clear();
@@ -1202,7 +1208,7 @@ int SQLProxy::sql_delete(const string& table_name, const SQLRecord& search)
 		for (size_t i=0; i<search.size(); ++i) {
 			searchProxy.addField(search.getField(i));
 			limit++;
-			if (limit==900) {
+			if (limit==900 || i==search.size()-1) {
 				ret = sqliteDB->sql_delete(table_name, searchProxy);
 				if (ret != SQLITE_OK) return ret;
 				searchProxy.clear();
