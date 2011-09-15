@@ -35,10 +35,10 @@ namespace mpkgSys {
 	// 	MPKGERROR_AMBIGUITY - в случае невозможности однозначного определения пакета.
 	//
 	// Установка (обновление)
-	int requestInstall(PACKAGE *package, mpkgDatabase *db, DependencyTracker *DepTracker);
-	int requestInstall(PACKAGE_LIST *pkgList, mpkgDatabase *db, DependencyTracker *DepTracker);
-	int requestInstall(int package_id, mpkgDatabase *db, DependencyTracker *DepTracker, bool localInstall=false);
-	int requestInstall(string package_name, string package_version, string package_build, mpkgDatabase *db, DependencyTracker *DepTracker);
+	//int requestInstall(PACKAGE *package, mpkgDatabase *db, DependencyTracker *DepTracker);
+	int __requestInstallPkgList(PACKAGE_LIST *pkgList, mpkgDatabase *db, DependencyTracker *DepTracker);
+	//int requestInstall(int package_id, mpkgDatabase *db, DependencyTracker *DepTracker, bool localInstall=false);
+	//int requestInstall(string package_name, string package_version, string package_build, mpkgDatabase *db, DependencyTracker *DepTracker);
 	int requestInstall(vector<string> package_name, vector<string> package_version, vector<string> package_build, mpkgDatabase *db, DependencyTracker *DepTracker, vector<string> *eList = NULL);
 	int requestInstallGroup(string groupName, mpkgDatabase *db, DependencyTracker *DepTracker);
 	// Удаление

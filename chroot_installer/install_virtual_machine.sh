@@ -44,8 +44,8 @@ for i in ${REPO} ; do
 done
 
 # Installing
-mpkg-update --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE}
-mpkg-installfromlist -y -m --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE}  ${LIST}
+mpkg-update --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE} || exit 1
+mpkg-installfromlist -v -y -m --conf=${NODE}/etc/mpkg.xml --sysroot=${NODE}  ${LIST} || exit 1
 
 # Moving config
 mv ${NODE}/etc/mpkg.xml.system ${NODE}/etc/mpkg.xml

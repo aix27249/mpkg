@@ -80,7 +80,7 @@ class mpkg
 		int install(string fname);
 		int install(PACKAGE *pkg);
 		int install(PACKAGE_LIST *pkgList);
-		int install(int package_id);
+		//int install(int package_id);
 		int installGroups(vector<string>groupName);
 		/* install(vector<string> fname):
 		 * Prepares packages with names defined in fname vector to install.

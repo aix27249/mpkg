@@ -227,7 +227,7 @@ int mpkgSys::update_repository_data(mpkgDatabase *db)//, DependencyTracker *DepT
 // 3) Проверяется факт обновления
 // Если все ок, направляем в DepTracker
 
-int mpkgSys::requestInstall(int package_id, mpkgDatabase *db, DependencyTracker *DepTracker, bool localInstall)
+/*int mpkgSys::requestInstall(int package_id, mpkgDatabase *db, DependencyTracker *DepTracker, bool localInstall)
 {
 	mDebug("requested to install " + IntToStr(package_id));
 	PACKAGE tmpPackage;
@@ -274,14 +274,17 @@ int mpkgSys::requestInstall(int package_id, mpkgDatabase *db, DependencyTracker 
 		mError(_("get_package error: returned ") + IntToStr (ret));
 		return ret;
 	}
-}
-int mpkgSys::requestInstall(PACKAGE_LIST *pkgList, mpkgDatabase *db, DependencyTracker *DepTracker)
-{
-	for (unsigned int i=0; i<pkgList->size(); i++) {
+}*/
+int mpkgSys::__requestInstallPkgList(PACKAGE_LIST *pkgList, mpkgDatabase *db, DependencyTracker *DepTracker) {
+	string act_reason;
+	for (size_t i=0; i<pkgList->size(); i++) {
+		if (pkgList->get_package_ptr(i)->package_action_reason.empty()) act_reason = "new-request";
+		else act_reason = pkgList->get_package_ptr(i)->package_action_reason;
 		//printf("Adding to install: [%d] %s-%s\n", pkgList->at(i).get_id(), pkgList->at(i).get_name().c_str(), pkgList->at(i).get_fullversion().c_str());
-		pkgList->get_package_ptr(i)->set_action(ST_INSTALL, "new-request");
+
+		pkgList->get_package_ptr(i)->set_action(ST_INSTALL, act_reason);
 		if (!ignoreDeps) DepTracker->addToInstallQuery(pkgList->at(i));
-		else db->set_action(pkgList->at(i).get_id(), ST_INSTALL, "new-request");
+		else db->set_action(pkgList->at(i).get_id(), ST_INSTALL, pkgList->get_package_ptr(i)->package_action_reason);
 	}
 	return 0;
 }
@@ -294,29 +297,26 @@ int mpkgSys::requestInstallGroup(string groupName, mpkgDatabase *db, DependencyT
 	db->get_packagelist(sqlSearch, &candidates, true, false);
 	db->get_full_taglist(&candidates);
 	vector<string> install_list;
-	for (unsigned int i=0; i<candidates.size(); i++)
-	{
-		for (unsigned int t=0; t<candidates[i].get_tags().size(); t++)
-		{
-			if (candidates[i].get_tags().at(t)==groupName)
-			{
+	for (size_t i=0; i<candidates.size(); ++i) {
+		for (unsigned int t=0; t<candidates[i].get_tags().size(); ++t) {
+			if (candidates[i].get_tags().at(t)==groupName) {
 				install_list.push_back(candidates[i].get_name());
 			}
 		}
 	}
+
 	mDebug("Requesting to install " + IntToStr(install_list.size()) + " packages from group " + groupName);
-	for (unsigned int i=0; i<install_list.size(); i++)
-	{
-		requestInstall(install_list[i],(string) "",(string) "", db, DepTracker);
-	}
+	vector<string> versions, builds;
+	requestInstall(install_list,versions, builds, db, DepTracker);
 	return 0;
 }
 
-int mpkgSys::requestInstall(PACKAGE *package, mpkgDatabase *db, DependencyTracker *DepTracker)
+// DEPRECATED
+/*int mpkgSys::requestInstall(PACKAGE *package, mpkgDatabase *db, DependencyTracker *DepTracker)
 {
 	if (!package->installedVersion.empty() && !package->installed()) requestUninstall(package->get_name(), db, DepTracker); 
 	return requestInstall(package->get_id(), db, DepTracker);
-}
+}*/
 
 // New, very very fast function. The only one who should be used, if fact
 int mpkgSys::requestInstall(vector<string> package_name, vector<string> package_version, vector<string> package_build, mpkgDatabase *db, DependencyTracker *DepTracker, vector<string> *eList) {
@@ -327,7 +327,7 @@ int mpkgSys::requestInstall(vector<string> package_name, vector<string> package_
 	vector<bool> isLocal(package_name.size(), false);
 	LocalPackage *_p;
 	string pkgType;
-	for (unsigned int i=0; i<package_name.size(); i++) {
+	for (size_t i=0; i<package_name.size(); i++) {
 		pkgType=getExtension(package_name[i]);
 		if (pkgType=="txz" || pkgType == "tbz" || pkgType == "tlz" || pkgType=="tgz" || pkgType == "spkg") {
 		       if (FileExists(package_name[i])) {
@@ -350,7 +350,7 @@ int mpkgSys::requestInstall(vector<string> package_name, vector<string> package_
 	// 1. Creating a request for all packages which are in package_name vector.
 	SQLRecord sqlSearch;
 	sqlSearch.setSearchMode(SEARCH_IN);
-	for (unsigned int i=0; i<package_name.size(); i++) {
+	for (size_t i=0; i<package_name.size(); i++) {
 		if (isLocal[i]) {
 			continue;
 		}
@@ -372,10 +372,10 @@ int mpkgSys::requestInstall(vector<string> package_name, vector<string> package_
 	PACKAGE_LIST uninstallList;
 	// 4. Search by cache for installed ones, check for availability and select the appropriate versions
 	// 4.1 Building matrix: one vector per list of packages with same name
-	for (unsigned int i=0; i<package_name.size(); i++) {
+	for (size_t i=0; i<package_name.size(); i++) {
 		delete tmpList;
 		tmpList = new PACKAGE_LIST;
-		for (unsigned int t=0; t<pCache.size(); t++) {
+		for (size_t t=0; t<pCache.size(); t++) {
 			if (pCache.at(t).get_name() == package_name[i]) {
 				if (isLocal[i] && pCache[t].get_id()!=localPackages[i]) continue;
 				tmpList->add(pCache.at(t));
@@ -389,10 +389,10 @@ int mpkgSys::requestInstall(vector<string> package_name, vector<string> package_
 	
 	// Sizes of tmpMatrix and input vectors are the same, so we can use any of them
 	PACKAGE *outPackage = NULL, *installedOne = NULL;
-	for (unsigned int i=0; i<tmpMatrix.size(); i++) {
+	for (size_t i=0; i<tmpMatrix.size(); i++) {
 		delete tmpList;
 		tmpList = new PACKAGE_LIST;
-		for (unsigned int t=0; t<tmpMatrix[i].size(); t++) {
+		for (size_t t=0; t<tmpMatrix[i].size(); t++) {
 			// Filling the tmpList with reachable (=installed or available) ones for each package
 			if (tmpMatrix[i].at(t).available(true) || tmpMatrix[i].at(t).installed()) {
 				if (package_version[i].empty() || tmpMatrix[i].at(t).get_version() == package_version[i]) {
@@ -434,7 +434,7 @@ int mpkgSys::requestInstall(vector<string> package_name, vector<string> package_
 		}
 	}
 	// Now, check resultList for installed ones and unavailable ones
-	for (unsigned int i=0; i<resultList.size(); i++) {
+	for (size_t i=0; i<resultList.size(); i++) {
 		if (resultList[i].installed()) {
 			mWarning(_("Package ") + resultList[i].get_name() + "-" + resultList[i].get_fullversion() + _(" is already installed"));
 		} 
@@ -446,7 +446,7 @@ int mpkgSys::requestInstall(vector<string> package_name, vector<string> package_
 	}
 	// NEW: ignore already installed packages
 	tmpList = new PACKAGE_LIST;
-	for (unsigned int i=0; i<resultList.size(); ++i) {
+	for (size_t i=0; i<resultList.size(); ++i) {
 		if (!resultList[i].installed()) {
 			tmpList->add(resultList[i]);
 		}
@@ -458,8 +458,8 @@ int mpkgSys::requestInstall(vector<string> package_name, vector<string> package_
 	//printf("resultList size = %d\n", resultList.size());
 	if (errorList.empty())	{
 		// Push to database
-		requestInstall(&resultList, db, DepTracker);
-		for (unsigned int i=0; i<uninstallList.size(); i++) requestUninstall(uninstallList.get_package_ptr(i), db, DepTracker);
+		__requestInstallPkgList(&resultList, db, DepTracker);
+		for (size_t i=0; i<uninstallList.size(); i++) requestUninstall(uninstallList.get_package_ptr(i), db, DepTracker);
 
 	}
 	else {
@@ -471,7 +471,7 @@ int mpkgSys::requestInstall(vector<string> package_name, vector<string> package_
 	if (eList) *eList = errorList;
 	return 0;
 }
-int mpkgSys::requestInstall(string package_name, string package_version, string package_build, mpkgDatabase *db, DependencyTracker *DepTracker)
+/*int mpkgSys::requestInstall(string package_name, string package_version, string package_build, mpkgDatabase *db, DependencyTracker *DepTracker)
 {
 	// Exclusion for here: package_name could be a filename of local placed package.
 	bool tryLocalInstall=false;
@@ -518,14 +518,6 @@ int mpkgSys::requestInstall(string package_name, string package_version, string 
 
 	else
 	{
-		/*
-		if (getExtension(package_name)=="spkg")
-		{
-			if (emerge_package(package_name, &package_name)!=0 || !FileExists(package_name)) {
-				mError(_("Cannot build this spkg"));
-				return MPKGERROR_NOPACKAGE;
-			}
-		}*/
 		msay(_("Inspecting local package ") + package_name);
 		LocalPackage _p(package_name);
 		_p.injectFile();
@@ -533,7 +525,9 @@ int mpkgSys::requestInstall(string package_name, string package_version, string 
 		requestInstall(_p.data.get_id(), db, DepTracker, true);
 		return 0;
 	}
-}	
+}*/
+
+
 // Удаление
 int mpkgSys::requestUninstall(PACKAGE *package, mpkgDatabase *db, DependencyTracker *DepTracker, bool purge)
 {

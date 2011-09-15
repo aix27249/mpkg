@@ -882,7 +882,7 @@ void mpkgDatabase::get_full_filelist(PACKAGE_LIST *pkgList)
 	for (size_t i=0; i<sqlTable->size(); ++i) {
 		package_id=atoi(sqlTable->getValue(i, fPackages_package_id).c_str());
 		pkgnum = pkgmap[package_id];
-		if (pkgnum >= pkgList->size()) {
+		if (pkgnum >= pkgList->size() || pkgnum<=0) {
 			continue;
 		}
 
@@ -990,7 +990,7 @@ void mpkgDatabase::get_full_dependencylist(PACKAGE_LIST *pkgList) //TODO: incomp
 	for (size_t i=0; i<deplist.size(); ++i) {
 		currentDepID = atoi(deplist.getValue(i, fPackages_package_id).c_str());
 		pkgnum = pkgmap[currentDepID];
-		if (pkgnum >= pkgList->size()) {
+		if (pkgnum >= pkgList->size() || pkgnum<=0) {
 			continue;
 		}
 		pkgList->get_package_ptr(pkgnum)->get_dependencies_ptr()->push_back(dep_tmp);
@@ -1052,11 +1052,11 @@ void mpkgDatabase::get_full_taglist(PACKAGE_LIST *pkgList)
 	for (size_t i=0; i<links.size(); ++i) {
 		currentLinkPackageID = atoi(links.getValue(i, fLinksPackages_package_id).c_str());
 		pkgnum = pkgmap[currentLinkPackageID];
-		if (pkgnum >= pkgList->size()) {
+		if (pkgnum >= pkgList->size() || pkgnum<=0) {
 			continue;
 		}
 		tagnum = tagmap[atoi(links.getValue(i, fLinksTags_tag_id).c_str())];
-		if (tagnum >= tags.size()) {
+		if (tagnum >= tags.size() || tagnum<=0) {
 			continue;
 		}
 

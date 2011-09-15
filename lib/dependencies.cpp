@@ -520,7 +520,10 @@ PACKAGE_LIST DependencyTracker::get_required_packages(PACKAGE *package)
 			depErrorTable.add(package->get_id(), package->get_name(), package->get_fullversion(), package->get_dependencies().at(i).get_package_name(), package->get_dependencies().at(i).getDepInfo(), ret);
 			mDebug(_("package ") + package->get_name() + " " + package->get_fullversion() + _(" is broken")); package->set_broken();
 		}
-		else requiredPackages.add(tmpPackage);
+		else {
+			tmpPackage.package_action_reason="required-by " + package->get_name() + "-" + package->get_fullversion();
+			requiredPackages.add(tmpPackage);
+		}
 	}
 	return requiredPackages;
 }

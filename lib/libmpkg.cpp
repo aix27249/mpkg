@@ -157,18 +157,26 @@ int mpkg::installGroups(vector<string> groupName)
 int mpkg::install(string fname)
 {
 	currentStatus = _("Building queue: ")+fname;
-	return mpkgSys::requestInstall(fname, (string) "",(string) "", db, DepTracker);
+	vector<string> queue, v, b;
+	queue.push_back(fname);
+	return mpkgSys::requestInstall(queue, v, b, db, DepTracker);
 }
-
+// Should be deprecated?
 int mpkg::install(PACKAGE *pkg)
 {
-	return mpkgSys::requestInstall(pkg, db, DepTracker);
+	vector<string> queue, v, b;
+	queue.push_back(pkg->get_name());
+	v.push_back(pkg->get_version());
+	b.push_back(pkg->get_build());
+
+	return mpkgSys::requestInstall(queue, v, b, db, DepTracker);
 }
 
-int mpkg::install(int package_id)
+// DEFINITELY DEPRECATED
+/*int mpkg::install(int package_id)
 {
 	return mpkgSys::requestInstall(package_id, db, DepTracker);
-}
+}*/
 
 int mpkg::install(PACKAGE_LIST *pkgList)
 {
@@ -180,15 +188,8 @@ int mpkg::install(PACKAGE_LIST *pkgList)
 		build.push_back(pkgList->at(i).get_build());
 	}
 	return mpkgSys::requestInstall(name, version, build, db, DepTracker);
-
-	/*
-	int ret=0;
-	for (int i=0; i<pkgList->size(); i++)
-	{
-		if (mpkgSys::requestInstall(pkgList->get_package(i), db, DepTracker)!=0) ret--;
-	}
-	return ret;*/
 }
+
 // Packages removing
 int mpkg::uninstall(vector<string> pkg_name)
 {
