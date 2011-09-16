@@ -879,10 +879,14 @@ void mpkgDatabase::get_full_filelist(PACKAGE_LIST *pkgList)
 	int package_id;
 	size_t fPackages_package_id=sqlTable->getFieldIndex("packages_package_id");
 	size_t fFile_name=sqlTable->getFieldIndex("file_name");
+	map<int, size_t>::iterator pkgmap_iter;
 	for (size_t i=0; i<sqlTable->size(); ++i) {
 		package_id=atoi(sqlTable->getValue(i, fPackages_package_id).c_str());
-		pkgnum = pkgmap[package_id];
-		if (pkgnum >= pkgList->size() || pkgnum<=0) {
+		pkgmap_iter = pkgmap.find(package_id);
+		if (pkgmap_iter==pkgmap.end()) continue;
+		pkgnum = pkgmap_iter->second;
+		// Additional check for boundaries
+		if (pkgnum >= pkgList->size() || pkgnum<0) {
 			continue;
 		}
 
@@ -984,13 +988,17 @@ void mpkgDatabase::get_full_dependencylist(PACKAGE_LIST *pkgList) //TODO: incomp
 	}
 
 	// Processing
-	int currentDepID;
+	int depPackageID;
 	size_t dsize, pkgnum;
+	map<int, size_t>::iterator pkgmap_iter;
 	DEPENDENCY *dep;
 	for (size_t i=0; i<deplist.size(); ++i) {
-		currentDepID = atoi(deplist.getValue(i, fPackages_package_id).c_str());
-		pkgnum = pkgmap[currentDepID];
-		if (pkgnum >= pkgList->size() || pkgnum<=0) {
+		depPackageID = atoi(deplist.getValue(i, fPackages_package_id).c_str());
+		pkgmap_iter = pkgmap.find(depPackageID);
+		if (pkgmap_iter==pkgmap.end()) continue;
+		pkgnum = pkgmap_iter->second;
+		// Additional boundary check
+		if (pkgnum >= pkgList->size() || pkgnum<0) {
 			continue;
 		}
 		pkgList->get_package_ptr(pkgnum)->get_dependencies_ptr()->push_back(dep_tmp);
@@ -1035,12 +1043,14 @@ void mpkgDatabase::get_full_taglist(PACKAGE_LIST *pkgList)
 
 	// Create pkg-id map
 	map<int, size_t> pkgmap;
+	map<int, size_t>::iterator pkgmap_iter;
 	for (size_t i=0; i<pkgList->size(); ++i) {
 		pkgmap[pkgList->at(i).get_id()]=i;
 	}
 
 	// Create tag-id map
 	map<int, size_t> tagmap;
+	map<int, size_t>::iterator tagmap_iter;
 	for (size_t i=0; i<tags.size(); ++i) {
 		tagmap[atoi(tags.getValue(i, fTagsTags_id).c_str())]=i;
 	}
@@ -1051,12 +1061,17 @@ void mpkgDatabase::get_full_taglist(PACKAGE_LIST *pkgList)
 	
 	for (size_t i=0; i<links.size(); ++i) {
 		currentLinkPackageID = atoi(links.getValue(i, fLinksPackages_package_id).c_str());
-		pkgnum = pkgmap[currentLinkPackageID];
-		if (pkgnum >= pkgList->size() || pkgnum<=0) {
+		pkgmap_iter = pkgmap.find(currentLinkPackageID);
+		if (pkgmap_iter==pkgmap.end()) continue;
+		pkgnum = pkgmap_iter->second;
+		// Additional boundary check
+		if (pkgnum >= pkgList->size() || pkgnum<0) {
 			continue;
 		}
-		tagnum = tagmap[atoi(links.getValue(i, fLinksTags_tag_id).c_str())];
-		if (tagnum >= tags.size() || tagnum<=0) {
+		tagmap_iter = tagmap.find(atoi(links.getValue(i, fLinksTags_tag_id).c_str()));
+		if (tagmap_iter==tagmap.end()) continue;
+		tagnum = tagmap_iter->second;
+		if (tagnum >= tags.size() || tagnum<0) {
 			continue;
 		}
 
