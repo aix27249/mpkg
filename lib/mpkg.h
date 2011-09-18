@@ -13,6 +13,24 @@
 #include "sql_pool.h"
 #include "htmlcore.h"
 #include <ftw.h>
+
+class HookManager {
+	public:
+		HookManager();
+		~HookManager();
+
+		void addInstalled(PACKAGE *);
+		void addRemoved(PACKAGE *);
+
+		void runHooks();
+		void reset();
+	private:
+		vector<string> pkgInstalled;
+		vector<string> pkgRemoved;
+};
+
+
+
 class mpkgDatabase
 {
 	public:
@@ -101,6 +119,8 @@ class mpkgDatabase
 		SQLProxy db;
 		PACKAGE_LIST packageDBCache;
 		bool hasFileList;
+
+		HookManager hookManager;
 	public:
 		void createDBCache();
 		bool check_cache(PACKAGE *package, bool clear_wrong=true, ItemOrder itemOrder_mark = ITEMORDER_MIDDLE);

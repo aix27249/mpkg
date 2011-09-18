@@ -886,7 +886,7 @@ void mpkgDatabase::get_full_filelist(PACKAGE_LIST *pkgList)
 		if (pkgmap_iter==pkgmap.end()) continue;
 		pkgnum = pkgmap_iter->second;
 		// Additional check for boundaries
-		if (pkgnum >= pkgList->size() || pkgnum<0) {
+		if (pkgnum >= pkgList->size()) {
 			continue;
 		}
 
@@ -998,7 +998,7 @@ void mpkgDatabase::get_full_dependencylist(PACKAGE_LIST *pkgList) //TODO: incomp
 		if (pkgmap_iter==pkgmap.end()) continue;
 		pkgnum = pkgmap_iter->second;
 		// Additional boundary check
-		if (pkgnum >= pkgList->size() || pkgnum<0) {
+		if (pkgnum >= pkgList->size()) {
 			continue;
 		}
 		pkgList->get_package_ptr(pkgnum)->get_dependencies_ptr()->push_back(dep_tmp);
@@ -1065,13 +1065,13 @@ void mpkgDatabase::get_full_taglist(PACKAGE_LIST *pkgList)
 		if (pkgmap_iter==pkgmap.end()) continue;
 		pkgnum = pkgmap_iter->second;
 		// Additional boundary check
-		if (pkgnum >= pkgList->size() || pkgnum<0) {
+		if (pkgnum >= pkgList->size()) {
 			continue;
 		}
 		tagmap_iter = tagmap.find(atoi(links.getValue(i, fLinksTags_tag_id).c_str()));
 		if (tagmap_iter==tagmap.end()) continue;
 		tagnum = tagmap_iter->second;
-		if (tagnum >= tags.size() || tagnum<0) {
+		if (tagnum >= tags.size()) {
 			continue;
 		}
 

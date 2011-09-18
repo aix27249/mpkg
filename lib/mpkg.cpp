@@ -214,6 +214,7 @@ vector<string> gconfSchemas, gconfSchemasUninstall;
 
 int mpkgDatabase::commit_actions()
 {
+	hookManager.reset();
 	needUpdateXFonts = false;
 	delete_tmp_files();
 	sqlFlush();
@@ -886,6 +887,9 @@ download_process:
 		
 		// Cleanup
 		system("rm -rf " + SYS_ROOT + "/install");
+		
+		// Hooks
+		hookManager.runHooks();
 
 
 		msay(_("Syncing disks..."), SAYMODE_NEWLINE);
@@ -1143,6 +1147,7 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 	// Managing config files
 	pkgConfigInstall(*package);	
 
+	hookManager.addInstalled(package);
 	package->get_files_ptr()->clear();
 	// Creating and running POST-INSTALL script
 	if (!DO_NOT_RUN_SCRIPTS)
@@ -1484,6 +1489,7 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 
 		if (_cmdOptions["warpmode"]!="yes") sqlFlush();
 		currentStatus = statusHeader + _("remove complete");
+		hookManager.addRemoved(package);
 		package->get_files_ptr()->clear();
 		//unexportPackage(SYS_ROOT+"/"+legacyPkgDir, *package);
 		pData.setItemProgress(package->itemID, pData.getItemProgressMaximum(package->itemID));
@@ -1865,3 +1871,63 @@ int mpkgDatabase::clear_unreachable_packages() {
 	return 0;
 
 }
+
+
+HookManager::HookManager() {
+}
+
+HookManager::~HookManager() {
+}
+
+void HookManager::addInstalled(PACKAGE *pkg) {
+	pkgInstalled.push_back(pkg->get_name());
+	FILE *f = fopen(string(SYS_ROOT + "/var/mpkg/last_installed_files").c_str(), "a");
+	for (size_t i=0; i<pkg->get_files().size(); ++i) {
+		fprintf(f, "%s\n", pkg->get_files().at(i).c_str());
+	}
+	fclose(f);
+}
+
+void HookManager::addRemoved(PACKAGE *pkg) {
+	pkgRemoved.push_back(pkg->get_name());
+	FILE *f = fopen(string(SYS_ROOT + "/var/mpkg/last_removed_files").c_str(), "a");
+	for (size_t i=0; i<pkg->get_files().size(); ++i) {
+		fprintf(f, "%s\n", pkg->get_files().at(i).c_str());
+	}
+	fclose(f);
+
+}
+
+void HookManager::runHooks() {
+	if (!FileExists(SYS_ROOT + "/etc/mpkg/hooks")) return;
+	string pkgInstalledStr, pkgRemovedStr, pkgUpdatedStr;
+	for (size_t i=0; i<pkgInstalled.size(); ++i) {
+		pkgInstalledStr = pkgInstalledStr + pkgInstalled[i];
+		if (i<pkgInstalled.size()-1) pkgInstalledStr+= " ";
+	}
+	for (size_t i=0; i<pkgRemoved.size(); ++i) {
+		pkgRemovedStr = pkgRemovedStr + pkgRemoved[i];
+		if (i<pkgRemoved.size()-1) pkgRemovedStr+= " ";
+	}
+
+	for (size_t i=0; i<pkgInstalled.size(); ++i) {
+		for (size_t t=0; t<pkgRemoved.size(); ++t) {
+			if (pkgInstalled[i]!=pkgRemoved[t]) continue;
+			if (!pkgUpdatedStr.empty()) pkgUpdatedStr+= " ";
+			pkgUpdatedStr = pkgUpdatedStr + pkgInstalled[i];
+		}
+	}
+
+	system("( cd " + SYS_ROOT + " ; for i in `find etc/mpkg/hooks -name '*.sh' -type f -perm 755` ; do PKG_INSTALLED='" + pkgInstalledStr + "' PKG_REMOVED='" + pkgRemovedStr + "' PKG_UPDATED='" + pkgUpdatedStr + "' $i ; done )");
+
+
+}
+
+void HookManager::reset() {
+	pkgInstalled.clear();
+	pkgRemoved.clear();
+	unlink(string(SYS_ROOT + "/var/mpkg/last_installed_files").c_str());
+	unlink(string(SYS_ROOT + "/var/mpkg/last_removed_files").c_str());
+	
+}
+
