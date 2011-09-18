@@ -1,6 +1,7 @@
 #!/bin/bash
 # This script should be run as root or fakeroot.
 set -e
+set -x
 export PATH=${scriptdir}/bin:$PATH
 CWD=${scriptdir}/live-elements
 # Set alias for chroot to fakechroot. Let's see if it can work such way
@@ -231,14 +232,21 @@ mkdir -p $OUTPUT
 ARCH=$ARCH OUTPUT=$OUTPUT NODE=$NODE COMPRESSOR=gzip BLOCK_SIZE=65536 $CWD/make_rootfs.sh
 
 # Now, initrd
-mkdir -p $INITRD_ROOT
-( cd $INITRD_ROOT && zcat $CWD/initrd$BITS.img | cpio -div )
-cat $CWD/init > $INITRD_ROOT/init
+#mkdir -p $INITRD_ROOT
+#( cd $INITRD_ROOT && zcat $CWD/initrd$BITS.img | cpio -div )
 
 # Copy kernel modules
 cd $NODE/lib/modules
 KERNEL_VER=`ls`
 MOD_PATH=lib/modules/$KERNEL_VER
+
+chroot $NODE /sbin/mkinitrd -o /boot/initrd$BITS.img -k $KERNEL_VER
+cp $NODE/lib$LIBDIRSUFFIX/libm*.so* $INITRD_ROOT/lib$LIBDIRSUFFIX
+cp $NODE/lib$LIBDIRSUFFIX/libc*.so* $INITRD_ROOT/lib$LIBDIRSUFFIX
+cat $CWD/init > $INITRD_ROOT/init
+
+
+
 cd -
 rm -rf $INITRD_ROOT/lib/modules
 mkdir -p $INITRD_ROOT/$MOD_PATH/
@@ -259,7 +267,8 @@ cp $NODE/boot/vmlinuz-$KERNEL_VER $LIVE_ROOT/boot/vmlinuz$BITS
 
 # Generating initrd image
 #mkinitrd -s $INITRD_ROOT -o $LIVE_ROOT/boot/initrd$BITS.img -k $KERNEL_VER
-chroot $NODE mkinitrd -o $LIVE_ROOT/boot/initrd$BITS.img -k $KERNEL_VER
+chroot $NODE /sbin/mkinitrd -o /boot/initrd$BITS.img -k $KERNEL_VER
+cp $NODE/boot/initrd$BITS.img $LIVE_ROOT/boot/initrd$BITS.img
 
 # Copying isolinux configs
 mkdir -p $LIVE_ROOT/isolinux
@@ -275,6 +284,14 @@ for i in linux.c32 vesamenu.c32 vesainfo.c32 isolinux.bin chain.c32 ; do
 done
 cp $CWD/grub640.png $LIVE_ROOT/isolinux/
 cp $CWD/koi8u_8x16.psf $LIVE_ROOT/isolinux/
+
+# Dracut attempt
+#mkdir -p $LIVE_ROOT/LiveOS
+#cp $LIVE_ROOT/fs$BITS/rootfs.sfs $LIVE_ROOT/LiveOS/squashfs.img
+#cp $NODE/boot/initrd-fallback-$KERNEL_VER.img $LIVE_ROOT/boot/initrd1.img
+
+# END DRACUT
+
 
 # Pre-iso cleanup
 if [ "$no_cleanup" = "" ] ; then
@@ -295,4 +312,4 @@ fi
 
 
 set +e
-
+set +x
