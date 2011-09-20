@@ -88,7 +88,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="mainwindow.qrc">:/icons/icons/agilia_installer_head.png</pixmap>
+               <pixmap resource="mainwindow.qrc">:/icons/icons/logo_wide.svg</pixmap>
               </property>
              </widget>
             </item>
