@@ -777,9 +777,16 @@ void AgiliaSetup::buildInitrd(bool initrd_delay, const string& initrd_modules) {
 	if (!additional_modules.empty()) additional_modules = " -m " + additional_modules;
 
 	if (notifier) notifier->setSummaryTextCall(_("Creating initrd"));
-	int ret = system("chroot /tmp/new_sysroot mkinitrd -c -r " + rootdev + " -f " + rootPartitionType + " -w " + rootdev_wait + " -k " + kernelversion + " " + " " + use_swap + " " + use_raid + " " + use_lvm + " " + additional_modules + "  2>/dev/null >/dev/null");
-	// In case if first run fails (happened only twice, but happened)
-	if (ret) system("chroot /tmp/new_sysroot mkinitrd  2>/dev/null >/dev/null");
+	
+	// Checking for initrd
+	int ret = -1;
+	// Create initrd using mkinitrd ONLY if there is no initrd already.
+	// Note that current kernels usually use dracut-based initrd's and it's creation should be run from post-install hooks, so we keep it only for fallback.
+	if (!FileExists("/tmp/new_sysroot/boot/initrd.gz")) {
+		ret = system("chroot /tmp/new_sysroot mkinitrd -c -r " + rootdev + " -f " + rootPartitionType + " -w " + rootdev_wait + " -k " + kernelversion + " " + " " + use_swap + " " + use_raid + " " + use_lvm + " " + additional_modules + "  2>/dev/null >/dev/null");
+		// In case if first run fails (happened only twice, but happened)
+		if (ret) system("chroot /tmp/new_sysroot mkinitrd  2>/dev/null >/dev/null");
+	}
 }
 
 StringMap AgiliaSetup::getDeviceMap(const string& mapFile) {
