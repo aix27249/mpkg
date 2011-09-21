@@ -1600,12 +1600,23 @@ vector<string> mpkg::getLatestUpdates(PACKAGE_LIST *pkgList, PACKAGE_LIST *unins
 	int query_ret = get_packagelist(sqlSearch, &pCache, fast, needDescriptions);
 
 	vector<string> blackList = ReadFileStrings("/etc/mpkg-update-blacklist");
-	vector<string> env_blacklist_v;
-       	if (getenv("SKIP")) env_blacklist_v = splitString(getenv("SKIP"), " ");
+	vector<string> env_blacklist_v, opt_blacklist_v;
+       	if (getenv("SKIP")) {
+		env_blacklist_v = splitString(getenv("SKIP"), " ");
+	}
+	if (!_cmdOptions["skip_packages"].empty()) {
+		opt_blacklist_v = splitString(_cmdOptions["skip_packages"], ",");
+		for (size_t i=0; i<opt_blacklist_v.size(); ++i) {
+			env_blacklist_v.push_back(opt_blacklist_v[i]);
+		}
+	}
+
 	for (size_t i=0; i<env_blacklist_v.size(); ++i) {
 		if (cutSpaces(env_blacklist_v[i]).empty()) continue;
+		printf("SKIP: %s\n", cutSpaces(env_blacklist_v[i]).c_str());
 		blackList.push_back(cutSpaces(env_blacklist_v[i]));
 	}
+
 	if (query_ret != 0) {
 		if (dialogMode) ncInterface.showMsgBox(_("Error querying database"));
 		else errorList.push_back(mError(string(_("Error querying database"))));

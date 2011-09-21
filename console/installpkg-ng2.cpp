@@ -80,7 +80,7 @@ int main (int argc, char **argv)
 		
 	bool do_reset=true;
 	int ich;
-	const char* short_opt = "hvpdzfmkDLrailgyqNcwxHbFQVRZWPKCMt:GsE:S:A:B:Ye:j:";
+	const char* short_opt = "hvpdzfmkDLrailgyqNcwxHbFQVRZWPKCMt:GsE:S:A:B:Ye:j:X:";
 	//const char* short_opt = "abcdfghiklmpqrvzDLyNwxHFQVRZWPKCME"; // Try to sort this stuff...later :)
 	const struct option long_options[] =  {
 		{ "help",		0, NULL,	'h'},
@@ -125,6 +125,7 @@ int main (int argc, char **argv)
 		{ "resync",		0, NULL,	'Y'},
 		{ "arch",		1, NULL,	'e'},
 		{ "limit",		1, NULL,	'j'},
+		{ "skip",		1, NULL,	'X'},
 		{ NULL, 		0, NULL, 	0}
 	};
 
@@ -136,6 +137,9 @@ int main (int argc, char **argv)
 		
 
 		switch (ich) {
+			case 'X':
+					_cmdOptions["skip_packages"]=string(optarg);
+					break;
 			case 'j':
 					_cmdOptions["versionLimit"]=string(optarg);
 					break;
@@ -363,6 +367,14 @@ int main (int argc, char **argv)
 		arg_string = (string) argv[0] + " -x ";
 		for (int i=1; i<argc; i++) {
 			arg_string += (string) argv[i] + " ";
+		}
+		if (getenv("SKIP") && !cutSpaces(getenv("SKIP")).empty()) {
+			vector<string> tmp_skip = splitString(getenv("SKIP"), " ");
+			arg_string += " -X ";
+			for (size_t s=0; s<tmp_skip.size(); ++s) {
+				arg_string += tmp_skip[s];
+				if (s<tmp_skip.size()-1) arg_string+= ",";
+			}
 		}
 		//say("%s\n", _("You must login as root to run this program"));
 		if (system("sudo " + arg_string)!=0) {

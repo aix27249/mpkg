@@ -312,7 +312,7 @@ bool AgiliaSetup::getRepositoryData() {
 
 
 
-bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string& merge_setup_variant, const string& netman, const string& nvidia_driver) {
+bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string& merge_setup_variant, const string& netman, const string& nvidia_driver, bool add_plymouth) {
 	if (notifier) notifier->setSummaryTextCall(_("Preparing install queue"));
 	if (notifier) notifier->setDetailsTextCall("");
 
@@ -337,6 +337,7 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 		if (!merge_setup_variant.empty()) pkgListStrings = mergeVectors(pkgListStrings, preprocessInstallList(merge_setup_variant));
 		if (netman=="networkmanager") pkgListStrings.push_back("NetworkManager");
 		else if (netman=="wicd") pkgListStrings.push_back("wicd");
+		if (add_plymouth) pkgListStrings.push_back("plymouth");
 		parseInstallList(pkgListStrings, installset_contains, versionz);
 		pkgListStrings.clear();
 		if (installset_contains.empty()) {
@@ -908,7 +909,7 @@ bool AgiliaSetup::grub2_mkconfig(const string& bootloader, const string& fbmode,
 	// Fixing /etc/default/grub
 	string grub_default = ReadFile("/tmp/new_sysroot/etc/default/grub");
 	strReplace(&grub_default, "#GRUB_GFXPAYLOAD_LINUX=keep", "GRUB_GFXPAYLOAD_LINUX=\"" + fbmode + "\"");
-	strReplace(&grub_default, "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"", "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet " + kernel_options + "\"");
+	strReplace(&grub_default, "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"", "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet " + kernel_options + "\" splash");
 
 	WriteFile("/tmp/new_sysroot/etc/default/grub", grub_default);
 	grub_default.clear();
@@ -989,7 +990,7 @@ set menu_color_highlight=white/dark-gray\n\
 # Linux bootable partition config begins\n\
 menuentry \"" + string(_("AgiliaLinux ") + string(DISTRO_VERSION) + _(" on ")) + rootPartition + "\" {\n\
 \tset root=(" + mapPart(devMap, grubBootPartition, 0) + ")\n" + gfxPayload + \
-"\tlinux " + kernelstring + " root=" + rootUUID + " ro quiet " + kernel_options+"\n\t" + initrdstring + "\n}\n\n";
+"\tlinux " + kernelstring + " root=" + rootUUID + " ro quiet splash " + kernel_options+"\n\t" + initrdstring + "\n}\n\n";
 // Add safe mode
 	grubConfig += "menuentry \"" + string(_("AgiliaLinux ") + string(DISTRO_VERSION) + _(" (recovery mode) on ")) + rootPartition + "\" {\n" + gfxPayload + \
 "\tlinux ("+ mapPart(devMap, grubBootPartition, 0) +")" + kernelstring + " root=" + rootPartition + " ro " + kernel_options + " single\n}\n\n";
@@ -1073,8 +1074,10 @@ bool AgiliaSetup::postInstallActions(const string& language, const string& setup
     		    FileExists("/tmp/new_sysroot/usr/sbin/lxdm") ||
 		    FileExists("/tmp/new_sysroot/usr/bin/slim")) {
 				setDefaultRunlevel("4");
-				enablePlymouth(true);
 		}
+	}
+	if (FileExists("/tmp/new_sysroot/bin/plymouth")) {
+		enablePlymouth(true);
 	}
 
 	// If nouveau is used, remove blacklist entry from /etc/modprobe.d/nouveau.conf
@@ -1114,8 +1117,7 @@ void AgiliaSetup::setDefaultRunlevel(const string& lvl) {
 	WriteFile("/tmp/new_sysroot/etc/inittab", data);
 }
 void AgiliaSetup::enablePlymouth(bool enable) {
-	if (enable) system("chroot /tmp/new_sysroot rc-update add plymouth default 2>/dev/null >/dev/null");
-	else system("chroot /tmp/new_sysroot rc-update del plymouth plymouth 2>/dev/null >/dev/null");
+	if (enable) system("chroot /tmp/new_sysroot rc-update add plymouth X11 2>/dev/null >/dev/null");
 }
 
 void AgiliaSetup::generateFontIndex() {
@@ -1241,7 +1243,7 @@ bool AgiliaSetup::run(const map<string, string>& _settings, const vector<TagPair
 	if (notifier) notifier->setProgressCall(10);
 	if (!getRepositoryData()) return false;
 	if (notifier) notifier->setProgressCall(25);
-	if (!prepareInstallQueue(settings["setup_variant"], settings["merge_setup_variant"], settings["netman"], settings["nvidia-driver"])) return false;
+	if (!prepareInstallQueue(settings["setup_variant"], settings["merge_setup_variant"], settings["netman"], settings["nvidia-driver"], strToBool(settings["add_plymouth"]))) return false;
 	if (notifier) notifier->setProgressCall(50);
 	if (!validateQueue()) return false;
 	if (notifier) notifier->setProgressCall(60);

@@ -31,8 +31,11 @@ class AgiliaSetup {
 		AgiliaSetup(StatusNotifier *_n = NULL);
 		~AgiliaSetup();
 
+		bool run(const map<string, string>& _settings, const vector<TagPair> &_users, const vector<PartConfig> &_partConfigs, const vector<string> &_additional_repositories, void (*updateProgressData) (ItemState));
+		
 		void registerStatusNotifier(StatusNotifier *);
 		void unregisterStatusNotifier();
+	private:
 
 		void setDefaultXDM();
 		void setDefaultRunlevels();
@@ -52,7 +55,7 @@ class AgiliaSetup {
 		bool setMpkgConfig(string pkgsource, const string& volname, const string& rep_location, const vector<string> additional_repositories);
 
 		bool getRepositoryData();
-		bool prepareInstallQueue(const string& setup_variant, const string& merge_setup_variant, const string& netman, const string& nvidia_driver);
+		bool prepareInstallQueue(const string& setup_variant, const string& merge_setup_variant, const string& netman, const string& nvidia_driver, bool add_plymouth);
 		bool validateQueue();
 
 		bool formatPartitions();
@@ -102,11 +105,9 @@ class AgiliaSetup {
 		vector<TagPair> users;
 		vector<string> additional_repositories;
 
-		bool run(const map<string, string>& _settings, const vector<TagPair> &_users, const vector<PartConfig> &_partConfigs, const vector<string> &_additional_repositories, void (*updateProgressData) (ItemState));
 		
 		bool validateConfig();
 
-	private:
 		bool setHostname(const string& hostname, const string& netname = "example.net");
 
 		vector<CustomPkgSet> customPkgSetList;
