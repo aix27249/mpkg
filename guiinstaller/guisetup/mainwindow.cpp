@@ -598,6 +598,8 @@ bool MainWindow::validateBootloaderSettings() {
 
 void MainWindow::saveBootloaderSettings() {
 	string fbmode = "text";
+	if (ui->enablePlymouthCheckBox->isChecked()) fbmode = "keep";
+	if (!cutSpaces(ui->fbmodeEdit->text().toStdString()).empty()) fbmode = cutSpaces(ui->fbmodeEdit->text().toStdString());
 	if (ui->bootDeviceRadioButton->isChecked()) {
 		if (ui->bootLoaderComboBox->currentIndex()<0) return;
 		else settings["bootloader"] = drives[ui->bootLoaderComboBox->currentIndex()].tag;
@@ -609,6 +611,7 @@ void MainWindow::saveBootloaderSettings() {
 	else if (ui->noBootLoaderRadioButton->isChecked()) settings["bootloader"] = "NONE";
 	settings["fbmode"] = fbmode;
 	settings["initrd_delay"] = IntToStr(ui->initrdDelayCheckBox->isChecked());
+	settings["add_plymouth"] = IntToStr(ui->enablePlymouthCheckBox->isChecked());
 	settings["kernel_options"] = ui->kernelOptionsLineEdit->text().toStdString();
 	settings["initrd_modules"] = ui->initrdModulesLineEdit->text().toStdString();
 	settings["tmpfs_tmp"] = IntToStr(ui->useTmpfsCheckBox->isChecked());
