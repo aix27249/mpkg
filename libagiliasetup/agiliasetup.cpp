@@ -909,7 +909,7 @@ bool AgiliaSetup::grub2_mkconfig(const string& bootloader, const string& fbmode,
 	// Fixing /etc/default/grub
 	string grub_default = ReadFile("/tmp/new_sysroot/etc/default/grub");
 	strReplace(&grub_default, "#GRUB_GFXPAYLOAD_LINUX=keep", "GRUB_GFXPAYLOAD_LINUX=\"" + fbmode + "\"");
-	strReplace(&grub_default, "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"", "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet " + kernel_options + "\" splash");
+	strReplace(&grub_default, "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"", "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet splash " + kernel_options + "\"");
 
 	WriteFile("/tmp/new_sysroot/etc/default/grub", grub_default);
 	grub_default.clear();
