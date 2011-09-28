@@ -4,32 +4,32 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="mainwindow.cpp" line="24"/>
+        <location filename="mainwindow.cpp" line="23"/>
         <source>Error</source>
         <translation type="unfinished">Помилка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="88"/>
+        <location filename="mainwindow.cpp" line="91"/>
         <source>Fatal error</source>
         <translation type="unfinished">Критична помилка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="89"/>
+        <location filename="mainwindow.cpp" line="92"/>
         <source>Setup failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="89"/>
+        <location filename="mainwindow.cpp" line="92"/>
         <source>Setup failed and will exit now. You can look in /var/log/guisetup_exec.log to see what can cause failure.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="98"/>
+        <location filename="mainwindow.cpp" line="106"/>
         <source>Really cancel installation?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="99"/>
+        <location filename="mainwindow.cpp" line="107"/>
         <source>Installation is not yet complete. If you interrupt it at this point, you will probably get your system completely unusable. Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -115,214 +115,156 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="31"/>
         <source>Retrieving setup variants</source>
-        <translation type="unfinished">Отримання варіантів установки</translation>
+        <translation type="obsolete">Отримання варіантів установки</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="32"/>
         <source>Retrieving list...</source>
-        <translation type="unfinished">Отримання списку...</translation>
+        <translation type="obsolete">Отримання списку...</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="45"/>
         <source>Receiving %1 of %2: %3</source>
-        <translation type="unfinished">Отримання %1 of %2: %3</translation>
+        <translation type="obsolete">Отримання %1 of %2: %3</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="79"/>
         <source>Validating config</source>
-        <translation type="unfinished">Перевірка конфігурації</translation>
+        <translation type="obsolete">Перевірка конфігурації</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="82"/>
         <source>License not accepted, cannot continue</source>
-        <translation type="unfinished">Ліцензія не прийнята, продовження неможливе</translation>
+        <translation type="obsolete">Ліцензія не прийнята, продовження неможливе</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="86"/>
         <source>Bootloader partition not specified, how you wish to boot, Luke?</source>
-        <translation type="unfinished">Завантажувач розділу не вказано, як ви хочете завантажитися?</translation>
+        <translation type="obsolete">Завантажувач розділу не вказано, як ви хочете завантажитися?</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="90"/>
         <source>No setup variant selected, cannot continue</source>
-        <translation type="unfinished">Не обрано варіант встановлення, продовження неможливе</translation>
+        <translation type="obsolete">Не обрано варіант встановлення, продовження неможливе</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="94"/>
         <source>No package source specified, cannot continue</source>
-        <translation type="unfinished">Не вказано джерело пакетів, продовження неможливе</translation>
+        <translation type="obsolete">Не вказано джерело пакетів, продовження неможливе</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="100"/>
         <source>No volume name specified, cannot continue</source>
-        <translation type="unfinished">Не вказана назва тому, продовження неможливе</translation>
+        <translation type="obsolete">Не вказана назва тому, продовження неможливе</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="104"/>
         <source>Repository location not specified, cannot continue</source>
-        <translation type="unfinished">Репозиторій не вказано, продовження неможливе</translation>
+        <translation type="obsolete">Репозиторій не вказано, продовження неможливе</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="110"/>
         <source>No timezone specified, cannot continue</source>
-        <translation type="unfinished">Не вказано часовий пояс, продовження неможливе</translation>
+        <translation type="obsolete">Не вказано часовий пояс, продовження неможливе</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="117"/>
         <source>Setting MPKG config</source>
-        <translation type="unfinished">Налаштування конфігурації MPKG</translation>
+        <translation type="obsolete">Налаштування конфігурації MPKG</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="138"/>
         <source>Updating repository data</source>
-        <translation type="unfinished">Оновлення репозиторію данних</translation>
+        <translation type="obsolete">Оновлення репозиторію данних</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="139"/>
         <source>Retrieving indices from repository</source>
-        <translation type="unfinished">Отримання індексів з репозиторія</translation>
+        <translation type="obsolete">Отримання індексів з репозиторія</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="142"/>
         <source>Failed to retreive repository data, cannot continue</source>
-        <translation type="unfinished">Помилка отримання індексів з репозиторія, продовження неможливе</translation>
+        <translation type="obsolete">Помилка отримання індексів з репозиторія, продовження неможливе</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="146"/>
         <source>Caching setup variants</source>
-        <translation type="unfinished">Кешування варіантів встановлення</translation>
+        <translation type="obsolete">Кешування варіантів встановлення</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="153"/>
         <source>Preparing install queue</source>
-        <translation type="unfinished">Підготовка черги установки</translation>
+        <translation type="obsolete">Підготовка черги установки</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="162"/>
         <source>Package set contains no packages, installation failed.</source>
-        <translation type="unfinished">Набір пакетів не містить пакетів, встановлення неможливе</translation>
+        <translation type="obsolete">Набір пакетів не містить пакетів, встановлення неможливе</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="223"/>
         <source>Validating queue</source>
-        <translation type="unfinished">Перевірка черги</translation>
+        <translation type="obsolete">Перевірка черги</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="231"/>
         <source>Commit failed: probably dependency errors</source>
-        <translation type="unfinished">Виконати не вдалося: можливо, помилки залежностей</translation>
+        <translation type="obsolete">Виконати не вдалося: можливо, помилки залежностей</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="239"/>
         <source>Formatting /dev/%2</source>
-        <translation type="unfinished">Форматування /dev/%2</translation>
+        <translation type="obsolete">Форматування /dev/%2</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="249"/>
         <source>Creating swapspace</source>
-        <translation type="unfinished">Створення розділу підкачки</translation>
+        <translation type="obsolete">Створення розділу підкачки</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="250"/>
         <source>Creating swap in %1</source>
-        <translation type="unfinished">Створення розділу підкачки в %1</translation>
+        <translation type="obsolete">Створення розділу підкачки в %1</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="258"/>
         <source>Activating swap</source>
-        <translation type="unfinished">Активація розділу підкачки</translation>
+        <translation type="obsolete">Активація розділу підкачки</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="259"/>
         <source>Activating swap in %1</source>
-        <translation type="unfinished">Активація розділу підкачки в %1</translation>
+        <translation type="obsolete">Активація розділу підкачки в %1</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="265"/>
         <source>Formatting partitions</source>
-        <translation type="unfinished">Форматування розділів</translation>
+        <translation type="obsolete">Форматування розділів</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="295"/>
         <source>Mounting partitions</source>
-        <translation type="unfinished">Монтування розділів</translation>
+        <translation type="obsolete">Монтування розділів</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="357"/>
         <source>Failed to mount partition %1</source>
-        <translation type="unfinished">Помилка монтування розділу %1</translation>
+        <translation type="obsolete">Помилка монтування розділу %1</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="366"/>
         <source>Moving database</source>
-        <translation type="unfinished">Переміщення бази даних</translation>
+        <translation type="obsolete">Переміщення бази даних</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="369"/>
         <source>An error occured while moving database to hard drive</source>
-        <translation type="unfinished">Сталася помилка при переміщенні бази даних на жорсткий диск</translation>
+        <translation type="obsolete">Сталася помилка при переміщенні бази даних на жорсткий диск</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="380"/>
         <source>Installing packages</source>
-        <translation type="unfinished">Встановлення пакетів</translation>
+        <translation type="obsolete">Встановлення пакетів</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="381"/>
         <source>Preparing to installation</source>
-        <translation type="unfinished">Підготовка до встановлення</translation>
+        <translation type="obsolete">Підготовка до встановлення</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="388"/>
-        <source>Finishing installation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="thread.cpp" line="389"/>
-        <source>Exporting pkgtools-compatible database</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="thread.cpp" line="543"/>
         <source>Creating initrd</source>
-        <translation type="unfinished">Створення initrd</translation>
+        <translation type="obsolete">Створення initrd</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="625"/>
         <source>Installing GRUB2 to %1</source>
-        <translation type="unfinished">Встановлення GRUB2 до %1</translation>
+        <translation type="obsolete">Встановлення GRUB2 до %1</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="736"/>
-        <source>Initializing X11 font database</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="thread.cpp" line="737"/>
         <source>Generating font index</source>
-        <translation type="unfinished">Створення індексу шрифтів</translation>
+        <translation type="obsolete">Створення індексу шрифтів</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="741"/>
         <source>Generating font cache</source>
-        <translation type="unfinished">Створення кешу шрифтів</translation>
+        <translation type="obsolete">Створення кешу шрифтів</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="786"/>
         <source>Install complete, running post-install actions</source>
-        <translation type="unfinished">Встановлення завершено, виконання службових дій</translation>
+        <translation type="obsolete">Встановлення завершено, виконання службових дій</translation>
     </message>
     <message>
-        <location filename="thread.cpp" line="915"/>
-        <source>Finishing...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="thread.cpp" line="916"/>
         <source>Unmounting filesystems and syncing disks</source>
-        <translation type="unfinished">Відключення розділів та синхронізація дисків</translation>
+        <translation type="obsolete">Відключення розділів та синхронізація дисків</translation>
     </message>
 </context>
 </TS>
