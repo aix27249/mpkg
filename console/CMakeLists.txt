@@ -60,18 +60,19 @@ ADD_EXECUTABLE(mpkg-transactions transactions)
 ADD_EXECUTABLE(mpkg-rollback rollback)
 ADD_EXECUTABLE(mpkg-conflicts conflicts)
 ADD_EXECUTABLE(mpkg-unused unused)
+ADD_EXECUTABLE(mpkg-compareversions compareversions)
 #ADD_EXECUTABLE(mpkg-converttosql converttosql)
 # Installation
 FILE(GLOB aliases "${CMAKE_CURRENT_SOURCE_DIR}/aliases/mpkg-*")
 FILE(GLOB update_all_caches "${CMAKE_CURRENT_SOURCE_DIR}/update-all-caches")
 IF(X86_64)
-	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts mpkg-checkconfigs mpkg-unused
+	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts mpkg-checkconfigs mpkg-unused mpkg-compareversions
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib64
 		ARCHIVE DESTINATION lib64
 	)
 ELSE(X86_64)
-	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts mpkg-checkconfigs mpkg-unused
+	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts mpkg-checkconfigs mpkg-unused mpkg-compareversions
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib
 		ARCHIVE DESTINATION lib
