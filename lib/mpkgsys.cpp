@@ -24,7 +24,7 @@ int mpkgSys::clean_cache(bool symlinks_only)
 void mpkgSys::clean_queue(mpkgDatabase *db) {
 	PACKAGE_LIST toInstall;
 	SQLRecord sqlSearch;
-	sqlSearch.setSearchMode(SEARCH_OR);
+	sqlSearch.setSearchMode(SEARCH_IN);
 	sqlSearch.addField("package_action", ST_INSTALL);
 	sqlSearch.addField("package_action", ST_REMOVE);
 	sqlSearch.addField("package_action", ST_PURGE);

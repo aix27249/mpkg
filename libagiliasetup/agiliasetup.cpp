@@ -395,7 +395,10 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 	// Now process alternatives
 	vector<TagPair> alterPairs = commitList.getAlternatives(alternatives, false);
 	core->clean_queue();
-	
+
+	delete core;
+	core = new mpkg;
+
 	bool altFound;
 	for (size_t i=0; i<alterPairs.size(); ++i) {
 		altFound = false;
@@ -428,7 +431,8 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 	}
 
 	
-
+	commitList.clear();
+	core->get_packagelist(sqlSearch, &commitList);
 
 
 	vector<string> queryLog;
