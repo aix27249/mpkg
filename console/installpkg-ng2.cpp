@@ -80,7 +80,7 @@ int main (int argc, char **argv)
 		
 	bool do_reset=true;
 	int ich;
-	const char* short_opt = "hvpdzfmkDLrailgyqNcwxHbFQVRZWPKCMt:GsE:S:A:B:Ye:j:X:";
+	const char* short_opt = "hvpdzfmkDLrailgyqNcwxHbFQVRZWPKCMt:GsE:S:A:B:Ye:j:X:I";
 	//const char* short_opt = "abcdfghiklmpqrvzDLyNwxHFQVRZWPKCME"; // Try to sort this stuff...later :)
 	const struct option long_options[] =  {
 		{ "help",		0, NULL,	'h'},
@@ -126,6 +126,7 @@ int main (int argc, char **argv)
 		{ "arch",		1, NULL,	'e'},
 		{ "limit",		1, NULL,	'j'},
 		{ "skip",		1, NULL,	'X'},
+		{ "machinemode",	0, NULL,	'I'},
 		{ NULL, 		0, NULL, 	0}
 	};
 
@@ -137,6 +138,9 @@ int main (int argc, char **argv)
 		
 
 		switch (ich) {
+			case 'I':
+					_cmdOptions["machine_mode"]="yes";
+					break;
 			case 'X':
 					_cmdOptions["skip_packages"]=string(optarg);
 					break;

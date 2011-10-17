@@ -205,8 +205,8 @@ void actUpdatesMenu(mpkg &core) {
 }
 void actUpgrade(mpkg &core, int action) {
 		// New algorithm
-		if (dialogMode) ncInterface.showInfoBox(_("Searching for updates..."));
-		else msay(_("Searching for updates..."));
+		//if (dialogMode) ncInterface.showInfoBox(_("Searching for updates..."));
+		//else fprintf(stderr, _("Searching for updates..."));
 
 		PACKAGE_LIST resultList, uninstallList;
 		vector<string> errorList = core.getLatestUpdates(&resultList, &uninstallList, true, dialogMode);
@@ -216,7 +216,7 @@ void actUpgrade(mpkg &core, int action) {
 		string distro;
 		string size;
 		if (errorList.empty() && resultList.size()>0)	{
-			if (!dialogMode) msay(_("Found ") + IntToStr(resultList.size()) + _(" updates\n"));
+			if (!dialogMode) fprintf(stderr, string("\r" + string(_("Found ")) + IntToStr(resultList.size()) + _(" updates\n")).c_str());
 			for (unsigned int i=0; i<resultList.size(); i++) {
 				totalSizeC += atoi(resultList[i].get_compressed_size().c_str());
 				totalSizeI += atoi(resultList[i].get_installed_size().c_str());
@@ -246,14 +246,18 @@ void actUpgrade(mpkg &core, int action) {
 			}
 			if (action==ACT_LISTUPGRADE) {
 				if (!dialogMode) {
-					say(_("Available updates:\n"));
+					fprintf(stderr, _("Available updates:\n"));
 					for (unsigned int i=0; i<resultList.size(); i++) {
+						if (_cmdOptions["machine_mode"]=="yes") {
+							cout << resultList[i].get_name() << " " << uninstallList[i].get_fullversion() << " => " << resultList[i].get_fullversion() << endl;
+							continue;
+						}
 						if (resultList[i].get_repository_tags().empty() || resultList[i].get_repository_tags()=="0") branch.clear();
 						else branch = "[" + resultList[i].get_repository_tags() + "]";
 						if (resultList[i].package_distro_version.empty() || resultList[i].package_distro_version == "0") distro.clear();
 						else distro = "[" + resultList[i].package_distro_version + "]";
 						size = " " + humanizeSize(atol(resultList[i].get_compressed_size().c_str()));
-
+						
 						if (!verbose) say("%s: %s%s%s ==> %s%s%s %s%s%s%s\n", resultList[i].get_name().c_str(), \
 								CL_6, uninstallList[i].get_fullversion().c_str(), CL_WHITE, \
 								CL_GREEN, resultList[i].get_fullversion().c_str(), \
@@ -262,7 +266,7 @@ void actUpgrade(mpkg &core, int action) {
 							say("%s%s\n", resultList[i].get_locations().at(t).get_full_url().c_str(), resultList[i].get_filename().c_str());
 						}
 					}
-					say(_("Total: %s to download\n"), humanizeSize(totalSizeC).c_str());
+					fprintf(stderr, _("Total: %s to download\n"), humanizeSize(totalSizeC).c_str());
 				}
 				else {
 					/*for (int i=0; i<resultList.size(); i++) {
@@ -274,7 +278,7 @@ void actUpgrade(mpkg &core, int action) {
 			}
 		}
 		else {
-			if (!dialogMode) say(_("No updates available\n"));
+			if (!dialogMode) fprintf(stderr, _("No updates available\n"));
 			else ncInterface.showMsgBox(_("No updates available\n"));
 		}
 		//return 0;

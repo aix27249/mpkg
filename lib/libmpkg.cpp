@@ -1588,7 +1588,7 @@ void mpkg::get_queue(PACKAGE_LIST *pkgList, int filter) {
 vector<string> mpkg::getLatestUpdates(PACKAGE_LIST *pkgList, PACKAGE_LIST *uninstList, bool fast, bool needDescriptions) {
 	// Yet another new algorithm
 	if (dialogMode) ncInterface.showInfoBox(_("Searching for updates..."));
-	else msay(_("Searching for updates..."));
+	else fprintf(stderr, _("Searching for updates..."));
 	vector<string> errorList;
 	//vector<MenuItem> menuItems; // Vector for update list
 	// Creating DB cache
