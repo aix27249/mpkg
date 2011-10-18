@@ -557,13 +557,6 @@ void DependencyTracker::fillByName(const string& name, PACKAGE_LIST *p, PACKAGE_
 	}
 }
 
-/*bool hasWillBeInstalled(const PACKAGE_LIST &pkgList) {
-	for (size_t i=0; i<pkgList.size(); ++i) {
-		if (pkgList[i].action()==ST_INSTALL) return true;
-	}
-	return false;
-}*/
-
 PACKAGE* getWillBeInstalled(PACKAGE_LIST &pkgList) {
 	for (size_t i=0; i<pkgList.size(); ++i) {
 		if (pkgList[i].action()==ST_INSTALL) return pkgList.get_package_ptr(i);
@@ -591,60 +584,17 @@ int DependencyTracker::get_dep_package(DEPENDENCY *dep, PACKAGE *returnPackage, 
 	}
 	
 	PACKAGE_LIST candidates;
-	// First of all, let's determine what alt is installed at this moment.
-	/*
-	string altname;
-	for (size_t i=0; i<reachablePackages.size(); ++i) {
-		if (reachablePackages[i].installed()) {
-			altname = reachablePackages[i].get_name();
-			break;
-		}
-	}
-	if (!altname.empty()) {
-		fprintf(stderr, "altname: %s\n", altname.c_str());
-		// Round zero: let's find candidates with same altversion
-		for (size_t i=0; i<reachablePackages.size(); ++i) {
-			if (reachablePackages[i].get_name()!=altname) continue;
-				if (reachablePackages[i].reachable() && meetVersion(dep->get_version_data(), reachablePackages[i].get_version())) {
-				candidates.add(reachablePackages.at(i));
-				fprintf(stderr, "Added candidate (round 0): %s %s\n", reachablePackages[i].get_name().c_str(), reachablePackages[i].get_fullversion().c_str());
-			}
+	for (size_t i=0; i<reachablePackages.size(); i++) {
+		if (reachablePackages[i].reachable() && meetVersion(dep->get_version_data(), reachablePackages[i].get_version())) {
+			candidates.add(reachablePackages.at(i));
 		}
 	}
 	
-	if (altname.find("cairo")!=std::string::npos) fprintf(stderr, "cairo altname check complete: %d\n", candidates.size());
-	// If nothing found - let's search another ones
-	// Round one: same name (no alts)
 	if (candidates.IsEmpty()) {
-		for (size_t i=0; i<reachablePackages.size(); ++i) {
-			if (reachablePackages[i].get_name()!=reachablePackages[i].get_corename()) continue;
-			if (reachablePackages[i].reachable() && meetVersion(dep->get_version_data(), reachablePackages[i].get_version())) {
-				candidates.add(reachablePackages.at(i));
-				fprintf(stderr, "Added candidate (round 1): %s %s\n", reachablePackages[i].get_name().c_str(), reachablePackages[i].get_fullversion().c_str());
-			}
-		}
-	}
-	
-	if (altname.find("cairo")!=std::string::npos) fprintf(stderr, "cairo corename check complete: %d\n", candidates.size()); */
-	// Finally, if no unaltered ones found - let's pick any
-	if (candidates.IsEmpty()) {
-		for (size_t i=0; i<reachablePackages.size(); i++) {
-			if (reachablePackages[i].reachable() && meetVersion(dep->get_version_data(), reachablePackages[i].get_version())) {
-				candidates.add(reachablePackages.at(i));
-				//fprintf(stderr, "Added candidate (round 2): %s %s\n", reachablePackages[i].get_name().c_str(), reachablePackages[i].get_fullversion().c_str());
-			}
-		}
-	}
-
-
-	//if (altname.find("cairo")!=std::string::npos) fprintf(stderr, "cairo anyname check complete: %d\n", candidates.size());
-	if (candidates.IsEmpty())
-	{
 		if (pList==NULL) mDebug(dep->getDepInfo() + _(" is required, but no suitable version was found"));
 		return MPKGERROR_NOSUCHVERSION;
 	}
 
-	//if (candidates.hasInstalledOnes()) *returnPackage = *candidates.getInstalledOne();
 	tmpRetPackage = (PACKAGE *) candidates.getInstalledOne();
 	if (tmpRetPackage) *returnPackage = *tmpRetPackage;
 	else {
