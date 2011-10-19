@@ -145,7 +145,9 @@ void DependencyTracker::fillInstalledPackages()
 		if (packageCache[i].installed()) installedPackages.add(packageCache[i]);
 	}
 }
-//#define DEPDEBUG
+
+// This function is used in some external utilities. 
+// FIXME: It seems that it's functionality is a duplicate of DependencyTracker::renderData() one, so we should investigate it, and if it's true - leave only one function. Of course, standalone function is preferred (so renderData() may become a wrapper).
 int DependencyTracker::renderDependenciesInPackageList(PACKAGE_LIST *pkgList)
 {
 	//printf("%s\n", __func__);

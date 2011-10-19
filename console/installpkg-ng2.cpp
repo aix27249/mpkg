@@ -404,7 +404,6 @@ int main (int argc, char **argv)
 			action == ACT_REMOVE ||
 			action == ACT_INSTALLGROUP ||
 			action == ACT_REMOVEGROUP ||
-			action == ACT_UPDATE ||
 			action == ACT_UPDATEALL ||
 			action == ACT_REINSTALL )
 	{

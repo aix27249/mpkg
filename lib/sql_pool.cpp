@@ -514,8 +514,8 @@ int SQLiteDB::get_sql_vtable(SQLTable &output, const SQLRecord& fields, const st
 	}
 	string order, group;
 	// Note here: leading space IS REQUIRED.
-	if (table_name == "packages") order = " ORDER BY package_name";
 	if (!search.orderBy.empty()) order = " ORDER BY " + search.orderBy;
+	else if (table_name == "packages") order = " ORDER BY package_name";
 	if (!search.groupBy.empty()) group = " GROUP BY " + search.groupBy;
 	sql_query=sql_action + " " + sql_fields + " " + sql_from + " " + sql_where + group + order + ";";
 	
@@ -523,8 +523,8 @@ int SQLiteDB::get_sql_vtable(SQLTable &output, const SQLRecord& fields, const st
 	sqlite3_stmt *stmt;
 	int p_ret = sqlite3_prepare_v2(db, sql_query.c_str(), -1, &stmt, NULL);
 	if (p_ret!=SQLITE_OK) {
-		printf("Prepare fails, ret: %d\n", p_ret);
-		printf("query:\n%s\n", sql_query.c_str());
+		fprintf(stderr, "Prepare fails, ret: %d\n", p_ret);
+		fprintf(stderr, "query:\n%s\n", sql_query.c_str());
 		return p_ret;
 	}
 
@@ -551,141 +551,13 @@ int SQLiteDB::get_sql_vtable(SQLTable &output, const SQLRecord& fields, const st
 	}
 	while (sql_ret==SQLITE_ROW);
 
+	//fprintf(stderr, "\nRunning statement...\n");
 	sqlite3_finalize(stmt);
+	//fprintf(stderr, "\nStatement finished.\n");
 	if (sql_ret==SQLITE_DONE) return SQLITE_OK;
 	else return sql_ret;
 }
 
-
-/*int SQLiteDB::get_sql_vtable_old(SQLTable &output, const SQLRecord& fields, const string &table_name, const SQLRecord& search)
-{
-	//printf("data received, building query\n");
-	string sql_query;
-	string sql_action;
-	mstring sql_fields;
-	string sql_from;
-	mstring sql_where;
-	vector<mstring> sqlMatrix;
-	int limiter = SQLMATRIX_LIMIT;
-	char **table;
-	int cols;
-	int rows;
-	// Do what?
-	sql_action="select";
-	SQLRecord tmp_fields;
-	SQLRecord *fieldptr=(SQLRecord *) &fields;
-	// Get what?
-	if (fields.empty()) // If fields is empty, just get all fields
-	{
-		fieldptr=&tmp_fields;
-		//mDebug("Fields empty");
-		vector<string> fieldnames=getFieldNames(table_name); // Get field names to fill
-		for (unsigned int i=0; i<fieldnames.size(); i++)
-			fieldptr->addField(fieldnames[i]);
-	}
-	for (unsigned int i=0; i<fieldptr->size(); i++) // Otherwise, get special fields
-	{
-		sql_fields+=fieldptr->getFieldName(i);
-		if (i!=fieldptr->size()-1) sql_fields+=", ";
-	}
-	
-
-	sql_from = "from "+table_name;
-	if (!search.empty())
-	{
-		if (search.getEqMode()!=EQ_EQUAL && search.getSearchMode()==SEARCH_IN) {
-			mWarning("SEARCH_IN is not supported for like statements, result may be not as you expected");
-		}
-		sql_where="where ";
-		if (search.getSearchMode()==SEARCH_IN)
-		{
-			sql_where += search.getFieldName(0) + " in (";
-			//printf("Building IN statements\n");
-			for (unsigned int i=0; i<search.size(); i++)
-			{
-				if (limiter == SQLMATRIX_LIMIT) {
-					sqlMatrix.resize(sqlMatrix.size()+1);
-					limiter = 0;
-				}
-				sqlMatrix[sqlMatrix.size()-1] += "'" + search.getValueI(i)+"'";
-				if (i!=search.size()-1) sqlMatrix[sqlMatrix.size()-1] +=", ";
-				limiter++;
-			}
-			//printf("composing matrix\n");
-			for (unsigned int i=0; i<sqlMatrix.size(); i++) {
-				sql_where += sqlMatrix[i];
-				sqlMatrix[i].clear();
-			}
-			sqlMatrix.clear();
-			sql_where += ")";
-			//printf("IN statement done\n");
-		}
-		else
-		{
-			//printf("LIKE statements\n");
-			for (unsigned int i=0; i<search.size(); i++)
-			{
-				if (limiter == SQLMATRIX_LIMIT) {
-					sqlMatrix.resize(sqlMatrix.size()+1);
-					limiter = 0;
-				}
-
-				if (search.getEqMode()==EQ_EQUAL) sqlMatrix[sqlMatrix.size()-1] += search.getFieldName(i) + "='" + search.getValueI(i)+"'";
-				if (search.getEqMode()==EQ_LIKE) sqlMatrix[sqlMatrix.size()-1] += search.getFieldName(i) + " like '%" + search.getValueI(i)+"%'";
-				if (search.getEqMode()==EQ_CUSTOMLIKE) sqlMatrix[sqlMatrix.size()-1] += search.getFieldName(i) + " like '" + search.getValueI(i)+"'";
-
-				if (i!=search.size()-1) {
-					if (search.getSearchMode()==SEARCH_AND) sqlMatrix[sqlMatrix.size()-1] += " and ";
-					if (search.getSearchMode()==SEARCH_OR) sqlMatrix[sqlMatrix.size()-1] += " or ";
-				}
-				limiter++;
-			}
-			for (unsigned int i=0; i<sqlMatrix.size(); i++) {
-				sql_where += sqlMatrix[i];
-				sqlMatrix[i].clear();
-			}
-			sqlMatrix.clear();
-			//printf("LIKE complete\n");
-		}
-	}
-	string order, group;
-	if (table_name == "packages") order = " order by package_name";
-	if (!search.orderBy.empty()) order = " order by " + search.orderBy;
-	if (!search.groupBy.empty()) group = " group by " + search.groupBy;
-	sql_query=sql_action+" "+sql_fields.s_str()+" "+sql_from+" "+sql_where.s_str() + group + order + ";";
-//	if (table_name == "packages" ) + " order by package_name;";
-//	else sql_query = sql_action+" "+sql_fields.s_str()+" "+sql_from+" "+sql_where.s_str() + ";";
-	//printf("Query complete, requesting\n");
-#ifdef DEBUG
-	lastSQLQuery=sql_query;
-#endif
-	int sql_ret=get_sql_table(sql_query, &table, &rows, &cols);
-	//printf("SQL Request complete, parsing results\n");
-	if (sql_ret==0)
-	{
-		output.clear(); // Ensure that output is clean and empty
-		SQLRecord row; 	// One row of data
-		unsigned int field_num=0;
-		for (int current_row=1; current_row<=rows; current_row++)
-		{
-			field_num=0;
-			row=*fieldptr;
-			for (int value_pos=cols*current_row; value_pos<cols*(current_row+1); value_pos++)
-			{
-				if (table[value_pos]!=NULL) row.setValue(field_num, table[value_pos]);
-				else row.getValueIPtr(field_num)->clear();
-				
-				field_num++;
-			}
-
-			output.addRecord(row);
-		}
-		//printf("Parse complete\n");
-		sqlite3_free_table(table);
-		return 0;
-	}
-	else return sql_ret;
-}*/
 
 int SQLiteDB::getLastError()
 {
@@ -1253,7 +1125,6 @@ void SQLProxy::closeDBConnection() {
 
 bool lockDatabase()
 {
-	
 	if (_cmdOptions["sql_readonly"]=="yes") return true; // No need to lock if we using read-only access
 	// Lock file will be /var/run/mpkg.lock
 	string var_directory = SYS_ROOT + "/var";

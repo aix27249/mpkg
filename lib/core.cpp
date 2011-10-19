@@ -704,6 +704,40 @@ int mpkgDatabase::get_packagelist (const SQLRecord& sqlSearch, PACKAGE_LIST *pac
 
 	SQLTable *sqlTable = new SQLTable;
 	SQLRecord sqlFields;
+
+	sqlFields.addField("package_id");
+	sqlFields.addField("package_name");
+	sqlFields.addField("package_version");
+	sqlFields.addField("package_arch");
+	sqlFields.addField("package_build");
+
+	if (needDescriptions) {
+		sqlFields.addField("package_compressed_size");
+		sqlFields.addField("package_installed_size");
+		sqlFields.addField("package_short_description");
+		sqlFields.addField("package_description");
+		sqlFields.addField("package_changelog");
+		sqlFields.addField("package_packager");
+		sqlFields.addField("package_packager_email");
+	}
+	sqlFields.addField("package_installed");
+	sqlFields.addField("package_configexist");
+	sqlFields.addField("package_action");
+	sqlFields.addField("package_md5");
+	sqlFields.addField("package_filename");
+	sqlFields.addField("package_installed_by_dependency");
+	sqlFields.addField("package_type");
+	if (needDescriptions) {
+		sqlFields.addField("package_add_date");
+		sqlFields.addField("package_build_date");
+		sqlFields.addField("package_repository_tags");
+		sqlFields.addField("package_distro_version");
+	}
+
+	sqlFields.addField("package_provides");
+	sqlFields.addField("package_conflicts");
+
+
 	PACKAGE package;
 
 	int sql_ret=db.get_sql_vtable(*sqlTable, sqlFields, string("packages"), sqlSearch);
@@ -750,13 +784,15 @@ int mpkgDatabase::get_packagelist (const SQLRecord& sqlSearch, PACKAGE_LIST *pac
 		p->set_version(sqlTable->getValue(i, fPackage_version));
 		p->set_arch(sqlTable->getValue(i, fPackage_arch));
 		p->set_build(sqlTable->getValue(i, fPackage_build));
-		p->set_compressed_size(sqlTable->getValue(i, fPackage_compressed_size));
-		p->set_installed_size(sqlTable->getValue(i, fPackage_installed_size));
-		if (needDescriptions) p->set_short_description(sqlTable->getValue(i, fPackage_short_description));
-		if (needDescriptions) p->set_description(sqlTable->getValue(i, fPackage_description));
-		if (needDescriptions) p->set_changelog(sqlTable->getValue(i, fPackage_changelog));
-		if (needDescriptions) p->set_packager(sqlTable->getValue(i, fPackage_packager));
-		if (needDescriptions) p->set_packager_email(sqlTable->getValue(i, fPackage_packager_email));
+		if (needDescriptions) {
+			p->set_compressed_size(sqlTable->getValue(i, fPackage_compressed_size));
+			p->set_installed_size(sqlTable->getValue(i, fPackage_installed_size));
+			p->set_short_description(sqlTable->getValue(i, fPackage_short_description));
+			p->set_description(sqlTable->getValue(i, fPackage_description));
+			p->set_changelog(sqlTable->getValue(i, fPackage_changelog));
+			p->set_packager(sqlTable->getValue(i, fPackage_packager));
+			p->set_packager_email(sqlTable->getValue(i, fPackage_packager_email));
+		}
 		p->set_installed(atoi(sqlTable->getValue(i,fPackage_installed).c_str()));
 		p->set_configexist(atoi(sqlTable->getValue(i, fPackage_configexist).c_str()));
 		p->set_action(atoi(sqlTable->getValue(i, fPackage_action).c_str()), sqlTable->getValue(i, fPackage_installed_by_dependency));
@@ -766,16 +802,19 @@ int mpkgDatabase::get_packagelist (const SQLRecord& sqlSearch, PACKAGE_LIST *pac
 		//p->set_betarelease(sqlTable->getValue(i, fPackage_betarelease));
 		p->set_installed_by_dependency(atoi(sqlTable->getValue(i, fPackage_installed_by_dependency).c_str()));
 		p->set_type(atoi(sqlTable->getValue(i, fPackage_type).c_str()));
-		if (needDescriptions) p->add_date = atoi(sqlTable->getValue(i, fPackage_add_date).c_str());
-		if (needDescriptions) p->build_date = atoi(sqlTable->getValue(i, fPackage_build_date).c_str());
-		if (needDescriptions) p->set_repository_tags(sqlTable->getValue(i, fPackage_repository_tags));
-		if (needDescriptions) p->package_distro_version = sqlTable->getValue(i, fPackage_distro_version);
+		if (needDescriptions) {
+			p->add_date = atoi(sqlTable->getValue(i, fPackage_add_date).c_str());
+			p->build_date = atoi(sqlTable->getValue(i, fPackage_build_date).c_str());
+			p->set_repository_tags(sqlTable->getValue(i, fPackage_repository_tags));
+			p->package_distro_version = sqlTable->getValue(i, fPackage_distro_version);
+		}
 		p->set_provides(sqlTable->getValue(i, fPackage_provides));
 		p->set_conflicts(sqlTable->getValue(i, fPackage_conflicts));
 #ifdef ENABLE_INTERNATIONAL
 		get_descriptionlist(p->get_id(), packagelist[i].get_descriptions());
 #endif
 	}
+
 	if (!ultraFast && !packagelist->IsEmpty()) 
 	{
 		get_full_taglist(packagelist);
@@ -1175,32 +1214,53 @@ void mpkgDatabase::get_full_locationlist(PACKAGE_LIST *pkgList)
 			sqlSearch.addField("packages_package_id", pkgList->at(i).get_id());
 		}
 	}
+	sqlSearch.orderBy = "packages_package_id";
 
 	db.get_sql_vtable(*sqlTable, sqlFields, "locations", sqlSearch);
 
 	int package_id;
-	LOCATION tmp;
+	LOCATION *tmp;
+	size_t loc_size;
 
 	// Index
 	int fPackages_package_id = sqlTable->getFieldIndex("packages_package_id");
 	int fLocation_id = sqlTable->getFieldIndex("location_id");
 	int fServer_url = sqlTable->getFieldIndex("server_url");
 	int fLocation_path = sqlTable->getFieldIndex("location_path");
+	//size_t counter = 0, miss = 0, step_miss = 0;
+	size_t last_miss = 0;
+	bool got_group = false; // PLEASE PLEASE NOTE: THIS LOGIC *DEPENDS* ON ORDER: NEVER REMOVE orderBy STATEMENT ABOVE!
+	//bool none_found = true, none_found_show = false;;
 
-	for (unsigned int i=0; i<sqlTable->size(); i++)
-	{
-		package_id = atoi(sqlTable->getValue(i, fPackages_package_id).c_str());
-		for (unsigned int t=0; t<pkgList->size(); t++)
-		{
-			if (pkgList->get_package_ptr(t)->get_id()==package_id)
-			{
-				tmp.set_id(atoi(sqlTable->getValue(i, fLocation_id).c_str()));
-				tmp.set_server_url(sqlTable->getValue(i, fServer_url));
-				tmp.set_path(sqlTable->getValue(i, fLocation_path));
-				pkgList->get_package_ptr(t)->get_locations_ptr()->push_back(tmp);
+	for (size_t t=0; t<pkgList->size(); ++t) {
+		got_group = false;
+		//step_miss = 0;
+		for (size_t i=last_miss; i<sqlTable->size(); ++i) {
+			package_id = atoi(sqlTable->getValue(i, fPackages_package_id).c_str());
+			if (pkgList->at(t).get_id()==package_id) {
+				//none_found = false;
+				got_group=true;
+				if (last_miss==i) last_miss = i+1;
+				//counter++;
+				loc_size = pkgList->get_package_ptr(t)->get_locations_ptr()->size();
+				pkgList->get_package_ptr(t)->get_locations_ptr()->resize(loc_size+1);
+				tmp = &pkgList->get_package_ptr(t)->get_locations_ptr()->at(loc_size);
+				tmp->set_id(atoi(sqlTable->getValue(i, fLocation_id).c_str()));
+				tmp->set_server_url(sqlTable->getValue(i, fServer_url));
+				tmp->set_path(sqlTable->getValue(i, fLocation_path));
+				//pkgList->get_package_ptr(t)->get_locations_ptr()->push_back(tmp);
+			}
+			else {
+				//miss++;
+				//step_miss++;
+				if (got_group) break;
 			}
 		}
+		//if (got_group && !none_found && !none_found_show) {
+		//	printf("Hit after %d misses, last_miss: %d, total miss: %d\n", step_miss, last_miss, miss);
+		//}
 	}
+	//printf("TOTAL: %d iterations, miss: %d\n", counter, miss);
 	delete sqlTable;
 }
 

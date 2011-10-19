@@ -1597,6 +1597,7 @@ vector<string> mpkg::getLatestUpdates(PACKAGE_LIST *pkgList, PACKAGE_LIST *unins
 	// 2. Requesting database by search array
 	PACKAGE_LIST pCache;
 	//printf("SLOW=%d GET_PACKAGELIST CALL: %s %d\n", fast, __func__, __LINE__);
+	sqlSearch.orderBy="package_id";
 	int query_ret = get_packagelist(sqlSearch, &pCache, fast, needDescriptions);
 
 	vector<string> blackList = ReadFileStrings("/etc/mpkg-update-blacklist");
@@ -1626,6 +1627,7 @@ vector<string> mpkg::getLatestUpdates(PACKAGE_LIST *pkgList, PACKAGE_LIST *unins
 	vector<PACKAGE *> updateCandidates, removeCandidates;
 	bool blacklisted;
 	bool addedToRemove;
+
 	for (size_t i=0; i<pCache.size(); ++i) {
 		if (!pCache[i].installed()) continue;
 		addedToRemove = false;
@@ -1638,7 +1640,7 @@ vector<string> mpkg::getLatestUpdates(PACKAGE_LIST *pkgList, PACKAGE_LIST *unins
 		}
 		if (blacklisted) continue;
 		for (size_t t=0; t<pCache.size(); ++t) {
-			if (pCache[i].get_name()!=pCache[t].get_name()) continue;
+			if (strcmp(pCache[i].get_name().c_str(), pCache[t].get_name().c_str())!=0) continue;
 			//if (!pCache[t].available()) continue;
 			if (compareVersions(pCache[i].get_version(), pCache[i].get_build(), pCache[t].get_version(), pCache[t].get_build())<0) {
 				updateCandidates.push_back(pCache.get_package_ptr(t));
