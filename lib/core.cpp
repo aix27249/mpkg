@@ -710,10 +710,10 @@ int mpkgDatabase::get_packagelist (const SQLRecord& sqlSearch, PACKAGE_LIST *pac
 	sqlFields.addField("package_version");
 	sqlFields.addField("package_arch");
 	sqlFields.addField("package_build");
+	sqlFields.addField("package_compressed_size");
+	sqlFields.addField("package_installed_size");
 
 	if (needDescriptions) {
-		sqlFields.addField("package_compressed_size");
-		sqlFields.addField("package_installed_size");
 		sqlFields.addField("package_short_description");
 		sqlFields.addField("package_description");
 		sqlFields.addField("package_changelog");
@@ -784,9 +784,10 @@ int mpkgDatabase::get_packagelist (const SQLRecord& sqlSearch, PACKAGE_LIST *pac
 		p->set_version(sqlTable->getValue(i, fPackage_version));
 		p->set_arch(sqlTable->getValue(i, fPackage_arch));
 		p->set_build(sqlTable->getValue(i, fPackage_build));
+		p->set_compressed_size(sqlTable->getValue(i, fPackage_compressed_size));
+		p->set_installed_size(sqlTable->getValue(i, fPackage_installed_size));
+
 		if (needDescriptions) {
-			p->set_compressed_size(sqlTable->getValue(i, fPackage_compressed_size));
-			p->set_installed_size(sqlTable->getValue(i, fPackage_installed_size));
 			p->set_short_description(sqlTable->getValue(i, fPackage_short_description));
 			p->set_description(sqlTable->getValue(i, fPackage_description));
 			p->set_changelog(sqlTable->getValue(i, fPackage_changelog));
