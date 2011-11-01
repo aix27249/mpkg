@@ -146,6 +146,7 @@ int mpkgDatabase::check_file_conflicts_new(const PACKAGE& package)
 			package_id=atoi(sqlTable.getValue(k, fPackages_package_id).c_str());
 			if (package_id!=package.get_id()) {
 				if (get_installed(package_id) || get_action(package_id)==ST_INSTALL) {
+					cout << "REGISTER CONFLICT: " << sqlTable.getValue(k, fFile_name) << endl;
 					fileNames.push_back(sqlTable.getValuePtr(k, fFile_name));
 					package_ids.push_back(package_id);
 				}
@@ -211,6 +212,7 @@ bool mpkgDatabase::add_conflict_records(int conflicted_id, vector<int> overwritt
 		tmp =p->get_name() + "_" + p->get_md5() + "/" + *file_names[i]; 
 		sqlFill->addField("backup_file", tmp);
 		sqlTable->addRecord(*sqlFill);
+		cout << "ADD_RECORD: " << *file_names[i] << " [" << p->get_name() << "]" << endl;
 		delete sqlFill;
 	}
 	if (!bad_package_ids.empty()) {
@@ -325,6 +327,9 @@ int mpkgDatabase::backupFiles(vector <string *> fileNames, vector<int> overwritt
 			}
 			fileNamesNew.push_back(fileNames[i]);
 			overwritten_package_ids_new.push_back(overwritten_package_ids[i]);
+		}
+		else {
+			cout << "ERR_BACKUP: NO FILE " << SYS_ROOT << *fileNames[i] << endl;
 		}
 	}
 	sqlSearch->setSearchMode(SEARCH_IN);
