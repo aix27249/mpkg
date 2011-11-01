@@ -1157,12 +1157,11 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 		//if (FileExists(package->get_scriptdir() + "doinst.sh"))
 		if (FileExists(SYS_ROOT + "/install/doinst.sh"))
 		{
-			//string postinst="cd " + SYS_ROOT + " ; sh "+package->get_scriptdir() + "doinst.sh";
 			string postinst;
 			string tmpdoinst = "/tmp/mpkgtmp_" + package->get_name() + ".sh";
-			add_tmp_file(SYS_ROOT + tmpdoinst);
-			system("mv " + SYS_ROOT + "/install/doinst.sh " + SYS_ROOT + tmpdoinst);
-			postinst="cd " + SYS_ROOT + " && bash " + SYS_ROOT + tmpdoinst; // New fast mode: we don't care much about script run ordering, and parallel run is MUCH faster.
+			add_tmp_file(SYS_ROOT + "/" + tmpdoinst);
+			system("mv " + SYS_ROOT + "/install/doinst.sh " + SYS_ROOT + "/" + tmpdoinst);
+			postinst="cd " + SYS_ROOT + " && bash " + SYS_ROOT + "/" + tmpdoinst; // New fast mode: we don't care much about script run ordering, and parallel run is MUCH faster.
 			if (setupMode && dialogMode) postinst += " 2>/dev/tty4 >/dev/tty4";
 			else if (dialogMode) postinst += " 2>/dev/null > /dev/null";
 			//cout << "Running: '" << postinst << endl;
@@ -1174,11 +1173,6 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 	if (dialogMode) ncInterface.setProgressText(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + "\n" + index_hole + _("finishing installation"));
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": finishing installation"));
 #ifndef INSTALL_DEBUG
-	// UPD: we don't care about whole dir, we care only about doinst.sh one
-	//system("rm -rf " + SYS_ROOT+"/install"); // Cleanup. Be aware of placing anything important to this directory
-//	unlink(string(SYS_ROOT+"/doinst.sh").c_str()); // It does not exists, but in case of move errors...
-//	unlink(string(SYS_ROOT+"/preremove.sh").c_str()); // *NOW* 
-//	unlink(string(SYS_ROOT+"/postremove.sh").c_str()); // It does not exists, but in case of move errors...
 
 	set_installed(package->get_id(), ST_INSTALLED);
 	set_configexist(package->get_id(), ST_CONFIGEXIST);
@@ -1191,7 +1185,6 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": updating database"));
 	if (_cmdOptions["warpmode"]!="yes") sqlFlush();
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": exporting legacy data"));
-	//if (!setupMode) exportPackage(SYS_ROOT+"/"+legacyPkgDir, *package); // We do not provide pkgtools compatibility mode anymore.
 	pData.increaseItemProgress(package->itemID);
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": complete"), SAYMODE_INLINE_END);
 	package->set_action(ST_NONE, "install_complete");
@@ -1341,7 +1334,7 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 		int unlink_ret;
 		for (size_t i=0; i<remove_files->size(); ++i) {
 			if (i==0 || i==remove_files->size() || i%20==0) msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str + _(": removing files [") + IntToStr(i) + "/"+IntToStr(remove_files->size())+"]");
-			fname=sys_root + remove_files->at(i);
+			fname=sys_root + "/" + remove_files->at(i);
 			for (size_t t=0; t<backups.size(); ++t) {
 				if (remove_files->at(i)==*backups[t].filename) {
 					fname = (string) SYS_BACKUP+"/"+backups[t].backup_file;
@@ -1401,7 +1394,7 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 		
 		for (unsigned int i=0; i<remove_files->size(); i++)
 		{
-			fname=sys_root + remove_files->at(i);
+			fname=sys_root + "/" + remove_files->at(i);
 			for (unsigned int d=0; d<fname.length(); d++)
 			{
 				edir+=fname[d];
@@ -1460,14 +1453,14 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 			for (size_t i=0; i<restore.size(); ++i) {
 				if (restore[i].filename->find_last_of("/")!=std::string::npos)	{
 					cmd = "mkdir -p ";
-					cmd += SYS_ROOT + restore[i].filename->substr(0, restore[i].filename->find_last_of("/")) + " 2>/dev/null >/dev/null";
+					cmd += SYS_ROOT + "/" + restore[i].filename->substr(0, restore[i].filename->find_last_of("/")) + " 2>/dev/null >/dev/null";
 					if (!simulate) system(cmd.c_str());
 				}
 				cmd = "mv ";
 			        cmd += SYS_BACKUP+restore[i].backup_file + " ";
 				tmpName = restore[i].backup_file.substr(SYS_BACKUP.length());
 				tmpName = tmpName.substr(tmpName.find("/"));
-			        cmd += SYS_ROOT + tmpName.substr(0,tmpName.find_last_of("/"))+"/ 2>/dev/null >/dev/null";
+			        cmd += SYS_ROOT + "/" + tmpName.substr(0,tmpName.find_last_of("/"))+"/ 2>/dev/null >/dev/null";
 				if (!simulate) ret = system(cmd);
 				if (verbose) cout << "RESTORE: " << cmd << endl;
 				delete_conflict_record(package->get_id(), restore[i].backup_file);
@@ -1492,7 +1485,6 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 		currentStatus = statusHeader + _("remove complete");
 		hookManager.addRemoved(package);
 		package->get_files_ptr()->clear();
-		//unexportPackage(SYS_ROOT+"/"+legacyPkgDir, *package);
 		pData.setItemProgress(package->itemID, pData.getItemProgressMaximum(package->itemID));
 		if (package->action()==ST_UPDATE) msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str + _(": done"));
 		else msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str+": done", SAYMODE_INLINE_END);

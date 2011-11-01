@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <mpkgconfig>
 	<sys_root>
-		/tmp/new_sysroot
+		/tmp/new_sysroot/
 	</sys_root>
 	<sys_cache>
 		/tmp/new_sysroot/var/mpkg/cache/

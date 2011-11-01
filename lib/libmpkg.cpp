@@ -605,7 +605,7 @@ bool mpkg::checkPackageIntegrity(PACKAGE *package)
 		if (package->get_files().at(i).rfind(".new")==package->get_files().at(i).length()-strlen(".new")) continue; // Skip config files
 		if (package->get_files().at(i).find("dev/")==0) continue; // Skip /dev section - all of this files are managed by udev
 		if (package_name.find("glibc")==0 && package->get_files().at(i).find("lib/incoming/")!=std::string::npos) continue;
-		if (!FileExists(SYS_ROOT + package->get_files().at(i), &broken_sym)) {
+		if (!FileExists(SYS_ROOT + "/" + package->get_files().at(i), &broken_sym)) {
 			if (integrity_ok) { 
 				if (!broken_sym || checkIntegrity_includeSymlinks) {
 					mError(_("Package ") + (string) CL_YELLOW + package->get_name() + (string) CL_WHITE + _(" has broken files or symlinks:"));

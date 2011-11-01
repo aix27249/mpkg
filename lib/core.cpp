@@ -315,7 +315,7 @@ int mpkgDatabase::backupFiles(vector <string *> fileNames, vector<int> overwritt
 	bool already = false;
 	for (unsigned int i=0; i<fileNames.size(); i++) {
 		already=false;
-		if (FileExists(SYS_ROOT + *fileNames[i]) && !isDirectory(SYS_ROOT + *fileNames[i])) {
+		if (FileExists(SYS_ROOT + "/" + *fileNames[i]) && !isDirectory(SYS_ROOT + "/" + *fileNames[i])) {
 			for (unsigned int k=0; k<overwritten_package_ids_new.size(); k++) {
 				if (overwritten_package_ids_new[k]==overwritten_package_ids[i]) {
 					already=true;
@@ -329,7 +329,7 @@ int mpkgDatabase::backupFiles(vector <string *> fileNames, vector<int> overwritt
 			overwritten_package_ids_new.push_back(overwritten_package_ids[i]);
 		}
 		else {
-			cout << "ERR_BACKUP: NO FILE " << SYS_ROOT << *fileNames[i] << endl;
+			cout << "ERR_BACKUP: NO FILE " << SYS_ROOT << "/" << *fileNames[i] << endl;
 		}
 	}
 	sqlSearch->setSearchMode(SEARCH_IN);
@@ -357,7 +357,7 @@ int mpkgDatabase::backupFiles(vector <string *> fileNames, vector<int> overwritt
 		backupDir = SYS_BACKUP + p->get_name() + "_" + p->get_md5() + "/" + getDirectory(*fileNamesNew[f]);
 		if (!isDirectory(backupDir)) system("mkdir -p '" + backupDir + "' 2>/dev/null >/dev/null");
 	       	if (isDirectory(backupDir)) {
-			src = SYS_ROOT + *fileNamesNew[f];
+			src = SYS_ROOT + "/" + *fileNamesNew[f];
 			dest = SYS_BACKUP + "/" + p->get_name() + "_" + p->get_md5() + "/" + *fileNamesNew[f];
 			if (verbose) cout << "BACKUP: " << src << " => " << dest << endl;
 			if (rename(src.c_str(), dest.c_str())) {

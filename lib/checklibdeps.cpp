@@ -160,7 +160,7 @@ PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast, bool skip_symbols) {
 		else if (fname.find("usr/lib64/")==0 && fname.find("python")!=std::string::npos) ld_preload = "LD_PRELOAD=/usr/lib64/libpython2.6.so ";
 		else ld_preload = "";
 
-		system(ld_preload + " " + ld_library_path + " ldd " + ldd_options + " '" + SYS_ROOT + fname + "' 2>&1 | grep -P 'undefined symbol|not found' > " + tmpfile);
+		system(ld_preload + " " + ld_library_path + " ldd " + ldd_options + " '" + SYS_ROOT + "/" + fname + "' 2>&1 | grep -P 'undefined symbol|not found' > " + tmpfile);
 		data = ReadFileStrings(tmpfile);
 		if (data.empty()) continue;
 		ret.parseData(fname, data);

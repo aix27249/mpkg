@@ -14,13 +14,8 @@ bool enableSpkgIndexing=false;
 bool afraidAaaInDeps=false;
 bool forceFullDBUpdate=false;
 bool getlinksOnly=false;
-#ifndef SERVERAPP
 string CONFIG_FILE = "/etc/mpkg.xml";
 bool serverMode = false;
-#else
-string CONFIG_FILE = "/var/www/mopspackages.ru/etc/mpkg.xml";
-bool serverMode = true;
-#endif
 string htmlNextLink="$NEXTLINK";
 string htmlPage = "/var/mpkg/state.html";
 bool htmlMode = false;
