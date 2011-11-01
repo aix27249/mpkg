@@ -48,7 +48,34 @@ int main(int argc, char **argv) {
 		over_name = over_name.substr(0, over_name.size()-33);
 		printf("%s:\t%s\n", conflictResults.getValue(i, fConflict_file_name).c_str(), over_name.c_str());
 	}
-	
 
 
+	// Search reverse conflicts
+	SQLRecord revConflictSearch;
+	revConflictSearch.setEqMode(EQ_LIKE);
+	revConflictSearch.addField("backup_file", package_name + "_" + package_md5 + "%");
+	SQLTable revConflictResults;
+	core.db->get_sql_vtable(revConflictResults, conflictFields, "conflicts", revConflictSearch);
+
+	if (revConflictResults.getRecordCount()>0) {
+		fprintf(stderr, _("\nOverwritten by others: \n"));
+	}
+	else return 0;
+
+	SQLRecord revPkgSearch;
+	for (size_t i=0; i<revConflictResults.size(); ++i) {
+		revPkgSearch.addField("package_id", revConflictResults.getValue(i, fConflict_package_id));
+	}
+	revPkgSearch.setSearchMode(SEARCH_IN);
+	PACKAGE_LIST revList;
+	core.get_packagelist(revPkgSearch, &revList);
+	PACKAGE *p;
+
+	for (size_t i=0; i<revConflictResults.size(); ++i) {
+		p = revList.getPackageByIDPtr(atoi(revConflictResults.getValue(i, fConflict_package_id).c_str()));
+		if (!p) over_name = "(unknown)";
+		else over_name = p->get_name();
+		printf("%s:\t%s\n", revConflictResults.getValue(i, fConflict_file_name).c_str(), over_name.c_str());
+	}
+	return 0;
 }
