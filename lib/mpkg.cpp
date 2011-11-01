@@ -1469,6 +1469,7 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 				tmpName = tmpName.substr(tmpName.find("/"));
 			        cmd += SYS_ROOT + tmpName.substr(0,tmpName.find_last_of("/"))+"/ 2>/dev/null >/dev/null";
 				if (!simulate) ret = system(cmd);
+				if (verbose) cout << "RESTORE: " << cmd << endl;
 				delete_conflict_record(package->get_id(), restore[i].backup_file);
 			}
 		}

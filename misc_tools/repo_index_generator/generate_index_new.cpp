@@ -22,8 +22,9 @@ string getDepConditionBack(int db_in) {
 	}
 	return "";
 }
-void report_failure(int line) {
+void report_failure(int line, const char *error = NULL) {
 	fprintf(stderr, "EPIC FAIL at line %d\n", line);
+	if (error) fprintf(stderr, "%s\n", error);
 	abort();
 }
 string getFancyDistro(const char *drepo, const char *darch, const char * dbranch) {
@@ -35,6 +36,7 @@ string getFancyDistro(const char *drepo, const char *darch, const char * dbranch
 }
 
 string getLocation(vector<string> drepo, vector<string> darch, vector<string> dbranch, const char *arch, const char *distro, const char *repo, string relative) {
+
 	string ret;
 	// Note: ORDER MATTERS HERE! Otherwise, return value will be incorrect.
 	if (darch.size()==1) ret = "";
@@ -181,11 +183,12 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 		fprintf(xml, "\t</maintainer>\n");
 		
 		fprintf(xml, "\t<location>%s</location>\n", getLocation(drepo, darch, dbranch, row[28], row[29], row[30], row[27]).c_str());
+
 		fprintf(xml, "\t<filename>%s</filename>\n", row[16]);
 		
 		// Deps... :)
 		res = mysql_query(&conn, string("SELECT dependency_package_name, dependency_condition, dependency_package_version FROM dependencies WHERE packages_package_id='" + string(row[0]) + "'").c_str());
-		if (res) report_failure(__LINE__);
+		if (res) report_failure(__LINE__, mysql_error(&conn));
 		deps = mysql_store_result(&conn);
 		if (mysql_num_rows(deps)>0) {
 			fprintf(xml, "\t<dependencies>\n");
@@ -199,6 +202,7 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 			fprintf(xml, "\t</dependencies>\n");
 
 		}
+
 		mysql_free_result(deps);
 		// Config files
 		mysql_query(&conn, string("SELECT config_files.id, config_files.filename FROM config_files WHERE package_id='" + string(row[0]) + "'").c_str());
@@ -234,18 +238,24 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 			fprintf(xml, "\t</tags>\n");
 		}
 		mysql_free_result(tags);
+		
 		fprintf(xml, "\t<repository_tags>%s</repository_tags>\n", row[22]);
 		fprintf(xml, "\t<distro_version>%s</distro_version>\n", fancydistro.c_str());
 		
 		// ABUILD, if exist
 		mysql_data_seek(abuilds, 0);
 		while (abuild = mysql_fetch_row(abuilds)) {
+			if (abuild[0]==NULL) continue;
 			if (atoi(abuild[0])!=atoi(row[0])) continue;
+
+			if (!abuild[1]) continue;
 			fprintf(xml, "\t<abuild>%s</abuild>\n", getLocation(drepo, darch, dbranch, row[28], row[29], row[30], abuild[1]).c_str());
+
 			break;
 		}
 		fprintf(xml, "</package>\n\n");
 	}
+
 	mysql_free_result(packages);
 	mysql_free_result(abuilds);
 
