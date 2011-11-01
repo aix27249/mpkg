@@ -1875,6 +1875,7 @@ HookManager::~HookManager() {
 void HookManager::addInstalled(PACKAGE *pkg) {
 	pkgInstalled.push_back(pkg->get_name());
 	FILE *f = fopen(string(SYS_ROOT + "/var/mpkg/last_installed_files").c_str(), "a");
+	if (!f) return;
 	for (size_t i=0; i<pkg->get_files().size(); ++i) {
 		fprintf(f, "%s\n", pkg->get_files().at(i).c_str());
 	}
@@ -1884,6 +1885,7 @@ void HookManager::addInstalled(PACKAGE *pkg) {
 void HookManager::addRemoved(PACKAGE *pkg) {
 	pkgRemoved.push_back(pkg->get_name());
 	FILE *f = fopen(string(SYS_ROOT + "/var/mpkg/last_removed_files").c_str(), "a");
+	if (!f) return;
 	for (size_t i=0; i<pkg->get_files().size(); ++i) {
 		fprintf(f, "%s\n", pkg->get_files().at(i).c_str());
 	}
