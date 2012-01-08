@@ -21,7 +21,7 @@ void check_conflicts(mpkg *core, const PACKAGE& package, vector<string> &fileNam
 	int fPackages_package_id = sqlTable.getFieldIndex("packages_package_id");
 	int fFile_name = sqlTable.getFieldIndex("file_name");
 	if (!sqlTable.empty()) {
-		for (unsigned int k=0;k<sqlTable.getRecordCount() ;k++) {
+		for (size_t k=0;k<sqlTable.getRecordCount() ;k++) {
 			package_id=atoi(sqlTable.getValue(k, fPackages_package_id).c_str());
 			if (package_id!=package.get_id()) {
 				if (core->db->get_installed(package_id) || core->db->get_action(package_id)==ST_INSTALL) {
@@ -42,6 +42,8 @@ int main(int argc, char **argv) {
 	core.db->get_full_filelist(&pkglist);
 	
 	PACKAGE *p;
+	vector<int> conflicting_packages;
+	bool found;
 
 	vector<string> fileNames; vector<int> package_ids;
 	for (size_t i=0; i<pkglist.size(); ++i) {
@@ -52,8 +54,18 @@ int main(int argc, char **argv) {
 		for (size_t t=0; t<fileNames.size(); ++t) {
 			p = pkglist.getPackageByIDPtr(package_ids[t]);
 			cout << "CONFLICT: " << fileNames[t] << ", " + pkglist[i].get_name() << " => " << p->get_name() << endl;
+			found = false;
+			for (size_t z=0; !found && z<conflicting_packages.size(); ++z) {
+				if (conflicting_packages[z]==package_ids[t]) found = true;
+			}
+			if (!found) conflicting_packages.push_back(package_ids[t]);
 		}
 		
+	}
+
+	for (size_t i=0; i<conflicting_packages.size(); ++i) {
+		p = pkglist.getPackageByIDPtr(conflicting_packages[i]);
+		cout << i+1 << ": " << p->get_name() << endl;
 	}
 
 

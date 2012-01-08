@@ -19,6 +19,7 @@ void AgiliaSetup::unregisterStatusNotifier() {
 void AgiliaSetup::setDefaultXDM() {
 	if (FileExists("/tmp/new_sysroot/etc/init.d/kdm")) system("chroot /tmp/new_sysroot rc-update add kdm X11 2>/dev/null >/dev/null");
 	else if (FileExists("/tmp/new_sysroot/etc/init.d/gdm")) system("chroot /tmp/new_sysroot rc-update add gdm X11 2>/dev/null >/dev/null");
+	else if (FileExists("/tmp/new_sysroot/etc/init.d/lightdm")) system("chroot /tmp/new_sysroot rc-update add lightdm X11 2>/dev/null >/dev/null");
 	else if (FileExists("/tmp/new_sysroot/etc/init.d/lxdm")) system("chroot /tmp/new_sysroot rc-update add lxdm X11 2>/dev/null >/dev/null");
 	else if (FileExists("/tmp/new_sysroot/etc/init.d/slim")) system("chroot /tmp/new_sysroot rc-update add slim X11 2>/dev/null >/dev/null");
 	else if (FileExists("/tmp/new_sysroot/etc/init.d/xdm")) system("chroot /tmp/new_sysroot rc-update add xdm X11 2>/dev/null >/dev/null");
@@ -52,6 +53,8 @@ void AgiliaSetup::setDefaultRunlevels() {
 	enableService("cupsd");
 	enableService("cron");
 	enableService("bluetooth");
+	enableService("avahi-daemon");
+	enableService("avahi-dnsconfd");
 }
 
 void AgiliaSetup::updateOpenrcDeps() {
@@ -151,7 +154,7 @@ bool AgiliaSetup::setRootPassword(const string& rootPassword) {
 }
 
 bool AgiliaSetup::addUser(const string &username) {
-	string extgroup="audio,cdrom,floppy,video,netdev,plugdev,power"; // New default groups, which conforms current guidelines
+	string extgroup="audio,cdrom,floppy,video,netdev,plugdev,power,scanner,camera"; // New default groups, which conforms current guidelines
 	int ret = system("chroot /tmp/new_sysroot /usr/sbin/useradd -d /home/" + username + " -m -g users -G " + extgroup + " -s /bin/bash " + username + " 2>/dev/null >/dev/null");
 	if (ret) return false; // Fail
 
