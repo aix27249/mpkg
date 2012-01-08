@@ -511,79 +511,17 @@ void LocalPackage::set_deltasources(const vector<DeltaSource>& deltasources) {
 int LocalPackage::get_size()
 {
 	string csize, isize;
-	if (getExtension(filename)=="spkg" || getExtension(filename) == "tlz" || getExtension(filename)=="txz" || getExtension(filename)=="tbz")
-	{
-		struct stat fstat;
-		stat(filename.c_str(), &fstat);
-		isize = "0";
-		data.set_installed_size(isize);
-		csize = IntToStr(fstat.st_size);
-		data.set_compressed_size(csize);
-	}
-	if (getExtension(filename)!="spkg") {
-		//mDebug("get_size start");
-		string tmp=get_tmp_file();
-		string sys;
-		if (getExtension(filename)=="tgz") sys="gzip -l "+filename+" > "+tmp + " 2>/dev/null";
-		if (getExtension(filename)=="tbz") sys="bzcat " + filename + " | wc -c > " + tmp + " 2>/dev/null";
-		if (getExtension(filename)=="tlz") sys="lzcat " + filename + " | wc -c > " + tmp + " 2>/dev/null";
-		if (getExtension(filename)=="txz") sys="xzcat " + filename + " | wc -c > " + tmp + " 2>/dev/null";
-		if (system(sys)!=0)
-		{
-			unlink(tmp.c_str());
-			delete_tmp_files();
-			mError("Zero-length package " + filename);
-			return -2;
-		}
-		FILE *zdata=fopen(tmp.c_str(), "r");
-		if (!zdata)
-		{
-			unlink(tmp.c_str());
-			mError("Unable to extract size of package");
-			return -1;
-		}
-		char *c_size = (char *) malloc(40000); //FIXME: Overflow are possible here
-		char *i_size = (char *) malloc(40000); //FIXME: Same problem
-		//mDebug("reading file...");
-	
-		if (getExtension(filename)=="tgz") {
-			for (int i=1; i<=5; i++) {
-				if (fscanf(zdata, "%s", c_size)==EOF)
-				{
-					fclose(zdata);
-					unlink(tmp.c_str());
-					delete_tmp_files();
-					mError("Unexcepted EOF while reading gzip data");
-					free(c_size);
-					free(i_size);
-					return -1;
-				}
-			}
-			fscanf(zdata, "%s", i_size);
-			if (c_size) {
-				csize=c_size;
-				free(c_size);
-			}
-		}
-		else {
-			fscanf(zdata, "%s", i_size);
-		}
-		fclose(zdata);
-		unlink(tmp.c_str());
-		if (i_size) {
-			isize=i_size;
-			free(i_size);
-		}
-		data.set_compressed_size(csize);
-		data.set_installed_size(isize);
-		//mDebug(" Sizes: C: " + csize + ", I: " + isize);
-	}
+	struct stat fstat;
+	stat(filename.c_str(), &fstat);
+	isize = getExtractedSize(filename);
+	data.set_installed_size(isize);
+	csize = IntToStr(fstat.st_size);
+	data.set_compressed_size(csize);
+	fprintf(stderr, "\n\nSIZES: %s installed, %s compressed\n\n", isize.c_str(), csize.c_str());
 
 	xmlNodePtr __node;
 	__node = xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"compressed_size", (const xmlChar *)csize.c_str());
 	__node = xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"installed_size", (const xmlChar *)isize.c_str());
-	//mDebug("get_size end");
-	delete_tmp_files();
 	return 0;
 }
 	
