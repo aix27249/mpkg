@@ -592,3 +592,52 @@ string getCmdOutput(const char* cmd) {
 vector<string> getCmdOutputStrings(const char* cmd) {
 	return MakeStrings(getCmdOutput(cmd));
 }
+
+
+string psystem(const string& cmd, bool removeNewline) {
+	string data;
+	const int MAX_BUFFER = 4096;
+	char buffer[MAX_BUFFER];
+	FILE *stream = popen(cmd.c_str(), "r");
+	while (fgets(buffer, MAX_BUFFER, stream) != NULL) {
+		data.append(buffer);
+	}
+	pclose(stream);
+	if (removeNewline && data.size()>0 && data[data.size()-1]=='\n') return data.substr(0, data.size()-1);
+	return data;
+}
+
+string getXZExtractedSize(const string& filename) {
+	string cmd = "xz --robot -l " + filename + " | grep totals | sed 's/\\s/\\n/g' | head -n 4 | tail -n 1";
+	string size = psystem(cmd);
+	return size;
+}
+
+string getGZExtractedSize(const string& filename) {
+	string cmd = "gzip -l " + filename + " | tail -n 1 | sed 's/^\\s*[0-9]*\\s*//' | sed 's/\\s.*//g'";
+	string size = psystem(cmd);
+	return size;
+}
+
+string getBZExtractedSize(const string& filename) {
+	string cmd = "bzcat " + filename + " | wc -c";
+	string size = psystem(cmd);
+	return size;
+}
+
+string getLZExtractedSize(const string& filename) {
+	string cmd = "lzcat " + filename + " | wc -c";
+	string size = psystem(cmd);
+	return size;
+}
+
+
+string getExtractedSize(const string& filename) {
+	string ext = getExtension(filename);
+	if (ext == "txz" || ext == "xz") return getXZExtractedSize(filename);
+	else if (ext == "tgz" || ext == "gz") return getGZExtractedSize(filename);
+	else if (ext == "tbz" || ext == "bz2") return getBZExtractedSize(filename);
+	else if (ext == "tlz" || ext == "lzma") return getLZExtractedSize(filename);
+	else return "0"; // Dunno how to determine it
+	
+}

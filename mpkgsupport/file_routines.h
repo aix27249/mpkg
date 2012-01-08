@@ -29,6 +29,8 @@ vector<string> getDirectoryList(const string& directory_name, vector<int> *types
 bool isDirectory(const string& dir_name);
 bool isMounted(string mountpoint);
 int system(const string& cmd);
+string psystem(const string& cmd, bool removeNewline = true);
+string getExtractedSize(const string& filename);
 long double get_disk_freespace(const string& point="/");
 long double getFileSize(const string& filename);
 string get_file_md5(const string& filename);
