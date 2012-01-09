@@ -517,7 +517,6 @@ int LocalPackage::get_size()
 	data.set_installed_size(isize);
 	csize = IntToStr(fstat.st_size);
 	data.set_compressed_size(csize);
-	fprintf(stderr, "\n\nSIZES: %s installed, %s compressed\n\n", isize.c_str(), csize.c_str());
 
 	xmlNodePtr __node;
 	__node = xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"compressed_size", (const xmlChar *)csize.c_str());
