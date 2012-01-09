@@ -608,7 +608,7 @@ string psystem(const string& cmd, bool removeNewline) {
 }
 
 string getXZExtractedSize(const string& filename) {
-	string cmd = "xz --robot -l " + filename + " | grep totals | sed 's/\\s/\\n/g' | head -n 4 | tail -n 1";
+	string cmd = "xz --robot -l " + filename + " | grep totals | sed 's/\\s/\\n/g' | head -n 5 | tail -n 1";
 	string size = psystem(cmd);
 	return size;
 }
