@@ -1912,8 +1912,9 @@ void HookManager::runHooks() {
 			pkgUpdatedStr = pkgUpdatedStr + pkgInstalled[i];
 		}
 	}
-
-	system("( cd " + SYS_ROOT + " ; for i in `find etc/mpkg/hooks -name '*.sh' -type f -perm 755` ; do PKG_INSTALLED='" + pkgInstalledStr + "' PKG_REMOVED='" + pkgRemovedStr + "' PKG_UPDATED='" + pkgUpdatedStr + "' $i ; done )");
+	printf(_("Executing post-install hooks..."));
+	system("( cd " + SYS_ROOT + " ; for i in `find etc/mpkg/hooks -name '*.sh' -type f -perm 755` ; do echo " + string(_("Starting")) + " /$i ; PKG_INSTALLED='" + pkgInstalledStr + "' PKG_REMOVED='" + pkgRemovedStr + "' PKG_UPDATED='" + pkgUpdatedStr + "' $i ; echo /$i " + string(_("finished")) + " ; done )");
+	printf(_("Post-install hooks completed"));
 
 
 }
