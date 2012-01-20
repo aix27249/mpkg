@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 	// Requires root, so check it and use sudo if required
 	if (getuid() != 0 ) {
 		string arg_string;
-		for (int i=1; i<argc; i++) {
+		for (int i=0; i<argc; i++) {
 			arg_string += (string) argv[i] + " ";
 		}
 		return system("sudo " + arg_string);
