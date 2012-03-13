@@ -1,11 +1,12 @@
 #!/bin/sh
+SETUP_PID=$1
 sync
 
-while [ "`ps ax | grep -v grep | grep guisetup_exec | head -n 1`" != "" ] ; do
-	echo "Waiting setup to close..."
+while ! ps -p $1 > /dev/null ; do
+	echo "Waiting installer to finish... (PID: $1)"
 	sleep 1
 done
 
-echo "Setup complete, rebooting"
+echo "Installation finished, rebooting right now"
 /sbin/reboot
 
