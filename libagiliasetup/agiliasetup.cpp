@@ -154,7 +154,7 @@ bool AgiliaSetup::setRootPassword(const string& rootPassword) {
 }
 
 bool AgiliaSetup::addUser(const string &username) {
-	string extgroup="audio,cdrom,floppy,video,netdev,plugdev,power,scanner,camera"; // New default groups, which conforms current guidelines
+	string extgroup="audio,cdrom,floppy,video,netdev,plugdev,power,scanner"; // New default groups, which conforms current guidelines
 	int ret = system("chroot /tmp/new_sysroot /usr/sbin/useradd -d /home/" + username + " -m -g users -G " + extgroup + " -s /bin/bash " + username + " 2>/dev/null >/dev/null");
 	if (ret) return false; // Fail
 
