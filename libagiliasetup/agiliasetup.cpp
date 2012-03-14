@@ -44,6 +44,7 @@ void AgiliaSetup::setDefaultRunlevels() {
 	enableService("lvm, boot");
 	enableService("sysfs", "sysinit");
 	enableService("udev", "sysinit");
+	enableService("udev-postmount");
 	enableService("consolefont");
 	enableService("sysklogd");
 	enableService("dbus");
