@@ -1187,7 +1187,9 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": exporting legacy data"));
 	pData.increaseItemProgress(package->itemID);
 	msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": complete"), SAYMODE_INLINE_END);
+	if (package->action()==ST_REPAIR) recordPackageTransaction(*package, 1, transaction_id, getSqlDb());
 	package->set_action(ST_NONE, "install_complete");
+	
 	recordPackageTransaction(*package, 0, transaction_id, getSqlDb());
 	return 0;
 }	//End of install_package
