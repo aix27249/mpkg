@@ -216,7 +216,6 @@ void actUpgrade(mpkg &core, int action) {
 		string distro;
 		string size;
 		if (errorList.empty() && resultList.size()>0)	{
-			if (!dialogMode) fprintf(stderr, string("\r" + string(_("Found ")) + IntToStr(resultList.size()) + _(" updates\n")).c_str());
 			for (unsigned int i=0; i<resultList.size(); i++) {
 				totalSizeC += atoi(resultList[i].get_compressed_size().c_str());
 				totalSizeI += atoi(resultList[i].get_installed_size().c_str());
@@ -239,7 +238,12 @@ void actUpgrade(mpkg &core, int action) {
 						if (menuItems[i].flag) uList.add(resultList[i]);
 					}
 				}
-				else uList = resultList;
+				else {
+					uList = resultList;
+					fprintf(stderr, string("\r" + string(_("Found ")) + IntToStr(resultList.size()) + _(" updates\n")).c_str());
+					fprintf(stderr, _("Total: %s to download\n"), humanizeSize(totalSizeC).c_str());
+
+				}
 				core.install(&uList);
 				core.commit();
 				core.clean_queue();
@@ -247,6 +251,7 @@ void actUpgrade(mpkg &core, int action) {
 			if (action==ACT_LISTUPGRADE) {
 				if (!dialogMode) {
 					fprintf(stderr, _("Available updates:\n"));
+					fprintf(stderr, "\n");
 					for (unsigned int i=0; i<resultList.size(); i++) {
 						if (_cmdOptions["machine_mode"]=="yes") {
 							cout << resultList[i].get_name() << " " << uninstallList[i].get_fullversion() << " => " << resultList[i].get_fullversion() << endl;
@@ -265,14 +270,13 @@ void actUpgrade(mpkg &core, int action) {
 						else for (unsigned int t=0; t<resultList[i].get_locations().size(); t++) {
 							say("%s%s\n", resultList[i].get_locations().at(t).get_full_url().c_str(), resultList[i].get_filename().c_str());
 						}
-					}
+					}	
+
+					fprintf(stderr, "\n");
+					fprintf(stderr, string("\r" + string(_("Found ")) + IntToStr(resultList.size()) + _(" updates\n")).c_str());
 					fprintf(stderr, _("Total: %s to download\n"), humanizeSize(totalSizeC).c_str());
 				}
 				else {
-					/*for (int i=0; i<resultList.size(); i++) {
-						menuItems.push_back(MenuItem(IntToStr(i), *resultList[i].get_name() + ": " + \
-						uninstallList[i].get_fullversion() + " ==> " + resultList[i].get_fullversion(), *resultList[i].get_description(), true));
-					}*/
 					ncInterface.showMenu2(_("Available updates:\n") + IntToStr(resultList.size()) + _(" packages, total size: ") + humanizeSize(totalSizeC) + " (" + humanizeSize(totalSizeI) + _(" installed)\n"), menuItems);
 				}
 			}

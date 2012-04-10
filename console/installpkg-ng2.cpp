@@ -1207,43 +1207,6 @@ int main (int argc, char **argv)
 		core.syncronize_repositories((string) argv[optind]);
 		return 0;
 	}
-	if (action == ACT_LATESTUPDATES) {
-		_cmdOptions["sql_readonly"]="yes";
-		int limit=-1;
-		int skip = 0;
-		if (argc>optind) limit = atoi(argv[optind]);
-		if (argc>optind+1) skip = atoi(argv[optind+1]);
-		if (htmlMode) {
-			SQLRecord sqlSearch;
-			sqlSearch.orderBy = "package_add_date";
-			PACKAGE_LIST pkgList;
-			core.get_packagelist(sqlSearch, &pkgList, true);
-			if (limit == -1) limit = 0;
-			else limit = pkgList.size() - limit;
-			PACKAGE *pkg;
-			string pkgChangelog, pkgShortDescription, pkgDescription, pkgRepTags;
-			for (int i=pkgList.size()-1-skip; i>=0; --i) {
-				pkg = pkgList.get_package_ptr(i);
-				
-				if (pkg->get_changelog()!="0") pkgChangelog = "<br><b><i>" + string(_("Changes:")) + " </i></b>" + toHtml(pkg->get_changelog());
-				else pkgChangelog.clear();
-
-				if (pkg->get_short_description()!="0") pkgShortDescription = ": " + pkg->get_short_description();
-				else pkgShortDescription.clear();
-
-				if (pkg->get_description()!="0") pkgDescription = toHtml(pkg->get_description());
-				else pkgDescription.clear();
-				if (!pkg->get_repository_tags().empty() && pkg->get_repository_tags()!="0") pkgRepTags = "<b><font color=\"blue\"> [" + pkg->get_repository_tags() + "] </b></font>";
-				else pkgRepTags.clear();
-
-				printf("<p><b>#%d</b> [%s]%s<br> <b><a href=\"show.php?id=%d\">%s %s</a>%s</b><br>%s%s</p>\n", i, getTimeString(pkg->add_date).c_str(), pkgRepTags.c_str(), pkg->get_id(), pkg->get_name().c_str(), pkg->get_fullversion().c_str(), pkgShortDescription.c_str(), pkgDescription.c_str(), pkgChangelog.c_str());
-				if (i+skip==limit) break;
-			}
-		}
-		if (rssMode) {
-			printf("RSS support dropped from mpkg.");
-		}
-	}
 
 	unlockDatabase();
 	return 0;
@@ -1351,7 +1314,6 @@ int setup_action(char* act)
 	if ( _act == "getrepositorylist") return ACT_GETONLINEREPOSITORYLIST;
 	if ( _act == "query") return ACT_QUERY;
 	if ( _act == "sync") return ACT_SYNC;
-	if ( _act == "lastupdates") return ACT_LATESTUPDATES;
 	if ( _act == "listgroups")
 		return ACT_LISTGROUPS;
 	if ( _act == "upgradeall")

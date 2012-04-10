@@ -1588,7 +1588,7 @@ void mpkg::get_queue(PACKAGE_LIST *pkgList, int filter) {
 vector<string> mpkg::getLatestUpdates(PACKAGE_LIST *pkgList, PACKAGE_LIST *uninstList, bool fast, bool needDescriptions) {
 	// Yet another new algorithm
 	if (dialogMode) ncInterface.showInfoBox(_("Searching for updates..."));
-	else fprintf(stderr, _("Searching for updates..."));
+	else fprintf(stderr, _("Searching for updates...\n"));
 	vector<string> errorList;
 	//vector<MenuItem> menuItems; // Vector for update list
 	// Creating DB cache
@@ -1614,7 +1614,6 @@ vector<string> mpkg::getLatestUpdates(PACKAGE_LIST *pkgList, PACKAGE_LIST *unins
 
 	for (size_t i=0; i<env_blacklist_v.size(); ++i) {
 		if (cutSpaces(env_blacklist_v[i]).empty()) continue;
-		printf("SKIP: %s\n", cutSpaces(env_blacklist_v[i]).c_str());
 		blackList.push_back(cutSpaces(env_blacklist_v[i]));
 	}
 
@@ -1634,7 +1633,7 @@ vector<string> mpkg::getLatestUpdates(PACKAGE_LIST *pkgList, PACKAGE_LIST *unins
 		blacklisted = false;
 		for (size_t t=0; !blacklisted && t<blackList.size(); ++t) {
 			if (pCache[i].get_corename()==blackList[t] || pCache[i].get_name()==blackList[t]) {
-				if (!dialogMode && verbose) printf(_("Skipping %s: BLACKLISTED\n"), pCache[i].get_name().c_str());
+				if (!dialogMode && verbose) fprintf(stderr, _("Skipping %s: BLACKLISTED\n"), pCache[i].get_name().c_str());
 				blacklisted = true;
 			}
 		}
