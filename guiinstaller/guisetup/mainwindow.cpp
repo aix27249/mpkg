@@ -612,6 +612,7 @@ void MainWindow::saveBootloaderSettings() {
 	settings["fbmode"] = fbmode;
 	settings["initrd_delay"] = IntToStr(ui->initrdDelayCheckBox->isChecked());
 	settings["add_plymouth"] = IntToStr(ui->enablePlymouthCheckBox->isChecked());
+	settings["drop_dracut"] = IntToStr(ui->mkinitrdCheckBox->isChecked());
 	settings["kernel_options"] = ui->kernelOptionsLineEdit->text().toStdString();
 	settings["initrd_modules"] = ui->initrdModulesLineEdit->text().toStdString();
 	settings["tmpfs_tmp"] = IntToStr(ui->useTmpfsCheckBox->isChecked());

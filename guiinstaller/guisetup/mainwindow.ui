@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>560</width>
-    <height>472</height>
+    <width>556</width>
+    <height>464</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -1718,7 +1718,7 @@ p, li { white-space: pre-wrap; }
            <enum>QTabWidget::North</enum>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="tab_3">
            <attribute name="title">
@@ -1823,23 +1823,9 @@ p, li { white-space: pre-wrap; }
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_15">
             <item>
-             <widget class="QLabel" name="label_14">
-              <property name="text">
-               <string>In some cases you need to specify additional options to make your system bootable.</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QCheckBox" name="useTmpfsCheckBox">
               <property name="text">
                <string>Use tmpfs for /tmp volume</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="initrdDelayCheckBox">
-              <property name="text">
-               <string>Enable boot delay (required for booting from USB drives)</string>
               </property>
              </widget>
             </item>
@@ -1863,23 +1849,6 @@ p, li { white-space: pre-wrap; }
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QLabel" name="label_31">
-                <property name="toolTip">
-                 <string>If your system requires additional modules to boot, specify it here. Note that this setting does nothing when plymouth is enabled.</string>
-                </property>
-                <property name="text">
-                 <string>Add modules to initrd (see help):</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLineEdit" name="initrdModulesLineEdit">
-                <property name="toolTip">
-                 <string>If your system requires additional modules to boot, specify it here. Note that this setting does nothing when plymouth is enabled.</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
                <widget class="QLabel" name="label_6">
                 <property name="toolTip">
                  <string>Write mode in GRUB format, for example, &quot;1280x1024x24&quot;. Use &quot;keep&quot; to keep mode same as boot menu. Default value is &quot;text&quot;.</string>
@@ -1889,7 +1858,7 @@ p, li { white-space: pre-wrap; }
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
+              <item row="1" column="1">
                <widget class="QLineEdit" name="fbmodeEdit">
                 <property name="toolTip">
                  <string>Write mode in GRUB format, for example, &quot;1280x1024x24&quot;. Use &quot;keep&quot; to keep mode same as boot menu. Default value is &quot;text&quot;.</string>
@@ -1906,6 +1875,49 @@ p, li { white-space: pre-wrap; }
               <property name="text">
                <string>Enable experimental plymouth support</string>
               </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="mkinitrdCheckBox">
+              <property name="text">
+               <string>Use old-style initrd generation via mkinitrd</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="mkinitrdGroupBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="title">
+               <string>Initrd options</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_16">
+               <item>
+                <widget class="QCheckBox" name="initrdDelayCheckBox">
+                 <property name="text">
+                  <string>Enable boot delay (required for booting from USB drives)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_31">
+                 <property name="toolTip">
+                  <string>If your system requires additional modules to boot, specify it here. Note that this setting does nothing when plymouth is enabled.</string>
+                 </property>
+                 <property name="text">
+                  <string>Add modules to initrd:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="initrdModulesLineEdit">
+                 <property name="toolTip">
+                  <string>If your system requires additional modules to boot, specify it here. Note that this setting does nothing when plymouth is enabled.</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
             <item>
@@ -2964,7 +2976,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>mountDoFormatRadioButton</tabstop>
   <tabstop>mountFormatOptionsComboBox</tabstop>
   <tabstop>bootLoaderComboBox</tabstop>
-  <tabstop>initrdDelayCheckBox</tabstop>
   <tabstop>kernelOptionsLineEdit</tabstop>
   <tabstop>initrdModulesLineEdit</tabstop>
   <tabstop>rootPasswordEdit</tabstop>

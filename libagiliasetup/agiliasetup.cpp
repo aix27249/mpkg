@@ -316,7 +316,7 @@ bool AgiliaSetup::getRepositoryData() {
 
 
 
-bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string& merge_setup_variant, const string& netman, const string& nvidia_driver, bool add_plymouth) {
+bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string& merge_setup_variant, const string& netman, const string& nvidia_driver, bool add_plymouth, bool remove_dracut) {
 	if (notifier) notifier->setSummaryTextCall(_("Preparing install queue"));
 	if (notifier) notifier->setDetailsTextCall("");
 
@@ -341,7 +341,7 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 		if (!merge_setup_variant.empty()) pkgListStrings = mergeVectors(pkgListStrings, preprocessInstallList(merge_setup_variant));
 		if (netman=="networkmanager") pkgListStrings.push_back("NetworkManager");
 		else if (netman=="wicd") pkgListStrings.push_back("wicd");
-		if (add_plymouth) pkgListStrings.push_back("plymouth");
+		if (add_plymouth && !remove_dracut) pkgListStrings.push_back("plymouth");
 		parseInstallList(pkgListStrings, installset_contains, versionz);
 		pkgListStrings.clear();
 		if (installset_contains.empty()) {
@@ -366,6 +366,13 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 	}
 	if (nvidia_driver=="96") {
 		alternatives.push_back("legacy96");
+	}
+	if (remove_dracut) {
+		vector<string> tmpset;
+		for (size_t i=0; i<installset_contains.size(); ++i) {
+			if (installset_contains[i]!="dracut") tmpset.push_back(installset_contains[i]);
+		}
+		installset_contains = tmpset;
 	}
 
 	int i_ret = core->install(installset_contains, NULL, NULL, &errorList);
@@ -1251,7 +1258,7 @@ bool AgiliaSetup::run(const map<string, string>& _settings, const vector<TagPair
 	if (notifier) notifier->setProgressCall(10);
 	if (!getRepositoryData()) return false;
 	if (notifier) notifier->setProgressCall(25);
-	if (!prepareInstallQueue(settings["setup_variant"], settings["merge_setup_variant"], settings["netman"], settings["nvidia-driver"], strToBool(settings["add_plymouth"]))) return false;
+	if (!prepareInstallQueue(settings["setup_variant"], settings["merge_setup_variant"], settings["netman"], settings["nvidia-driver"], strToBool(settings["add_plymouth"]), strToBool(settings["drop_dracut"]))) return false;
 	if (notifier) notifier->setProgressCall(50);
 	if (!validateQueue()) return false;
 	if (notifier) notifier->setProgressCall(60);

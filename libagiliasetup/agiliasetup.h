@@ -55,7 +55,7 @@ class AgiliaSetup {
 		bool setMpkgConfig(string pkgsource, const string& volname, const string& rep_location, const vector<string> additional_repositories);
 
 		bool getRepositoryData();
-		bool prepareInstallQueue(const string& setup_variant, const string& merge_setup_variant, const string& netman, const string& nvidia_driver, bool add_plymouth);
+		bool prepareInstallQueue(const string& setup_variant, const string& merge_setup_variant, const string& netman, const string& nvidia_driver, bool add_plymouth, bool remove_dracut);
 		bool validateQueue();
 
 		bool formatPartitions();
