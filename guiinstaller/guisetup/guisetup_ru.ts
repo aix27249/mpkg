@@ -818,11 +818,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Add modules to initrd (see help):</source>
-        <translation>Добавить модули в initrd (смотрите справку):</translation>
+        <translation type="obsolete">Добавить модули в initrd (смотрите справку):</translation>
     </message>
     <message>
         <source>In some cases you need to specify additional options to make your system bootable.</source>
-        <translation>В некоторых случаях вам необходимо указать дополнительные опции для того, чтобы ваша система загружалась.</translation>
+        <translation type="obsolete">В некоторых случаях вам необходимо указать дополнительные опции для того, чтобы ваша система загружалась.</translation>
     </message>
     <message>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -1202,6 +1202,18 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;Пожалуйста, сообщайте нам о найденных ошибках в багтрекер: &lt;/span&gt;&lt;a href=&quot; http://bugs.agilialinux.ru/&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans Serif&apos;; text-decoration: underline; color:#0057ae;&quot;&gt;http://bugs.agilialinux.ru/&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Droid Sans&apos;;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans Serif&apos;;&quot;&gt;За дополнительной информацией, обращайтесь на наш сайт: &lt;/span&gt;&lt;a href=&quot; http://www.agilialinux.ru/&quot;&gt;&lt;span style=&quot; font-family:&apos;Sans Serif&apos;; text-decoration: underline; color:#0057ae;&quot;&gt;http://www.agilialinux.ru/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Use old-style initrd generation via mkinitrd</source>
+        <translation>Использовать старый метод создания initrd через mkinitrd</translation>
+    </message>
+    <message>
+        <source>Initrd options</source>
+        <translation>Опции initrd</translation>
+    </message>
+    <message>
+        <source>Add modules to initrd:</source>
+        <translation>Добавить модули в initrd:</translation>
     </message>
 </context>
 <context>
