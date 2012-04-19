@@ -125,7 +125,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	connect(ui->mountNoFormatRadioButton, SIGNAL(toggled(bool)), this, SLOT(mountFilterNoFormat(bool)));
 
 	// Initrd box
-	connect(ui->mkinitrdCheckBox, SIGNAL(toggled(bool)), this, SLOT(ui->mkinitrdGroupBox->setEnabled(bool)));
+	connect(ui->mkinitrdCheckBox, SIGNAL(toggled(bool)), ui->mkinitrdGroupBox, SLOT(setEnabled(bool)));
 
 
 	ui->progressBar->setMaximum(ui->stackedWidget->count()+1);
