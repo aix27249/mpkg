@@ -1,11 +1,72 @@
 #!/bin/bash
 
+print_usage() {
+	echo "mklivecd: creates LiveCD and it's structure"
+	echo "Usage:"
+	echo -e "\tmklivecd [OPTIONS]"
+	echo "Available options:"
+	echo -e "\t-c CONFIG_FILE\t\tSpecify alternative config file"
+	echo -e "\t-o ISO_OUT_DIR\t\tSpecify ISO output directory. Default: ~/.mklivecd/iso" 
+	echo -e "\t-w BUILD_ROOT_DIR\tSpecify directory in which build process will occur. Default: ~/.mklivecd/build"
+       	echo -e "\t-l LIVE_BUILD_DIR\tSpecify directory in which livecd structure will be created. Default: ~/.mklivecd/live"
+       	echo -e "\t-f ISO_FILENAME\t\tSpecify exact ISO filename to be created"
+       	echo -e "\t-n\t\t\tDon't perform cleanup after build"
+       	echo -e "\t-a\t\t\tDon't build ISO, keep live root instead"
+       	echo -e "\t-k\t\t\tKeep live root"
+
+}
+
+while getopts ":c:o:w:l:f:nak" opt ; do
+	case $opt in
+		c)
+			config_path="$OPTARG"
+			echo "Using configuration file from $OPTARG"
+			;;
+		o)
+			ISO_OUTPUT="$OPTARG"
+			echo "ISO_OUTPUT: $OPTARG"
+			;;
+		w)
+			BUILD_ROOT="$OPTARG"
+			echo "BUILD_ROOT: $OPTARG"
+			;;
+		l)
+			LIVE_BUILD_ROOT="$OPTARG"
+			echo "LIVE_BUILD_ROOT: $OPTARG"
+			;;
+		f)
+			ISO_FILENAME="$OPTARG"
+			echo "ISO_FILENAME: $OPTARG"
+			;;
+		n)
+			export no_cleanup=1
+			echo "Cleanup disabled completely"
+			;;
+		a)
+			export no_iso=1
+			export keep_liveroot=1
+			echo "ISO building disabled"
+			;;
+		k)
+			export keep_liveroot=1
+			echo "Keeping live root"
+			;;
+
+
+
+
+		\?)
+			print_usage >&2
+			exit
+			;;
+	esac
+done
 
 export REAL_HOME="$HOME"
 
 # Checking if ISOBUILD exists
 if [ ! -r "ISOBUILD" ] ; then
-	echo "Sorry, no ISOBUILD file here, aborting"
+	echo "Sorry, no ISOBUILD file here, aborting" >&2
 	exit 1
 fi
 

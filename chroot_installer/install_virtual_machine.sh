@@ -52,4 +52,3 @@ mv ${NODE}/etc/mpkg.xml.system ${NODE}/etc/mpkg.xml
 cat /etc/resolv.conf > ${NODE}/etc/resolv.conf
 echo "Installation complete"
 
-set +e

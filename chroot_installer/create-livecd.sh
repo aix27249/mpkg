@@ -1,7 +1,10 @@
 #!/bin/bash
 # This script should be run as root or fakeroot.
 set -e
-set -x
+if [ "$DEBUG" != "" ] ; then
+	set -x
+fi
+
 export PATH=${scriptdir}/bin:$PATH
 CWD=${scriptdir}/live-elements
 # Set alias for chroot to fakechroot. Let's see if it can work such way
@@ -299,17 +302,21 @@ if [ "$no_cleanup" = "" ] ; then
 	rm -rf "$INITRD_ROOT"
 fi
 
-
-# Creating ISO
-mkdir -p $ISO_OUTPUT
-rm -f $ISO_OUTPUT/$ISO_FILENAME
-ISO_FILE=$ISO_OUTPUT/$ISO_FILENAME ISO_ROOT=$LIVE_ROOT $CWD/makeiso.sh
+if [ "$no_iso" = "" ] ; then
+	# Creating ISO
+	mkdir -p $ISO_OUTPUT
+	rm -f $ISO_OUTPUT/$ISO_FILENAME
+	ISO_FILE=$ISO_OUTPUT/$ISO_FILENAME ISO_ROOT=$LIVE_ROOT $CWD/makeiso.sh
+fi
 
 # Post-build cleanup
-if [ "$no_cleanup" = "" ] ; then
+if [ "$no_cleanup" = "" -a "$keep_liveroot" = "" ] ; then
 	rm -rf "$LIVE_ROOT"
 fi
 
 
 set +e
-set +x
+if [ "$DEBUG" != "" ] ; then
+	set +x
+fi
+
