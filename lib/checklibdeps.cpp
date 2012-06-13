@@ -140,10 +140,14 @@ PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast, bool skip_symbols) {
 			if (!ld_found) ld_paths.push_back(getDirectory(pkg.get_files().at(i)));
 		}
 	}
-	string ld_library_path = "LD_LIBRARY_PATH=$LD_LIBRARY_PATH";
+	string ld_library_path, orig_library_path;
+       	if (getenv("LD_LIBRARY_PATH")) orig_library_path = getenv("LD_LIBRARY_PATH");
+	ld_library_path = orig_library_path;
 	for (size_t i=0; i<ld_paths.size(); ++i) {
-		ld_library_path += ":/" + ld_paths[i];
+		if (ld_library_path.size()>0) ld_library_path += ":";
+		ld_library_path += "/" + ld_paths[i];
 	}
+	setenv("LD_LIBRARY_PATH", ld_library_path.c_str(), 1);
 	for (size_t i=0; i<pkg.get_files().size(); ++i) {
 		fname = pkg.get_files().at(i);
 		if (fast) {
@@ -165,6 +169,8 @@ PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast, bool skip_symbols) {
 		if (data.empty()) continue;
 		ret.parseData(fname, data);
 	}
+	if (orig_library_path.empty()) unsetenv("LD_LIBRARY_PATH");
+	else setenv("LD_LIBRARY_PATH", orig_library_path.c_str(), 1);
 
 	unlink(tmpfile.c_str());
 	return ret;
