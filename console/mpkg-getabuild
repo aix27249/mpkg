@@ -1,0 +1,5 @@
+#!/bin/bash
+
+wget http://api.agilialinux.ru/bt/$1
+
+tar xf $1_*_build_tree.tar.xz
