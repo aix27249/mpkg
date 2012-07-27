@@ -2,4 +2,4 @@
 
 wget http://api.agilialinux.ru/bt/$1
 
-tar xf $1_*_build_tree.tar.xz
+tar xf $1_*.build_tree.tar.xz
