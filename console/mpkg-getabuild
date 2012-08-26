@@ -1,15 +1,15 @@
 #!/bin/bash
 PKGNAME=$1
 DIRNAME="."
-if [ "$2" = "-c" ] ; then
-	DIRNAME="$2"
+if [ "$2"="-c" ] ; then
+	DIRNAME="$PKGNAME"
 fi
 
 mkdir -p "$DIRNAME"
 ( cd "$DIRNAME" 
 	wget http://api.agilialinux.ru/bt/$PKGNAME
 	tar xf $PKGNAME-*.build_tree.tar.xz
-	if [ "$3" = "-e" ] ; then
+	if [ "$3"="-e" ] ; then
 		vim ABUILD
 	fi
 )
