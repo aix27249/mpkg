@@ -1,5 +1,11 @@
 #!/bin/bash
-
-wget http://api.agilialinux.ru/bt/$1
-
-tar xf $1-*.build_tree.tar.xz
+PKGNAME=$1
+DIRNAME="."
+if [ "$1" = "-c" ] ; then
+	PKGNAME=$2
+	DIRNAME="$1"
+mkdir -p "$DIRNAME"
+( cd "$DIRNAME" 
+	wget http://api.agilialinux.ru/bt/$PKGNAME
+	tar xf $PKGNAME-*.build_tree.tar.xz
+)
