@@ -113,6 +113,7 @@ map<const PACKAGE *, PkgScanResults> checkRevDeps(const PACKAGE_LIST &pkgList, b
 }
 
 PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast, bool skip_symbols) {
+	//printf("Running check for %s\n", pkg.get_name().c_str());
 	PkgScanResults ret;
 	
 	// Check if package has files filled in, if no - report error and return empty results. This check includes that package is installed and checkable.
@@ -123,7 +124,6 @@ PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast, bool skip_symbols) {
 
 	// Now go scanning
 	string fname;
-	string tmpfile = get_tmp_file();
 	vector<string> data;
 	string ld_preload;
 	string ldd_options;
@@ -147,16 +147,18 @@ PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast, bool skip_symbols) {
 		if (ld_library_path.size()>0) ld_library_path += ":";
 		ld_library_path += "/" + ld_paths[i];
 	}
+	string cmdstring;
 	setenv("LD_LIBRARY_PATH", ld_library_path.c_str(), 1);
 	for (size_t i=0; i<pkg.get_files().size(); ++i) {
 		fname = pkg.get_files().at(i);
+		//printf("Scanning file %s\n", fname.c_str());
 		if (fast) {
 			if (fname.find("usr/lib")!=0 && fname.find("usr/bin/")!=0 && fname.find("bin/")!=0 && fname.find("sbin/")!=0 && fname.find("usr/sbin/")!=0) continue;
 		}
 		// Skip directories and special dirs with huge amount of files
 		if (fname.empty() || fname[fname.size()-1]=='/' || fname.find("etc/")==0 || fname.find("dev/")==0 || fname.find("lib/modules/")==0 || fname.find("usr/share/")==0 || fname.find("usr/man/")==0 || fname.find("usr/include/")==0 || fname.find("usr/doc/")==0 || fname.find("usr/lib/locale/")==0 || fname.find("usr/lib64/locale/")==0 || fname.find("opt/")==0) continue;
 		// Skip non-executable ones
-		if (access(string("/" + fname).c_str(), X_OK)) continue;
+		if (fast && access(string("/" + fname).c_str(), X_OK)) continue;
 
 		// Too slow, disabled
 		//msay("[" + pkg.get_name() + ": errs: " + IntToStr(ret.symbolErrors.size() + ret.notFoundErrors.size()) + "] [" + IntToStr(i+1) + "/" + IntToStr(pkg.get_files().size()) + "]: /" + fname);
@@ -164,15 +166,20 @@ PkgScanResults checkRevDeps(const PACKAGE &pkg, bool fast, bool skip_symbols) {
 		else if (fname.find("usr/lib64/")==0 && fname.find("python")!=std::string::npos) ld_preload = "LD_PRELOAD=/usr/lib64/libpython2.6.so ";
 		else ld_preload = "";
 
-		system(ld_preload + " " + ld_library_path + " ldd " + ldd_options + " '" + SYS_ROOT + "/" + fname + "' 2>&1 | grep -P 'undefined symbol|not found' > " + tmpfile);
-		data = ReadFileStrings(tmpfile);
-		if (data.empty()) continue;
+		cmdstring = "LD_PRELOAD=" + ld_preload + " LD_LIBRARY_PATH=" + ld_library_path + " ldd " + ldd_options + " '" + SYS_ROOT + fname + "' 2>&1 | grep -P 'undefined symbol|not found'";
+
+		data = MakeStrings(psystem(cmdstring));
+		if (data.empty()) {
+			//printf("CMDLINE WAS: %s\n", cmdstring.c_str());
+			//printf("Nothing for %s, continue\n", fname.c_str());
+			continue;
+		}
+		//printf("Parsing data for file %s, found %d records\n", fname.c_str(), data.size());
 		ret.parseData(fname, data);
 	}
 	if (orig_library_path.empty()) unsetenv("LD_LIBRARY_PATH");
 	else setenv("LD_LIBRARY_PATH", orig_library_path.c_str(), 1);
 
-	unlink(tmpfile.c_str());
 	return ret;
 }
 

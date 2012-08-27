@@ -90,6 +90,7 @@ int main(int argc, char **argv) {
 					break;
 			case 'V':
 					verbose_level = 2;
+					verbose = true;
 					break;
 			case 'c':
 					compact = true;
