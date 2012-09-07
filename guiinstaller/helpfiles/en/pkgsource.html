@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Package source</title>
+</head>
+<body>
+	<h1>Package source</h1>
+	<h2>Basic settings</h2>
+	<p>There you can choose primary install source and enable additional update.</p>
+	<h3>Install source</h3>
+	<p>There you can choose primary install media:</p>
+	<ul>
+		<li><b>Install from disk (DVD or USB flash)</b>: install from media, which was used for booting. If you boot from flash drive with AgiliaLinux install image, also choose this case for installing from flash drive</li>
+		<li><b>Install from Internet</b>: install from network. All last packages from core32.agilialinux.ru or core64.agilialinux.ru (depending from architecture) will be used to install</li>
+		<li><b>ISO image on HDD</b>: install from ISO image, which located on some hard disk partition. In this case before next step you must choose path to ISO image. Be careful: partition with install ISO cannot be formated in install process!</li>
+		<li><b>Directory on HDD</b>: install from folder on HDD, which contains packages. In this case before next step you must choose path to folder with packages!</li>
+		<li><b>Custom URL</b>: install from custom repository, which can be accessed by URL.</li>
+	</ul>
+	<h2>Advanced settings</h2>
+	<h3>Automatic update</h3>
+	<p>You can check box "Automatically get updates from official repository" if you want download latest updates from our repository when installs from DVD or ISO. It will look like "Official online repository" but will be faster and takes less Internet traffic because only updated packages will be downloaded.</p>
+	<h3>Additional repositories</h3>
+	<p>You can choose additional repositories which will be used in install process. You can check the box "userland" (enables repo with packages excluded from DVD) and "testing" (enables repo with very last packages, may broke your system), and also can add your custom repo in text field "Manually specified repostiories". Repositories in this field divided by newline.</p>
+
+</body>
+</html>

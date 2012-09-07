@@ -1,0 +1,20 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Bootloader</title>
+</head>
+<body>
+	<h1>Bootloader</h1>
+	<p>Here you can customize options of your bootloader. You can simply press "Next" to apply defaults, which better in common case, or you can modify some settings.</p>
+	<h2>Basic settings</h2>
+	<p>Here you can choose place to install bootloader: bootable hard disk or bootable partition. You must remember that if you choosing installing into partition you must provide another bootloader in MBR!</p>
+	<h2>Advanced settings</h2>
+	<p>Here you can enable:</p>
+	<ul>
+		<li><b>Placing /tmp in RAM</b>: you can place /tmp in RAM for speed-upping your system. You must have at least 2GiB of RAM, in other case, you can feel slowless, not faster system.</li>
+		<li><b>Enable boot delay</b>: you can enable pause in booting, if you have slow SSD of HDD. Nowadays it's deprecated, because initrd-script should do it automatically if needs.</li>
+	</ul>
+	<p>Также вы можете задать дополнительные опции для ядра и включить дополнительные модули в initrd.</p>
+</body>
+</html>

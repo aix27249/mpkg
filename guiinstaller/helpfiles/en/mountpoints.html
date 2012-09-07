@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Mount points</title>
+</head>
+<body>
+	<h1>Mount points</h1>
+	<p>There you must specify mount points for your partitions and file system, if not specified before.</p>
+	<h2>Mount points and file systems</h2>
+	<p><b>Mount point</b> is a partition's place in file ierarchy. There are some common mount points:
+	<ul>
+		<li><b>/</b> is primary mount point. System installs in /, from / system runs.</li>
+		<li><b>/home</b> mount point for users data. In partition with this mount point stores all users data such as music, video, documents, etc.</li>
+	</ul>
+	<p>It's not all avaliable mount points but the most useful of this.</p>
+	<p><b>File system</b> is understanded by computer structure of physical placing files and folders. In AgiliaLinux nowadays supported file systems for installing are:
+	<ul>
+		<li>ext2</li>
+		<li>ext3</li>
+		<li>ext4</li>
+		<li>xfs</li>
+		<li>jfs</li>
+		<li>reiserfs</li>
+		<li>btrfs</li>
+		<li>nilfs2</li>
+	</ul>
+	<p>File systems from other OS (FAT16/32, NTFS from Windows, HFS/HFS+ from Mac OS X) supports too but not installable.</p>
+	<p>File system ext4 recommended for install.</p>
+	<h2>Defining filesystems and mountpoints</h2>
+	<p>You must choose partition, created before, and choose for this file system and mount point. If you format file system earlier, you can choose "Do not format". You must choose one partition with mount point /. Very good practise is choosing another partition for /home. Also, you can create swap-partition for dumping memory if RAM ends. We recommend create swap partition and choose in "Mount Options" "Swap-partition" for this partition.</p>
+</body>
+</html>
