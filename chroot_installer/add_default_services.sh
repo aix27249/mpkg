@@ -2,13 +2,12 @@
 BOOT_SERVICE_LIST="mdadm lvm videoswitch langswitch"
 SYS_SERVICE_LIST="sysfs udev"
 DEF_SERVICE_LIST="consolefont \
-	hald \
+	udev-postmount \
 	dbus \
-	sshd \
 	sysklogd \
 	alsasound \
-	acpid \
 	cupsd \
+	gdm \
 	cron \
 	networkmanager"
 X11_SERVICE_LIST="xdm \
