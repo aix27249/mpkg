@@ -1,0 +1,76 @@
+.TH mpkg-sync 0.16 "Декабрь 2010"
+.SH ИМЯ
+mpkg-sync
+.SH СИНТАКСИС
+.B mpkg-sync
+[
+.B -v --verbose
+]
+[
+.B -y --noconfirm
+]
+[
+.B -K --skip-deprecated
+]
+.I ИМЯ_ФАЙЛА_С_SYNCMAP
+.SH ОПИСАНИЕ
+Синхронизация с внешними репозиториями.
+.SH КАК ЭТО РАБОТАЕТ
+В двух словах, сравниваются списки пакетов на внешнем репозитории и в текущем, и выкачиваются недостающие. 
+.br 
+Вот что говорит об этом комментарий из кода:
+.nf
+int mpkg::syncronize_repositories(string sync_map) {
+	// So, we have:
+	// 1. List of remote repositories, which should be mapped to defined destination directories
+	// 2. These directories should be indexed after sync, and become a mirrors of requested repositories
+	// 3. If set by syncmap, no extra packages should be in destination after sync: they should be backed up to deprecated branch
+	// 4. Only changed/new packages should be downloaded
+	// 5. Directory structure should be the same as in source storage
+	// 6. Log activity in the way in which it can be readed for site news.
+	// 7. Check package integrity by comparing md5 after sync
+.fi
+.SH КЛЮЧИ
+.TP
+.B -v --verbose
+Показывать подробно, какие именно пакеты будут синхронизированы
+.TP
+.B -y --noconfirm
+Не спрашивать подтверждения перед каждой парой
+.TP
+.B -K --skip-deprecated
+Не синхронизировать уже устаревшие пакеты, брать только последние версии
+.SH ФОРМАТ syncmap
+Для синхронизации нужно создать специальный файл, так называемый syncmap, в котором надо указать что и куда синхронизировать. Кроме того, он может содержать некоторые опции. Пример такого файла:
+
+
+
+.nf
+ftp://archlich.homeip.net:2121/unnamed_hero/ /home/webmaster/www/mopspackages.no-ip.org/branches/mopslinux-6.2/contrib/common/unnamed_hero_mirror/
+ftp://archlich.homeip.net:2121/NomerUNO/packages/ /home/webmaster/www/mopspackages.no-ip.org/branches/mopslinux-6.2/contrib/common/NomerUNO_mirror/
+.fi
+.TP
+Как видно, на каждой строчке надо указать, разделяя пробелом, URL внешнего репозитория и полный путь до локальной директории, в которую ведется синхронизация. Завершающие слэши как в URL, так и в путях - обязательны2). Кроме того, можно указать следующие опции (по одной на каждой строке):
+.TP
+.B DROP=ИМЯ_ПАКЕТА
+Не синхронизировать пакеты с данным именем
+.TP
+.B DEPRECATE_OLD
+Перемещать устаревшие пакеты в директорию, определенную опцией DEPRECATED_DIR
+.TP
+.B DEPRECATED_DIR=ИМЯ_ДИРЕКТОРИИ
+Директория для устаревших пакетов, куда они будут перемещаться при указании опции DEPRECATE_OLD
+.TP
+.B DELETE_DEPRECATED
+Удалять устаревшие пакеты
+.TP
+.B REBUILD_INDEX_BEFORE_SYNC
+Пересчитывать локальный индекс перед тем как выполнять синхронизацию.
+.TP
+.B NO_REBUILD_AFTER_SYNC
+Не пересчитывать индекс после синхронизации. По умолчанию он пересчитывается после синхронизации каждой пары.
+.TP
+.B NO_VALIDATE
+Не проводить валидацию пакетов после синхронизации.
+
+

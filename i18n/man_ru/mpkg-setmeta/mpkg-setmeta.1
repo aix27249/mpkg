@@ -1,0 +1,164 @@
+.TH mpkg-setmeta 0.16 "Декабрь 2010"
+.SH ИМЯ
+mpkg-setmeta
+.SH СИНТАКСИС
+.B mpkg-setmeta
+.I ИМЯ_ФАЙЛА|ИМЯ_ДИРЕКТОРИИ
+[
+.B -h --help
+]
+[
+.B -n --name=NAME
+]
+[
+.B -v --version=VERSION
+]
+[
+.B -a --arch=ARCH
+]
+[
+.B -b --build=BUILD
+]
+[
+.B -B --buildup
+]
+[
+.B -N --basename=FILENAME
+]
+[
+.B -m --mainteiner-name=NAME
+]
+[
+.B -e --maintainer-email=EMAIL
+]
+[
+.B -t --add-tag=TAG
+]
+[
+.B -T --remove-tag=TAG
+]
+[
+.B -d --add-dep=DEP
+]
+[
+.B -D --remove-dep=DEP
+]
+[
+.B -S --shortdesc=FILE|TEXT
+]
+[
+.B -l --longdesc=FILE|TEXT
+]
+[
+.B -c --changelog=FILENAME|TEXT
+]
+[
+.B -X --cleartags
+]
+[
+.B -Z --cleardeps
+]
+[
+.B -p --provides
+]
+[
+.B -P --clearprovides
+]
+[
+.B -k --conficts
+]
+[
+.B -K --clearconflicts
+]
+[
+.B -s --keep-symlinks
+]
+[
+.B -f --config-files=FILENAME
+]
+[
+.B -F **-clear-config-files
+]
+.SH ОПИСАНИЕ
+Редактирование метаданных пакета. 
+.TP 
+.B ВНИМАНИЕ:
+mpkg-setmeta 
+.B делает
+convert для не-mpkg пакетов, поэтому применение mpkg-convert перед ней больше не требуется.
+.SH КЛЮЧИ
+.TP
+.B -h --help
+Показывает помощь по использованию
+.TP
+.B -n --name=NAME
+Установить имя пакета
+.TP
+.B -v --version=VERSION
+Установить версию пакета
+.TP
+.B -a --arch=ARCH
+Установить архитектуру пакета
+.TP
+.B -b --build=BUILD
+Установить билд пакета
+.TP
+.B -B --buildup
+Увеличить билд пакета
+.TP
+.B -N --basename=FILENAME
+Получить имя, версию, архитектуру и билд из имени файла в slackware-стиле
+.TP
+.B -m --mainteiner-name=NAME
+Уставновить имя мейтейнера
+.TP
+.B -e --maintainer-email=EMAIL
+Установить адрес электронной почты мейнтейнера
+.TP
+.B -t --add-tag=TAG
+Добавить тег к пакету
+.TP
+.B -T --remove-tag=TAG
+Убрать тег из пакета
+.TP
+.B -d --add-dep=DEP
+Добавить зависимость (формат: foo=>1.0)
+.TP
+.B -D --remove-dep=DEP
+Убрать зависимость (формат: foo)
+.TP
+.B -S --shortdesc=FILE|TEXT
+Установить краткое описание пакета
+.TP
+.B -l --longdesc=FILE|TEXT
+Установить подробное описание пакета
+.TP
+.B -c --changelog=FILENAME|TEXT
+Установить список изменений
+.TP
+.B -X --cleartags
+Очистить все предыдущие теги
+.TP
+.B -Z --cleardeps
+Очистить все предыдущие зависимости
+.TP
+.B -p --provides
+Установить значение параметра provides
+.TP
+.B -P --clearprovides
+Очистить значение параметра provides
+.TP
+.B -k --conficts
+Установить значение параметра conflicts
+.TP
+.B -K --clearconflicts
+Очистить значение параметра conflicts
+.TP
+.B -s --keep-symlinks
+Оставлять симлинки внутри архива, не выносить их в doinst.sh
+.TP
+.B -f --config-files=FILENAME
+Прописать список конфигурационных файлов, взяв его из FILENAME
+.TP
+.B -F **-clear-config-files
+Очистить список конфигурационных файлов

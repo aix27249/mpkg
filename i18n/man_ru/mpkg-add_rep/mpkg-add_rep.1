@@ -1,0 +1,36 @@
+.TH mpkg-add_rep 0.16 "Декабрь 2010"
+.SH ИМЯ
+mpkg-add_rep
+.SH СИНТАКСИС
+.B mpkg-add_rep
+[
+.B -t --conf=ИМЯ_КОНФИГА
+]
+.I URL
+.SH ОПИСАНИЕ
+Добавление репозитория к текущему профилю.
+URL должен быть в виде ссылки на директорию с 
+.B packages.xml.gz
+(например, 
+.B http://www.mopspackages.ru/branches/mopslinux-6.2/branches/kde4/
+).
+.TP
+Поддерживаются протоколы:
+.TP
+.B http,
+например http://www.mopspackages.ru/branches/mopslinux-6.2/branches/kde4/
+.TP
+.B ftp,
+например ftp://ftp.rpunet.ru/mopslinux-6.2.2/packages/
+.TP
+.B file,
+например file:///mnt/hd/my_repository/
+Обратите внимание, что в начале - три слэша. Ссылка строится по принципу file:// плюс абсолютный путь /mnt/hd/my_repository/
+.TP
+.B cdrom,
+например cdrom://MOPSDVD/packages/
+Структура данной ссылки такова: cdrom://метка диска/директория_на_диске/
+.SH КЛЮЧИ
+.TP
+.B -t --conf=ИМЯ_КОНФИГА
+Использовать альтернативный конфигурационный файл.
