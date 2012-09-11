@@ -1,2 +1,5 @@
 *~
 *.swp*
+misc_tools/repo_index_generator/generate_index_new
+*.o
+*/build/

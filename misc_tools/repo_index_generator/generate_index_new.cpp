@@ -280,8 +280,10 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 		vector<string> svar_raw = getDirectoryList(index_path + "/setup_variants");
 		if (svar_raw.size()>0) {
 			for (size_t i=0; i<svar_raw.size(); ++i) {
-				if (svar_raw[i].find(".desc")==svar_raw[i].size()-strlen(".desc")) {
-					fprintf(setup_variants, "%s\n", svar_raw[i].substr(0, svar_raw[i].size()-strlen(".desc")).c_str());
+				if (svar_raw[i].find(".list")==std::string::npos) continue; // Skip files that are not lists
+				if (svar_raw[i].find(".")==0) continue; // Skip hidden files
+				if (svar_raw[i].find(".list")==svar_raw[i].size()-strlen(".list")) {
+					fprintf(setup_variants, "%s\n", svar_raw[i].substr(0, svar_raw[i].size()-strlen(".list")).c_str());
 				}
 			}
 		}
