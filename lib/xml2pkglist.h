@@ -4,7 +4,7 @@
 #include <libxml/tree.h>
 #include "dataunits.h"
 // Receives XML doc, root node, link to package list and server url
-int xml2pkglist(xmlDocPtr doc, PACKAGE_LIST &pkgList, const string& server_url, vector< pair<string, string> > *descriptions = NULL);
+int xml2pkglist(xmlDocPtr doc, PACKAGE_LIST &pkgList, const string& server_url, vector< pair<string, string> > *descriptions = NULL, bool force_offline_descriptions = false);
 // Same thing for single package. Creates doc on the fly
 int xml2pkg(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg);
 

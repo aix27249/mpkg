@@ -203,7 +203,7 @@ int getPackageCount(xmlNodePtr cur) {
 	return counter;
 }
 
-int xml2pkglist(xmlDocPtr doc, PACKAGE_LIST &pkgList, const string& server_url, vector< pair<string, string> >  *descriptions) {
+int xml2pkglist(xmlDocPtr doc, PACKAGE_LIST &pkgList, const string& server_url, vector< pair<string, string> >  *descriptions, bool force_offline_descriptions) {
 	xmlNodePtr cur = xmlDocGetRootElement(doc);
 
 	int package_count = getPackageCount(cur);
@@ -224,7 +224,9 @@ int xml2pkglist(xmlDocPtr doc, PACKAGE_LIST &pkgList, const string& server_url, 
 			counter++;
 		}
 		else if (descriptions != NULL && !xmlStrcmp(cur->name, (const xmlChar *) "descriptions")) {
-			parseDescriptions(doc, cur, descriptions);
+			if (force_offline_descriptions || server_url.find("http://")==0 || server_url.find("ftp://")==0 || server_url.find("https://")==0) {
+				parseDescriptions(doc, cur, descriptions);
+			}
 		}
 		cur = cur->next;
 	}

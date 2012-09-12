@@ -765,7 +765,7 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 				return -1;
 			}
 
-			xml2pkglist(indexDoc, tempPkgList, server_url, package_descriptions);
+			xml2pkglist(indexDoc, tempPkgList, server_url, package_descriptions, mConfig.getValue("force_offline_descriptions")=="yes");
 
 			xmlFreeDoc(indexDoc);
 			xmlCleanupMemory();
