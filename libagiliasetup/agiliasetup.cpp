@@ -50,7 +50,8 @@ void AgiliaSetup::setDefaultRunlevels() {
 	enableService("dbus");
 	enableService("sshd");
 	enableService("alsasound");
-	enableService("acpid");
+	//enableService("acpid"); // Disable for now - it leads to immediate shutdown in KDE and GNOME, instead of showing shutdown dialog
+	enableService("gpm");
 	enableService("cupsd");
 	enableService("cron");
 	enableService("bluetooth");
