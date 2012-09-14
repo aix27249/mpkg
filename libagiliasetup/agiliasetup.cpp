@@ -48,7 +48,7 @@ void AgiliaSetup::setDefaultRunlevels() {
 	enableService("consolefont");
 	enableService("sysklogd");
 	enableService("dbus");
-	enableService("sshd");
+	// enableService("sshd"); // For most of users, it's just a security hole. All others should know how to enable it.
 	enableService("alsasound");
 	//enableService("acpid"); // Disable for now - it leads to immediate shutdown in KDE and GNOME, instead of showing shutdown dialog
 	enableService("gpm");
