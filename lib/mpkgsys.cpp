@@ -52,7 +52,7 @@ int mpkgSys::build_package(string out_directory, bool source)
 
 	string pkgname;
 	if (out_directory.empty()) out_directory = "./";
-	out_directory+="/";
+	if (out_directory.find_last_of("/")!=out_directory.length()-1) out_directory+="/";
 	string pkgType=mConfig.getValue("build_pkg_type");
 	if (pkgType.empty()) pkgType="txz";
 	printf("pkgType=[%s]\n", pkgType.c_str());
@@ -78,6 +78,7 @@ int mpkgSys::build_package(string out_directory, bool source)
 			say(_("Packing binary package to %s%s.%s\n"), out_directory.c_str(), pkgname.c_str(), pkgType.c_str());
 			string tmp_dir = get_tmp_dir();
 			system(MAKEPKG_CMD + " " + tmp_dir + "/" + pkgname+"."+pkgType);
+			say(_("Moving package to output directory...\n"));
 			system("mv " + tmp_dir + "/" + pkgname+"."+pkgType + " " + out_directory);
 		}
 	}
@@ -85,7 +86,7 @@ int mpkgSys::build_package(string out_directory, bool source)
 		mError("No XML data, cannot build package");
 		return -1;
 	}
-	say(_("Package was built to %s/%s\n"), out_directory.c_str(), pkgname.c_str());
+	say(_("Package was built to %s%s.%s\n"), out_directory.c_str(), pkgname.c_str(), pkgType.c_str());
     	return 0;
 }
 int rsyncDescriptions(const string& path, const string& base_path) {
