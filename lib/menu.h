@@ -12,7 +12,7 @@ void show_package_info(mpkg *core, string name, string version="", string build=
 void list_pkglist(const PACKAGE_LIST& pkglist);
 void list(mpkg *core, const vector<string>& search, const bool showOnlyAvailable, const bool showOnlyInstalled, const bool onlyQueue=false);
 void actConvert(string filename, string tmpdir);
-void actInstallFromList(mpkg &core, string filename, bool includeVersions=false, bool enqueueOnly=false);
+int actInstallFromList(mpkg &core, string filename, bool includeVersions=false, bool enqueueOnly=false);
 void searchByFile(mpkg *core, string filename, bool strict=false);
 void actListDependants(mpkg &core, string filename, bool includeNotInstalled=false);
 void actSearchByDescription(mpkg &core, const vector<string> &query, bool showOnlyInstalled=false, bool showOnlyAvailable=false);

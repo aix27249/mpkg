@@ -145,7 +145,7 @@ void showMainMenu(mpkg &core) {
 
 }
 
-void actInstallFromList(mpkg &core, string filename, bool includeVersions, bool enqueueOnly) {
+int actInstallFromList(mpkg &core, string filename, bool includeVersions, bool enqueueOnly) {
 	vector<string> installQuery, versionQuery;
        	parseInstallList(preprocessInstallList(filename), installQuery, versionQuery);
 	int ret;
@@ -166,8 +166,9 @@ void actInstallFromList(mpkg &core, string filename, bool includeVersions, bool 
 			}
 			ncInterface.showMsgBox(err);
 		}
+		return ret;
 	}
-	core.commit(enqueueOnly);
+	return core.commit(enqueueOnly);
 }
 
 void actConvert(string filename, string tmpdir) {

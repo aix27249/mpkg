@@ -503,13 +503,13 @@ int main (int argc, char **argv)
 		}
 		if (!FileExists(filename)) {
 			mError(_("File not found"));
-			return 0;
+			return -1;
 		}
 		lockDatabase();
-		actInstallFromList(core, filename, exportinstalled_includeversions, enqueueOnly);
+		int ret = actInstallFromList(core, filename, exportinstalled_includeversions, enqueueOnly);
 		delete_tmp_files();
 		unlockDatabase();
-		return 0;
+		return ret;
 	}				
 	
 	if (action == ACT_SHOWVERSION) {
@@ -600,21 +600,24 @@ int main (int argc, char **argv)
 			p_build.push_back(build);
 		}
 		hideErrors = false;
-		if (action != ACT_REINSTALL) core.install(fname, &p_version, &p_build);
+		int ret = 0;
+		if (action != ACT_REINSTALL) ret = core.install(fname, &p_version, &p_build);
 		else {
-			for (unsigned int i=0; i<fname.size(); i++)
-			{
-				//printf("TODO: repair package %s\n", fname[i].c_str());
-				core.repair(fname[i]);
+			for (size_t i=0; i<fname.size(); ++i) {
+				if (core.repair(fname[i])!=0) ret = -1;
 			}
 		}
-		core.commit(enqueueOnly);
+		if (ret!=0) {
+			delete_tmp_files();
+			return ret;
+		}
+		ret = core.commit(enqueueOnly);
 		if (!enqueueOnly) core.clean_queue();
 		delete_tmp_files();
 
 		if (usedCdromMount) system("umount " + CDROM_MOUNTPOINT + " 2>/dev/null >/dev/null");
 		unlockDatabase();
-		return 0;
+		return ret;
 	}
 
 	if (action == ACT_LISTGROUPS)
