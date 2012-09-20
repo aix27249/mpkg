@@ -608,6 +608,7 @@ int main (int argc, char **argv)
 			}
 		}
 		if (ret!=0) {
+			if (!enqueueOnly) core.clean_queue();
 			delete_tmp_files();
 			return ret;
 		}
@@ -673,11 +674,17 @@ int main (int argc, char **argv)
 		{
 			if (pkgList1[i].isTaggedBy(group) && !pkgList1[i].installed()) queue.push_back(pkgList1[i].get_name());
 		}
-		core.install(queue);
-		core.commit(enqueueOnly);
+		int ret = core.install(queue);
+		if (ret!=0) {
+			if (!enqueueOnly) core.clean_queue();
+			delete_tmp_files();
+			unlockDatabase();
+			return ret;
+		}
+		ret = core.commit(enqueueOnly);
+
 		if (!enqueueOnly) core.clean_queue();
 		delete_tmp_files();
-
 		unlockDatabase();
 		
 
@@ -698,17 +705,20 @@ int main (int argc, char **argv)
 		{
 			if (pkgList1[i].isTaggedBy(group) && pkgList1[i].installed()) queue.push_back(pkgList1[i].get_name());
 		}
-		core.uninstall(queue);
+		int ret = core.uninstall(queue);
 
 		hideErrors = false;
-		int ret = core.commit(enqueueOnly);
-		if (ret==MPKGERROR_IMPOSSIBLE) {
-			printf("oops, ret = %d\n", ret);
+		if (ret != 0) {
+			if (!enqueueOnly) core.clean_queue();
+			delete_tmp_files();
+			unlockDatabase();
+			return ret;
 		}
+		ret = core.commit(enqueueOnly);
 		if (!enqueueOnly) core.clean_queue();
 		delete_tmp_files();
 		unlockDatabase();
-		return 0;
+		return ret;
 
 	}
 
@@ -1058,13 +1068,20 @@ int main (int argc, char **argv)
 
 
 		hideErrors = false;
-		if (action==ACT_REMOVE && do_purge==0) core.uninstall(r_name);
-		else core.purge(r_name);
-		core.commit(enqueueOnly);
+		int ret = 0;
+		if (action==ACT_REMOVE && do_purge==0) ret = core.uninstall(r_name);
+		else ret = core.purge(r_name);
+		if (ret!=0) {
+			delete_tmp_files();
+			if (!enqueueOnly) core.clean_queue();
+			unlockDatabase();
+			return ret;
+		}
+		ret = core.commit(enqueueOnly);
 		if (!enqueueOnly) core.clean_queue();
 		delete_tmp_files();
 		unlockDatabase();
-		return 0;
+		return ret;
 	}
 
 	if ( action == ACT_LIST_REP ) {
