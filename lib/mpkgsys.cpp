@@ -583,7 +583,7 @@ int mpkgSys::requestUninstall(int package_id, mpkgDatabase *db, DependencyTracke
 				else db->set_action(tmpPackage.get_id(), ST_REMOVE, "direct");
 			}
 
-			return tmpPackage.get_id();
+			return 0;
 		}
 		else
 		{

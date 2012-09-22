@@ -604,7 +604,7 @@ int main (int argc, char **argv)
 		if (action != ACT_REINSTALL) ret = core.install(fname, &p_version, &p_build);
 		else {
 			for (size_t i=0; i<fname.size(); ++i) {
-				if (core.repair(fname[i])!=0) ret = -1;
+				if (!core.repair(fname[i])) ret = -1;
 			}
 		}
 		if (ret!=0) {
