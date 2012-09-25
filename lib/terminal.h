@@ -18,7 +18,7 @@ void clearRow(int rowLength = -1);
 #define	PMODE_AUTO 0
 #define	PMODE_NONE 1
 
-void msay(string data, int mode=SAYMODE_INLINE);
+void msay(string data, int mode=SAYMODE_INLINE, FILE *output = stdout);
 
 class ProgressDisplay {
 	public:

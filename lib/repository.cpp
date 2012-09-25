@@ -577,7 +577,7 @@ int countPackage(const char *filename, const struct stat *file_status, int filet
 void importIndexCache(const std::string& path) {
 	Repository rep;
 	rep.get_index("file://" + getAbsolutePath(path), __pkgCache);
-	printf("Using cached indexing: cached %d packages\n", __pkgCache->size());
+	fprintf(stderr, "Using cached indexing: cached %d packages\n", __pkgCache->size());
 }
 
 int Repository::build_index(string path, bool make_filelist)
@@ -658,9 +658,6 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 	if (_abortActions) return MPKGERROR_ABORTED;
 
 	currentStatus = _("Updating data from ")+ server_url+"...";
-	if (htmlMode) {
-		printHtml("<img src=\"processing.png\"><a href=\"" + server_url + "\"> " + server_url + "...</a>\n", true);
-	}
 
 	//mDebug("get_index!");
 	// First: detecting repository type
@@ -776,7 +773,7 @@ int Repository::get_index(string server_url, PACKAGE_LIST *packages, unsigned in
 				if (checkAcceptedArch(tempPkgList.get_package_ptr(i))) packages->add(tempPkgList[i]);
 			}
 			
-			msay((string) CL_5 + _("Index update:") + (string) CL_WHITE +" ["+server_url+"]: " + (string) CL_GREEN + _("done") + (string) CL_WHITE + _(" (total: ") + IntToStr(tempPkgList.size()) + _(" packages, accepted: ") + IntToStr(packages->size()) + ")", SAYMODE_INLINE_END);
+			msay((string) CL_5 + _("Index update:") + (string) CL_WHITE +" ["+server_url+"]: " + (string) CL_GREEN + _("done") + (string) CL_WHITE + _(" (total: ") + IntToStr(tempPkgList.size()) + _(" packages, accepted: ") + IntToStr(packages->size()) + ")", SAYMODE_INLINE_END, stderr);
 
 			tempPkgList.clear();
 			break;

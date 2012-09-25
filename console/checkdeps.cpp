@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 		checkList.add(*tmpList);
 		delete tmpList;
 	}
-	say(_("Checking %d packages\n"), checkList.size());
+	fprintf(stderr, _("Checking %d packages\n"), checkList.size());
 	for (size_t i=0; i<checkList.size(); ++i) {
 		checkList.get_package_ptr(i)->set_action(ST_INSTALL, "check");
 	}

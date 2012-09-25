@@ -47,7 +47,7 @@ void truncateDataStr(string& data) {
 	//data = p1 + "..." + p2;
 
 }
-void msay (string data, int mode)
+void msay (string data, int mode, FILE *output)
 {
 	currentStatus = data;
 	//if (!dialogMode && !htmlMode && errorManagerMode==EMODE_CONSOLE) truncateDataStr(data); // disabled due to segfaults in Qt mode (and, maybe, in others too)
@@ -55,20 +55,20 @@ void msay (string data, int mode)
 		switch (mode) {
 			case SAYMODE_INLINE:
 				clearRow(utf8strlen(data));
-				printf("\r%s", data.c_str());
+				fprintf(output, "\r%s", data.c_str());
 				msayState = true;
 				break;
 			case SAYMODE_INLINE_START:
 				msayState = true;
-				printf("\r%s", data.c_str());
+				fprintf(output, "\r%s", data.c_str());
 				break;
 			case SAYMODE_INLINE_END:
 				clearRow();
-				printf("\r%s\n", data.c_str());
+				fprintf(output, "\r%s\n", data.c_str());
 				msayState = false;
 				break;
 			case SAYMODE_NEWLINE:
-				printf("%s\n", data.c_str());
+				fprintf(output, "%s\n", data.c_str());
 				msayState = false;
 				break;
 		}		
