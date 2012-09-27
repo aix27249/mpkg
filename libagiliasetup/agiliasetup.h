@@ -59,7 +59,7 @@ class AgiliaSetup {
 		bool validateQueue();
 
 		bool formatPartitions();
-		bool mountPartitions();
+		bool mountPartitions(bool tmpfs_tmp);
 		bool formatPartition(PartConfig pConfig, string *logFile);
 		bool makeSwap(PartConfig pConfig, string *logFile);
 		bool activateSwap(PartConfig pConfig, string *logFile);

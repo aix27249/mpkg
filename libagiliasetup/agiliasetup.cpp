@@ -558,7 +558,7 @@ bool AgiliaSetup::formatPartitions() {
 	return true;
 }
 
-bool AgiliaSetup::mountPartitions() {
+bool AgiliaSetup::mountPartitions(bool tmpfs_tmp) {
 	if (notifier) notifier->setSummaryTextCall(_("Mounting partitions"));
 	if (notifier) notifier->setDetailsTextCall("");
 	string logFile = get_tmp_file();
@@ -638,6 +638,10 @@ bool AgiliaSetup::mountPartitions() {
 			if (notifier) notifier->sendReportError(_("Failed to mount partition ") + partConfigs[mountOrder[i]].partition + ", error log:\n" + ReadFile(logFile));
 			return false;
 		}
+	}
+	// Mount tmpfs at install time
+	if (tmpfs_tmp) {
+		system("mount -t tmpfs nont /tmp/new_sysroot/tmp");
 	}
 	return true;
 
@@ -1265,7 +1269,7 @@ bool AgiliaSetup::run(const map<string, string>& _settings, const vector<TagPair
 	if (notifier) notifier->setProgressCall(60);
 	if (!formatPartitions()) return false;
 	if (notifier) notifier->setProgressCall(70);
-	if (!mountPartitions()) return false;
+	if (!mountPartitions(strToBool(settings["tmpfs_tmp"]))) return false;
 	if (notifier) notifier->setProgressCall(85);
 	// FIXME: Merge these two functions and check it's return value.
 	if (!moveDatabase()) return false;
