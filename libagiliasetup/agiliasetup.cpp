@@ -170,7 +170,7 @@ bool AgiliaSetup::setPasswd(const string& username, const string& passwd) {
 	string passwd_cmd = "#!/bin/sh\necho " + username + ":" + passwd + " | chpasswd\n";
 	WriteFile("/tmp/new_sysroot/tmp/run_passwd", passwd_cmd);
 	int ret = system("chroot /tmp/new_sysroot sh /tmp/run_passwd ");
-	//unlink("/tmp/new_sysroot/tmp/run_passwd");
+	unlink("/tmp/new_sysroot/tmp/run_passwd");
 	if (ret == 0) return true;
 	return false;
 }
