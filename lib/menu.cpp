@@ -948,7 +948,6 @@ void searchByFile(mpkg *core, string filename, bool strict)
 void actListDependants(mpkg &core, string pkgname, bool includeNotInstalled) {
 	PACKAGE_LIST packages;
 	SQLRecord sqlSearch;
-	if (!includeNotInstalled) sqlSearch.addField("package_installed", 1);
 	core.get_packagelist(sqlSearch, &packages);
 
 	string core_name, data;
@@ -972,20 +971,15 @@ void actListDependants(mpkg &core, string pkgname, bool includeNotInstalled) {
 	}
 
 	if (core_name.empty()) {
-		if (includeNotInstalled) {
-			mWarning(_("Package ") + pkgname + _(" not found, but we will try to find if some package still depends on it"));
-			core_name = pkgname;
-		}
-		else {
-			mError(_("Package ") + pkgname + _(" not installed, and search scope limited to installed ones"));
-			return;
-		}
+		mWarning(_("Package ") + pkgname + _(" not found, but we will try to find if some package still depends on it"));
+		core_name = pkgname;
 	}
 	if (core_name!=pkgname) fprintf(stderr, _("Looking for package who depends on %s, as %s provides it\n"), core_name.c_str(), pkgname.c_str());
 
 	vector<PACKAGE *> list;
 	bool found;
 	for (size_t i=0; i<packages.size(); ++i) {
+		if (!includeNotInstalled && !packages[i].installed()) continue;
 		for (size_t t=0; t<packages[i].get_dependencies().size(); ++t) {
 			if (packages[i].get_dependencies().at(t).get_package_name()==core_name) {
 				found = false;
@@ -1028,7 +1022,7 @@ void actListDependants(mpkg &core, string pkgname, bool includeNotInstalled) {
 					}
 
 					if (verbose) {
-						say("%s%s%s\n", list[i]->get_name().c_str(), vcond.c_str(), pver.c_str());
+						say("%s-%s requires %s %s %s\n", list[i]->get_name().c_str(), list[i]->get_fullversion().c_str(), core_name.c_str(), vcond.c_str(), pver.c_str());
 						break;
 					}
 					else {
