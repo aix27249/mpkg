@@ -952,16 +952,30 @@ void actListDependants(mpkg &core, string pkgname, bool includeNotInstalled) {
 	core.get_packagelist(sqlSearch, &packages);
 
 	string core_name, data;
-	// First, check if such package exists
+	// We should distinguish installed and not installed packages, as available packages may be different, including malformed ones.
+	// First, check if such package exists within installed packages
 	for (size_t i=0; i<packages.size(); ++i) {
 		if (packages[i].installed() && packages[i].get_name()==pkgname) {
 			core_name = packages[i].get_corename();
+			break;
 		}
 	}
+
 	if (core_name.empty()) {
-		mError(_("Package ") + pkgname + _(" not installed"));
-		return;
+		for (size_t i=0; i<packages.size(); ++i) {
+			if (!packages[i].installed() && packages[i].get_name()==pkgname) {
+				core_name = packages[i].get_corename();
+				break;
+			}
+		}
+
 	}
+
+	if (core_name.empty()) {
+		mWarning(_("Package ") + pkgname + _(" not found, but we will try to find if some package still depends on it"));
+		core_name = pkgname;
+	}
+	if (core_name!=pkgname) fprintf(stderr, _("Looking for package who depends on %s, as %s provides it\n"), core_name.c_str(), pkgname.c_str());
 
 	vector<PACKAGE *> list;
 	bool found;
@@ -994,7 +1008,7 @@ void actListDependants(mpkg &core, string pkgname, bool includeNotInstalled) {
 	for (size_t i=0; i<list.size(); ++i) {
 		if (!dialogMode) {
 			for (size_t t=0; t<list[i]->get_dependencies().size(); ++t) {
-				if (list[i]->get_dependencies().at(t).get_package_name()==pkgname) {
+				if (list[i]->get_dependencies().at(t).get_package_name()==core_name) {
 					vcond = list[i]->get_dependencies().at(t).get_vcondition();
 					pver = list[i]->get_dependencies().at(t).get_package_version();
 					if (vcond=="(any)") {
