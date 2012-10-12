@@ -1,29 +1,35 @@
 #!/bin/sh
-LDDLIST=`cat $1`
-OUTLDDDIR=$2
-FILELIST=`cat $3`
-OUTFILEDIR=$4
-TMPDIR=$5
+LDDLIST="$1"
+OUTLDDDIR="$2"
+FILELIST="$3"
+OUTFILEDIR="$4"
+TMPDIR="$5"
 echo "outfiledir = $OUTFILEDIR"
 echo "outldddir = $OUTLDDDIR"
+echo "TMPDIR = $TMPDIR"
+
 mkdir -p $OUTFILEDIR
 mkdir -p $OUTLDDDIR
 let i=0
-echo "objdump: searching from $i"
-for index in $LDDLIST; do
-	objdump -p $TMPDIR/$index 2>/dev/null | grep NEEDED > $OUTLDDDIR/$i
-	#if [ "`cat $OUTLDDDIR/$i`" != "" ] ; then
-	#	cat $OUTLDDDIR/$i
-	#fi
+
+echo "Counting files..."
+LDDCOUNT=$(cat $LDDLIST | wc -l)
+FILECOUNT=$(cat $FILELIST | wc -l)
+echo "Counting complete"
+# Process ldd list
+echo "objdump: processing $LDDCOUNT files"
+while read index ; do
+	objdump -p "$TMPDIR/$index" 2>/dev/null | grep NEEDED > $OUTLDDDIR/$i
 	let i=$i+1
-done
-echo "objdump: searched for $i files"
+done < $LDDLIST
+echo "objdump processing complete, processed $i files"
+
 let i=0
-echo "files searching from $i"
-for index in $FILELIST; do
-	#echo $i
-	file $TMPDIR/$index > $OUTFILEDIR/$i 2>/dev/null
+echo "file: processing $FILECOUNT files"
+while read index ; do
+	file "$TMPDIR/$index" > $OUTFILEDIR/$i 2>/dev/null
 	let i=$i+1
-done
-echo "file searched for $i files"
+done < $FILELIST
+
+echo "file processing complete, processed $i files"
 
