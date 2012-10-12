@@ -122,7 +122,6 @@ int showCmdHelp(const string cmd, bool is_error)
 	fprintf(stream,_("\tmpkg-convert <filename>        convert package to MPKG format\n"));
 	fprintf(stream,_("\tmpkg-nativize [dir]            search directory for non-native packages and convert it to MPKG format\n"));
 	fprintf(stream,_("\tmpkg-gendeps <filename(s)>         generate dependencies and import it into package. Also can be called by mpkg-gendeps2.\n"));
-	fprintf(stream,_("\tmpkg-cleardeps <filename>         clear package dependencies\n"));
 	fprintf(stream,_("\tmpkg-checklist [dir]           check md5 sums of a package tree (requires a valid index in this dir)\n"));
 	fprintf(stream,_("\tmpkg-sync <syncmap file>       syncronize repositories by sync map\n"));
 	fprintf(stream,_("\tmpkg-buildup <filename>        increase spkg/tgz build\n"));
