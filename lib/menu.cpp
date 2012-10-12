@@ -945,7 +945,7 @@ void searchByFile(mpkg *core, string filename, bool strict)
 	if (dialogMode) ncInterface.showMsgBox(data);
 }
 
-void actListDependants(mpkg &core, string filename, bool includeNotInstalled) {
+void actListDependants(mpkg &core, string pkgname, bool includeNotInstalled) {
 	PACKAGE_LIST packages;
 	SQLRecord sqlSearch;
 	if (!includeNotInstalled) sqlSearch.addField("package_installed", 1);
@@ -954,12 +954,12 @@ void actListDependants(mpkg &core, string filename, bool includeNotInstalled) {
 	string core_name, data;
 	// First, check if such package exists
 	for (size_t i=0; i<packages.size(); ++i) {
-		if (packages[i].installed() && packages[i].get_name()==filename) {
+		if (packages[i].installed() && packages[i].get_name()==pkgname) {
 			core_name = packages[i].get_corename();
 		}
 	}
 	if (core_name.empty()) {
-		mError(_("Package ") + filename + _(" not installed"));
+		mError(_("Package ") + pkgname + _(" not installed"));
 		return;
 	}
 
@@ -979,22 +979,22 @@ void actListDependants(mpkg &core, string filename, bool includeNotInstalled) {
 	// Output
 	
 	
-	if (!dialogMode) fprintf(stderr, _("Next packages depends on %s: \n"), filename.c_str());
+	if (!dialogMode) fprintf(stderr, _("Next packages depends on %s: \n"), pkgname.c_str());
 	else {
-		ncInterface.setSubtitle(_("Searching for packages depending on ") + filename);
-		data = _("Next packages depends on ") + filename + "\n";
+		ncInterface.setSubtitle(_("Searching for packages depending on ") + pkgname);
+		data = _("Next packages depends on ") + pkgname + "\n";
 	}
 
 	if (list.empty()) {
-		if (dialogMode) data = _("No package depends on ") + filename;
-		else fprintf(stderr, _("No package depends on %s\n"), filename.c_str());
+		if (dialogMode) data = _("No package depends on ") + pkgname;
+		else fprintf(stderr, _("No package depends on %s\n"), pkgname.c_str());
 	}
 	string vcond, pver, vlimit = _cmdOptions["versionLimit"];
 
 	for (size_t i=0; i<list.size(); ++i) {
 		if (!dialogMode) {
 			for (size_t t=0; t<list[i]->get_dependencies().size(); ++t) {
-				if (list[i]->get_dependencies().at(t).get_package_name()==filename) {
+				if (list[i]->get_dependencies().at(t).get_package_name()==pkgname) {
 					vcond = list[i]->get_dependencies().at(t).get_vcondition();
 					pver = list[i]->get_dependencies().at(t).get_package_version();
 					if (vcond=="(any)") {
