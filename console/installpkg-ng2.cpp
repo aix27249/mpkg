@@ -735,7 +735,9 @@ int main (int argc, char **argv)
 	{
 		_cmdOptions["sql_readonly"]="yes";
 		if (argc<=optind) return print_usage(program_name, true);
-		searchByFile(&core, argv[optind],true);
+		string arg = argv[optind];
+		if (arg.find("/")==std::string::npos) arg = psystem("which " + arg);
+		searchByFile(&core, arg, true);
 		return 0;
 	}
 	
