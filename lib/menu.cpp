@@ -972,8 +972,14 @@ void actListDependants(mpkg &core, string pkgname, bool includeNotInstalled) {
 	}
 
 	if (core_name.empty()) {
-		mWarning(_("Package ") + pkgname + _(" not found, but we will try to find if some package still depends on it"));
-		core_name = pkgname;
+		if (includeNotInstalled) {
+			mWarning(_("Package ") + pkgname + _(" not found, but we will try to find if some package still depends on it"));
+			core_name = pkgname;
+		}
+		else {
+			mError(_("Package ") + pkgname + _(" not installed, and search scope limited to installed ones"));
+			return;
+		}
 	}
 	if (core_name!=pkgname) fprintf(stderr, _("Looking for package who depends on %s, as %s provides it\n"), core_name.c_str(), pkgname.c_str());
 
