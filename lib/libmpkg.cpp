@@ -1840,13 +1840,8 @@ bool checkUtilities() {
 CustomPkgSet getUserCustomPkgSet(const string &path, const string& base_name, bool merge, const string& locale) {
 	CustomPkgSet ret;
 	
-	PACKAGE_LIST pkgList;
-	SQLRecord record;
-	mpkg *core = new mpkg;
-	core->get_packagelist(record, &pkgList, true, false);
-	delete core;
 
-	if (merge) ret = getCustomPkgSet(base_name, locale, pkgList);
+	if (merge) ret = getCustomPkgSet(base_name, locale);
 	else {
 		ret.name = getFilename(path);
 		ret.desc = _("Custom list");
@@ -1864,11 +1859,11 @@ CustomPkgSet getUserCustomPkgSet(const string &path, const string& base_name, bo
 	}
 	else finalPath = path;
 
-	calculatePkgSetSize(ret, finalPath, pkgList, merge);
+	calculatePkgSetSize(ret, finalPath, merge);
 	return ret;
 }
 
-CustomPkgSet getCustomPkgSet(const string& name, const string& locale, const PACKAGE_LIST &pkgList) {
+CustomPkgSet getCustomPkgSet(const string& name, const string& locale) {
 	vector<string> data = ReadFileStrings("/tmp/setup_variants/" + name + ".desc");
 	CustomPkgSet ret;
 	ret.hasX11 = false;
@@ -1891,11 +1886,11 @@ CustomPkgSet getCustomPkgSet(const string& name, const string& locale, const PAC
 	}
 	if (ret.desc.empty()) ret.desc = gendesc;
 	if (ret.full.empty()) ret.full = genfull;
-	calculatePkgSetSize(ret, "/tmp/setup_variants/" + ret.name + ".list", pkgList, false);
+	calculatePkgSetSize(ret, "/tmp/setup_variants/" + ret.name + ".list", false);
 	return ret;
 }
 
-void calculatePkgSetSize(CustomPkgSet &set, const string& file_path, const PACKAGE_LIST &pkgList, bool merge) {
+void calculatePkgSetSize(CustomPkgSet &set, const string& file_path, bool merge) {
 	vector<string> list = preprocessInstallList(file_path);
 	int64_t csize = 0, isize = 0;
 	size_t count = 0;
@@ -1909,13 +1904,13 @@ void calculatePkgSetSize(CustomPkgSet &set, const string& file_path, const PACKA
 			if (was[w]==cutSpaces(list[i])) pkgWas = true;
 		}
 		if (pkgWas) continue;
-		for (size_t t=0; t<pkgList.size(); ++t) {
-			if (pkgList[t].get_name()!=cutSpaces(list[i])) continue;
-			was.push_back(cutSpaces(list[i]));
-			csize += atol(pkgList[t].get_compressed_size().c_str());
-			isize += atol(pkgList[t].get_installed_size().c_str());
-			count++;
-		}
+		was.push_back(cutSpaces(list[i]));
+	}
+	PACKAGE_LIST processedTree = buildInstallQueue(was);
+	for (size_t i=0; i<processedTree.size(); ++i) {
+		csize += atol(processedTree[i].get_compressed_size().c_str());
+		isize += atol(processedTree[i].get_installed_size().c_str());
+		count++;
 	}
 	if (!merge) {
 		set.isize = 0;
@@ -1928,4 +1923,18 @@ void calculatePkgSetSize(CustomPkgSet &set, const string& file_path, const PACKA
 
 }
 
+PACKAGE_LIST buildInstallQueue(const vector<string> &list) {
+	mpkg core;
+	vector<string> errorList;
+	core.clean_queue();
+	core.install(list, NULL, NULL, &errorList);
+	core.commit(true);
+	SQLRecord sqlSearch;
+	sqlSearch.addField("package_action", ST_INSTALL);
+	PACKAGE_LIST pkgList;
+	core.get_packagelist(sqlSearch, &pkgList, true, false);
+	core.clean_queue();
+	
+	return pkgList;
+}
 

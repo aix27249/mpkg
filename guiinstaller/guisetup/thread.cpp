@@ -188,11 +188,6 @@ void LoadSetupVariantsThread::getCustomSetupVariants(const vector<string>& rep_l
 	tmpDownloadItem.status = DL_STATUS_WAIT;
 	string itemname;
 
-	PACKAGE_LIST pkgList;
-	SQLRecord record;
-	mpkg *core = new mpkg;
-	core->get_packagelist(record, &pkgList, true, false);
-	delete core;
 
 	for (size_t z=0; z<rep_list.size(); ++z) {
 		emit sendLoadText(tr("Receiving setup variants"));
@@ -233,7 +228,7 @@ void LoadSetupVariantsThread::getCustomSetupVariants(const vector<string>& rep_l
 			emit sendLoadProgress(10+(z+1)*3+( (double)((100-(10+(z+1)*3))/(double) list.size())*(i+1) ));
 
 			printf("Processing %d of %d\n", (int) i+1, (int) list.size());
-			customPkgSetList.push_back(getCustomPkgSet(list[i], locale, pkgList));
+			customPkgSetList.push_back(getCustomPkgSet(list[i], locale));
 		}
 	}
 }
