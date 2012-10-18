@@ -394,10 +394,7 @@ void MainWindow::loadPartitioningDriveList() {
 
 
 void MainWindow::runPartitioningTool() {
-	Qt::WindowStates winstate = windowState();
-	setWindowState(Qt::WindowMinimized);
 	system("gparted");
-	setWindowState(Qt::WindowNoState);
 	deviceCacheActual = false;
 	partitionCacheActual = false;
 	updatePartitionLists();
