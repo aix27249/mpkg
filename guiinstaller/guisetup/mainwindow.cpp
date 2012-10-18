@@ -767,7 +767,7 @@ void MainWindow::realShowSetupVariantDescription(const CustomPkgSet &customPkgSe
 			arg(customPkgSet.hw.c_str()).\
 			arg(customPkgSet.count).\
 			arg(humanizeSize(customPkgSet.csize).c_str()).\
-			arg(humanizeSize(customPkgSet.isize).c_str()));
+			arg(humanizeSize(customPkgSet.isize+customPkgSet.isize*0.2).c_str()));
 	delete image;
 	QString customSetInfo;
 	if (!customSetupVariant.isEmpty()) {
