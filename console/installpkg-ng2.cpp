@@ -1189,7 +1189,7 @@ int main (int argc, char **argv)
 		if (argc > optind) output = string(argv[optind]);
 		vector<string> data = core.getExportInstalled(exportinstalled_includeversions);
 		if (output.empty()) {
-			for (unsigned int i=0; i<data.size(); ++i) {
+			for (size_t i=0; i<data.size(); ++i) {
 				printf("%s\n", data[i].c_str());
 			}
 		}
