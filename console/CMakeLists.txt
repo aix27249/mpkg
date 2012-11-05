@@ -64,18 +64,19 @@ ADD_EXECUTABLE(mpkg-compareversions compareversions)
 ADD_EXECUTABLE(mpkg-checkbackups checkbackups)
 ADD_EXECUTABLE(mpkg-getopt getopt)
 ADD_EXECUTABLE(mpkg-setopt setopt)
+ADD_EXECUTABLE(mpkg-vercmp vercmp)
 #ADD_EXECUTABLE(mpkg-converttosql converttosql)
 # Installation
 FILE(GLOB aliases "${CMAKE_CURRENT_SOURCE_DIR}/aliases/mpkg-*")
 FILE(GLOB update_all_caches "${CMAKE_CURRENT_SOURCE_DIR}/update-all-caches")
 IF(X86_64)
-	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts mpkg-checkconfigs mpkg-unused mpkg-compareversions mpkg-checkbackups mpkg-getopt mpkg-setopt
+	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts mpkg-checkconfigs mpkg-unused mpkg-compareversions mpkg-checkbackups mpkg-getopt mpkg-setopt mpkg-vercmp
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib64
 		ARCHIVE DESTINATION lib64
 	)
 ELSE(X86_64)
-	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts mpkg-checkconfigs mpkg-unused mpkg-compareversions mpkg-checkbackups mpkg-getopt mpkg-setopt
+	INSTALL(TARGETS mpkg-core mpkg-validate mpkg-setmeta mpkg-setprofile mpkg-saveprofile mpkg-listprofiles mpkg-deleteprofile mpkg-depgraph mpkg-checkdeps mpkg-altlist mpkg-altshow mpkg-quicklist mpkg-checklibdeps mpkg-maintainer mpkg-spkg2abuild mpkg-deporder mpkg-fixdeps mpkg-transactions mpkg-rollback mpkg-conflicts mpkg-checkconfigs mpkg-unused mpkg-compareversions mpkg-checkbackups mpkg-getopt mpkg-setopt mpkg-vercmp
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib
 		ARCHIVE DESTINATION lib
@@ -93,3 +94,4 @@ INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mkabuild" DESTINATION bin PERMISSIONS
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mpkgsrc" DESTINATION bin PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/makepkg" DESTINATION /sbin PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE)
 INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/mpkg" DESTINATION ${SYSCONFDIR}/bash_completion.d)
+
