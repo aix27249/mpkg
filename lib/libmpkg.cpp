@@ -1738,7 +1738,10 @@ vector<string> mpkg::getExportInstalled(bool include_versions) {
 		if (include_versions) ret.push_back(pkgList[i].get_name() + " " + pkgList[i].get_fullversion());
 		else ret.push_back(pkgList[i].get_name());
 	}*/
-	ret[0] += IntToStr(pkgList.size());
+	if (verbose) {
+		// Add package count to first line
+		ret[0] += IntToStr(pkgList.size());
+	}
 	return ret;
 }
 
