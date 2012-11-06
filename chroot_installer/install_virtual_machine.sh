@@ -27,6 +27,10 @@ mkdir -p ${NODE}/{root,home,proc,sys,dev,mnt,media}
 mkdir -p ${NODE}/usr/local/{bin,lib,sbin,share,doc}
 mkdir -p ${NODE}/etc/init.d
 mkdir -p ${NODE}/etc/rc.d
+
+# Set permissions on /tmp
+chmod 1777 ${NODE}/tmp
+
 # This is for KDE:
 ( cd ${NODE}/var ; ln -s ../tmp tmp )
 
