@@ -257,21 +257,7 @@ int mpkgDatabase::commit_actions()
 	//printf("SLOW GET_PACKAGELIST CALL: %s %d\n", __func__, __LINE__);
 	if (get_packagelist(sqlSearch, &install_list, false, false)!=0) return MPKGERROR_SQLQUERYERROR;
 	
-	// Sorting install order: from lowest priority to maximum one 
-	if (dialogMode) {
-		ncInterface.setProgressText(_("Detecting package installation order (this may take a while)..."));
-		ncInterface.setProgress(4);
-	}
 
-	install_list.sortByLocations();
-	install_list.sortByTags();
-	// FIXME: Order should be direct in case of installation AND update, but it should be reverse if packages are being removed. 
-	// Also, glibc should be updated first, always.
-	if (mConfig.getValue("old_sort").empty()) install_list.sortByPriorityNew(); // Buggy?
-
-	// Don't forget to sort remove priority too: it does not take much time, but may be useful in case of disaster.
-	if (mConfig.getValue("old_sort").empty()) remove_list.sortByPriorityNew(true); // Buggy?
-	
 	// Checking available space
 	long double rem_size=0;
 	long double ins_size=0;
@@ -321,6 +307,50 @@ int mpkgDatabase::commit_actions()
 		}
 		else mWarning(_("It seems to be that disk free space is not enough to install. Required: ") + humanizeSize(required_space) + _(", available: ") + humanizeSize(freespace));
 	}
+
+	// Sorting install order: from lowest priority to maximum one 
+	if (dialogMode) {
+		ncInterface.setProgressText(_("Detecting package installation order (this may take a while)..."));
+		ncInterface.setProgress(4);
+	}
+
+	// These sortings really doesn't do anything important, but since results are different with these ones, let them be. 
+	install_list.sortByLocations();
+	install_list.sortByTags();
+	// FIXME: Order should be direct in case of installation AND update, but it should be reverse if packages are being removed. 
+	// Also, glibc should be updated first, always.
+	install_list.sortByPriorityNew(); // Buggy?
+
+	// Split remove_list to two parts: we need different sort methods of updates and complete removals.
+	PACKAGE_LIST *__updateList = new PACKAGE_LIST;
+	PACKAGE_LIST *__removeList = new PACKAGE_LIST;
+	for (size_t i=0; i<remove_list.size(); ++i) {
+		if (remove_list[i].action()==ST_UPDATE) __updateList->add(remove_list[i]);
+		else __removeList->add(remove_list[i]);
+	}
+	__updateList->sortByPriorityNew();
+	__removeList->sortByPriorityNew(true);
+	fprintf(stderr, "Updates: %d\n", __updateList->size());
+	remove_list = *__removeList;
+	remove_list.add(*__updateList);
+	delete __updateList;
+	delete __removeList;
+
+	// Rebuild update links (since pointers were changed, see above)
+	for (size_t i=0; i<remove_list.size(); i++)
+	{
+		remove_list.get_package_ptr(i)->itemID = pData.addItem(remove_list[i].get_name(), 10);
+		rem_size+=strtod(remove_list[i].get_installed_size().c_str(), NULL);
+		// Also, checking for update
+		for (size_t t=0; t<install_list.size(); ++t) {
+			if (install_list[t].get_name() == remove_list[i].get_name()) {
+				remove_list.get_package_ptr(i)->set_action(ST_UPDATE, "upgrade-" + remove_list[i].package_action_reason);
+				remove_list.get_package_ptr(i)->updatingBy=install_list.get_package_ptr(t);
+				install_list.get_package_ptr(t)->updatingBy = remove_list.get_package_ptr(i);
+			}
+		}
+	}
+
 	string branch;
 	string distro;
 	string is_virtual;

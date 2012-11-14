@@ -1256,26 +1256,13 @@ void PACKAGE_LIST::sortByPriorityNew(const bool& reverse_order) {
 	vector< vector <PACKAGE *> > matrix;
 	unsigned int packages_calculated=0, prev_packages_calculated=0;
 	bool skip=false;
-	// Step 0. Заполнение минус-первого кольца. Пакеты группы base *пока что* должны идти строго по алфавиту.
-	vector<string> base_pkgnames;
-	for (size_t i=0; i<packages.size(); ++i) {
-		if (packages[i].isTaggedBy("base")) base_pkgnames.push_back(packages[i].get_name());
-	}
-	sort(base_pkgnames.begin(), base_pkgnames.end());
-	int temp_pkgnumber;
-	for (size_t i=0; i<base_pkgnames.size(); ++i) {
-		temp_pkgnumber = getPackageNumberByName(base_pkgnames[i]);
-		if (temp_pkgnumber==-1) continue;
-		currentRing.push_back(&packages[temp_pkgnumber]);
-	}
 
-	matrix.push_back(currentRing);
-	packages_calculated = currentRing.size();
-	currentRing.clear();
+	PACKAGE *loopMinDepPkg = NULL;
 	
 	// Step 1. Заполнение нулевого кольца: пакеты без зависимостей
-	for (unsigned int i=0; i<packages.size(); i++) {
+	for (size_t i=0; i<packages.size(); ++i) {
 		if (packages[i].get_dependencies().size()==0 && !packages[i].isTaggedBy("base")) {
+			//fprintf(stderr, "[RING 0] %s: no deps\n", packages[i].get_name().c_str());
 			currentRing.push_back(&packages[i]);
 			packages_calculated++;
 		}
@@ -1287,11 +1274,11 @@ void PACKAGE_LIST::sortByPriorityNew(const bool& reverse_order) {
 	while (packages_calculated!=prev_packages_calculated && packages_calculated != packages.size()) {
 		prev_packages_calculated = packages_calculated;
 		currentRing.clear();
-		for (unsigned int i=0; i<packages.size(); i++) {
+		for (size_t i=0; i<packages.size(); ++i) {
 			skip=false;
 			// Проверяем, есть ли данный пакет уже в предыдущих кольцах
-			for (unsigned int x=0; !skip && x<matrix.size(); x++) {
-				for (unsigned int y=0; !skip && y<matrix[x].size(); y++) {
+			for (size_t x=0; !skip && x<matrix.size(); ++x) {
+				for (size_t y=0; !skip && y<matrix[x].size(); ++y) {
 					if (matrix[x][y]==&packages[i]) {
 						skip=true;
 					}
@@ -1301,53 +1288,61 @@ void PACKAGE_LIST::sortByPriorityNew(const bool& reverse_order) {
 				// Если пакета еще нету в кольцах, проверяем его зависимости
 				if (checkDependencyResolvable(&packages[i], &matrix, &packages)) {
 					currentRing.push_back(&packages[i]);
+					//fprintf(stderr, "[RING %d] %s: dependency-based order\n", matrix.size()-1, packages[i].get_name().c_str());
 					packages_calculated++;
-				};
+				}
 			}
 		}
-		matrix.push_back(currentRing);
-	}
-	currentRing.clear();
-	// Проверяем, чего осталось
-	
-	if (packages_calculated != packages.size()) {
-		// Если так, то у нас - кольцевые зависимости. Кидаем эти пакеты в конец списка не сортируя, ибо ничего с ними не поделаешь...
-		for (unsigned int i=0; i<packages.size(); i++) {
-			skip=false;
-			// Проверяем, есть ли данный пакет уже в предыдущих кольцах
-			for (unsigned int x=0; !skip && x<matrix.size(); x++) {
-				for (unsigned int y=0; !skip && y<matrix[x].size(); y++) {
-					if (matrix[x][y]==&packages[i]) {
-						skip=true;
+		// Check if we have a loop. If we do, add one with least deps (dirty, but really much better than pushing everything unordered)
+		if (packages_calculated != packages.size() && packages_calculated==prev_packages_calculated) {
+			// Yes, we have a loop. Find one with least deps
+			loopMinDepPkg = NULL;
+			for (size_t i=0; i<packages.size(); ++i) {
+				skip=false;
+				// Проверяем, есть ли данный пакет уже в предыдущих кольцах
+				for (size_t x=0; !skip && x<matrix.size(); ++x) {
+					for (size_t y=0; !skip && y<matrix[x].size(); ++y) {
+						if (matrix[x][y]==&packages[i]) {
+							skip=true;
+						}
+					}
+				}
+				if (!skip) {
+					if (loopMinDepPkg==NULL || loopMinDepPkg->get_dependencies().size()>packages[i].get_dependencies().size()) {
+						loopMinDepPkg = &packages[i];
 					}
 				}
 			}
-			if (!skip) {
-				currentRing.push_back(&packages[i]);
-			}
+			//fprintf(stderr, "[RING %d] %s: loop\n", matrix.size()-1, loopMinDepPkg->get_name().c_str());
+			currentRing.push_back(loopMinDepPkg);
+			packages_calculated++;
 		}
 		matrix.push_back(currentRing);
+		
 	}
+	currentRing.clear();
+
 	// Теперь мы получили вектор колец, иными словами - матрицу пакетов.
 	// Создаем теперь сортированный список.
 	// Помним о том, что нулевое кольцо нам не нужно.
 	if (reverse_order) {
-		for (unsigned int x=matrix.size(); x>0; x--) {
-			for (unsigned int y=0; y<matrix[x-1].size(); y++) {
+		for (size_t x=matrix.size(); x>0; --x) {
+			for (size_t y=0; y<matrix[x-1].size(); ++y) {
 				sortedList.push_back(*matrix[x-1][y]);
 			}
 		}
 
 	}
 	else {
-		for (unsigned int x=0; x<matrix.size(); x++) {
-			for (unsigned int y=0; y<matrix[x].size(); y++) {
+		for (size_t x=0; x<matrix.size(); ++x) {
+			for (size_t y=0; y<matrix[x].size(); ++y) {
 				sortedList.push_back(*matrix[x][y]);
 			}
 		}
 	}
 	if (sortedList.size()!=packages.size()) {
-		printf("WARNING! Size mismatch!\n");
+		fprintf(stderr, "FATAL ERROR: %s: size mismatch\n", __func__);
+		abort();
 	}
 	packages = sortedList;
 	sortedList.clear();
@@ -1490,38 +1485,6 @@ void PACKAGE_LIST::sortByTags(const bool& reverse_order) {
 	sortedList.clear();
 }
 
-void PACKAGE_LIST::sortByPriority(const bool& reverse_order) {	
-	if (!priorityInitialized) buildDependencyOrder();
-	int min_priority = 0;
-	for (unsigned int i=0; i<packages.size(); i++)
-	{
-		if (packages[i].priority>min_priority) min_priority = packages[i].priority;
-	}
-
-	vector<PACKAGE> sorted;
-	if (!reverse_order)
-	{	
-		for (int p=0; p<=min_priority; p++)
-		{
-			for (unsigned int i=0; i<packages.size(); i++)
-			{
-				if (packages[i].priority==p) sorted.push_back(packages[i]);
-			}
-		}
-	}
-	else
-	{
-		for (int p=min_priority; p>=0; p--)
-		{
-			for (unsigned int i=0; i<packages.size(); i++)
-			{
-				if (packages[i].priority==p) sorted.push_back(packages[i]);
-			}
-		}
-	}
-	packages = sorted;
-
-}
 void PACKAGE_LIST::sortByLocationTypes()
 {
 	// Step 1) sorting each package locations
