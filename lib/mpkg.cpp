@@ -157,10 +157,8 @@ int mpkgDatabase::emerge_to_db(PACKAGE *package)
 	get_package(pkg_id, &db_package);
 	package->set_id(pkg_id);
 	//printf("pkg has %d locations already, avail flag: %d\n", db_package.get_locations().size(), package->available());
-	for (unsigned int j=0; j<package->get_locations().size(); j++)
-	{
-		for (unsigned int i=0; i<db_package.get_locations().size(); i++)
-		{
+	for (size_t j=0; j<package->get_locations().size(); ++j) {
+		for (size_t i=0; i<db_package.get_locations().size(); i++) {
 			if (!package->get_locations().at(j).equalTo(db_package.get_locations().at(i)))
 			{
 				new_locations.push_back(package->get_locations().at(j));
@@ -287,7 +285,7 @@ int mpkgDatabase::commit_actions()
 		remove_list.get_package_ptr(i)->itemID = pData.addItem(remove_list[i].get_name(), 10);
 		rem_size+=strtod(remove_list[i].get_installed_size().c_str(), NULL);
 		// Also, checking for update
-		for (unsigned int t=0; t<install_list.size(); t++) {
+		for (size_t t=0; t<install_list.size(); ++t) {
 			if (install_list[t].get_name() == remove_list[i].get_name()) {
 				remove_list.get_package_ptr(i)->set_action(ST_UPDATE, "upgrade-" + remove_list[i].package_action_reason);
 				remove_list.get_package_ptr(i)->updatingBy=install_list.get_package_ptr(t);
@@ -324,17 +322,18 @@ int mpkgDatabase::commit_actions()
 	string branch;
 	string distro;
 	string is_virtual;
+	size_t currentItemNum = 0, totalItemCount = 0;
 	// Let's show the summary for console and dialog users and ask for confirmation
 	if (consoleMode)
 	{
-		unsigned int installCount = 0, removeCount = 0, purgeCount = 0, repairCount = 0, updateCount = 0;
+		size_t installCount = 0, removeCount = 0, purgeCount = 0, repairCount = 0, updateCount = 0;
 		string dialogMsg;
 		string pkgTypeStr;
 		string reason;
 		//msay(_("Action summary:\n"));
 
 		// Install
-		for (unsigned int i=0; i<install_list.size(); i++) {
+		for (size_t i=0; i<install_list.size(); ++i) {
 			if (verbose) reason = install_list[i].package_action_reason;
 			branch=install_list[i].get_repository_tags();
 			distro = install_list[i].package_distro_version;
@@ -457,6 +456,8 @@ int mpkgDatabase::commit_actions()
 				else dialogMsg += "  [" + IntToStr(repairCount) + "] " + install_list[i].get_name() + " " + install_list[i].get_fullversion() + "\n";
 			}
 		}
+		// Calculate total queue
+		totalItemCount = installCount + removeCount + purgeCount + updateCount + repairCount;
 
 		if (install_list.size()>0 || remove_list.size()>0)
 		{
@@ -511,7 +512,7 @@ int mpkgDatabase::commit_actions()
 	} // if (consoleMode && !dialogMode)
 	if (getlinksOnly) {
 		vector<string> urls;
-		for (unsigned int i=0; i<install_list.size(); ++i) {
+		for (size_t i=0; i<install_list.size(); ++i) {
 			urls.push_back(install_list[i].get_locations().at(0).get_full_url() + install_list[i].get_filename());
 			printf("%s\n", urls[i].c_str());
 		}
@@ -545,11 +546,9 @@ int mpkgDatabase::commit_actions()
 		pData.setCurrentAction(_("Checking cache"));
 		bool skip=false;
 		if (dialogMode) ncInterface.setProgressMax(install_list.size());
-		for (unsigned int i=0; i<install_list.size(); i++)
-		{
+		for (size_t i=0; i<install_list.size(); ++i) {
 			needFullDownload[i]=false;
-			if (dialogMode)
-			{
+			if (dialogMode)	{
 				ncInterface.setProgressText("["+IntToStr(i+1)+"/"+IntToStr(install_list.size())+_("] Checking package cache and building installation queue: ") + install_list[i].get_name());
 				ncInterface.setProgress(i);
 			}
@@ -585,7 +584,7 @@ int mpkgDatabase::commit_actions()
 				tmpDownloadItem.usedSource = (string *) &install_list[i].usedSource;
 	
 				install_list.get_package_ptr(i)->sortLocations();
-				for (unsigned int k = 0; k < install_list[i].get_locations().size(); k++) {
+				for (size_t k = 0; k < install_list[i].get_locations().size(); k++) {
 					itemLocations.push_back(install_list[i].get_locations().at(k).get_server_url() \
 						     + install_list[i].get_locations().at(k).get_path() \
 						     + install_list[i].get_filename());
@@ -699,8 +698,7 @@ download_process:
 		pData.setCurrentAction(_("Removing packages"));
 	
 		int removeItemID=0;
-		for(unsigned int i=0; i<remove_list.size(); i++)
-		{
+		for (size_t i=0; i<remove_list.size(); ++i) {
 			removeItemID=remove_list[i].itemID;
 			pData.setItemState(removeItemID, ITEMSTATE_WAIT);
 			pData.setItemProgress(removeItemID, 0);
@@ -708,7 +706,7 @@ download_process:
 		}
 		string _actionName;
 		ncInterface.setProgressMax(remove_list.size());
-		for(size_t i=0; i<remove_list.size(); ++i) {
+		for (size_t i=0; i<remove_list.size(); ++i) {
 			if (remove_list[i].action()==ST_UPDATE) {
 				_actionName = _("Updating package");
 				if (dialogMode) ncInterface.setSubtitle(_("Updating packages"));
@@ -717,9 +715,10 @@ download_process:
 				_actionName = _("Removing package");
 				if (dialogMode) ncInterface.setSubtitle(_("Removing packages"));
 			}
+			currentItemNum++;
 			
 			if (dialogMode) {
-				ncInterface.setProgressText("[" + IntToStr(i+1) + "/" + IntToStr(remove_list.size()) + "] " + _actionName + " " + \
+				ncInterface.setProgressText("[" + IntToStr(currentItemNum) + "/" + IntToStr(totalItemCount) + "] " + _actionName + " " + \
 						remove_list[i].get_name() + "-" + \
 						remove_list[i].get_fullversion());
 			       	ncInterface.setProgress((unsigned int) round((double)(i)/(double)((double)(remove_list.size())/(double) (100))));
@@ -733,7 +732,7 @@ download_process:
 
 			msay(_actionName+" " + remove_list[i].get_name());
 
-			if (remove_package(remove_list.get_package_ptr(i), i, remove_list.size(), transaction_id)!=0) {
+			if (remove_package(remove_list.get_package_ptr(i), currentItemNum, totalItemCount, transaction_id)!=0) {
 				removeFailures++;
 				pData.setItemCurrentAction(remove_list[i].itemID, _("Remove failed"));
 				pData.setItemState(remove_list[i].itemID, ITEMSTATE_FAILED);
@@ -771,14 +770,14 @@ download_process:
 		time_t ETA_Time = 0;
 		MpkgErrorCode install_result;
 		for (size_t i=0;i<install_list.size(); ++i) {
-
+			currentItemNum++;
 			pkgInstallStartTime=time(NULL); // TIMER 1: mark package installation start
 			
 			if (_abortActions) {
 				sqlFlush();
 				return MPKGERROR_ABORTED;
 			}
-			pData.setItemCurrentAction(install_list[i].itemID, string("installing [") + IntToStr(i+1) + "/" + IntToStr(install_list.size()) + ", " + humanizeSize(IntToStr(pkgInstallSpeed)) + _("/s, ETA: ") + IntToStr(ETA_Time/60) + _(" min") + string("]"));
+			pData.setItemCurrentAction(install_list[i].itemID, string("installing [") + IntToStr(currentItemNum) + "/" + IntToStr(totalItemCount) + ", " + humanizeSize(IntToStr(pkgInstallSpeed)) + _("/s, ETA: ") + IntToStr(ETA_Time/60) + _(" min") + string("]"));
 			pData.setItemState(install_list[i].itemID, ITEMSTATE_INPROGRESS);
 			msay(_("Installing package ") + install_list[i].get_name());
 
@@ -794,7 +793,7 @@ download_process:
 				//csz += atol(install_list[i].get_installed_size().c_str());
 				//ncInterface.setProgress(csz);
 			}
-			install_result = (MpkgErrorCode) install_package(install_list.get_package_ptr(i),i,install_list.size(), transaction_id);
+			install_result = (MpkgErrorCode) install_package(install_list.get_package_ptr(i), currentItemNum, totalItemCount, transaction_id);
 			if (install_result!=0)
 			{
 				mpkgErrorHandler.callError(install_result, _("Failed to install package ") + install_list[i].get_name() + " " + install_list[i].get_fullversion());
@@ -917,8 +916,8 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 	string sys_root=SYS_ROOT;
 	string index_str, index_hole;
 	if (packagesTotal>0) {
-		index_str = "[" + IntToStr(packageNum+1) + "/"+IntToStr(packagesTotal)+"] ";
-		for (unsigned int i=0; i<utf8strlen(index_str); i++) {
+		index_str = "[" + IntToStr(packageNum) + "/"+IntToStr(packagesTotal)+"] ";
+		for (size_t i=0; i<utf8strlen(index_str); ++i) {
 			index_hole += " ";
 		}
 	}
@@ -1199,12 +1198,12 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 	//system("echo `date +\%d.\%m.\%Y\\ \%H:\%M:\%S`  Removing package " + package->get_name() + "-" + package->get_fullversion() + " >> /var/log/mpkg-installation.log");
 	string index_str, action_str, by_str;
 	if (packagesTotal>0) {
-		index_str = "[" + IntToStr(packageNum+1) + "/"+IntToStr(packagesTotal)+"] ";
+		index_str = "[" + IntToStr(packageNum) + "/"+IntToStr(packagesTotal)+"] ";
 	}
 	bool needSpecialUpdate = false;
 	bool dontRemove = false;
 	vector<string> unremovable = ReadFileStrings("/etc/mpkg-unremovable"); // List of packages, which will NEVER be removed physically
-	for (unsigned int i=0; i<unremovable.size(); i++) {
+	for (size_t i=0; i<unremovable.size(); ++i) {
 		if (package->get_name() == unremovable[i]) {
 //			msay("Package " + package->get_name() + " is unremovable, so it's files will not be deleted");
 			dontRemove = true;
@@ -1372,7 +1371,7 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 			if (removeThis && fname[fname.length()-1]!='/')
 			{
 				if (!simulate && !dontRemove) {
-					if (verbose && !dialogMode) say("[%d] %s %s: ", (unsigned int) i, _("Removing file"), fname.c_str());
+					if (verbose && !dialogMode) say("[%d] %s %s: ", (size_t) i, _("Removing file"), fname.c_str());
 					unlink_ret = unlink(fname.c_str());
 					if (verbose && !dialogMode) {
 						if (unlink_ret==0) say("%sOK%s\n", CL_GREEN, CL_WHITE);
@@ -1394,21 +1393,17 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 		
 		pData.increaseItemProgress(package->itemID);
 		
-		for (unsigned int i=0; i<remove_files->size(); i++)
-		{
+		for (size_t i=0; i<remove_files->size(); ++i) {
 			fname=sys_root + "/" + remove_files->at(i);
-			for (unsigned int d=0; d<fname.length(); d++)
-			{
+			for (size_t d=0; d<fname.length(); ++d)	{
 				edir+=fname[d];
-				if (fname[d]=='/')
-				{
+				if (fname[d]=='/') {
 					empty_dirs.resize(empty_dirs.size()+1);
 					empty_dirs[empty_dirs.size()-1]=edir;
 				}
 			}
 
-			for (int x=empty_dirs.size()-1;x>=0; x--)
-			{
+			for (int x=empty_dirs.size()-1; x>=0; x--) {
 				if (!simulate && !dontRemove) {
 					unlink_ret = rmdir(empty_dirs[x].c_str());
 					if (verbose) {
@@ -1514,14 +1509,12 @@ int mpkgDatabase::delete_packages(PACKAGE_LIST *pkgList)
 	}
 	SQLRecord sqlSearch;
 	sqlSearch.setSearchMode(SEARCH_IN);
-	for(unsigned int i=0; i<pkgList->size(); i++)
-	{
+	for(size_t i=0; i<pkgList->size(); ++i) {
 		sqlSearch.addField("package_id", pkgList->at(i).get_id());
 	}
 	db.sql_delete("packages", sqlSearch);
 	sqlSearch.clear();
-	for(unsigned int i=0; i<pkgList->size(); i++)
-	{
+	for(size_t i=0; i<pkgList->size(); ++i) {
 		sqlSearch.addField("packages_package_id", pkgList->at(i).get_id());
 	}
 	db.sql_delete("tags_links", sqlSearch);
@@ -1549,9 +1542,9 @@ int mpkgDatabase::delete_packages(PACKAGE_LIST *pkgList)
 	int fAvailTags_id = available_tags.getFieldIndex("tags_id");
 	int fUsedTags_tag_id = used_tags.getFieldIndex("tags_tag_id");
 	if (available_tags.size()>0) {
-		for(unsigned int i=0; i<available_tags.size(); i++) {
+		for(size_t i=0; i<available_tags.size(); ++i) {
 			used=false;
-			for (unsigned int u=0; u<used_tags.size(); u++) {
+			for (size_t u=0; u<used_tags.size(); ++u) {
 				if (used_tags.getValue(u, fUsedTags_tag_id)==available_tags.getValue(i, fAvailTags_id)) {
 					used=true;
 				}
@@ -1564,10 +1557,8 @@ int mpkgDatabase::delete_packages(PACKAGE_LIST *pkgList)
 		available_tags.clear();
 		sqlSearch.clear();
 		sqlSearch.setSearchMode(SEARCH_IN);
-		if (toDelete.size()>0)
-		{
-			for (unsigned int i=0; i<toDelete.size(); i++)
-			{
+		if (toDelete.size()>0) {
+			for (size_t i=0; i<toDelete.size(); ++i) {
 				sqlSearch.addField("tags_id", toDelete[i]);
 			}
 			db.sql_delete("tags", sqlSearch);
@@ -1578,8 +1569,7 @@ int mpkgDatabase::delete_packages(PACKAGE_LIST *pkgList)
 
 
 
-int mpkgDatabase::cleanFileList(int package_id)
-{
+int mpkgDatabase::cleanFileList(int package_id) {
 	SQLRecord sqlSearch;
 	sqlSearch.addField("packages_package_id", package_id);
 	int ret = db.sql_delete("files", sqlSearch);
@@ -1787,7 +1777,7 @@ int mpkgDatabase::updateRepositoryData(PACKAGE_LIST *newPackages)
 	// Вообще говоря, ее можно было бы делать прямо здесь, но пусть таки будет универсальность.
 	delete newPackages;//->clear();
 	syncronize_data(pkgList, needUpdateRepositoryTags, needUpdateDistroVersion);
-	if (!dialogMode && new_pkgs>0) say(_("New packages in repositories: %d\n"), (unsigned int) new_pkgs);
+	if (!dialogMode && new_pkgs>0) say(_("New packages in repositories: %d\n"), (size_t) new_pkgs);
 	return 0;
 }
 int mpkgDatabase::syncronize_data(PACKAGE_LIST *pkgList, vector<bool> needUpdateRepositoryTags, vector<bool> needUpdateDistroVersion)
@@ -1845,8 +1835,7 @@ int mpkgDatabase::clear_unreachable_packages() {
 	get_packagelist(sqlSearch, allList, true, false);
 	PACKAGE_LIST deleteQueue;
 	unsigned int rm_pkgs = 0;
-	for(unsigned int i=0; i<allList->size(); i++)
-	{
+	for(size_t i=0; i<allList->size(); ++i) {
 		if (allList->at(i).installed()) continue;
 		if (!allList->at(i).reachable(true)) {
 			deleteQueue.add(allList->at(i));
