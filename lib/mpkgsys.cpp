@@ -635,11 +635,7 @@ int mpkgSys::requestUninstall(string package_name, mpkgDatabase *db, DependencyT
 
 
 
-int mpkgSys::_clean(const char *filename, const struct stat *file_status, int filetype)
-{
-	unsigned short x=0, y=0;
-
-	if (file_status->st_ino!=0) x=y;
+int mpkgSys::_clean(const char *filename, const struct stat *, int filetype) {
 	if (verbose && !dialogMode) say(_("Removing %s\n"), filename);
 	switch(filetype)
 	{

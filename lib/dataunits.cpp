@@ -913,53 +913,8 @@ int getUnusedCount(const vector<string> &base, const vector<string> &alts) {
 	}
 	return ret;
 }
-/*vector<TagPair> PACKAGE_LIST::getAlternatives(const vector<string>& alternatives, bool filterQueued) {
-	vector<TagPair> ret;
-	vector<string> altVec;
-	bool match, found;
-	for (size_t i=0; i<packages.size(); ++i) {
-		altVec = packages[i].getAlternativeVector();
-		if (altVec.empty()) continue;
-		match = true;
-		for (size_t t=0; match && t<alternatives.size(); ++t) {
-			if (!packages[i].checkAlternative(alternatives[t])) match = false;
-		}
-		if (!match) continue;
-		// Check for dupes and add to ret, if none
-		found = false;
-		for (size_t r=0; !found && r<ret.size(); ++r) {
-			if (ret[r].value==packages[i].get_name()) continue;
-		}
 
-		if (!found) ret.push_back(TagPair(packages[i].get_corename(), packages[i].get_name()));
-		
-	}
-	if (filterQueued) {
-		vector<TagPair> ret2;
-		for (size_t i=0; i<ret.size(); ++i) {
-			for (size_t t=0; t<packages.size(); ++t) {
-				if (packages[t].action()!=ST_INSTALL) continue;
-				if (packages[t].get_name()!=ret[i].tag) continue;
-				if (t==packages.size()-1) {
-					if (!dialogMode && verbose) printf("%s: adding pair %s => %s\n", __func__, ret[i].tag.c_str(), ret[i].value.c_str());
-					ret2.push_back(ret[i]);
-				}
-			}
-		}
-		ret = ret2;
-	}
-
-
-	if (!dialogMode && verbose) {
-		printf("%s: return %d pairs\n", __func__, ret.size());
-		for (size_t i=0; i<ret.size(); ++i) {
-			printf("%s: return %s => %s\n", __func__, ret[i].tag.c_str(), ret[i].value.c_str());
-		}
-	}
-	return ret;
-	
-}*/
-vector<TagPair> PACKAGE_LIST::getAlternatives(const vector<string>& alternatives, bool filterQueued) {
+vector<TagPair> PACKAGE_LIST::getAlternatives(const vector<string>& alternatives) {
 	// ----------------------------------VARIABLES SECTION------------------------------------- //
 	vector<PACKAGE *> altPackages;
 	vector<size_t> meetCount;

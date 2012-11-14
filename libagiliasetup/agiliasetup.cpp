@@ -405,7 +405,7 @@ bool AgiliaSetup::prepareInstallQueue(const string& setup_variant, const string&
 		return false;
 	}
 	// Now process alternatives
-	vector<TagPair> alterPairs = commitList.getAlternatives(alternatives, false);
+	vector<TagPair> alterPairs = commitList.getAlternatives(alternatives);
 	core->clean_queue();
 
 	delete core;

@@ -28,7 +28,7 @@ void ProgressData::unregisterEventHandler() {
 	eventHandler=NULL;
 }
 void ProgressData::callEvent() {
-	if (eventHandler<=0 || !sendEvents) return;
+	if (eventHandler==NULL || !sendEvents) return;
 	ItemState a;
 	a.name=getItemName(lastChangedItem);
 	a.currentAction=getItemCurrentAction(lastChangedItem);

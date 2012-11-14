@@ -16,7 +16,6 @@
 using namespace std;
 const string IntToStr(long long num);
 const string getAbsolutePath(const string& directory);
-void PrepareSql(string& str);
 char * strMerge(const char *part1, const char *part2); // Merges part1 and part2, and returns the result. Note: you should free() the result at the end.
 const string cutSpaces(const string& str);
 const string humanizeSize(const string& size);

@@ -207,8 +207,8 @@ private:
 	XMLNode _node;
 	XMLNode tmp;
 	string EMPTY;
-    int errors;
-    int depCount, suggestCount;
+    size_t errors;
+    size_t depCount, suggestCount;
     xmlDocPtr doc;
     xmlNodePtr curNode;
 

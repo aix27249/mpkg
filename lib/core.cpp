@@ -378,11 +378,7 @@ int mpkgDatabase::backupFiles(vector <string *> fileNames, vector<int> overwritt
 	return hasErrors;
 }
 
-int _cleanBackupCallback(const char *filename, const struct stat *file_status, int filetype)
-{
-	unsigned short x=0, y=0;
-
-	if (file_status->st_ino!=0) x=y;
+int _cleanBackupCallback(const char *filename, const struct stat *, int filetype) {
 	if (filetype == FTW_D && strcmp(filename, SYS_BACKUP.c_str())!=0 && !simulate ) rmdir(filename);
 	return 0;
 }
@@ -451,7 +447,6 @@ int mpkgDatabase::add_filelist_record(int package_id, vector<string> *filelist)
 }
 int mpkgDatabase::add_abuild_record(int package_id, const string& abuild_url) {
 	string a_url = abuild_url;
-	PrepareSql(a_url);
 	db.sql_exec("INSERT INTO abuilds VALUES(NULL," + IntToStr(package_id) + ",'" + a_url + "');");
 	return 0;
 }
@@ -483,9 +478,7 @@ int mpkgDatabase::add_configfiles_record(const int package_id, const vector<Conf
 		config_id = db.last_insert_id();
 		for (size_t a=0; a<config_files[i].attr.size(); ++a) {
 			name = config_files[i].attr[a].name;
-			PrepareSql(name);
 			val = config_files[i].attr[a].value;
-			PrepareSql(val);
 			db.sql_exec("INSERT INTO config_options VALUES(NULL, " + IntToStr(config_id) + ", '" + name + "', '" + val + "');");
 		}
 	}
@@ -1538,7 +1531,6 @@ const string& SQLRecord::getValue(const string& fieldname) const {
 	{
 		if (field[i].fieldname==fieldname)
 		{
-			//PrepareSql(&field[i].value);
 			return field[i].value;
 		}
 	}
@@ -1555,7 +1547,6 @@ bool SQLRecord::setValue(const string& fieldname, const string& value) {
 	for (unsigned int i=0; i<field.size(); i++) {
 		if (field[i].fieldname==fieldname) {
 			field[i].value=value;
-			PrepareSql(field[i].value);
 			return true;
 		}
 	}
@@ -1564,14 +1555,12 @@ bool SQLRecord::setValue(const string& fieldname, const string& value) {
 
 void SQLRecord::setValue(unsigned int& field_index, const string& value) {
 	field[field_index].value = value;
-	PrepareSql(field[field_index].value);
 }
 
 void SQLRecord::addField(const string& fieldname, const string& value) {
 	SQLField tmp;
 	tmp.fieldname=fieldname;
 	tmp.value=value;
-	PrepareSql(tmp.value);
 	field.push_back(tmp);
 }
 /*void SQLRecord::addField(const string& fieldname, const string& value) {
@@ -1593,11 +1582,9 @@ const string& SQLRecord::getValueI(unsigned int num) const {
 		cout << __func__ << ": field size " << field.size() << " < " << num << "\n" << endl;
 		abort();
 	}
-		//PrepareSql(&field[num].value);
 	return field[num].value;
 }
 string* SQLRecord::getValueIPtr(unsigned int num) {
-	//PrepareSql(&field[num].value);
 	if (field.size()<=num) {
 		cout << __func__ << ": field size " << field.size() << " < " << num << "\n" << endl;
 		abort();

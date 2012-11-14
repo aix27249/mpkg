@@ -432,26 +432,16 @@ int LocalPackage::get_filelist(bool index)
 	return fill_filelist(&data, index);
 }
 	
-int LocalPackage::create_md5()
-{
-	
-	//mDebug("create_md5 start");
-	string tmp_md5=get_tmp_file();
-
-	string sys="md5sum "+filename+" > "+tmp_md5;
-	system(sys);
-	string md5str=ReadFile(tmp_md5).substr(0,32);
-	unlink(tmp_md5.c_str());
-	//mDebug("MD5 = "+md5str);
-	if (md5str.empty())
-	{
-		mError("Unable to read md5 temp file");
+int LocalPackage::create_md5() {
+	string sys="md5sum "+filename;
+	string md5str=psystem(sys);
+	if (md5str.empty()) {
+		mError("Unable to get MD5 from " + filename);
 		return 1;
 	}
+	md5str = md5str.substr(0,32);
 	data.set_md5(md5str);
-	xmlNodePtr __node;
-	__node = xmlNewChild(_packageXMLNode, NULL, (const xmlChar *)"md5", (const xmlChar *)md5str.c_str());
-	delete_tmp_files();
+	xmlNewChild(_packageXMLNode, NULL, (const xmlChar *)"md5", (const xmlChar *)md5str.c_str());
 	return 0;
 }
 
@@ -467,31 +457,25 @@ int LocalPackage::create_signature(string) {
 		return 1;
 	}
 	data.pgp_signature = pgpstr;
-	xmlNodePtr __node;
-	__node = xmlNewChild(_packageXMLNode, NULL, (const xmlChar *)"signature", (const xmlChar *)pgpstr.c_str());
+	xmlNewChild(_packageXMLNode, NULL, (const xmlChar *)"signature", (const xmlChar *)pgpstr.c_str());
 	return 0;
 }
-void LocalPackage::set_repository_branch(const string &branch)
-{
-	data.set_repository_tags(branch);
 
-	xmlNodePtr __node;
-	__node = xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"repository_tags", (const xmlChar *)branch.c_str());
+void LocalPackage::set_repository_branch(const string &branch) {
+	data.set_repository_tags(branch);
+	xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"repository_tags", (const xmlChar *)branch.c_str());
 	return;
 }
 
-void LocalPackage::set_distro_version(const string &distro)
-{
+void LocalPackage::set_distro_version(const string &distro) {
 	data.package_distro_version = distro;
 
-	xmlNodePtr __node;
-	__node = xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"distro_version", (const xmlChar *)distro.c_str());
+	xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"distro_version", (const xmlChar *)distro.c_str());
 	return;
 }
 void setXmlDeltaSources(const vector<DeltaSource>& deltasources, xmlNodePtr _packageXMLNode) {
-	//printf("setting delta sources, count: %d\n", deltasources.size());
 	xmlNodePtr __node;
-	for (unsigned int i=0; i<deltasources.size(); ++i) {
+	for (size_t i=0; i<deltasources.size(); ++i) {
 		__node = xmlNewChild(_packageXMLNode, NULL, (const xmlChar *)"bdelta", NULL);
 		xmlNewProp(__node, (const xmlChar *) "orig", (const xmlChar *) deltasources[i].orig_filename.c_str());
 		xmlNewProp(__node, (const xmlChar *) "orig_md5", (const xmlChar *) deltasources[i].orig_md5.c_str());
@@ -518,9 +502,8 @@ int LocalPackage::get_size()
 	csize = IntToStr(fstat.st_size);
 	data.set_compressed_size(csize);
 
-	xmlNodePtr __node;
-	__node = xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"compressed_size", (const xmlChar *)csize.c_str());
-	__node = xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"installed_size", (const xmlChar *)isize.c_str());
+	xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"compressed_size", (const xmlChar *)csize.c_str());
+	xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"installed_size", (const xmlChar *)isize.c_str());
 	return 0;
 }
 	
@@ -566,9 +549,8 @@ int LocalPackage::set_additional_data()
 	location.set_server_url(string("local://"));
 	location.set_path(ffname);
 	data.get_locations_ptr()->push_back(location);
-	xmlNodePtr __node;
-	__node = xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"filename", (const xmlChar *)data.get_filename().c_str());
-	__node = xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"location", (const xmlChar *)fpath.c_str());
+	xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"filename", (const xmlChar *)data.get_filename().c_str());
+	xmlNewTextChild(_packageXMLNode, NULL, (const xmlChar *)"location", (const xmlChar *)fpath.c_str());
 	return 0;
 }
 

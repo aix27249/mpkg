@@ -144,7 +144,7 @@ void parsePackage(xmlDocPtr doc, xmlNodePtr cur, PACKAGE &pkg) {
 	}
 }
 
-void parseDescriptions(xmlDocPtr doc, xmlNodePtr cur, vector< pair<string, string> > *descriptions) {
+void parseDescriptions(xmlNodePtr cur, vector< pair<string, string> > *descriptions) {
 	cur = cur->xmlChildrenNode;
 	pair<string, string> desc_url;
 	bool found = false;
@@ -225,7 +225,7 @@ int xml2pkglist(xmlDocPtr doc, PACKAGE_LIST &pkgList, const string& server_url, 
 		}
 		else if (descriptions != NULL && !xmlStrcmp(cur->name, (const xmlChar *) "descriptions")) {
 			if (force_offline_descriptions || server_url.find("http://")==0 || server_url.find("ftp://")==0 || server_url.find("https://")==0) {
-				parseDescriptions(doc, cur, descriptions);
+				parseDescriptions(cur, descriptions);
 			}
 		}
 		cur = cur->next;

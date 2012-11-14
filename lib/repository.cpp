@@ -364,14 +364,7 @@ vector<DeltaSource> detectFileDeltas(const string& filename, const string deltad
 	}
 	return ret;
 }
-int ProcessPackage(const char *filename, const struct stat *file_status, int filetype)
-{
-	//XMLNode tmpX;
-	unsigned short x=0, y=0;
-
-	if (file_status->st_ino!=0) x=y;
-
-	//mDebug("processing package "+ (string) filename);
+int ProcessPackage(const char *filename, const struct stat *, int filetype) {
        	string ext = getExtension(filename);
 	vector<string> fileList;
 
@@ -532,15 +525,7 @@ int ProcessPackage(const char *filename, const struct stat *file_status, int fil
 	return 0;
 }
 
-int countPackage(const char *filename, const struct stat *file_status, int filetype)
-{
-	
-	//XMLNode tmpX;
-	unsigned short x=0, y=0;
-
-	if (file_status->st_ino!=0) x=y;
-
-	//mDebug("processing package "+ (string) filename);
+int countPackage(const char *filename, const struct stat *, int filetype) {
        	string ext = getExtension(filename);
 
 	if (filetype==FTW_F) {

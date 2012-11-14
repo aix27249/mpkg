@@ -610,7 +610,10 @@ void showPackageInfoCLI(const PACKAGE *pkg, const string &hasUpdate) {
 	}
 
 	cout << pkg->get_name() << " " << pkg->get_version() << "-" << pkg->get_build() << " (" << pkg->get_arch() << "): " << shortDescription << endl;
-	if (pkg->installed()) cout << _("Installed:") << "\t" << getInstallDate(pkg) << endl;
+	if (pkg->installed()) {
+		cout << _("Installed:") << "\t" << getInstallDate(pkg) << endl;
+		if (!hasUpdate.empty()) cout << hasUpdate << endl;
+	}
 	else cout << _("Available in:") << "\t" << pkg->package_distro_version.c_str() << endl;
 	if (!pkg->get_provides().empty()) cout << _("Provides:") << "\t" << pkg->get_provides() << endl;
 	if (!pkg->get_conflicts().empty()) cout << _("Conflicts with:") << "\t"	<< pkg->get_conflicts() << endl;

@@ -26,8 +26,7 @@ void PThreadWaiter::registerThread(pthread_t id) {
 PThreadWaiter pthreadWaiter;
 void *system_routine(void *arg) {
 	string data = (const char *) arg;
-	//printf("\n\nFSYSTEM: %s\n\n", data.c_str());
-	int ret = system(data.c_str());
+	size_t ret = system((const char *) arg);
 	pthread_exit((void *) ret);
 }
 void system_threaded(const string& cmd) {

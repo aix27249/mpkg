@@ -92,11 +92,9 @@ MetaPackage::MetaPackage(const string& _f) {
 			return;
 		}
 		data = new PACKAGE;
-		bool canParse=false;
 		if (FileExists(_f + "/install/data.xml")) {
 			PackageConfig p(_f + "/install/data.xml");
 			if (p.parseOk) {
-				canParse = true;
 				xml2package(p.getXMLDoc(), p.getXMLNode(), data);
 			}
 		}
@@ -251,11 +249,9 @@ MetaSrcPackage::MetaSrcPackage(string _f) {
 			return;
 		}
 		data = new SPKG;
-		bool canParse=false;
 		if (FileExists(_f + "/install/data.xml")) {
 			PackageConfig p(_f + "/install/data.xml");
 			if (p.parseOk) {
-				canParse = true;
 				xml2spkg(p.getXMLNode(), data);
 			}
 		}

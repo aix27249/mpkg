@@ -24,7 +24,7 @@ void pkgConfigInstall(const PACKAGE &package) {
 		return;
 	}
        	
-	bool sysconf_exists, orig_exists;
+	bool sysconf_exists;
 	string sysconf_name, orig_name, old_name;
 	for (size_t i=0; i<package.config_files.size(); ++i) {
 		if (verbose) printf("Install: checking config file %s\n", sysconf_name.c_str());
@@ -39,9 +39,6 @@ void pkgConfigInstall(const PACKAGE &package) {
  
 		// Проверяется, есть ли уже такой конфиг в системе:
 		sysconf_exists = FileExists(sysconf_name);
- 
-		// Проверяется, есть ли копия предыдущего оригинального конфига в var/mpkg/configs/$pkgname/$conf_path/$conf_file
-		orig_exists = FileExists(orig_name);
  
 		// Create a copy of new conf
 		system("mkdir -p " + getDirectory(orig_name));

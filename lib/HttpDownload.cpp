@@ -46,18 +46,14 @@ bool max_set = false;
 int skip = 0;
 const int __httpDownloadSkipFactor=50;
 int __httpDownloadTableSkipCounter = __httpDownloadSkipFactor;
-static int downloadCallback(void *clientp,
+static int downloadCallback(void *,
                        double dltotal,
                        double dlnow,
-                       double ultotal,
-                       double ulnow)
+                       double,
+                       double)
 {
 	i_dlnow=dlnow;
 	i_dltotal=dltotal;
-	double t = ultotal;
-	t=ulnow;
-	void *t1;
-	t1= clientp;
 	double speed=-1;
 	curl_easy_getinfo(chPtr, CURLINFO_SPEED_DOWNLOAD, &speed);
 	if (__httpDownloadTableSkipCounter==__httpDownloadSkipFactor) {

@@ -347,7 +347,7 @@ class PACKAGE_LIST {
 	PACKAGE __empty;
     public:
 
-	vector<TagPair> getAlternatives(const vector<string>& alternatives, bool filterQueued);
+	vector<TagPair> getAlternatives(const vector<string>& alternatives);
 	bool priorityInitialized;
 	void sortByTags(const bool& reverse_order = false);
 	void sortByPriorityNew(const bool& reverse_order=false);

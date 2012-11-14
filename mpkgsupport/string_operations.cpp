@@ -168,27 +168,6 @@ void StringMap::setValue(const string& keyName, const string& keyValue) {
 	return;
 }
 
-void PrepareSql(string& str)
-{
-	return;
-	/*
-	if (str.empty())
-	{
-		str="0";
-		return;
-	}
-	if (str.find("\'")==std::string::npos) return;
-	size_t last_pos=0;
-	size_t offset = 0;
-	while (offset<str.length())
-	{
-		last_pos=str.substr(offset).find_first_of("\'");
-		if (last_pos!=std::string::npos) str.insert(last_pos+offset, "\'");
-		else return;
-		offset += last_pos + 2;
-	}*/
-}
-
 const string getAbsolutePath(const string& directory)
 {
 	string cwd = get_current_dir_name();
