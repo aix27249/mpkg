@@ -314,9 +314,9 @@ int mpkgDatabase::commit_actions()
 	// These sortings really doesn't do anything important, but since results are different with these ones, let them be. 
 	install_list.sortByLocations();
 	install_list.sortByTags();
-	// FIXME: Order should be direct in case of installation AND update, but it should be reverse if packages are being removed. 
-	// Also, glibc should be updated first, always.
-	install_list.sortByPriorityNew(); // Buggy?
+
+	// That one is a real deal.
+	install_list.sortByPriorityNew();
 
 	// Split remove_list to two parts: we need different sort methods of updates and complete removals.
 	PACKAGE_LIST *__updateList = new PACKAGE_LIST;
@@ -327,7 +327,6 @@ int mpkgDatabase::commit_actions()
 	}
 	__updateList->sortByPriorityNew();
 	__removeList->sortByPriorityNew(true);
-	fprintf(stderr, "Updates: %d\n", __updateList->size());
 	remove_list = *__removeList;
 	remove_list.add(*__updateList);
 	delete __updateList;
