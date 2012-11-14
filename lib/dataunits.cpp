@@ -1271,7 +1271,7 @@ void PACKAGE_LIST::sortByPriorityNew(const bool& reverse_order) {
 
 	// Step 2. Заполнение очередного кольца, зависимости которого могут быть удовлетворены предыдущими кольцами
 	// Причем, пакеты в данном кольце не должны быть в каких либо кольцах еще.
-	while (packages_calculated!=prev_packages_calculated && packages_calculated != packages.size()) {
+	do {
 		prev_packages_calculated = packages_calculated;
 		currentRing.clear();
 		for (size_t i=0; i<packages.size(); ++i) {
@@ -1319,7 +1319,7 @@ void PACKAGE_LIST::sortByPriorityNew(const bool& reverse_order) {
 		}
 		matrix.push_back(currentRing);
 		
-	}
+	} while (packages_calculated!=prev_packages_calculated && packages_calculated != packages.size());
 	currentRing.clear();
 
 	// Теперь мы получили вектор колец, иными словами - матрицу пакетов.
@@ -1341,7 +1341,7 @@ void PACKAGE_LIST::sortByPriorityNew(const bool& reverse_order) {
 		}
 	}
 	if (sortedList.size()!=packages.size()) {
-		fprintf(stderr, "FATAL ERROR: %s: size mismatch\n", __func__);
+		fprintf(stderr, "FATAL ERROR: %s: size mismatch! This should not happen. Ever. Please, report a bug, and specify what did you do (including list of packages being updated/installed/removed/etc).\n", __func__);
 		abort();
 	}
 	packages = sortedList;
