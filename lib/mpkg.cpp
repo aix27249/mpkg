@@ -265,6 +265,8 @@ int mpkgDatabase::commit_actions()
 
 	install_list.sortByLocations();
 	install_list.sortByTags();
+	// FIXME: Order should be direct in case of installation AND update, but it should be reverse if packages are being removed. 
+	// Also, glibc should be updated first, always.
 	if (mConfig.getValue("old_sort").empty()) install_list.sortByPriorityNew(); // Buggy?
 
 	// Don't forget to sort remove priority too: it does not take much time, but may be useful in case of disaster.
