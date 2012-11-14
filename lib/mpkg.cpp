@@ -333,11 +333,7 @@ int mpkgDatabase::commit_actions()
 	delete __removeList;
 
 	// Rebuild update links (since pointers were changed, see above)
-	for (size_t i=0; i<remove_list.size(); i++)
-	{
-		remove_list.get_package_ptr(i)->itemID = pData.addItem(remove_list[i].get_name(), 10);
-		rem_size+=strtod(remove_list[i].get_installed_size().c_str(), NULL);
-		// Also, checking for update
+	for (size_t i=0; i<remove_list.size(); ++i) {
 		for (size_t t=0; t<install_list.size(); ++t) {
 			if (install_list[t].get_name() == remove_list[i].get_name()) {
 				remove_list.get_package_ptr(i)->set_action(ST_UPDATE, "upgrade-" + remove_list[i].package_action_reason);
