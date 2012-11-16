@@ -216,7 +216,7 @@ int mpkgSys::update_repository_data(mpkgDatabase *db)//, DependencyTracker *DepT
 
 	// Now - update package descriptions
 	updatePackageDescriptions(package_descriptions);
-	if (!dialogMode && !htmlMode) say(_("Update complete.\n"));
+	if (!dialogMode) say(_("Update complete.\n"));
 	pData.clear();
 	return ret;
 }

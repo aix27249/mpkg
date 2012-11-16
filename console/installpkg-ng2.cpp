@@ -80,7 +80,7 @@ int main (int argc, char **argv)
 		
 	bool do_reset=true;
 	int ich;
-	const char* short_opt = "hvpdzfmkDLrailgyqNcwxHbFQVRZWPKCMt:GsE:S:A:B:Ye:j:X:I";
+	const char* short_opt = "hvpdzfmkDLrailgyqNcwxbFQVRZWPKCMt:GsE:S:A:B:Ye:j:X:I";
 	//const char* short_opt = "abcdfghiklmpqrvzDLyNwxHFQVRZWPKCME"; // Try to sort this stuff...later :)
 	const struct option long_options[] =  {
 		{ "help",		0, NULL,	'h'},
@@ -103,7 +103,6 @@ int main (int argc, char **argv)
 		{ "nodepgen",		0, NULL,	'N'},
 		{ "no-resume",		0, NULL,	'c'},
 		{ "no-header",		0, NULL,	'x'},
-		{ "html",		0, NULL,	'H'},
 		{ "cleartags",		0, NULL,	'b'},
 		{ "fork",		0, NULL,	'F'},
 		{ "enqueue", 		0, NULL,	'Q'},
@@ -284,10 +283,6 @@ int main (int argc, char **argv)
 			case 'w':
 					useBuildCache = false;
 					break;
-			case 'H':
-					htmlMode = true;
-					interactive_mode = false;
-					break;
 			case 'Z':
 					rssMode=true;
 					interactive_mode = false;
@@ -386,11 +381,7 @@ int main (int argc, char **argv)
 		}
 		return 0;
 	}
-	if (htmlMode && isDatabaseLocked()) {
-		newHtmlPage();
-		printHtmlError("Database is locked, cannot process");
-		exit(0);
-	}
+	
 	if (require_root && isDatabaseLocked())
 	{
 		mError(_("Error: database is locked. Please close all other programs that use this"));
@@ -437,10 +428,7 @@ int main (int argc, char **argv)
 		}
 		
 		//------
-		if (!htmlMode) show_package_info(&core, name, version, build, showFilelist);
-		else {
-			show_package_info(&core, "", "", "", showFilelist, atoi(argv[optind]));
-		}
+		show_package_info(&core, name, version, build, showFilelist);
 	}
 	vector<string> pname;
 	if (action == ACT_COMMIT)
@@ -868,10 +856,7 @@ int main (int argc, char **argv)
 				}
 				continue;
 			}
-			if (htmlMode && q.find("SHOW_URL=")==0) {
-				showUrl = q.substr(q.find("SHOW_URL=")+strlen("SHOW_URL="));
-				continue;
-			}
+			
 			printf("Invalid query: [%s]\n", argv[i]);
 			return 0;
 		}
@@ -884,18 +869,7 @@ int main (int argc, char **argv)
 		core.get_packagelist(sqlSearch, &pkgList, true);
 		core.db->sql_exec("PRAGMA case_sensitive_like = true;");
 
-		if (htmlMode) {
-			string htmlData;
-			PACKAGE *pkg;
-			for (unsigned int i=0; i<pkgList.size(); i++) {
-				pkg = pkgList.get_package_ptr(i);
-				htmlData += "<a href=\"" + showUrl + IntToStr(pkg->get_id()) + "\">" + pkg->get_name() + " " + pkg->get_fullversion() + ": " + pkg->get_short_description()+"</a><br>";
-			}
-			if (pkgList.IsEmpty()) {
-				htmlData = "<p>Nothing found</p>";
-			}
-			printf("%s\n", htmlData.c_str());
-		}
+		
 		return 0;
 	}
 

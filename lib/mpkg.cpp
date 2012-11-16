@@ -11,7 +11,6 @@
 #include "package.h"
 #include "build.h"
 #include "terminal.h"
-#include "htmlcore.h"
 #include <fstream>
 #include <stdint.h>
 #include "errorhandler.h"
@@ -1018,7 +1017,6 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 	}
 
 	currentStatus = statusHeader + _("extracting file list");
-	printHtmlProgress();
 	if (dialogMode) ncInterface.setProgressText(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + "\n" + index_hole + _("extracting file list"));
 	else msay(index_str + _("Installing ") + package->get_name() + " " + package->get_fullversion() + _(": extracting file list"));
 	pData.increaseItemProgress(package->itemID);
@@ -1080,7 +1078,6 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 	{
 
 		currentStatus = statusHeader + _("checking file conflicts");
-		printHtmlProgress();
 		pData.increaseItemProgress(package->itemID);
 
 	}
@@ -1099,8 +1096,6 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 	
 	currentStatus = statusHeader + _("installing...");
 	pData.increaseItemProgress(package->itemID);
-
-	printHtmlProgress();
 
 // Filtering file list...
 
@@ -1149,12 +1144,9 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 				if (FileExists(SYS_ROOT + "/install/postremove.sh")) system("mkdir -p " + package->get_scriptdir() + " && mv " + SYS_ROOT+"/install/postremove.sh " + package->get_scriptdir());
 				if (FileExists(SYS_ROOT + "/install/preremove.sh")) system("mkdir -p " + package->get_scriptdir() + " && mv " + SYS_ROOT+"/install/preremove.sh " + package->get_scriptdir());
 			}
-			printHtmlProgress();
 			currentStatus = statusHeader + _("executing post-install scripts...");
 		}
 		else {
-			
-			printHtmlProgress();
 			currentStatus = _("Failed to extract!");
 			mError(_("Error while extracting package ") + package->get_name());
 			return MPKG_INSTALL_EXTRACT_ERROR;
@@ -1263,7 +1255,6 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 	string statusHeader = _("Removing package ") + package->get_name()+": ";
 	currentStatus = statusHeader + _("initialization");
 	
-	printHtmlProgress();
 	if (package->action()==ST_REMOVE || package->action()==ST_PURGE || package->action()==ST_UPDATE)
 	{
 		// Checking if package is updating, if so, get the files of new package already
@@ -1282,7 +1273,6 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 			if (FileExists(package->get_scriptdir() + "preremove.sh"))
 			{
 				msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str + _(": executing pre-remove script"));
-				printHtmlProgress();
 				currentStatus = statusHeader + _("executing pre-remove scripts");
 				string prerem="cd " + SYS_ROOT + " ; sh "+package->get_scriptdir() + "preremove.sh";
 				if (!simulate) system(prerem.c_str());
@@ -1353,7 +1343,6 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 			}
 		}
 
-		printHtmlProgress();
 		currentStatus = statusHeader + _("removing files...");
 		bool removeThis;
 		int unlink_ret;
@@ -1408,7 +1397,6 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 		}
 		msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str+_(": removing empty directories"));
 
-		printHtmlProgress();
 		currentStatus = statusHeader + _("removing empty directories...");
 	
 		// Run 2: clearing empty directories
@@ -1440,7 +1428,6 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 			empty_dirs.clear();
 		}
 	
-		printHtmlProgress();
 		// Creating and running POST-REMOVE script
 		if (!DO_NOT_RUN_SCRIPTS)
 		{
@@ -1460,7 +1447,6 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 		
 		msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str+_(": restoring backups"));
 
-		printHtmlProgress();
 		
 		// Creating restore lists. Note that both objects are linked inside.
 		vector<string> restore_fnames;
@@ -1510,7 +1496,6 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 		if (package->action()==ST_UPDATE) msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str + _(": done"));
 		else msay(index_str + action_str + " " + package->get_name() + " " + package->get_fullversion() + by_str+": done", SAYMODE_INLINE_END);
 		
-		printHtmlProgress();
 		recordPackageTransaction(*package, 1, transaction_id, getSqlDb());
 		// If update: run install now (for fault tolerance)
 		if (package->action()==ST_UPDATE) {

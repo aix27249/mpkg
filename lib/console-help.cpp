@@ -33,7 +33,6 @@ int showCmdHelp(const string cmd, bool is_error)
 	fprintf(stream,_("\t-b    --cleartags         clear all other tags before tagging\n"));
 	fprintf(stream,_("\t-F    --fork              detach from terminal and run in background\n"));
 	fprintf(stream,_("\t-Q    --enqueue           only enqueue actions, do not perform\n"));
-	fprintf(stream,_("\t-H    --html              switch to html mode (useful only for integrate into web)\n"));
 	fprintf(stream,_("\t-V    --enableversions    enable versioning in install lists\n"));
 	fprintf(stream,_("\t-R    --index-filelist    create file list while indexing\n"));
 	fprintf(stream,_("\t-M    --md5index          add md5 sums for each file in filelist\n"));

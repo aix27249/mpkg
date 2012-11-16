@@ -15,10 +15,6 @@ bool afraidAaaInDeps=false;
 bool forceFullDBUpdate=false;
 bool getlinksOnly=false;
 string CONFIG_FILE = "/etc/mpkg.xml";
-bool serverMode = false;
-string htmlNextLink="$NEXTLINK";
-string htmlPage = "/var/mpkg/state.html";
-bool htmlMode = false;
 bool noEject = false;
 bool _cdromMounted = false;
 int TERM_COLS=0;
@@ -118,7 +114,6 @@ int loadGlobalConfig(string config_file) {
 	if (mConfig.getValue("skip_man_installation")=="yes") _cmdOptions["skip_man_installation"]="true";
 	if (mConfig.getValue("skip_doc_installation")=="yes") _cmdOptions["skip_doc_installation"]="true";
 	if (mConfig.getValue("warpmode")=="yes") _cmdOptions["warpmode"]="yes"; // Skips SQL buffer flushing within install or remove operations
-	if (mConfig.getValue("server_mode")=="yes") serverMode = true;
 	_cmdOptions["arch"]=mConfig.getValue("override_arch");
 #ifdef HTTP_LIB
 	mError("error: core running non-core code\n");

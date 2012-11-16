@@ -33,10 +33,6 @@ class DepErrorTable {
 		vector<int> packageID, failureType;
 		string print(int num=-1);
 };
-extern string htmlPage;
-extern string htmlNextLink;
-extern bool htmlMode;
-extern bool serverMode;
 extern bool noEject;
 extern bool FORCE_CDROM_CACHE;
 extern DepErrorTable depErrorTable;

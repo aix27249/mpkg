@@ -11,7 +11,7 @@ int getTerminalWidth() {
 }
 void clearRow(int rowLength)
 {
-	if (dialogMode || htmlMode) return;
+	if (dialogMode) return;
 	int oldRowLength = prevRowLength;
 	if (rowLength>=oldRowLength) return;
 	string buff;
@@ -50,8 +50,7 @@ void truncateDataStr(string& data) {
 void msay (string data, int mode, FILE *output)
 {
 	currentStatus = data;
-	//if (!dialogMode && !htmlMode && errorManagerMode==EMODE_CONSOLE) truncateDataStr(data); // disabled due to segfaults in Qt mode (and, maybe, in others too)
-	if (!dialogMode && !htmlMode) {
+	if (!dialogMode) {
 		switch (mode) {
 			case SAYMODE_INLINE:
 				clearRow(utf8strlen(data));

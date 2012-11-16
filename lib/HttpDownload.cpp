@@ -11,7 +11,6 @@
 #endif
 #include <mntent.h>
 #include "terminal.h"
-#include "htmlcore.h"
 #include "errorhandler.h"
 #include <cstdio>
 #define DOWNLOAD_TIMEOUT 10 // 10 seconds, and failing
@@ -103,7 +102,6 @@ static int downloadCallback(void *,
 	if (__httpDownloadTableSkipCounter==__httpDownloadSkipFactor) __httpDownloadTableSkipCounter=0;
 	else __httpDownloadTableSkipCounter++;
 	if (skip>=300) {
-		if (!repositoryIndexDL) printHtmlProgress();
 		skip = 0;
 	}
 	else skip++;
@@ -204,10 +202,8 @@ int cdromFetch(std::string source, std::string output, bool do_cache) // Caching
 try_mount:
 			if (dialogMode) ncInterface.showInfoBox(_("Mounting ") + CDROM_DEVICE + _(" to mount point ") + CDROM_MOUNTPOINT);
 			else {
-				if (!htmlMode) {
-					say("\n");
-					say(_("Mounting %s to %s\n"), CDROM_DEVICE.c_str(), CDROM_MOUNTPOINT.c_str());
-				}
+				say("\n");
+				say(_("Mounting %s to %s\n"), CDROM_DEVICE.c_str(), CDROM_MOUNTPOINT.c_str());
 			}
 			mDebug("Mounting");
 			mDebug("Mount using system");
@@ -527,7 +523,7 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 								fseek(out,0,SEEK_END);
 								if (enableDownloadResume) {
 									if (size!=0) {
-										if (!dialogMode && !htmlMode) say(_("Resuming download from %Li\n"), (long long int) size);
+										if (!dialogMode) say(_("Resuming download from %Li\n"), (long long int) size);
 										curl_easy_setopt(ch, CURLOPT_RESUME_FROM, size);
 										resumePos = (double) size;
 									}
@@ -550,7 +546,6 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 									item->url_list.at(j).find("Packages.gz")==std::string::npos) 
 								{
 									repositoryIndexDL=false;
-									printHtmlProgress();
 									if (!dialogMode) currentDownloadingString = _("Download: [")+IntToStr(i+1) + "/" + IntToStr(list.size())+"] [" + \
 								     			getHostFromUrl(downloadUrl_string)+"] ";
 									else currentDownloadingString =  "["+IntToStr(i+1) + "/" + IntToStr(list.size())+"] ";
@@ -573,7 +568,6 @@ DownloadResults HttpDownload::getFile(DownloadsList &list, std::string *itemname
 									{
 										repositoryIndexDL = false;
 										msay(currentDownloadingString + ": " +(string) CL_GREEN + _("done") + (string) CL_WHITE, SAYMODE_INLINE_END);
-										printHtmlProgress();
 									}
 									else {
 										clearRow();

@@ -7,11 +7,9 @@
 #define MPKG_H_
 
 #include <math.h>
-//#include "constants.h"
 #include "debug.h"
 #include "config.h"
 #include "sql_pool.h"
-#include "htmlcore.h"
 #include <ftw.h>
 
 class HookManager {

@@ -4,7 +4,7 @@
  
 
 #include "debug.h"
-#include "htmlcore.h"
+#include "config.h"
 #define ENABLE_LOGGING
 #define RELEASE
 bool hideErrors = false;
@@ -52,11 +52,7 @@ std::string _mError(const char* file, int line, const char *func, std::string me
 
 	if (setupMode) fclose(tty);
 	if (dialogMode) ncInterface.showMsgBox(message);
-	if (htmlMode) {
-		if (warn) printHtmlWarning(toHtml(message));
-		else printHtmlError(toHtml(message));
-	}
-return message;
+	return message;
 }
 
 #ifdef DEBUG
