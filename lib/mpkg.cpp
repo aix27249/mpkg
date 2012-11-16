@@ -1216,7 +1216,6 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 	if (packagesTotal>0) {
 		index_str = "[" + IntToStr(packageNum) + "/"+IntToStr(packagesTotal)+"] ";
 	}
-	bool needSpecialUpdate = false;
 	bool dontRemove = false;
 	vector<string> unremovable = ReadFileStrings("/etc/mpkg-unremovable"); // List of packages, which will NEVER be removed physically
 	for (size_t i=0; i<unremovable.size(); ++i) {
@@ -1228,24 +1227,14 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 	}
 	if (package->get_name()=="glibc" || package->get_name()=="glibc-solibs" || package->get_name()=="aaa_elflibs" || package->get_name()=="tar" || package->get_name()=="xz" || package->get_name()=="aaa_base" || package->get_name()=="gzip") {
 		dontRemove = true;
-		needSpecialUpdate = true;
 	}
 
 	if (package->action()==ST_UPDATE) {
 		action_str=_("Updating");
 		by_str = _(" ==> ") + package->updatingBy->get_fullversion();
-		if (package->needSpecialUpdate || package->updatingBy->needSpecialUpdate) {
-			msay("Package " + package->get_name() + " needs a special update method");
-			needSpecialUpdate = true;
-		}
-		if (needSpecialUpdate || package->isTaggedBy("base") || package->updatingBy->isTaggedBy("base")) needSpecialUpdate=true;
-		if (needSpecialUpdate || package->get_name().find("aaa_")==0 || package->get_name().find("glibc")==0) needSpecialUpdate=true;
-		if (needSpecialUpdate || package->get_name().find("tar")==0 || package->get_name().find("coreutils")==0 || package->get_name().find("sed")==0 || package->get_name().find("bash")==0 || \
-				package->get_name().find("grep")==0 || package->get_name().find("gzip")==0 || package->get_name().find("which")==0) needSpecialUpdate=true;
 	}
 	if (package->action()==ST_REMOVE) action_str = _("Removing");
 	if (package->action()==ST_PURGE) action_str = _("Purging");
-	if (mConfig.getValue("always_special_update")=="yes") needSpecialUpdate = true; // Transitional purposes
 	get_filelist(package->get_id(), package->get_files_ptr());
 	pData.setItemProgressMaximum(package->itemID, package->get_files().size()+8);
 
@@ -1370,12 +1359,10 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 			}
 			else {
 				removeThis=true;
-				if (needSpecialUpdate) {
-					for (size_t t=0; removeThis && t<new_files->size(); ++t) {
-						if (new_files->at(t)==remove_files->at(i)) {
-							removeThis=false;
-							break;
-						}
+				for (size_t t=0; removeThis && t<new_files->size(); ++t) {
+					if (strcmp(new_files->at(t).c_str(), remove_files->at(i).c_str())==0) {
+						removeThis=false;
+						break;
 					}
 				}
 			}
