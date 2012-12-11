@@ -95,7 +95,7 @@ if [ "$skip_stage1" = "" ] ; then
 	chmod 755 ${NODE}/etc/init.d/videoswitch
 
 	mkdir -p ${NODE}/etc/X11/xorg_drivers
-	for i in vesa nv nouveau ; do
+	for i in vesa nv nouveau fbdev modesetting ; do
 		cp ${CWD}/20-$i.conf ${NODE}/etc/X11/xorg_drivers/
 	done
 
