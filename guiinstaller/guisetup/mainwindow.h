@@ -77,7 +77,7 @@ class MainWindow: public QMainWindow {
 		void saveRootPassword();
 		void saveUsers();
 		void saveNetworking();
-		void saveNvidia();
+		void saveVideo();
 		int hasNvidia;
 		map<int, bool> skipPages;
 		QTranslator *translator;
@@ -117,6 +117,7 @@ class MainWindow: public QMainWindow {
 		void loadBootloaderTree();
 		void loadSetupVariants();
 		void loadNetworking();
+		void loadVideoSettings();
 		void loadTimezones();
 		void loadConfirmationData();
 		bool checkNvidiaLoad();
@@ -151,7 +152,7 @@ enum {
 	PAGE_PKGSOURCE,
 	PAGE_WAITPKGSOURCE,
 	PAGE_INSTALLTYPE,
-	PAGE_NVIDIA,
+	PAGE_VIDEO,
 	PAGE_PARTITIONING,
 	PAGE_MOUNTPOINTS,
 	PAGE_BOOTLOADER,

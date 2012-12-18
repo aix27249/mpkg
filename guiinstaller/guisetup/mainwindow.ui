@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>556</width>
-    <height>464</height>
+    <width>664</width>
+    <height>552</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -128,15 +128,15 @@
            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans'; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 8.1.1&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans';&quot;&gt;	&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans';&quot;&gt;Welcome to AgiliaLinux! This tool will install the system to your computer. If you need help, please visit our forum: http://forum.agilialinux.ru/ or join jabber conference: agilialinux@conference.jabber.ru. &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Droid Sans';&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans';&quot;&gt;This installer is running inside a live system. It contains a working environment with web browser, IM client and other useful things, which you can use to get assistance at installation time.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Droid Sans';&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans';&quot;&gt;Please report bugs at &lt;/span&gt;&lt;a href=&quot; http://bugs.agilialinux.ru/&quot;&gt;&lt;span style=&quot; font-family:'Sans Serif'; text-decoration: underline; color:#0057ae;&quot;&gt;http://bugs.agilialinux.ru/&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Droid Sans';&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Droid Sans';&quot;&gt;&lt;/p&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Droid Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;AgiliaLinux 8.1.1&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;	&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Welcome to AgiliaLinux! This tool will install the system to your computer. If you need help, please visit our forum: http://forum.agilialinux.ru/ or join jabber conference: agilialinux@conference.jabber.ru. &lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This installer is running inside a live system. It contains a working environment with web browser, IM client and other useful things, which you can use to get assistance at installation time.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Please report bugs at &lt;a href=&quot; http://bugs.agilialinux.ru/&quot;&gt;&lt;span style=&quot; font-family:'Sans Serif'; text-decoration: underline; color:#0057ae;&quot;&gt;http://bugs.agilialinux.ru/&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Sans Serif';&quot;&gt;For more info, please visit &lt;/span&gt;&lt;a href=&quot; http://www.agilialinux.ru/&quot;&gt;&lt;span style=&quot; font-family:'Sans Serif'; text-decoration: underline; color:#0057ae;&quot;&gt;http://www.agilialinux.ru/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
@@ -999,7 +999,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Droid Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Tahoma'; font-size:24pt; font-weight:600;&quot;&gt;NVIDIA drivers&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Tahoma'; font-size:24pt; font-weight:600;&quot;&gt;Video driver&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="wordWrap">
              <bool>false</bool>
@@ -1054,7 +1054,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QLabel" name="label_60">
           <property name="text">
-           <string>Installer detected NVIDIA video card in your hardware. If you want accelerated graphics and 3D, select driver appropriate to your card. By default, open source driver is used.</string>
+           <string>Please, select a driver for your video card:</string>
           </property>
           <property name="wordWrap">
            <bool>true</bool>
@@ -1062,7 +1062,7 @@ p, li { white-space: pre-wrap; }
          </widget>
         </item>
         <item>
-         <spacer name="verticalSpacer_39">
+         <spacer name="verticalSpacer_nvidia">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
@@ -1076,6 +1076,13 @@ p, li { white-space: pre-wrap; }
            </size>
           </property>
          </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="nvidiaProprietaryDriverLabel">
+          <property name="text">
+           <string>Proprietary NVIDIA drivers:</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QRadioButton" name="nvidiaLatestRadioButton">
@@ -1105,11 +1112,80 @@ p, li { white-space: pre-wrap; }
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="nvidiaNVRadioButton">
+         <spacer name="verticalSpacer_41">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>15</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_7">
           <property name="text">
-           <string>Open source driver</string>
+           <string>Open-source drivers that may support your video card:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="xorgDriverAutodetectRadioButton">
+          <property name="text">
+           <string>Use autodetection (default)</string>
           </property>
           <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="xorgDriverFbdevRadioButton">
+          <property name="text">
+           <string>fbdev</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="xorgDriverModesettingRadioButton">
+          <property name="text">
+           <string>modesetting</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="xorgDriverVesaRadioButton">
+          <property name="text">
+           <string>VESA</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="xorgDriverCustomRadioButton">
+          <property name="text">
+           <string>Custom:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="xorgDriverCustomEdit">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>By default, a proper driver is selected automatically at boot time. In case that your card does not work properly with that, you may specify a driver manually. See help for more information about specific drivers and known hardware issues.
+NVIDIA users may select a proprietary driver corresponding to their video card model.</string>
+          </property>
+          <property name="wordWrap">
            <bool>true</bool>
           </property>
          </widget>
@@ -2726,8 +2802,8 @@ p, li { white-space: pre-wrap; }
            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Droid Sans';&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Droid Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -2960,10 +3036,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>pkgSourceDVDRadioButton</tabstop>
   <tabstop>pkgSourceISORadioButton</tabstop>
   <tabstop>pkgSourceCustomRadioButton</tabstop>
-  <tabstop>nvidiaLatestRadioButton</tabstop>
-  <tabstop>nvidia173RadioButton</tabstop>
-  <tabstop>nvidia96RadioButton</tabstop>
-  <tabstop>nvidiaNVRadioButton</tabstop>
   <tabstop>partitioningNoEditRadioButton</tabstop>
   <tabstop>partitioningManualRadioButton</tabstop>
   <tabstop>mountPointsTreeWidget</tabstop>
@@ -2993,5 +3065,22 @@ p, li { white-space: pre-wrap; }
  <resources>
   <include location="mainwindow.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>xorgDriverCustomRadioButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>xorgDriverCustomEdit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>38</x>
+     <y>354</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>61</x>
+     <y>384</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

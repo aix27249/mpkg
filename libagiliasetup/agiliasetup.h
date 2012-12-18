@@ -67,6 +67,7 @@ class AgiliaSetup {
 		bool moveDatabase();
 
 		void xorgSetLangConf(const string& language);
+		void xorgSetVideoDriver(const string& driver);
 		bool processInstall(const string& pkgsource);
 		void generateIssue();
 
@@ -91,7 +92,7 @@ class AgiliaSetup {
 
 
 
-		bool postInstallActions(const string& language, const string& setup_variant, bool tmpfs_tmp, bool initrd_delay, const string& initrd_modules, const string& bootloader, const string& fbmode, const string& kernel_options, const string& netman, const string& hostname, const string& netname, bool time_utc, const string& timezone, const string& nvidia_driver);
+		bool postInstallActions(const string& language, const string& setup_variant, bool tmpfs_tmp, bool initrd_delay, const string& initrd_modules, const string& bootloader, const string& fbmode, const string& kernel_options, const string& netman, const string& hostname, const string& netname, bool time_utc, const string& timezone, const string& nvidia_driver, const string& xorg_driver);
 
 		void setDefaultRunlevel(const string& lvl);
 		void enablePlymouth(bool enable);

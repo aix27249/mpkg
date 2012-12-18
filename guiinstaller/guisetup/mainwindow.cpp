@@ -17,7 +17,7 @@ string getHelpPageName(int page_num) {
 		case PAGE_PKGSOURCE: return "pkgsource.html";
 		case PAGE_WAITPKGSOURCE: return "waitpkgsource.html";
 		case PAGE_INSTALLTYPE: return "installtype.html";
-		case PAGE_NVIDIA: return "nvidia.html";
+		case PAGE_VIDEO: return "video.html";
 		case PAGE_PARTITIONING: return "partitioning.html";
 		case PAGE_MOUNTPOINTS: return "mountpoints.html";
 		case PAGE_BOOTLOADER: return "bootloader.html";
@@ -276,8 +276,8 @@ void MainWindow::storePageSettings(int index) {
 		case PAGE_INSTALLTYPE:
 			saveSetupVariant();
 			break;
-		case PAGE_NVIDIA:
-			saveNvidia();
+		case PAGE_VIDEO:
+			saveVideo();
 			break;
 		case PAGE_TIMEZONE:
 			saveTimezone();
@@ -307,6 +307,9 @@ void MainWindow::updatePageData(int index) {
 			break;
 		case PAGE_BOOTLOADER:
 			loadBootloaderTree();
+			break;
+		case PAGE_VIDEO:
+			loadVideoSettings();
 			break;
 		case PAGE_PKGSOURCE:
 			break;
@@ -1139,10 +1142,8 @@ void MainWindow::saveNetworking() {
 }
 
 bool MainWindow::checkLoad(int page) {
+	// ATM, no page will be skipped
 	switch(page) {
-		case PAGE_NVIDIA:
-			return checkNvidiaLoad();
-			break;
 		default: 
 			return true;
 	}
@@ -1167,13 +1168,44 @@ bool MainWindow::checkNvidiaLoad() {
 		return true;
 	}
 }
-
-void MainWindow::saveNvidia() {
-	// TODO: Split NV and Nouveau!!!
+void MainWindow::loadVideoSettings() {
+	if (!checkNvidiaLoad()) {
+		ui->verticalSpacer_nvidia->changeSize(0,0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+		ui->nvidiaLatestRadioButton->hide();
+		ui->nvidia173RadioButton->hide();
+		ui->nvidia96RadioButton->hide();
+	}
+	// Check if user specified some driver via boot loader settings
+	string cmdline = ReadFile("/proc/cmdline");
+	size_t pos = cmdline.find("VIDEODRIVER=");
+	if (pos!=std::string::npos) {
+		cmdline = cmdline.substr(pos + strlen("VIDEODRIVER="));
+		pos = cmdline.find(" ");
+		if (pos!=std::string::npos) {
+			cmdline = cmdline.substr(0, pos);
+		}
+	}
+	if (cmdline!="") {
+		// Select known ones, or select custom.
+		if (cmdline=="fbdev") ui->xorgDriverFbdevRadioButton->setChecked(Qt::Checked);
+		else if (cmdline=="modesetting") ui->xorgDriverModesettingRadioButton->setChecked(Qt::Checked);
+		else if (cmdline=="vesa") ui->xorgDriverVesaRadioButton->setChecked(Qt::Checked);
+		else if (cmdline!="nouveau") {
+			ui->xorgDriverCustomRadioButton->setChecked(Qt::Checked);
+			ui->xorgDriverCustomEdit->setEnabled(true);
+			ui->xorgDriverCustomEdit->setText(cmdline.c_str());
+		}
+	}
+}
+void MainWindow::saveVideo() {
 	if (ui->nvidiaLatestRadioButton->isChecked()) settings["nvidia-driver"] = "latest";
 	else if (ui->nvidia173RadioButton->isChecked()) settings["nvidia-driver"] = "173";
 	else if (ui->nvidia96RadioButton->isChecked()) settings["nvidia-driver"] =  "96";
-	else if (ui->nvidiaNVRadioButton->isChecked()) settings["nvidia-driver"] = "nouveau";
+	else if (ui->xorgDriverAutodetectRadioButton->isChecked()) settings["xorg-driver"] = "";
+	else if (ui->xorgDriverFbdevRadioButton->isChecked()) settings["xorg-driver"] = "fbdev";
+	else if (ui->xorgDriverModesettingRadioButton->isChecked()) settings["xorg-driver"] = "modesetting";
+	else if (ui->xorgDriverVesaRadioButton->isChecked()) settings["xorg-driver"] = "vesa";
+	else if (ui->xorgDriverCustomRadioButton->isChecked()) settings["xorg-driver"] = ui->xorgDriverCustomEdit->text().toStdString();
 }
 
 void MainWindow::showHideReleaseNotes() {

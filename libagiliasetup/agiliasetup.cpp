@@ -712,6 +712,14 @@ EndSection\n";
 
 }
 
+// Function forces usage to specific video driver. Special case: if already-prepared config exists, it will be used instead of auto-generated one.
+void AgiliaSetup::xorgSetVideoDriver(const string& driver) {
+	if (driver=="") return;
+	string config = "Section \"Device\"\n\tIdentifier \"Video Card\"\n\tDriver \"" + driver + "\"\nEndSection\n";
+	system("mkdir -p /tmp/new_sysroot/etc/X11/xorg.conf.d 2>/dev/null >/dev/null");
+	WriteFile("/tmp/new_sysroot/etc/X11/xorg.conf.d/20-" + driver + ".conf", config);
+}
+
 void AgiliaSetup::generateIssue() {
 	if (!FileExists("/tmp/new_sysroot/etc/issue_" + sysconf_lang)) {
 		return;
@@ -1029,7 +1037,7 @@ menuentry \"" + string(_("AgiliaLinux ") + string(DISTRO_VERSION) + _(" on ")) +
 	return true;
 }
 
-bool AgiliaSetup::postInstallActions(const string& language, const string& setup_variant, bool tmpfs_tmp, bool initrd_delay, const string& initrd_modules, const string& bootloader, const string& fbmode, const string& kernel_options, const string& netman, const string& hostname, const string& netname, bool time_utc, const string& timezone, const string& nvidia_driver) {
+bool AgiliaSetup::postInstallActions(const string& language, const string& setup_variant, bool tmpfs_tmp, bool initrd_delay, const string& initrd_modules, const string& bootloader, const string& fbmode, const string& kernel_options, const string& netman, const string& hostname, const string& netname, bool time_utc, const string& timezone, const string& nvidia_driver, const string& xorg_driver) {
 	if (notifier) {
 		notifier->setSummaryTextCall(_("Install complete, running post-install actions"));
 		notifier->setDetailsTextCall("");
@@ -1079,7 +1087,10 @@ bool AgiliaSetup::postInstallActions(const string& language, const string& setup
 	// Copy skel to root directory
 	system("rsync -arvh /tmp/new_sysroot/etc/skel/ /tmp/new_sysroot/root/ 2>/dev/null >/dev/null");
 	system("chown -R root:root /tmp/new_sysroot/root 2>/dev/null >/dev/null");
+
 	xorgSetLangConf(language);
+	if (xorg_driver!="") xorgSetVideoDriver(xorg_driver);
+	
 	generateIssue();
 	writeFstab(tmpfs_tmp);
 	system("chroot /tmp/new_sysroot depmod -a " + kernelversion + " 2>/dev/null >/dev/null");
@@ -1101,7 +1112,7 @@ bool AgiliaSetup::postInstallActions(const string& language, const string& setup
 	}
 
 	// If nouveau is used, remove blacklist entry from /etc/modprobe.d/nouveau.conf
-	if (nvidia_driver=="nouveau") {
+	if ((nvidia_driver=="nouveau" || xorg_driver=="nouveau") && FileExists("/tmp/new_sysroot/etc/modprobe.d/nouveau.conf")) {
 		unlink("/tmp/new_sysroot/etc/modprobe.d/nouveau.conf");
 	}
 
@@ -1278,7 +1289,7 @@ bool AgiliaSetup::run(const map<string, string>& _settings, const vector<TagPair
 
 	pData.registerEventHandler(updateProgressData);
 	if (!processInstall(settings["pkgsource"])) return false;
-	if (!postInstallActions(settings["language"], settings["setup_variant"], strToBool(settings["tmpfs_tmp"]), strToBool(settings["initrd_delay"]), settings["initrd_modules"], settings["bootloader"], settings["fbmode"], settings["kernel_options"], settings["netman"], settings["hostname"], settings["netname"], strToBool(settings["time_utc"]), settings["timezone"], settings["nvidia-driver"])) return false;
+	if (!postInstallActions(settings["language"], settings["setup_variant"], strToBool(settings["tmpfs_tmp"]), strToBool(settings["initrd_delay"]), settings["initrd_modules"], settings["bootloader"], settings["fbmode"], settings["kernel_options"], settings["netman"], settings["hostname"], settings["netname"], strToBool(settings["time_utc"]), settings["timezone"], settings["nvidia-driver"], settings["xorg-driver"])) return false;
 	pData.unregisterEventHandler();
 	return true;
 }
