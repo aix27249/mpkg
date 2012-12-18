@@ -50,7 +50,8 @@ void AgiliaSetup::setDefaultRunlevels() {
 	enableService("dbus");
 	// enableService("sshd"); // For most of users, it's just a security hole. All others should know how to enable it.
 	enableService("alsasound");
-	//enableService("acpid"); // Disable for now - it leads to immediate shutdown in KDE and GNOME, instead of showing shutdown dialog
+	// Enable acpid only for systems whose does not have it's own acpi event handler (such as KDE, GNOME and XFCE)
+	if (!FileExists("/tmp/new_sysroot/usr/bin/plasma-desktop") && !FileExists("/tmp/new_sysroot/usr/bin/gnome-session") && !FileExists("/tmp/new_sysroot/usr/bin/xfdesktop")) enableService("acpid");
 	enableService("gpm");
 	enableService("cupsd");
 	enableService("cron");
