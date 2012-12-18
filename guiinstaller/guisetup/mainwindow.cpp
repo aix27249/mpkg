@@ -1171,12 +1171,13 @@ bool MainWindow::checkNvidiaLoad() {
 void MainWindow::loadVideoSettings() {
 	if (!checkNvidiaLoad()) {
 		ui->verticalSpacer_nvidia->changeSize(0,0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+		ui->nvidiaProprietaryDriverLabel->hide();
 		ui->nvidiaLatestRadioButton->hide();
 		ui->nvidia173RadioButton->hide();
 		ui->nvidia96RadioButton->hide();
 	}
 	// Check if user specified some driver via boot loader settings
-	string cmdline = ReadFile("/proc/cmdline");
+	string cmdline = psystem("cat /proc/cmdline");
 	size_t pos = cmdline.find("VIDEODRIVER=");
 	if (pos!=std::string::npos) {
 		cmdline = cmdline.substr(pos + strlen("VIDEODRIVER="));
@@ -1185,6 +1186,8 @@ void MainWindow::loadVideoSettings() {
 			cmdline = cmdline.substr(0, pos);
 		}
 	}
+	else cmdline = "";
+
 	if (cmdline!="") {
 		// Select known ones, or select custom.
 		if (cmdline=="fbdev") ui->xorgDriverFbdevRadioButton->setChecked(Qt::Checked);
