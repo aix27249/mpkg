@@ -1173,51 +1173,51 @@ const PACKAGE& PACKAGE_LIST::getPackageByID(const int& id) const {
 	abort(); // TODO: check conditions which may apply to this case. UPD: these conditions exist... :(
 }
 
-bool checkDependencyResolvable(PACKAGE *package, vector< vector <PACKAGE *> > *matrix, vector<PACKAGE> *checkList) {
-	vector<bool> resolved;
-	bool resolvable = false;
-	for (unsigned int i=0; i<package->get_dependencies().size(); i++) {
-		resolved.push_back(false);
+
+// This function check if dependencies of specified package may be resolved via matrix.
+// NOTE: For ordering ONLY! It does not check versions, it does not check if package can ever be resolved.
+bool checkDependencyResolvable(const PACKAGE& package, const vector< vector <PACKAGE *> > &provided_matrix, const vector<PACKAGE *> currentRing) {
+	bool resolvable;
+	vector< vector <PACKAGE *> > matrix = provided_matrix;
+	if (currentRing.size()>0) matrix.push_back(currentRing);
+
+	for (size_t i=0; i<package.get_dependencies().size(); ++i) {
 		resolvable = false;
-		if (checkList!=NULL) {
-			for (unsigned int d=0; d<checkList->size(); d++) {
-				if (checkList->at(d).get_name() == package->get_dependencies().at(i).get_package_name()) {
-					resolvable=true;
-					break;
-				}
-			}
-			if (!resolvable) resolved[i]=true;
+		// We have some packages that depends on itself. So, check it first.
+		if (strcmp(package.get_corename().c_str(), package.get_dependencies().at(i).get_package_name().c_str())==0) {
+			resolvable = true;
+			continue;
 		}
-		for (unsigned int x=0; !resolved[i] && x<matrix->size(); x++) {
-			for (unsigned int y=0; !resolved[i] && y<matrix->at(x).size(); y++) {
+		for (size_t x=0; !resolvable && x<matrix.size(); ++x) {
+			for (size_t y=0; !resolvable && y<matrix[x].size(); ++y) {
 				// Проверяем i-ю зависимость на удовлетворение пакетом из matrix[x][y]
-				if (package->get_dependencies().at(i).get_package_name()==matrix->at(x).at(y)->get_name()) {
-					if (meetVersion(package->get_dependencies().at(i).get_version_data(), matrix->at(x).at(y)->get_version())) {
-						// Подходит
-						resolved[i]=true;
-					}
+				// Note: always use corename here, as deps relies on it
+				if (strcmp(package.get_dependencies().at(i).get_package_name().c_str(), matrix[x][y]->get_corename().c_str())==0) {
+					resolvable = true;
 				}
+				
 			}
 		}
-	}
-	for (unsigned int i=0; i<resolved.size(); i++) {
-		if (!resolved[i]) return false;
+		if (!resolvable) {
+			return false;
+		}
 	}
 	return true;
 }
 void PACKAGE_LIST::sortByPriorityNew(const bool& reverse_order) {
-	vector<PACKAGE *> currentRing;
+	vector<PACKAGE *> currentRing, loop;
 	vector<PACKAGE> sortedList;
 	vector< vector <PACKAGE *> > matrix;
 	unsigned int packages_calculated=0, prev_packages_calculated=0;
 	bool skip=false;
+	int maxRevDeps = -1, thisRevDeps = 0;
 
-	PACKAGE *loopMinDepPkg = NULL;
+	vector<PACKAGE *> loopMaxDepPackages;
 	
 	// Step 1. Заполнение нулевого кольца: пакеты без зависимостей
 	for (size_t i=0; i<packages.size(); ++i) {
-		if (packages[i].get_dependencies().size()==0 && !packages[i].isTaggedBy("base")) {
-			//fprintf(stderr, "[RING 0] %s: no deps\n", packages[i].get_name().c_str());
+		if (packages[i].get_dependencies().size()==0 || packages[i].isTaggedBy("virtual")) {
+			//fprintf(stderr, "[RING 0] %s: zero deps\n", packages[i].get_name().c_str());
 			currentRing.push_back(&packages[i]);
 			packages_calculated++;
 		}
@@ -1229,48 +1229,65 @@ void PACKAGE_LIST::sortByPriorityNew(const bool& reverse_order) {
 	do {
 		prev_packages_calculated = packages_calculated;
 		currentRing.clear();
+		loop.clear();
 		for (size_t i=0; i<packages.size(); ++i) {
 			skip=false;
 			// Проверяем, есть ли данный пакет уже в предыдущих кольцах
 			for (size_t x=0; !skip && x<matrix.size(); ++x) {
 				for (size_t y=0; !skip && y<matrix[x].size(); ++y) {
-					if (matrix[x][y]==&packages[i]) {
+					if (strcmp(matrix[x][y]->get_md5().c_str(), packages[i].get_md5().c_str())==0) {
 						skip=true;
 					}
 				}
 			}
 			if (!skip) {
-				// Если пакета еще нету в кольцах, проверяем его зависимости
-				if (checkDependencyResolvable(&packages[i], &matrix, &packages)) {
+				// Если пакета еще нету в порядковых кольцах, проверяем, удовлетворяют ли его зависимости уже отобранные пакеты
+				if (checkDependencyResolvable(packages[i], matrix, currentRing)) {
 					currentRing.push_back(&packages[i]);
 					//fprintf(stderr, "[RING %d] %s: dependency-based order\n", matrix.size()-1, packages[i].get_name().c_str());
 					packages_calculated++;
 				}
+				// If package didn't go to currentRing, it is: a) will be processed in one of the next rings, b) it is a part of loop
+				// So, it is safe to build loop right here
+				else loop.push_back(&packages[i]); 
 			}
 		}
-		// Check if we have a loop. If we do, add one with least deps (dirty, but really much better than pushing everything unordered)
-		if (packages_calculated != packages.size() && packages_calculated==prev_packages_calculated) {
+		// Check if we have a loop. If we do, add one with least reverse deps (e.g. packages that depends on this one). Very, very dirty, but really much better than pushing everything unordered)
+		// Note that big loops may provide very bad results, so don't rely on this alogrithm and try to avoid any loops.
+		// FIXME: this algorithm may be improved and this is #1 task in mpkg.
+		if (currentRing.empty() && !loop.empty()) {
 			// Yes, we have a loop. Find one with least deps
-			loopMinDepPkg = NULL;
-			for (size_t i=0; i<packages.size(); ++i) {
-				skip=false;
-				// Проверяем, есть ли данный пакет уже в предыдущих кольцах
-				for (size_t x=0; !skip && x<matrix.size(); ++x) {
-					for (size_t y=0; !skip && y<matrix[x].size(); ++y) {
-						if (matrix[x][y]==&packages[i]) {
-							skip=true;
-						}
+			loopMaxDepPackages.clear();
+			maxRevDeps = 0;
+
+			// Find package with minimal count of reverse deps
+			for (size_t i=0; i<loop.size(); ++i) {
+				//checkDependencyResolvable(*loop[i], matrix, currentRing, true);
+				thisRevDeps = 0;
+				for (size_t t=0; t<loop.size(); ++t) {
+					//if (t==i) continue; // Skip package itself even if it depends on himself
+					for (size_t d=0; d<loop[t]->get_dependencies().size(); ++d) {
+						// Note: we use corename here because deps are always asks for corenames itself
+						if (strcmp(loop[i]->get_corename().c_str(), loop[t]->get_dependencies().at(d).get_package_name().c_str())==0 ||
+						    strcmp(loop[i]->get_name().c_str(), loop[t]->get_dependencies().at(d).get_package_name().c_str())==0) thisRevDeps++;
 					}
 				}
-				if (!skip) {
-					if (loopMinDepPkg==NULL || loopMinDepPkg->get_dependencies().size()>packages[i].get_dependencies().size()) {
-						loopMinDepPkg = &packages[i];
-					}
+				//fprintf(stderr, "Got %d revdeps for %s\n", thisRevDeps, loop[i]->get_name().c_str());
+				
+				if (maxRevDeps<thisRevDeps) {
+					maxRevDeps = thisRevDeps;
+					loopMaxDepPackages.clear();
+				       	loopMaxDepPackages.push_back(loop[i]);
+				}
+				else if (maxRevDeps==thisRevDeps) {
+					loopMaxDepPackages.push_back(loop[i]);
 				}
 			}
-			//fprintf(stderr, "[RING %d] %s: loop\n", matrix.size()-1, loopMinDepPkg->get_name().c_str());
-			currentRing.push_back(loopMinDepPkg);
-			packages_calculated++;
+			for (size_t i=0; i<loopMaxDepPackages.size(); ++i) {
+				//fprintf(stderr, "[RING %d] %s: loop (%d reverse deps)\n", matrix.size()-1, loopMaxDepPackages[i]->get_corename().c_str(), maxRevDeps);
+				currentRing.push_back(loopMaxDepPackages[i]);
+				packages_calculated++;
+			}
 		}
 		matrix.push_back(currentRing);
 		
