@@ -27,12 +27,21 @@ void report_failure(int line, const char *error = NULL) {
 	if (error) fprintf(stderr, "%s\n", error);
 	abort();
 }
+
+void log_query(string query, string out_file = "big_query.log") {
+	FILE *f = fopen(out_file.c_str(), "a");
+	if (f) {
+		fprintf(f, string(query + "\n").c_str());
+		fclose(f);
+	}
+
+}
 string getFancyDistro(const char *drepo, const char *darch, const char * dbranch) {
 	string repo, arch, branch;
 	if (drepo) repo = drepo;
 	if (darch) arch = darch;
 	if (dbranch) branch = dbranch;
-	 return repo + "-" + branch + "-" + arch;
+	return repo + "-" + branch + "-" + arch;
 }
 
 string getLocation(vector<string> drepo, vector<string> darch, vector<string> dbranch, const char *arch, const char *distro, const char *repo, string relative) {
@@ -110,7 +119,29 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 	printf("Generating index for %s\n", index_path.c_str());
 	MYSQL_RES *packages;
 	int res;
-	res = mysql_query(&conn, string("SELECT packages.*, locations.location_path, locations.distro_arch, locations.distro_version, locations.server_url FROM packages, locations WHERE packages.package_id=locations.packages_package_id " + search_subquery + " GROUP BY packages.package_id").c_str());
+	string query = string("SELECT DISTINCT packages.package_id, \
+			packages.package_name, \
+			packages.package_version, \
+			packages.package_arch, \
+			packages.package_build, \
+			packages.package_compressed_size, \
+			packages.package_installed_size, \
+			packages.package_short_description, \
+			packages.package_description, \
+			packages.package_changelog, \
+			packages.package_packager, \
+			packages.package_packager_email, \
+			packages.package_md5, \
+			packages.package_filename, \
+			packages.package_repository_tags, \
+			packages.package_provides, \
+			packages.package_conflicts, \
+			locations.location_path, \
+			locations.distro_arch, \
+			locations.distro_version, \
+			locations.server_url \
+			FROM packages, locations WHERE packages.package_id=locations.packages_package_id " + search_subquery);
+	res = mysql_query(&conn, query.c_str());
 
 	if (res) report_failure(__LINE__);
 
@@ -119,12 +150,13 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 
 	//printf("Checking out ABUILD list...\n");
 	MYSQL_RES *abuilds;
-	res = mysql_query(&conn, "SELECT package_id, filename FROM abuilds;");
+	query = "SELECT package_id, filename FROM abuilds";
+	res = mysql_query(&conn, query.c_str());
 	if (res) report_failure(__LINE__);
 
 	abuilds = mysql_store_result(&conn);
 	printf("Found: %d packages, starting to generate index in %s\n", mysql_num_rows(packages), index_path.c_str());
-	
+
 	FILE *xml = fopen(string(index_path + "/packages.xml").c_str(), "w");
 	if (!xml) {
 		perror("Failed to open packages.xml file for writing");
@@ -160,7 +192,7 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 	string attr;
 
 	while (row = mysql_fetch_row(packages)) {
-		fancydistro = getFancyDistro(row[30], row[28], row[29]);
+		fancydistro = getFancyDistro(row[20], row[18], row[19]);
 		fprintf(package_list, row[1]);
 		fprintf(xml, "<package>\n");
 		fprintf(xml, "\t<name>%s</name>\n", row[1]);
@@ -168,24 +200,24 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 		fprintf(xml, "\t<arch>%s</arch>\n", row[3]);
 		fprintf(xml, "\t<build>%s</build>\n", row[4]);
 
-		if (row[25] && cutSpaces(row[25])!="") fprintf(xml, "\t<provides>%s</provides>\n", cutSpaces(row[25]).c_str());
-		if (row[26] && cutSpaces(row[26])!="") fprintf(xml, "\t<conflicts>%s</conflicts>\n", cutSpaces(row[26]).c_str());
+		if (row[15] && cutSpaces(row[15])!="") fprintf(xml, "\t<provides>%s</provides>\n", cutSpaces(row[15]).c_str());
+		if (row[16] && cutSpaces(row[16])!="") fprintf(xml, "\t<conflicts>%s</conflicts>\n", cutSpaces(row[16]).c_str());
 
 		fprintf(xml, "\t<compressed_size>%s</compressed_size>\n", row[5]);
 		fprintf(xml, "\t<installed_size>%s</installed_size>\n", row[6]);
 		fprintf(xml, "\t<short_description><![CDATA[%s]]></short_description>\n", row[7]);
 		fprintf(xml, "\t<description><![CDATA[%s]]></description>\n", row[8]);
 		if (row[9] && cutSpaces(row[9])!="") fprintf(xml, "\t<changelog><![CDATA[%s]]></changelog>\n", row[9]);
-		fprintf(xml, "\t<md5>%s</md5>\n", row[15]);
+		fprintf(xml, "\t<md5>%s</md5>\n", row[12]);
 		fprintf(xml, "\t<maintainer>\n");
 		fprintf(xml, "\t\t<name>%s</name>\n", row[10]);
 		fprintf(xml, "\t\t<email>%s</email>\n", row[11]);
 		fprintf(xml, "\t</maintainer>\n");
-		
-		fprintf(xml, "\t<location>%s</location>\n", getLocation(drepo, darch, dbranch, row[28], row[29], row[30], row[27]).c_str());
 
-		fprintf(xml, "\t<filename>%s</filename>\n", row[16]);
-		
+		fprintf(xml, "\t<location>%s</location>\n", getLocation(drepo, darch, dbranch, row[18], row[19], row[20], row[17]).c_str());
+
+		fprintf(xml, "\t<filename>%s</filename>\n", row[13]);
+
 		// Deps... :)
 		res = mysql_query(&conn, string("SELECT dependency_package_name, dependency_condition, dependency_package_version FROM dependencies WHERE packages_package_id='" + string(row[0]) + "'").c_str());
 		if (res) report_failure(__LINE__, mysql_error(&conn));
@@ -238,10 +270,10 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 			fprintf(xml, "\t</tags>\n");
 		}
 		mysql_free_result(tags);
-		
-		fprintf(xml, "\t<repository_tags>%s</repository_tags>\n", row[22]);
+
+		fprintf(xml, "\t<repository_tags>%s</repository_tags>\n", row[14]);
 		fprintf(xml, "\t<distro_version>%s</distro_version>\n", fancydistro.c_str());
-		
+
 		// ABUILD, if exist
 		mysql_data_seek(abuilds, 0);
 		while (abuild = mysql_fetch_row(abuilds)) {
@@ -249,7 +281,7 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 			if (atoi(abuild[0])!=atoi(row[0])) continue;
 
 			if (!abuild[1]) continue;
-			fprintf(xml, "\t<abuild>%s</abuild>\n", getLocation(drepo, darch, dbranch, row[28], row[29], row[30], abuild[1]).c_str());
+			fprintf(xml, "\t<abuild>%s</abuild>\n", getLocation(drepo, darch, dbranch, row[18], row[19], row[20], abuild[1]).c_str());
 
 			break;
 		}
@@ -265,10 +297,10 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 
 
 	printf("\tXML complete, compressing...\n");
-	system("( cat " + index_path + "/packages.xml | gzip -9 > " + index_path + "/packages.xml.gz.tmp && mv " + index_path + "/packages.xml.gz.tmp " + index_path + "/packages.xml.gz ) &");
+	//system("( cat " + index_path + "/packages.xml | gzip -9 > " + index_path + "/packages.xml.gz.tmp && mv " + index_path + "/packages.xml.gz.tmp " + index_path + "/packages.xml.gz ) &"); // gzip indexes are deprecated from now.
 	system("( cat " + index_path + "/packages.xml | xz -c > " + index_path + "/packages.xml.xz.tmp && mv " + index_path + "/packages.xml.xz.tmp " + index_path + "/packages.xml.xz ) &");
 
-	
+
 	// Also, we need setup variants index here.
 	FILE *setup_variants;
 	setup_variants=fopen(string(index_path + "/setup_variants.list").c_str(), "w");
@@ -287,14 +319,14 @@ void generateIndex2(MYSQL &conn, vector<string> drepo, vector<string> darch, vec
 				}
 			}
 		}
-		system("( cd " + index_path + " && tar -cJvf setup_variants.tar.xz setup_variants )");
+		system("( cd " + index_path + " && tar -cJvf setup_variants.tar.xz --exclude .git setup_variants )");
 	}
 	fclose(setup_variants);
-	
+
 
 
 	printf("Index generation completed.\n");
-	
+
 }
 int main(int argc, char **argv) {
 	MYSQL conn;
@@ -313,17 +345,17 @@ int main(int argc, char **argv) {
 
 	}
 	mysql_set_character_set(&conn, "utf8");
-	
-	
-	
+
+
+
 	MYSQL_RES *available_repos;
-       	//int res = mysql_query(&conn, "SELECT server_url, distro_arch, distro_version FROM locations GROUP BY server_url, distro_arch");
-       	int res = mysql_query(&conn, "SELECT repositories.name, architectures.name, branches.name FROM repositories, branches, architectures");
+	//int res = mysql_query(&conn, "SELECT server_url, distro_arch, distro_version FROM locations GROUP BY server_url, distro_arch");
+	int res = mysql_query(&conn, "SELECT repositories.name, architectures.name, branches.name FROM repositories, branches, architectures");
 	if (res) report_failure(__LINE__);
 	available_repos = mysql_store_result(&conn);
 	int repocount = mysql_num_rows(available_repos);
 	printf("Total repos: %d\n", repocount);
-	
+
 	vector<string> drepo, darch, dbranch, tmp_branch, tmp_arch, tmp_repo;
 
 	MYSQL_ROW row;
@@ -350,19 +382,19 @@ int main(int argc, char **argv) {
 	// 	/$branch/$repo/
 	// 	/$branch/
 	// 	/
-	
+
 	// Global index: /
 	generateIndex2(conn, tmp_repo, tmp_arch, tmp_branch);
 	// Deprecated branch:
 	tmp_branch.push_back("8.0_deprecated");
 	generateIndex2(conn, tmp_repo, tmp_arch, tmp_branch, "deprecated_package_tree", true);
-	
+
 	for (size_t i=0; i<drepo.size(); ++i) {
 		// Index: /$repo/
 		tmp_branch.clear();
 		tmp_arch.clear();
 		tmp_repo.clear();
-		
+
 		tmp_repo.push_back(drepo[i]);
 		generateIndex2(conn, tmp_repo, tmp_arch, tmp_branch);
 		for (size_t t=0; t<dbranch.size(); ++t) {
