@@ -205,9 +205,10 @@ bool mpkgDatabase::check_cache(PACKAGE *package, bool clear_wrong, ItemOrder ite
 bool needUpdateXFonts = false;
 vector<string> iconCacheUpdates;
 vector<string> gconfSchemas, gconfSchemasUninstall;
-
+vector<string> fileRemoveQueue;
 int mpkgDatabase::commit_actions()
 {
+	fileRemoveQueue.clear();
 	hookManager.reset();
 	needUpdateXFonts = false;
 	delete_tmp_files();
@@ -863,6 +864,14 @@ download_process:
 	// NEW 25.08.08: cleanup db for local packages
 	msay(_("Clearing unreachable packages"), SAYMODE_NEWLINE);
 	clear_unreachable_packages();
+
+	// Remove files from fileRemoveQueue
+	if (fileRemoveQueue.size()>0) {
+		msay(_("Cleanup: removing ") + IntToStr(fileRemoveQueue.size()) + _(" files"), SAYMODE_NEWLINE);
+		for (size_t i=0; i<fileRemoveQueue.size(); ++i) {
+			unlink(fileRemoveQueue[i].c_str());
+		}
+	}
 	
 	if (install_list.size()>0 || remove_list.size()>0) 
 	{
@@ -1368,14 +1377,19 @@ int mpkgDatabase::remove_package(PACKAGE* package, size_t packageNum, size_t pac
 			}
 			if (checkEssentialFile(remove_files->at(i))) removeThis=false; 
 			// Actually removing files
-			if (removeThis && fname[fname.length()-1]!='/')
-			{
+			if (removeThis && fname[fname.length()-1]!='/') {
 				if (!simulate && !dontRemove) {
-					if (verbose && !dialogMode) say("[%d] %s %s: ", (size_t) i, _("Removing file"), fname.c_str());
-					unlink_ret = unlink(fname.c_str());
-					if (verbose && !dialogMode) {
-						if (unlink_ret==0) say("%sOK%s\n", CL_GREEN, CL_WHITE);
-						else say(_("%sFAILED%s\n"), CL_RED, CL_WHITE);
+					if (package->action()==ST_UPDATE) {
+						// Add to remove queue
+						fileRemoveQueue.push_back(fname);
+					}
+					else {
+						if (verbose && !dialogMode) say("[%d] %s %s: ", (size_t) i, _("Removing file"), fname.c_str());
+						unlink_ret = unlink(fname.c_str());
+						if (verbose && !dialogMode) {
+							if (unlink_ret==0) say("%sOK%s\n", CL_GREEN, CL_WHITE);
+							else say(_("%sFAILED%s\n"), CL_RED, CL_WHITE);
+						}
 					}
 				}
 			}
