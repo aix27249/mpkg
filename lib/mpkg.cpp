@@ -1114,6 +1114,16 @@ int mpkgDatabase::install_package(PACKAGE* package, size_t packageNum, size_t pa
 	add_filelist_record(package->get_id(), package->get_files_ptr());
 #endif
 	
+	// Check fileRemoveQueue and delete entries which matches with installing files
+	vector<string> *pkgFiles = package->get_files_ptr();
+	for (size_t i=0; i<pkgFiles->size(); ++i) {
+		for (size_t z=0; z<fileRemoveQueue.size(); ++z) {
+			if (strcmp(pkgFiles->at(i).c_str(), fileRemoveQueue[z].c_str())==0) {
+				fileRemoveQueue.erase(fileRemoveQueue.begin()+z);
+			}
+		}
+	}
+
 	string sys;
 
 	// Extracting package
